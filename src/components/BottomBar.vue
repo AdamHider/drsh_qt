@@ -1,0 +1,25 @@
+<template>
+    <q-tabs>
+        <q-route-tab
+            icon="home"
+            to="/home"
+            exact
+        />
+        <q-route-tab
+            icon="group"
+            to="/classroom"
+            exact
+        />
+        <q-route-tab
+            icon="notifications"
+            to="/notifications"
+            exact
+        />
+        <q-route-tab
+            icon="person"
+            to="/user-dashboard"
+            exact
+        />
+    </q-tabs>
+</template>
+

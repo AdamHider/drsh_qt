@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import { useUserStore } from '../stores/user'
 
 /*
  * If not building with SSR mode, you can
@@ -23,8 +24,27 @@ export default route(function (/* { store, ssrContext } */) {
     // Leave this as is and make changes in quasar.conf.js instead!
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
-    history: createHistory(process.env.VUE_ROUTER_BASE)
+    history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE)
   })
+  
+
+  Router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      // this route requires auth, check if logged in
+      // if not, redirect to login page.
+      const { user } = useUserStore()
+      if (!user.active.data.id) {
+        Router.push({ path: "/user-startup"})
+      } else {
+        next() // go to wherever I'm going
+      }
+    } else {
+      next() // does not require auth, make sure to always call next()!
+    }
+  })
+  
 
   return Router
 })
+
+
