@@ -1,6 +1,6 @@
 <template  withBackground="true">
     <q-chip class="transparent no-shadow"
-        clickable 
+        clickable
         icon-right="autorenew"
         text-color="white"
         @click="dialog = true"
@@ -14,17 +14,18 @@
         </div>
     </q-chip>
     <q-dialog v-model="dialog" position="top">
-      <q-card style="width: 350px">
+      <q-card>
         <q-card-section class="q-pb-none">
           <div class="text-h6">Choose your classroom</div>
         </q-card-section>
         <q-card-section class="q-pt-none q-px-none">
           <ClassroomSlider
-                  :slidesPerView=1.5
-                  :centerAligned="false"
-                  :withButton="false"
-                  slideHeight="100"
-                  :navigation="false"
+            :slidesPerView=1.5
+            :centerAligned="false"
+            :withButton="false"
+            slideHeight="170"
+            :navigation="false"
+            captionMode="full"
           />
         </q-card-section>
       </q-card>
@@ -33,14 +34,12 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
 import ClassroomSlider from '../components/ClassroomSlider.vue'
 import { CONFIG } from '../config.js'
 
-const { user, signOut } = useUserStore();
-const { classroom } = useClassroom();
+const { classroom } = useClassroom()
 
-const dialog = ref(false);
+const dialog = ref(false)
 
 </script>

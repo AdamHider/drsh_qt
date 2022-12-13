@@ -1,12 +1,15 @@
 <template>
+  <q-page-container>
     <q-page class="flex justify-center content-center full-height full-width text-center">
       <PageHeader v-if="user.active?.data.id" title="User Dashboard" subtitle="Choose your classroom" text-color="white"/>
       <Suspense v-if="user.active?.data.id">
-        <ClassroomSlider 
+        <ClassroomSlider
             :slidesPerView="1.3"
             :centerAligned="true"
             :withButton="true"
-            slideHeight="300"/>
+            slideHeight="300"
+            captionMode="bottom"
+          />
       </Suspense>
       <q-card class="transparent no-shadow full-width">
         <q-card-section v-if="user.active?.data.id" class="d-flex flex-no-wrap justify-space-between align-center">
@@ -15,12 +18,12 @@
         </q-card-section>
         <q-card-section v-else>
             <h4 class="text-h4 text-white" >
-                You are not logged in. You may just: 
+                You are not logged in. You may just:
             </h4>
             <div class="d-flex justify-center align-baseline">
-                <q-btn flat  color="white" to="/user-sign-in">sign in</q-btn> 
-                <b class="text-white">or</b> 
-                <q-btn flat  color="white" to="/user-sign-up">sign up</q-btn> 
+                <q-btn flat  color="white" to="/user-sign-in">sign in</q-btn>
+                <b class="text-white">or</b>
+                <q-btn flat  color="white" to="/user-sign-up">sign up</q-btn>
             </div>
         </q-card-section>
         <v-divider v-if="(Object.keys(user.list).length > 0)" color="white" class="mt-2 mb-2"></v-divider>
@@ -34,7 +37,7 @@
                 </q-card-section>
                 <q-card-section>
                     <q-list lines="two">
-                        <q-item clickable v-ripple 
+                        <q-item clickable v-ripple
                             v-for="(userItem, index) in user.list" :key="index">
 
                             <q-item-section>
@@ -59,6 +62,7 @@
             </q-card>
         </q-dialog>
     </q-page>
+  </q-page-container>
 </template>
 
 <script setup>
@@ -66,22 +70,21 @@ import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import ClassroomSlider from '../components/ClassroomSlider.vue'
 import PageHeader from '../components/PageHeader.vue'
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 
-const dialog = ref(false);
-const btnLoading = ref([]);
+const dialog = ref(false)
+const btnLoading = ref([])
 
 const switchUser = async (userItem, key) => {
-    btnLoading.value[key] = true;
-    await signIn(userItem.authorization, userItem.activeClassroom); 
-    btnLoading.value[key] = false;
-    dialog.value = false;
-    return router.push('/user-dashboard');
+  btnLoading.value[key] = true
+  await signIn(userItem.authorization, userItem.activeClassroom)
+  btnLoading.value[key] = false
+  dialog.value = false
+  return router.push('/user-dashboard')
 }
 
 const { signOut, signIn, user } = useUserStore()
-
 
 </script>

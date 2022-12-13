@@ -9,20 +9,18 @@ import { useUserStore } from './stores/user'
 import { useClassroom } from './composables/useClassroom'
 import { useAppMessage } from './composables/useAppMessage'
 async function init () {
+  const { user, autoSignIn } = useUserStore()
+  await autoSignIn()
 
-    const { user, autoSignIn } = useUserStore()
+  const { getActive, getList } = useClassroom()
+  getActive()
 
-    await autoSignIn()
-
-    const { getActive, getList } = useClassroom()
-    getActive();
-
-    watch(user.active, (newData, oldData) => {
-        console.log('watched');
-        getActive();
-        getList();
-    });
+  watch(user.active, (newData, oldData) => {
+    console.log('watched')
+    getActive()
+    getList()
+  })
 }
-init();
+init()
 
 </script>

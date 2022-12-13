@@ -1,6 +1,6 @@
 <template>
-    <div class="otp-container">
-      <v-label>{{label}}</v-label>
+    <div class="otp-container" @click="focus()">
+      <div>{{label}}</div>
       <div ref="otpCont" class="v-digit-container">
         <input
           :type="type"
@@ -17,80 +17,86 @@
   </template>
 
 <script setup>
-  import { ref, reactive } from 'vue';
+import { ref, reactive } from 'vue'
 
-  const props = defineProps({
-    default: String,
-    digitCount: {
-      type: Number,
-      required: true
-    },
-    value: String,
-    type: String,
-    label: String,
-    fieldConfig: Object
-  });
-  const emit = defineEmits(['update:otp', 'validate:otp']);
+const props = defineProps({
+  default: String,
+  digitCount: {
+    type: Number,
+    required: true
+  },
+  value: String,
+  type: String,
+  label: String,
+  fieldConfig: Object
+})
+const emit = defineEmits(['update:otp', 'validate:otp'])
 
-  const digits = reactive([])
+const digits = reactive([])
 
-  if (props.default && props.default.length === props.digitCount) {
-    for (let i =0; i < props.digitCount; i++) {
-      digits[i] = props.default.charAt(i)
-    }
-  } else {
-    for (let i =0; i < props.digitCount; i++) {
-      digits[i] = null;
-    }
+if (props.default && props.default.length === props.digitCount) {
+  for (let i = 0; i < props.digitCount; i++) {
+    digits[i] = props.default.charAt(i)
+  }
+} else {
+  for (let i = 0; i < props.digitCount; i++) {
+    digits[i] = null
+  }
+}
+
+const otpCont = ref(null)
+
+const handleKeyDown = function (event, index) {
+  if (event.key !== 'Tab' &&
+        event.key !== 'ArrowRight' &&
+        event.key !== 'ArrowLeft'
+  ) {
+    event.preventDefault()
   }
 
-  const otpCont = ref(null)
-  const handleKeyDown = function (event, index) {
-    if (event.key !== "Tab" && 
-        event.key !== "ArrowRight" &&
-        event.key !== "ArrowLeft"
-    ) {
-      event.preventDefault();
-    }
-    
-    if (event.key === "Backspace") {
-      digits[index] = null;
-      
-      if (index != 0) {
-        (otpCont.value.children)[index-1].focus();
-      } 
+  if (event.key === 'Backspace') {
+    digits[index] = null
 
-      return;
-    }
-
-    if ((new RegExp('^([0-9])$')).test(event.key)) {
-      digits[index] = event.key;
-
-      if (index != props.digitCount - 1) {
-        (otpCont.value.children)[index+1].focus();
-      }
+    if (index !== 0) {
+      (otpCont.value.children)[index - 1].focus()
     }
     emit('update:otp', validate())
-  }
-  const validate = function (){
-    const value = digits.join('');
-    var result = {
-      value: value,
-      valid: true
-    }
-    for(var i in props.fieldConfig.rules){
-      var validity = props.fieldConfig.rules[i](value);
-      if(validity !== true){
-        result.valid = false;
-      }
-    }
-    return result;
+    return
   }
 
-  
+  if ((new RegExp('^([0-9])$')).test(event.key)) {
+    digits[index] = event.key
+
+    if (index !== props.digitCount - 1) {
+      (otpCont.value.children)[index + 1].focus()
+    }
+  }
   emit('update:otp', validate())
-  
+}
+const validate = function () {
+  const value = digits.join('')
+  const result = {
+    value,
+    valid: true
+  }
+  for (const i in props.fieldConfig.rules) {
+    const validity = props.fieldConfig.rules[i](value)
+    if (validity !== true) {
+      result.valid = false
+    }
+  }
+  console.log(result)
+  return result
+}
+const focus = function () {
+  let activeIndex = digits.join('').length
+  if (activeIndex > digits.length - 1) {
+    activeIndex = digits.length - 1
+  }
+  (otpCont.value.children)[activeIndex].focus()
+}
 
+emit('update:otp', validate())
 
 </script>
 
@@ -104,7 +110,7 @@
 }
 .v-digit-container{
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 .v-digit-box {
   height: 56px;

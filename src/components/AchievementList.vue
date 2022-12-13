@@ -10,7 +10,7 @@
             <q-item class="q-pa-none bg-white">
                 <q-item-section avatar>
                     <q-avatar size="80px">
-                        <img :src="`${CONFIG.API_HOST}${achievement.image}`" />
+                        <img :src="`${CONFIG.API_HOST}/images/dershane/${achievement.image}`" />
                     </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left">
@@ -22,10 +22,10 @@
                             <b>{{achievement.achievement_progress.current_progress}}/{{achievement.achievement_progress.target_progress}}</b>
                         </div>
                     </div>
-                    <q-linear-progress 
+                    <q-linear-progress
                         :color="(achievement.achievement_progress.percentage/100) >= 1 ? 'positive' : 'primary'"
-                        :value="(achievement.achievement_progress.percentage/100)" 
-                        size="20px" 
+                        :value="(achievement.achievement_progress.percentage/100)"
+                        size="20px"
                         rounded
                     ></q-linear-progress>
                 </q-item-section>
@@ -35,26 +35,22 @@
     </q-infinite-scroll>
 </template>
 
-
 <script setup>
 import { useAchievement } from '../composables/useAchievement'
 import { CONFIG } from '../config.js'
-import { onMounted, onActivated, onDeactivated} from "vue"
+import { onMounted, onActivated, onDeactivated } from 'vue'
 
 const { achievements, getList } = useAchievement()
 
-const onLoad = async function(index, done) {
-    console.log(index);
-    const isDone = await getList(index);
-    done(isDone);
+const onLoad = async function (index, done) {
+  console.log(index)
+  const isDone = await getList(index)
+  done(isDone)
 }
 
-//onActivated(() => {
-    //console.log('empty');
-    //getList();
-//});
-
-
-
+// onActivated(() => {
+// console.log('empty');
+// getList();
+// });
 
 </script>

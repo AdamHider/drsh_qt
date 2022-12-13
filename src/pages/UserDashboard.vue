@@ -13,9 +13,9 @@
                 <q-card-section>
                     <q-linear-progress
                         color="white"
-                        :model-value="(user.active.data.profile?.level.percentage / 100)" 
+                        :model-value="(user.active.data.profile?.level.percentage / 100)"
                         size="20px"
-                        dark stripe rounded 
+                        dark stripe rounded
                     ></q-linear-progress>
                     <div class="row q-ma-sm text-white">
                         <div class="col text-left">
@@ -38,7 +38,7 @@
                 <q-card-section>
                     <div class="text-h5"><b>{{user.active.data.name}}</b></div>
                 </q-card-section>
-                
+
                 <q-card-section class="q-px-none">
                     <q-card >
                         <q-card-section >
@@ -54,7 +54,7 @@
                                 </q-item-section>
                                 <q-item-section side>
                                     <q-btn
-                                    flat 
+                                    flat
                                     to="/user-startup"
                                     icon="autorenew" />
                                 </q-item-section>
@@ -70,10 +70,10 @@
                 >
                     <label>Edit profile</label>
                 </q-btn>
-                <div class="q-mt-md q-mb-md row q-col-gutter-sm">
+                <div class="q-mt-sm q-mb-md row q-col-gutter-md">
                     <div class="col-6">
                         <q-card class="text-left" rounded="lg">
-                            <q-card-section>
+                            <q-card-section class="q-py-sm">
                                 <div class="text-h5">{{user.active.data.profile?.total_exercises}}</div>
                                 <div class="text-caption text-grey">Exercises</div>
                                 <q-tooltip activator="parent" location="top">
@@ -84,7 +84,7 @@
                     </div>
                     <div class="col-6">
                         <q-card class="text-left" rounded="lg">
-                            <q-card-section>
+                            <q-card-section class="q-py-sm">
                                 <div class="text-h5">{{user.active.data.profile?.total_points}}</div>
                                 <div class="text-caption text-grey">Points</div>
                                 <q-tooltip activator="parent" location="top">
@@ -95,7 +95,7 @@
                     </div>
                     <div class="col-6">
                         <q-card class="text-left" rounded="lg">
-                            <q-card-section>
+                            <q-card-section class="q-py-sm">
                                 <div class="text-h5">{{user.active.data.profile?.total_classrooms}}</div>
                                 <div class="text-caption text-grey">Classrooms</div>
                                 <q-tooltip activator="parent" location="top">
@@ -106,7 +106,7 @@
                     </div>
                     <div class="col-6">
                         <q-card class="text-left" rounded="lg">
-                            <q-card-section>
+                            <q-card-section class="q-py-sm">
                                 <div class="text-h5">{{user.active.data.profile?.total_achievements}}</div>
                                 <div class="text-caption text-grey">Achievements</div>
                                 <q-tooltip activator="parent" location="top">
@@ -142,14 +142,11 @@ const { user, signOut } = useUserStore()
 const { classroom } = useClassroom()
 const router = useRouter()
 
-
-const sheet = ref(false);
-
+const sheet = ref(false)
 
 const exitUser = async function () {
-    await signOut();
-    return router.push('/user-startup');
+  await signOut()
+  return router.push('/user-startup')
 }
-
 
 </script>

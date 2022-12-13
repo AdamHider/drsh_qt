@@ -7,152 +7,217 @@
       <q-toolbar-title></q-toolbar-title>
     </q-toolbar>
   </q-header>
-  <q-page class="flex justify-center items-end full-height full-width text-center">
-    <q-form 
-      ref="form"
-      v-model="formData.valid" 
-      @submit.prevent="validate()"
-      class="full-width">
-      <q-card v-if="formData.step == 1" class="rounded-b-0">
-        <q-card-section>
-            <q-field v-if="formData.passwordIsPin"
-              v-model="formData.fields.password.value"
-              :rules="formData.fields.password.rules"
-              label="Password"
-              borderless
-            >
-              <OTPInput 
-                :fieldConfig="formData.fields.password"
-                @update:otp="formData.valid = $event.valid; formData.fields.password.value = $event.value;"
-                :digit-count="4"
-                type="password"
+  <q-page-container>
+    <q-page class="flex justify-center items-end full-height full-width text-center">
+      <q-form
+        ref="form"
+        v-model="formData.valid"
+        @submit.prevent="validate()"
+        autocomplete="off"
+        class="full-width">
+        <q-card v-if="formData.step == 1" class="rounded-b-0">
+          <q-card-section>
+            <div class="text-h6">It is too easy to be true</div>
+            <div class="text-gray">Creating account is in a few seconds now</div>
+          </q-card-section>
+          <q-separator />
+          <q-card-actions vertical>
+            <q-btn
+                @click="validate()"
+                v-on:keyup.enter="validate()"
+                color="primary"
+                label="Sure, let's go!" />
+          </q-card-actions>
+        </q-card>
+        <q-card v-if="formData.step == 2" class="rounded-b-0">
+          <q-card-section>
+            <div class="text-h6">Enter password</div>
+            <div class="text-gray">It may be a pin or a standart password</div>
+          </q-card-section>
+          <q-card-section>
+              <q-input v-if="formData.passwordIsPin"
+                :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
+                v-model="formData.fields.password.value"
+                :rules="formData.fields.password.rules"
+                :error-messages="formData.fields.password.errors"
+                :type="formData.fields.password.reveal ? 'text' : 'password'"
+                no-error-icon
+                label="Pin password"
+                mask="####"
+              />
+              <q-input v-else
+                v-model="formData.fields.password.value"
+                :rules="formData.fields.password.rules"
+                :error-messages="formData.fields.password.errors"
+                :type="formData.fields.password.reveal ? 'text' : 'password'"
+                label="Password"
               >
-              </OTPInput>
-            </q-field>
-            <q-input v-else
-              v-model="formData.fields.password.value"
-              :rules="formData.fields.password.rules"
-              :error-messages="formData.fields.password.errors"
-              :type="formData.fields.password.reveal ? 'text' : 'password'"
-              counter
-              label="Password"
-              autocomplete="off"
+                <template v-slot:append>
+                  <q-icon
+                    :name="formData.fields.password.reveal ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="formData.fields.password.reveal = !formData.fields.password.reveal"
+                  />
+                </template>
+              </q-input>
+              <q-btn-toggle
+                  v-model="formData.passwordIsPin"
+                  spread
+                  no-caps
+                  :options="[
+                    {label: 'Use pin', value: true},
+                    {label: 'Use password', value: false}
+                  ]"
+                />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions vertical>
+            <q-btn
+                :disabled="!formData.valid"
+                @click="validate()"
+                v-on:keyup.enter="validate()"
+                color="primary"
+                label="Continue" />
+          </q-card-actions>
+        </q-card>
+        <q-card v-if="formData.step == 3" class="rounded-b-0">
+          <q-card-section>
+            <div class="text-h6">Confirm password</div>
+            <div class="text-gray">It may be a pin or a standart password</div>
+          </q-card-section>
+          <q-card-section>
+            <q-input v-if="formData.passwordIsPin"
+              :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
+              v-model="formData.fields.passwordConfirm.value"
+              :rules="formData.fields.passwordConfirm.rules"
+              :error-messages="formData.fields.passwordConfirm.errors"
+              :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
+              no-error-icon
+              label="Pin password"
+              mask="####"
+            />
+            <q-input  v-else
+              v-model="formData.fields.passwordConfirm.value"
+              :rules="formData.fields.passwordConfirm.rules"
+              :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
+              label="Confirm password"
             >
               <template v-slot:append>
                 <q-icon
-                  :name="formData.fields.password.reveal ? 'visibility_off' : 'visibility'"
+                  :name="formData.fields.passwordConfirm.reveal ? 'visibility_off' : 'visibility'"
                   class="cursor-pointer"
-                  @click="formData.fields.password.reveal = !formData.fields.password.reveal"
+                  @click="formData.fields.passwordConfirm.reveal = !formData.fields.passwordConfirm.reveal"
                 />
               </template>
             </q-input>
-            <q-chip
-              class="ma-4"
-              clickable 
-              :ripple="false" 
-              @click="formData.passwordIsPin = !formData.passwordIsPin"
-            >
-              <template v-if="formData.passwordIsPin">Use password</template>
-              <template v-else>Use pin</template>
-            </q-chip>
-        </q-card-section>
-        <q-separator />
-        <q-card-actions vertical>
-          <q-btn
-              @click="validate()"
-              v-on:keyup.enter="validate()" 
-              color="primary" 
-              label="Continue" />
-        </q-card-actions>
-      </q-card>
-      <q-card v-if="formData.step == 2" class="rounded-b-0">
+            <q-btn-toggle
+                v-model="formData.passwordIsPin"
+                spread
+                no-caps
+                :options="[
+                  {label: 'Use pin', value: true},
+                  {label: 'Use password', value: false}
+                ]"
+              />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions vertical>
+            <q-btn
+                :disabled="!formData.valid"
+                @click="validate()"
+                v-on:keyup.enter="validate()"
+                color="primary"
+                label="Continue" />
+          </q-card-actions>
+        </q-card>
+        <q-card v-if="formData.step == 4" class="rounded-b-0">
+          <q-card-section>
+            <div class="text-h6">Do you agree with our Terms?</div>
+            <div class="text-gray">It would be very nice, maybe</div>
+          </q-card-section>
+          <q-card-section>
+            <q-item class="text-left" tag="label">
+              <q-item-section avatar>
+                <q-field
+                  borderless
+                  hide-bottom-space
+                  v-model="formData.fields.terms.value"
+                  :rules="formData.fields.terms.rules"
+                  no-error-icon
+                >
+                  <template v-slot:control>
+                    <q-checkbox
+                      v-model="formData.fields.terms.value"
+                    >
+                    </q-checkbox>
+                  </template>
+                </q-field>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>I agree with the Terms</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-btn
+                class="full-width"
+                color="white"
+                text-color="primary"
+                icon="visibility"
+                @click="termsDialog = true;"
+                label="I want to see these terms" />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions vertical>
+            <q-btn
+                :disabled="!formData.valid"
+                @click="validate()"
+                v-on:keyup.enter="validate()"
+                color="primary"
+                label="Sign Up" />
+          </q-card-actions>
+        </q-card>
+      </q-form>
+    </q-page>
+    <q-dialog v-model="termsDialog">
+      <q-card>
         <q-card-section>
-          <q-field v-if="formData.passwordIsPin"
-            v-model="formData.fields.passwordConfirm.value"
-            :rules="formData.fields.passwordConfirm.rules"
-              label="Confirm password"
-              borderless
-          >
-            <OTPInput 
-              :fieldConfig="formData.fields.passwordConfirm"
-              @update:otp="formData.valid = $event.valid; formData.fields.passwordConfirm.value = $event.value;"
-              :digit-count="4"
-                type="password"
-            >
-            </OTPInput>
-          </q-field>
-          <q-input  v-else
-            v-model="formData.fields.passwordConfirm.value"
-            :append-icon="formData.fields.passwordConfirm.reveal ? 'mdi-eye' : 'mdi-eye-off'"
-            :rules="formData.fields.passwordConfirm.rules"
-            :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
-            counter
-            label="Confirm password"
-            autocomplete="off"
-            @click:append="formData.fields.passwordConfirm.reveal = !formData.fields.passwordConfirm.reveal"
-          ></q-input>
-          <q-chip
-            class="ma-4"
-            clickable
-            :ripple="false" 
-            @click="formData.passwordIsPin = !formData.passwordIsPin"
-          >
-            <template v-if="formData.passwordIsPin">Use password</template>
-            <template v-else>Use pin</template>
-          </q-chip>
+          <div class="text-h6">Terms Of Use</div>
         </q-card-section>
-        <q-separator />
-        <q-card-actions vertical>
-          <q-btn
-              @click="validate()"
-              v-on:keyup.enter="validate()" 
-              color="primary" 
-              label="Continue" />
+        <q-card-section class="q-pt-none">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Rerum repellendus sit voluptate voluptas eveniet porro.
+          Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus minima, porro labore.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Rerum repellendus sit voluptate voluptas eveniet porro.
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" v-close-popup />
         </q-card-actions>
       </q-card>
-      <q-card v-if="formData.step == 3" class="rounded-b-0">
-        <q-card-section>
-          <v-checkbox
-            v-model="formData.fields.terms.value"
-            :rules="[v => !!v || 'You must agree to continue!']"
-            label="Do you agree?"
-            required
-          ></v-checkbox>
-        </q-card-section>
-        <q-separator />
-        <q-card-actions vertical>
-          <q-btn
-              @click="validate()"
-              v-on:keyup.enter="validate()" 
-              color="primary" 
-              label="Sign Up" />
-        </q-card-actions>
-      </q-card>
-    </q-form>
-  </q-page>
+    </q-dialog>
+  </q-page-container>
 </template>
 
 <script setup >
-import  OTPInput from '../components/OTPInput'
 import { useUserStore } from '../stores/user'
-import { reactive, ref, watch, watchEffect } from 'vue'
-import { useRouter, useRoute } from "vue-router";
+import { reactive, ref, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 
 const { signUp, signIn } = useUserStore()
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 
-const form = ref(null);
+const termsDialog = ref(false)
+const form = ref(null)
 const formData = reactive({
-  step: route.params.step*1,
+  step: route.params.step * 1,
   passwordIsPin: true,
-  valid: true,
+  valid: false,
   fields: {
     password: {
       value: '',
       rules: [
         v => !!v || 'Required.',
-        v => (/^[0-9a-zA-Z]{4,}$/.test(v)) || 'Password must contain at least one digit, be of latin and min 8 characters',
+        v => (/^[0-9a-zA-Z]{4,}$/.test(v)) || 'Password must contain at least one digit, be of latin and min 8 characters'
       ],
       errors: '',
       reveal: false,
@@ -162,48 +227,54 @@ const formData = reactive({
       value: '',
       rules: [
         v => !!v || 'Required.',
-        v => (v === formData.fields.password.value) || 'Your passwords are different',
+        v => (v === formData.fields.password.value) || 'Your passwords are different'
       ],
       errors: '',
       reveal: false,
       required: true
     },
     terms: {
-      value: false
+      value: false,
+      rules: [
+        v => !!v
+      ]
     }
   }
 })
 
 const steps = [
   '', 'password', 'password', 'terms'
-];
+]
 
 const validate = async function () {
-  formData.valid = await form.value.validate();
-  if (formData.step == 3){
-    const user_auth = {
+  formData.valid = await form.value.validate()
+  if (formData.step === 4) {
+    const userAuth = {
       password: formData.fields.password.value
-    };
-    const authResponse = await signUp(user_auth);
-    console.log(authResponse);
-    if (authResponse.success) {
-      const logged = await signIn(authResponse.data);
-      if(logged.success) return router.push('/user-dashboard');
-    } else {
-      formData.fields[steps[formData.step]].errors = result.message;
     }
-    return;
+    const authResponse = await signUp(userAuth)
+    if (authResponse.success) {
+      const logged = await signIn(authResponse.data)
+      if (logged.success) return router.push('/user-dashboard')
+    } else {
+      formData.fields[steps[formData.step]].errors = authResponse.message
+    }
+    return
   }
   if (formData.valid) formData.step++
-  return router.push('/user-sign-up/step'+formData.step);
+  return router.push('/user-sign-up/step' + formData.step)
 }
 
+watch(formData.fields, async (currentValue, oldValue) => {
+  formData.valid = await form.value.validate()
+  console.log(form)
+})
 watch(() => route.params.step, (currentValue, oldValue) => {
-  if(!formData.valid && route.params.step > formData.step){
-    router.go(-1);
-    return false;
+  if (!formData.valid && route.params.step > formData.step) {
+    router.go(-1)
+    return false
   }
-  formData.step = route.params.step*1;
-});
+  formData.step = route.params.step * 1
+})
 
 </script>
