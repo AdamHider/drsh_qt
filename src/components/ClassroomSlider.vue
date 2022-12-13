@@ -43,7 +43,7 @@
     </q-btn>
 </template>
 <script setup>
-import { routerPush, router } from '../router/index'
+import router from '../router/index'
 import { ref } from 'vue';
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'

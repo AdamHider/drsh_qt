@@ -1,13 +1,11 @@
 <template>
   <AppBackground/>
   <q-layout view="lHh Lpr lFf">
-    <q-page-container>
-      <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
-      </router-view>
-    </q-page-container>
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
     <q-footer bordered class="bg-white text-primary ">
       <BottomBar v-if="bottomBar"/>
     </q-footer>

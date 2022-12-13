@@ -5,8 +5,8 @@
         text-color="white"
         @click="dialog = true"
     >
-        <q-avatar>
-          <q-img :src="`${CONFIG.API_HOST}${classroom.active?.introimage}`"/>
+        <q-avatar size="30px">
+          <img :src="`${CONFIG.API_HOST}${classroom.active?.introimage}`"/>
         </q-avatar>
         <div class="ellipsis">
             <b>{{classroom.active?.title}}</b>
@@ -15,19 +15,17 @@
     </q-chip>
     <q-dialog v-model="dialog" position="top">
       <q-card style="width: 350px">
-        <q-linear-progress :value="0.6" color="pink" />
-
-        <q-card-section class="row items-center no-wrap">
-          <div>
-            <div class="text-weight-bold">The Walker</div>
-            <div class="text-grey">Fitz & The Tantrums</div>
-          </div>
-
-          <q-space />
-
-          <q-btn flat round icon="fast_rewind" />
-          <q-btn flat round icon="pause" />
-          <q-btn flat round icon="fast_forward" />
+        <q-card-section class="q-pb-none">
+          <div class="text-h6">Choose your classroom</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none q-px-none">
+          <ClassroomSlider
+                  :slidesPerView=1.5
+                  :centerAligned="false"
+                  :withButton="false"
+                  slideHeight="100"
+                  :navigation="false"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
