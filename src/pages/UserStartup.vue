@@ -1,17 +1,19 @@
 <template>
-    <q-page class="flex justify-center items-center full-height full-width text-center">
+    <q-page class="flex justify-center content-center full-height full-width text-center">
       <PageHeader v-if="user.active?.data.id" title="User Dashboard" subtitle="Choose your classroom" text-color="white"/>
+      <Suspense v-if="user.active?.data.id">
         <ClassroomSlider 
             :slidesPerView="1.3"
             :centerAligned="true"
             :withButton="true"
             slideHeight="300"/>
-      <v-sheet color="transparent" class="text-center pa-4">
-        <div v-if="user.active?.data.id" class="d-flex flex-no-wrap justify-space-between align-center">
+      </Suspense>
+      <q-card class="transparent no-shadow full-width">
+        <q-card-section v-if="user.active?.data.id" class="d-flex flex-no-wrap justify-space-between align-center">
             <h4 class="text-white">{{user.active?.data.name}}</h4>
             <q-btn flat  @click="signOut()" color="white">Sign out</q-btn>
-        </div>
-        <div v-else>
+        </q-card-section>
+        <q-card-section v-else>
             <h4 class="text-h4 text-white" >
                 You are not logged in. You may just: 
             </h4>
@@ -20,10 +22,10 @@
                 <b class="text-white">or</b> 
                 <q-btn flat  color="white" to="/user-sign-up">sign up</q-btn> 
             </div>
-        </div>
-            <v-divider v-if="(Object.keys(user.list).length > 0)" color="white" class="mt-2 mb-2"></v-divider>
-            <q-btn v-if="(Object.keys(user.list).length > 0)" flat  color="white" rounded="lg" @click="dialog=true">Choose existing accounts</q-btn>
-        </v-sheet>
+        </q-card-section>
+        <v-divider v-if="(Object.keys(user.list).length > 0)" color="white" class="mt-2 mb-2"></v-divider>
+        <q-btn v-if="(Object.keys(user.list).length > 0)" flat  color="white" rounded="lg" @click="dialog=true">Choose existing accounts</q-btn>
+    </q-card>
 
         <q-dialog v-model="dialog">
             <q-card>

@@ -133,7 +133,7 @@
 </template>
 
 <script setup >
-import  OTPInput from 'components/OTPInput.vue'
+import  OTPInput from '../components/OTPInput'
 import { useUserStore } from '../stores/user'
 import { reactive, ref, watch, watchEffect } from 'vue'
 import { useRouter, useRoute } from "vue-router";

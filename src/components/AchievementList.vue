@@ -1,47 +1,25 @@
 <template>
-    <v-container fluid>
-        <v-row dense>
-            <v-col
-                v-for="(achievement, index) in achievements.list"
-                :key="index"
-                cols="12"
-                >
-                <v-card rounded="lg" density="comfortable">
-                    <div class="d-flex flex-no-wrap justify-left align-center">
-                        <v-avatar
-                            class="ma-3"
-                            size="100"
-                            rounded="0"
-                        >
-                            <v-img :src="`/src/${achievement.image}`"></v-img>
-                        </v-avatar>
-                        <v-container fluid>
-                            <v-card-title class="pa-0 text-subtitle-1">{{achievement.description.title.ru}}</v-card-title>
-                            <v-card-subtitle class="px-0 pt-2">{{achievement.description.description.ru}}</v-card-subtitle>
-                            <v-card-text class="pa-0">
-                                <v-sheet color="transparent">
-                                    <v-container class="pt-2 pb-2">
-                                        <v-row>
-                                            <v-col cols="6" class="pl-0 pr-0 text-left"></v-col>
-                                            <v-col cols="6" class="pl-0 pr-0 text-right">
-                                                <b>{{achievement.achievement_progress.current_progress}}/{{achievement.achievement_progress.target_progress}}</b>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                    <v-progress-linear 
-                                        color="primary"
-                                        :model-value="achievement.achievement_progress.percentage" 
-                                        :height="20" 
-                                        rounded="lg"
-                                    ></v-progress-linear>
-                                </v-sheet>
-                            </v-card-text>
-                        </v-container>
-                    </div>
-                </v-card>
-            </v-col>
-        </v-row>
-    </v-container>
+    <q-card  v-for="(achievement, index) in achievements.list" class="q-ma-sm">
+        <q-card-section >
+        <q-item class="q-pa-none bg-white">
+            <q-item-section avatar>
+                <q-avatar>
+                    <img :src="`${CONFIG.API_HOST}${achievement.image}`" />
+                </q-avatar>
+            </q-item-section>
+            <q-item-section class="text-left">
+                <div class="text-bold">{{achievement.description.title.ru}}</div>
+                <div class="text-grey">{{achievement.description.description.ru}}</div>
+                <q-linear-progress 
+                    color="primary"
+                    :value="achievement.achievement_progress.percentage" 
+                    size="20px" 
+                    rounded
+                ></q-linear-progress>
+            </q-item-section>
+        </q-item>
+        </q-card-section >
+    </q-card >
 </template>
 
 
@@ -53,10 +31,10 @@ import { onMounted, onActivated, onDeactivated} from "vue"
 const { achievements, getList } = useAchievement()
 
 
-onActivated(() => {
+//onActivated(() => {
     console.log('empty');
     getList();
-});
+//});
 
 
 

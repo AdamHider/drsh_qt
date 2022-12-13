@@ -90,7 +90,7 @@
 </template>
 
 <script setup >
-import  OTPInput from 'components/OTPInput.vue'
+import  OTPInput from '../components/OTPInput'
 import { useUserStore } from '../stores/user'
 import { reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from "vue-router";
