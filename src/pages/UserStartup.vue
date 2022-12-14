@@ -1,4 +1,10 @@
 <template>
+    <q-header class="transparent text-white">
+        <q-toolbar >
+        <q-btn v-if="user.active.data.id" flat round dense icon="arrow_back" v-on:click="$router.go(-1);"></q-btn>
+        <q-toolbar-title></q-toolbar-title>
+        </q-toolbar>
+    </q-header>
   <q-page-container>
     <q-page class="flex justify-center content-center full-height full-width text-center">
       <PageHeader v-if="user.active?.data.id" title="User Dashboard" subtitle="Choose your classroom" text-color="white"/>
@@ -29,9 +35,8 @@
         <v-divider v-if="(Object.keys(user.list).length > 0)" color="white" class="mt-2 mb-2"></v-divider>
         <q-btn v-if="(Object.keys(user.list).length > 0)" flat  color="white" rounded="lg" @click="dialog=true">Choose existing accounts</q-btn>
     </q-card>
-
         <q-dialog v-model="dialog">
-            <q-card>
+            <q-card style="min-width: 300px">
                 <q-card-section>
                     <div class="text-h6">Choose user</div>
                 </q-card-section>

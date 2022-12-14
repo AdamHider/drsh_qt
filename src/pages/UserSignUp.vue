@@ -20,7 +20,6 @@
             <div class="text-h6">It is too easy to be true</div>
             <div class="text-gray">Creating account is in a few seconds now</div>
           </q-card-section>
-          <q-separator />
           <q-card-actions vertical>
             <q-btn
                 @click="validate()"
@@ -169,6 +168,7 @@
           <q-card-actions vertical>
             <q-btn
                 :disabled="!formData.valid"
+                :loading="buttonLoading"
                 @click="validate()"
                 v-on:keyup.enter="validate()"
                 color="primary"
@@ -206,6 +206,7 @@ const { signUp, signIn } = useUserStore()
 const route = useRoute()
 const router = useRouter()
 
+const buttonLoading = ref(false)
 const termsDialog = ref(false)
 const form = ref(null)
 const formData = reactive({
@@ -243,18 +244,20 @@ const formData = reactive({
 })
 
 const steps = [
-  '', 'password', 'password', 'terms'
+  '', '', 'password', 'passwordConfirm', 'terms'
 ]
 
 const validate = async function () {
   formData.valid = await form.value.validate()
   if (formData.step === 4) {
+    buttonLoading.value = true
     const userAuth = {
       password: formData.fields.password.value
     }
     const authResponse = await signUp(userAuth)
     if (authResponse.success) {
       const logged = await signIn(authResponse.data)
+      buttonLoading.value = false
       if (logged.success) return router.push('/user-dashboard')
     } else {
       formData.fields[steps[formData.step]].errors = authResponse.message
@@ -267,14 +270,14 @@ const validate = async function () {
 
 watch(formData.fields, async (currentValue, oldValue) => {
   formData.valid = await form.value.validate()
-  console.log(form)
 })
-watch(() => route.params.step, (currentValue, oldValue) => {
+watch(() => route.params.step, async (currentValue, oldValue) => {
   if (!formData.valid && route.params.step > formData.step) {
     router.go(-1)
     return false
   }
   formData.step = route.params.step * 1
+  if(formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]].value == '') formData.valid = false
 })
 
 </script>

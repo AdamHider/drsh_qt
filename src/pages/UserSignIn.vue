@@ -5,97 +5,86 @@
       <q-toolbar-title></q-toolbar-title>
     </q-toolbar>
   </q-header>
-  <q-page class="flex justify-center items-end full-height full-width text-center">
-    <q-form 
-      ref="form"
-      v-model="formData.valid" 
-      @submit.prevent="validate()">
-      <q-stepper
-        class="full-width"
-        v-model="formData.step"
-        ref="stepper"
-        color="primary"
-        animated
-      >
-        <q-step
-          :name="1"
-          title="Select campaign settings"
-          icon="settings"
-          :done="done1"
-        >
-        <q-input
-          v-model="formData.fields.username.value"
-          :rules="formData.fields.username.rules"
-          :error-messages="formData.fields.username.errors"
-          label="Username or e-mail"
-          required
-        ></q-input>
-        <q-stepper-navigation>
-          <q-btn
-              @click="validate()"
-              v-on:keyup.enter="validate()" 
-              color="primary" 
-              label="Continue" />
-        </q-stepper-navigation>
-      </q-step>
-      <q-step
-          :name="2"
-          title="Select campaign settings"
-          icon="settings"
-          :done="done2"
-        >
-          <q-field v-if="formData.passwordIsPin"
-            v-model="formData.fields.password.value"
-            :rules="formData.fields.password.rules"
-          >
-            <OTPInput 
-              :fieldConfig="formData.fields.password"
-              :default="formData.fields.password.value"
-              @update:otp="formData.valid = $event.valid; formData.fields.password.value = $event.value;"
-              :digit-count="4"
-              label="Password"
-            >
-            </OTPInput>
-          </q-field>
-          <q-input v-else
-            v-model="formData.fields.password.value"
-            :append-icon="formData.fields.password.reveal ? 'mdi-eye' : 'mdi-eye-off'"
-            :rules="formData.fields.password.rules"
-            :error-messages="formData.fields.password.errors"
-            :type="formData.fields.password.reveal ? 'text' : 'password'"
-            counter
-            label="Password"
-            @click:append="formData.fields.password.reveal = !formData.fields.password.reveal"
-          ></q-input>
-          <v-chip
-            variant="text"
-            class="ma-4"
-            :ripple="false" 
-            @click="formData.passwordIsPin = !formData.passwordIsPin; formData.fields.password.value = '';"
-          >
-            <template v-if="formData.passwordIsPin">Use password</template>
-            <template v-else>Use pin</template>
-          </v-chip>
-          <q-stepper-navigation>
+  <q-page-container>
+    <q-page class="flex justify-center items-end full-height full-width text-center">
+      <q-form
+        ref="form"
+        v-model="formData.valid"
+        @submit.prevent="validate()"
+        autocomplete="off"
+        class="full-width">
+        <q-card class="rounded-b-0">
+          <q-card-section>
+            <div class="text-h6">Join us over again</div>
+            <div class="text-gray">Just enter your account data and get ready to lift off</div>
+          </q-card-section>
+          <q-card-section>  
+            <q-input
+              v-model="formData.fields.username.value"
+              :rules="formData.fields.username.rules"
+              :error-messages="formData.fields.username.errors"
+              label="Username or e-mail"
+              required
+            ></q-input>
+              <q-input v-if="formData.passwordIsPin"
+                :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
+                v-model="formData.fields.password.value"
+                :rules="formData.fields.password.rules"
+                :error-messages="formData.fields.password.errors"
+                :type="formData.fields.password.reveal ? 'text' : 'password'"
+                no-error-icon
+                label="Pin password"
+                mask="####"
+              />
+              <q-input v-else
+                v-model="formData.fields.password.value"
+                :rules="formData.fields.password.rules"
+                :error-messages="formData.fields.password.errors"
+                :type="formData.fields.password.reveal ? 'text' : 'password'"
+                label="Password"
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="formData.fields.password.reveal ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="formData.fields.password.reveal = !formData.fields.password.reveal"
+                  />
+                </template>
+              </q-input>
+              <q-btn-toggle
+                  v-model="formData.passwordIsPin"
+                  spread
+                  no-caps
+                  :options="[
+                    {label: 'Use pin', value: true},
+                    {label: 'Use password', value: false}
+                  ]"
+                />
+          </q-card-section>
+          <q-separator />
+          <q-card-actions vertical>
             <q-btn
+                :disabled="!formData.valid"
+                :loading="buttonLoading"
                 @click="validate()"
-                v-on:keyup.enter="validate()" 
-                color="primary" 
-                label="Sign In" />
-          </q-stepper-navigation>
-        </q-step>
-      </q-stepper>
-    </q-form>
-  </q-page>
+                v-on:keyup.enter="validate()"
+                color="primary"
+                label="Sign in" />
+          </q-card-actions>
+        </q-card>
+      </q-form>
+    </q-page>
+  </q-page-container>
 </template>
 
 <script setup >
-import  OTPInput from '../components/OTPInput'
+import  OTPInput from '../components/OTPInput.vue'
 import { useUserStore } from '../stores/user'
 import { reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from "vue-router";
 
 const form = ref(null);
+const buttonLoading = ref(false)
 const route = useRoute();
 const router = useRouter();
 
@@ -124,30 +113,16 @@ const formData = reactive({
 
 const { signIn } = useUserStore()
 
-const steps = [
-  '', 'password', 'password', 'terms'
-];
-
 const validate = async function () {
   formData.valid = await form.value.validate();
-  if (formData.step == 2){
-    const user_auth = {
-      username: formData.fields.username.value,
-      password: formData.fields.password.value
-    };
-    const logged = await signIn(user_auth);
-    if(logged.success) return router.push('/user-dashboard');
-    return;
-  }
-  if (formData.valid) formData.step++
-  return router.push('/user-sign-in/step'+formData.step);
+  buttonLoading.value = true;
+  const user_auth = {
+    username: formData.fields.username.value,
+    password: formData.fields.password.value
+  };
+  const logged = await signIn(user_auth);
+  buttonLoading.value = false;
+  if(logged.success) return router.push('/user-dashboard');
+  return;
 }
-
-watch(() => route.params.step, (currentValue, oldValue) => {
-  if(!formData.valid && route.params.step > formData.step){
-    router.go(-1);
-    return false;
-  }
-  formData.step = route.params.step*1;
-});
 </script>

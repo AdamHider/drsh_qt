@@ -35,7 +35,7 @@
         </q-card>
       </swiper-slide>
     </swiper>
-    <q-btn v-if="props.withButton" rounded="lg" @click="select()" :disabled="(activeItem.code == user.active.authorization.classroom_code)">
+    <q-btn v-if="props.withButton" color="primary" rounded="lg" @click="select()" :disabled="(activeItem.code == user.active.authorization.classroom_code)">
       <template v-if="(activeItem.id !== 0)">
         Enter {{activeItem.title}}
       </template>

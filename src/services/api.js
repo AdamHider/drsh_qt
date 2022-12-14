@@ -94,6 +94,9 @@ export class Api extends ApiService{
         },
         getList: (params) =>  {
             return this.post('classroom', 'getList', params)
+        },
+        checkIfExists: (params) =>  {
+            return this.post('classroom', 'checkIfExists', params)
         }
     }
 }

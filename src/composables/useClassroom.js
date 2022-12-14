@@ -25,10 +25,19 @@ export function useClassroom() {
             throw new Error(`classroom are null: `+e); 
         }      
     }
+    async function checkIfExists (code) {
+        try{
+            return api.classroom.checkIfExists({code: code});
+        } catch(e){
+            throw new Error(`classroom are null: `+e); 
+        }      
+    }
+    
     
     return {
         getActive,
         getList,
+        checkIfExists,
         classroom
     }
 }
