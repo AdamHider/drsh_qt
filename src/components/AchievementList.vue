@@ -38,12 +38,10 @@
 <script setup>
 import { useAchievement } from '../composables/useAchievement'
 import { CONFIG } from '../config.js'
-import { onMounted, onActivated, onDeactivated } from 'vue'
 
 const { achievements, getList } = useAchievement()
 
 const onLoad = async function (index, done) {
-  console.log(index)
   const isDone = await getList(index)
   done(isDone)
 }

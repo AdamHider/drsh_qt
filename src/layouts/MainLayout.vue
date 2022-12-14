@@ -5,7 +5,7 @@
       <q-toolbar >
         <ClassroomToggle/>
         <q-toolbar-title></q-toolbar-title>
-        <q-btn flat round dense icon="emoji_events" class="q-mr-sm" to="/user-achievements"/>
+        <q-btn flat round dense icon="emoji_events" class="q-mr-sm" to="/user/achievements"/>
         <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/edit/settings"/>
       </q-toolbar>
     </q-header>
@@ -26,22 +26,21 @@
 import { ref, watch } from 'vue'
 import AppBackground from 'components/AppBackground.vue'
 import BottomBar from 'components/BottomBar.vue'
-import { useRoute } from "vue-router";
+import { useRoute } from 'vue-router'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 
-const route = useRoute();
+const route = useRoute()
 
-const bottomBar = ref(true);
-  if(route.meta.noBottomBar){
-    bottomBar.value = false;
-  }
+const bottomBar = ref(true)
+if (route.meta.noBottomBar) {
+  bottomBar.value = false
+}
 
 watch(route, (currentValue, oldValue) => {
-  console.log(currentValue.meta);
-  if(currentValue.meta.noBottomBar){
-    bottomBar.value = false;
+  if (currentValue.meta.noBottomBar) {
+    bottomBar.value = false
   } else {
-    bottomBar.value = true;
+    bottomBar.value = true
   }
-});
+})
 </script>

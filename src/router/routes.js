@@ -6,69 +6,25 @@ const routes = [
     redirect: '/home',
     children: [
       {
-        path: '/home',
+        path: 'home',
         component: () => import('pages/Home.vue'),
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true }
       },
       {
-        path: '/lessons-:category_id',
+        path: 'lessons-:category_id',
         component: () => import('pages/Lessons.vue'),
         meta: { requiresAuth: true }
       },
       {
-        path: '/classroom',
+        path: 'classroom',
         component: () => import('pages/Classroom.vue'),
         meta: { requiresAuth: true }
       },
       {
-        path: '/classroom-join',
-        redirect: '/classroom-join/code=0'
-      },
-      {
-        path: '/classroom-join/code=:code',
-        component: () => import('pages/ClassroomJoin.vue'),
-        meta: { noBottomBar: true }
-      },
-      {
-        path: '/notifications',
-        component: () => import('pages/Notifications.vue'),
-        meta: { requiresAuth: true }
-      },
-      {
-        path: 'user-dashboard',
+        path: 'user',
         component: () => import('pages/UserDashboard.vue'),
         meta: { requiresAuth: true }
-      },
-      {
-        path: '/user-startup',
-        component: () => import('pages/UserStartup.vue'),
-        meta: { noBottomBar: true }
-      },
-      {
-        path: '/user-sign-in',
-        component: () => import('pages/UserSignIn.vue'),
-        meta: { noBottomBar: true }
-      },
-      {
-        path: '/user-sign-up',
-        redirect: '/user-sign-up/step1'
-      },
-      {
-        path: '/user-sign-up/step:step',
-        name: 'user-sign-up',
-        component: () => import('pages/UserSignUp.vue'),
-        meta: { noBottomBar: true }
-      },
-      {
-        path: '/user-activate-:activation_code',
-        component: () => import('pages/UserActivate.vue'),
-        meta: { noBottomBar: true }
-      },
-      {
-        path: 'user-achievements',
-        component: () => import('pages/UserAchievements.vue'),
-        meta: { noBottomBar: true }
-      },
+      }
     ]
   },
   {
@@ -90,17 +46,16 @@ const routes = [
         meta: { noBottomBar: true }
       },
       {
-        path: 'user-sign-in',
+        path: 'sign-in',
         component: () => import('pages/UserSignIn.vue'),
         meta: { noBottomBar: true }
       },
       {
-        path: 'user-sign-up',
-        redirect: 'user-sign-up/step1'
+        path: 'sign-up',
+        redirect: 'authorization/sign-up/step1'
       },
       {
-        path: 'user-sign-up/step:step',
-        name: 'user-sign-up',
+        path: 'sign-up/step:step',
         component: () => import('pages/UserSignUp.vue'),
         meta: { noBottomBar: true }
       },
@@ -108,12 +63,12 @@ const routes = [
         path: '/user-activate-:activation_code',
         component: () => import('pages/UserActivate.vue'),
         meta: { noBottomBar: true }
-      },
+      }
     ]
   },
   {
     path: '/edit',
-    component: () => import('layouts/EditLayout.vue'),
+    component: () => import('src/layouts/EditLayout.vue'),
     children: [
       {
         path: 'user',
@@ -129,7 +84,22 @@ const routes = [
         path: 'settings',
         component: () => import('pages/Settings.vue'),
         meta: { noBottomBar: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: () => import('layouts/BasicLayout.vue'),
+    children: [
+      {
+        path: 'notifications',
+        component: () => import('pages/Notifications.vue'),
+        meta: { requiresAuth: true }
       },
+      {
+        path: 'user/achievements',
+        component: () => import('pages/UserAchievements.vue')
+      }
     ]
   },
 

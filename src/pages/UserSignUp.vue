@@ -1,13 +1,6 @@
 <style>
 </style>
 <template>
-  <q-header class="transparent text-white">
-    <q-toolbar >
-      <q-btn flat round dense icon="arrow_back" v-on:click="$router.go(-1);"></q-btn>
-      <q-toolbar-title></q-toolbar-title>
-    </q-toolbar>
-  </q-header>
-  <q-page-container>
     <q-page class="flex justify-center items-end full-height full-width text-center">
       <q-form
         ref="form"
@@ -18,7 +11,7 @@
         <q-card v-if="formData.step == 1" class="rounded-b-0">
           <q-card-section>
             <div class="text-h6">It is too easy to be true</div>
-            <div class="text-gray">Creating account is in a few seconds now</div>
+            <div class="text-grey">Creating account is in a few seconds now</div>
           </q-card-section>
           <q-card-actions vertical>
             <q-btn
@@ -31,7 +24,7 @@
         <q-card v-if="formData.step == 2" class="rounded-b-0">
           <q-card-section>
             <div class="text-h6">Enter password</div>
-            <div class="text-gray">It may be a pin or a standart password</div>
+            <div class="text-grey">It may be a pin or a standart password</div>
           </q-card-section>
           <q-card-section>
               <q-input v-if="formData.passwordIsPin"
@@ -82,7 +75,7 @@
         <q-card v-if="formData.step == 3" class="rounded-b-0">
           <q-card-section>
             <div class="text-h6">Confirm password</div>
-            <div class="text-gray">It may be a pin or a standart password</div>
+            <div class="text-grey">It may be a pin or a standart password</div>
           </q-card-section>
           <q-card-section>
             <q-input v-if="formData.passwordIsPin"
@@ -132,7 +125,7 @@
         <q-card v-if="formData.step == 4" class="rounded-b-0">
           <q-card-section>
             <div class="text-h6">Do you agree with our Terms?</div>
-            <div class="text-gray">It would be very nice, maybe</div>
+            <div class="text-grey">It would be very nice, maybe</div>
           </q-card-section>
           <q-card-section>
             <q-item class="text-left" tag="label">
@@ -176,7 +169,6 @@
           </q-card-actions>
         </q-card>
       </q-form>
-    </q-page>
     <q-dialog v-model="termsDialog">
       <q-card>
         <q-card-section>
@@ -194,7 +186,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </q-page-container>
+    </q-page>
 </template>
 
 <script setup >
@@ -265,7 +257,7 @@ const validate = async function () {
     return
   }
   if (formData.valid) formData.step++
-  return router.push('/user-sign-up/step' + formData.step)
+  return router.push('/authorization/sign-up/step' + formData.step)
 }
 
 watch(formData.fields, async (currentValue, oldValue) => {
@@ -277,7 +269,7 @@ watch(() => route.params.step, async (currentValue, oldValue) => {
     return false
   }
   formData.step = route.params.step * 1
-  if(formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]].value == '') formData.valid = false
+  if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]].value === '') formData.valid = false
 })
 
 </script>

@@ -26,7 +26,6 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE)
   })
-  
 
   Router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -34,7 +33,7 @@ export default route(function (/* { store, ssrContext } */) {
       // if not, redirect to login page.
       const { user } = useUserStore()
       if (!user.active.data.id) {
-        Router.push({ path: "/user-startup"})
+        Router.push({ path: '/authorization' })
       } else {
         next() // go to wherever I'm going
       }
@@ -42,9 +41,6 @@ export default route(function (/* { store, ssrContext } */) {
       next() // does not require auth, make sure to always call next()!
     }
   })
-  
 
   return Router
 })
-
-
