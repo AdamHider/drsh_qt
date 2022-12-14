@@ -2,23 +2,19 @@
   <AppBackground/>
   <q-layout view="hHh LpR fFf">
     <q-header class="transparent text-white">
-      <q-toolbar >
-        <ClassroomToggle/>
+        <q-toolbar >
+        <q-btn flat round dense icon="arrow_back" v-on:click="$router.go(-1);"></q-btn>
         <q-toolbar-title></q-toolbar-title>
-        <q-btn flat round dense icon="emoji_events" class="q-mr-sm" to="/user-achievements"/>
-        <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/edit/settings"/>
-      </q-toolbar>
+        </q-toolbar>
     </q-header>
     <q-footer bordered class="bg-white text-primary ">
       <BottomBar v-if="bottomBar"/>
     </q-footer>
-    <q-page-container>
-      <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
+    <q-page-container >
+      <router-view v-slot="{ Component }" >
+          <component :is="Component" ref="page"/>
       </router-view>
-    </q-page-container>
+    </q-page-container >
   </q-layout>
 </template>
 
@@ -27,14 +23,14 @@ import { ref, watch } from 'vue'
 import AppBackground from 'components/AppBackground.vue'
 import BottomBar from 'components/BottomBar.vue'
 import { useRoute } from "vue-router";
-import ClassroomToggle from '../components/ClassroomToggle.vue'
 
 const route = useRoute();
-
+console.log(route);
 const bottomBar = ref(true);
-  if(route.meta.noBottomBar){
-    bottomBar.value = false;
-  }
+if(route.meta.noBottomBar){
+  bottomBar.value = false;
+}
+//const isRootPage = 
 
 watch(route, (currentValue, oldValue) => {
   console.log(currentValue.meta);

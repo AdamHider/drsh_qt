@@ -28,9 +28,11 @@
       </swiper-slide>
       <swiper-slide :class="'text-center'" @click="select(false)">
         <q-card class="q-ma-md">
-            <q-img class="align-center pa-3"
+            <q-img 
               :style="`height: ${props.slideHeight}px;`">
-              <q-icon name="plus"></q-icon>
+              <div class="absolute-full text-center text-white flex flex-center">
+                <q-icon size="30px" name="add"></q-icon>
+              </div>
             </q-img>
         </q-card>
       </swiper-slide>

@@ -53,7 +53,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     }
 
     async function autoSignIn () {
-      const userResponse = await api.user.get();
+      const userResponse = await api.user.get({code: user.active.authorization?.classroom_code});
       if(user.active.data.id && user.active.data.id != userResponse.data.id){
         const result = await signIn(user.active.authorization);
         if(!result.success){

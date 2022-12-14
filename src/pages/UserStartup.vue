@@ -1,11 +1,4 @@
 <template>
-    <q-header class="transparent text-white">
-        <q-toolbar >
-        <q-btn v-if="user.active.data.id" flat round dense icon="arrow_back" v-on:click="$router.go(-1);"></q-btn>
-        <q-toolbar-title></q-toolbar-title>
-        </q-toolbar>
-    </q-header>
-  <q-page-container>
     <q-page class="flex justify-center content-center full-height full-width text-center">
       <PageHeader v-if="user.active?.data.id" title="User Dashboard" subtitle="Choose your classroom" text-color="white"/>
       <Suspense v-if="user.active?.data.id">
@@ -67,7 +60,6 @@
             </q-card>
         </q-dialog>
     </q-page>
-  </q-page-container>
 </template>
 
 <script setup>
