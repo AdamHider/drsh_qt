@@ -10,7 +10,10 @@
             <q-item class="q-pa-none bg-white">
                 <q-item-section avatar>
                     <q-avatar size="80px">
-                        <img :src="`${CONFIG.API_HOST}/images/dershane/${achievement.image}`" />
+                        <q-img
+                          :src="`${CONFIG.API_HOST}/images/dershane/${achievement.image}`"
+                          loading="lazy"
+                          spinner-color="white"/>
                     </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left">

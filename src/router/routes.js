@@ -33,7 +33,7 @@ const routes = [
   },
   {
     path: '/',
-    component: () => import('layouts/AuthorizationLayout.vue'),
+    component: AuthorizationLayout,
     children: [
       {
         path: 'authorization',
@@ -41,11 +41,11 @@ const routes = [
         meta: { noBottomBar: true }
       },
       {
-        path: 'authorization/classroom-join',
-        redirect: 'classroom-join/code=0'
+        path: 'classroom/join',
+        redirect: 'classroom/join/code=0'
       },
       {
-        path: 'authorization/classroom-join/code=:code',
+        path: 'classroom/join/code=:code',
         component: () => import('pages/ClassroomJoin.vue'),
         meta: { noBottomBar: true }
       },
@@ -60,40 +60,35 @@ const routes = [
       },
       {
         path: 'authorization/sign-up/step:step',
-        component: () => import('pages/UserSignUp.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('pages/UserSignUp.vue')
       },
       {
         path: '/authorization/user-activate-:activation_code',
-        component: () => import('pages/UserActivate.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('pages/UserActivate.vue')
       }
     ]
   },
   {
     path: '/',
-    component: () => import('src/layouts/EditLayout.vue'),
+    component: EditLayout,
     children: [
       {
         path: 'user/edit',
-        component: () => import('pages/UserEdit.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('pages/UserEdit.vue')
       },
       {
-        path: 'user-password',
-        component: () => import('pages/UserPasswordEdit.vue'),
-        meta: { noBottomBar: true }
+        path: 'user/edit/password',
+        component: () => import('src/pages/UserEditPassword.vue')
       },
       {
         path: 'user/settings',
-        component: () => import('pages/Settings.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('src/pages/UserSettings.vue.vue')
       }
     ]
   },
   {
     path: '/',
-    component: () => import('layouts/BasicLayout.vue'),
+    component: BasicLayout,
     children: [
       {
         path: 'notifications',

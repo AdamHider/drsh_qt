@@ -108,14 +108,12 @@
                 </div>
             </div>
             <q-btn
-                block
                 class="full-width"
                 color="primary"
                 @click="exitUser(); "
                 append-icon="mdi-logout-variant"
-            >
-                <label>Sign out</label>
-            </q-btn>
+                label="Sign out"
+            />
         </q-card>
     </q-page>
 </template>
@@ -125,13 +123,10 @@ import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
 import { useRouter } from 'vue-router'
 import { CONFIG } from '../config.js'
-import { ref } from 'vue'
 
 const { user, signOut } = useUserStore()
 const { classroom } = useClassroom()
 const router = useRouter()
-
-const sheet = ref(false)
 
 const exitUser = async function () {
   await signOut()

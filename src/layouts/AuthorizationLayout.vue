@@ -8,8 +8,10 @@
         </q-toolbar>
     </q-header>
     <q-page-container >
-      <router-view v-slot="{ Component }" >
-          <component :is="Component" ref="page"/>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
       </router-view>
     </q-page-container >
   </q-layout>
@@ -21,7 +23,9 @@ import AppBackground from 'components/AppBackground.vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const isRootPage = ref(true)
+const isRootPage = ref(false)
+
+isRootPage.value = (route.fullPath.split('/').length === 2)
 
 watch(route, (currentValue, oldValue) => {
   isRootPage.value = (currentValue.fullPath.split('/').length === 2)

@@ -7,17 +7,17 @@
 import { routerPush } from '../router/index'
 import { useUserStore } from '../stores/user'
 import { reactive, ref } from 'vue'
-import { useRoute } from "vue-router";
+import { useRoute } from 'vue-router'
 
 const { activate } = useUserStore()
 const errors = ref()
 
-const route = useRoute();
-const activation_code = route.params.activation_code;
+const route = useRoute()
+const activation_code = route.params.activation_code
 
-if( activation_code && activation_code.length > 30 ){
+if (activation_code && activation_code.length > 30) {
   (async () => {
-    const activated = await activate({activation: activation_code});
+    const activated = await activate({ activation: activation_code })
     if (activated) {
       routerPush('/student-startup')
     } else {
@@ -27,6 +27,5 @@ if( activation_code && activation_code.length > 30 ){
 } else {
   routerPush('/student-startup')
 }
-
 
 </script>

@@ -10,7 +10,7 @@
       </q-toolbar>
     </q-header>
     <q-footer bordered class="bg-white text-primary ">
-      <BottomBar v-if="bottomBar"/>
+      <BottomBar/>
     </q-footer>
     <q-page-container>
       <router-view v-slot="{ Component }">

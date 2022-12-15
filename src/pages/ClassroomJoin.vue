@@ -1,12 +1,5 @@
 <template>
-  <q-header class="transparent text-white">
-      <q-toolbar >
-      <q-btn flat round dense icon="arrow_back" v-on:click="$router.go(-1);"></q-btn>
-      <q-toolbar-title></q-toolbar-title>
-      </q-toolbar>
-  </q-header>
-  <q-page-container>
-    <q-page class="flex justify-center items-end full-height full-width text-center">
+  <q-page class="flex justify-center items-end full-height full-width text-center">
       <q-form
         ref="form"
         v-model="formData.valid"
@@ -42,19 +35,17 @@
         </q-card>
       </q-form>
     </q-page>
-  </q-page-container>
 </template>
 
 <script setup >
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
-import { useRoute } from "vue-router";
+
 import { useClassroom } from '../composables/useClassroom'
 import { useUserStore } from '../stores/user'
 
-
-const form = ref(null);
-const buttonLoading = ref(false)
+const form = ref(null)
+const loading = ref(false)
 const router = useRouter()
 const { checkIfExists } = useClassroom()
 const { user, signIn, signOut } = useUserStore()
@@ -66,56 +57,52 @@ const formData = reactive({
       value: '',
       rules: [
         v => !!v || 'Classroom code is required',
-        v => (v && v.length > 5) || 'Classroom code must be valid',
+        v => (v && v.length > 5) || 'Classroom code must be valid'
       ],
-      errors: '',
+      errors: ''
     }
   }
 })
 
-
-
 const validate = async function () {
-  const valid = await form.value.validate();
-  buttonLoading.value = true
-  if(valid){
+  const valid = await form.value.validate()
+  loading.value = true
+  if (valid) {
     const auth = {
       username: user.active.authorization.username,
       password: user.active.authorization.password,
       classroom_code: formData.fields.classroom_code.value
-    };
-    await signOut();
-    const isset = await signIn(auth);
-    buttonLoading.value = false
-    if(isset) return router.push('/user-startup');
-    formData.fields.classroom_code.errors = 'Error';
-  }  
+    }
+    await signOut()
+    const isset = await signIn(auth)
+    loading.value = false
+    if (isset) return router.push('/user-startup')
+    formData.fields.classroom_code.errors = 'Error'
+  }
 }
 
-
-
-const route = useRoute();
-if(route.params.code != 0){
-  formData.fields.classroom_code.value = route.params.code;
+const route = useRoute()
+if (route.params.code != 0) {
+  formData.fields.classroom_code.value = route.params.code
 }
 
 onMounted(() => {
-  if(route.params.code != 0){
-    validate();
+  if (route.params.code != 0) {
+    validate()
   }
 })
 
 watch(() => formData.fields.classroom_code.value, async (currentValue, oldValue) => {
-  if(currentValue.length > 5){
-    const checkResponse = await checkIfExists(currentValue);
-    if(!checkResponse.success){
-      formData.valid = false;
-      formData.fields.classroom_code.errors = checkResponse.message;
-      return;
+  if (currentValue.length > 5) {
+    const checkResponse = await checkIfExists(currentValue)
+    if (!checkResponse.success) {
+      formData.valid = false
+      formData.fields.classroom_code.errors = checkResponse.message
+      return
     }
   }
-  formData.fields.classroom_code.errors = '';
-  formData.valid = true;
+  formData.fields.classroom_code.errors = ''
+  formData.valid = true
 })
 
 </script>

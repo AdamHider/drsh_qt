@@ -11,8 +11,10 @@
       <BottomBar/>
     </q-footer>
     <q-page-container >
-      <router-view v-slot="{ Component }" >
-          <component :is="Component" ref="page"/>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
       </router-view>
     </q-page-container >
   </q-layout>

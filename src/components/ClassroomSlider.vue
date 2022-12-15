@@ -28,7 +28,7 @@
       </swiper-slide>
       <swiper-slide :class="'text-center'" @click="select(false)">
         <q-card class="q-ma-md">
-            <q-img 
+            <q-img
               :style="`height: ${props.slideHeight}px;`">
               <div class="absolute-full text-center text-white flex flex-center">
                 <q-icon size="30px" name="add"></q-icon>
@@ -90,7 +90,7 @@ const select = async (index) => {
     activeItem.value = classroom.list[index]
     // classroomSlider.slideTo(index);
   } else {
-    return router.push('/classroom-join')
+    return router.push('/classroom/join')
   }
   if (activeItem.value.code === user.active.authorization.classroom_code) {
     return false
@@ -101,7 +101,7 @@ const select = async (index) => {
     classroom_code: activeItem.value.code
   }
   await signIn(auth)
-  return router.push('/user-dashboard')
+  return router.push('/user')
 }
 
 const onSwiper = (swiper) => {

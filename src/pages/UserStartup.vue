@@ -76,7 +76,7 @@ const switchUser = async (userItem, key) => {
   await signIn(userItem.authorization, userItem.activeClassroom)
   btnLoading.value[key] = false
   dialog.value = false
-  return router.push('/user-dashboard')
+  return router.push('/user')
 }
 
 const { signOut, signIn, user } = useUserStore()
