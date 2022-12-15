@@ -55,7 +55,7 @@
             </q-card-section>
             <q-btn
                 block
-                to="edit/user"
+                to="/user/edit"
                 class="full-width"
                 append-icon="mdi-account-edit"
             >

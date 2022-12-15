@@ -11,12 +11,10 @@ const routes = reactive({
 
 export function useNavigationHistory () {
   const route = useRoute()
-  console.log(route)
-  watch(() => route.fullPath, (currentValue, oldValue) => {
-    const currentRoot = (currentValue.split('/')[1])
-    routes[currentRoot] = currentValue
-  })
-
+  /*
+  const currentRoot = (route.fullPath.split('/')[1])
+  routes[currentRoot] = route.fullPath
+*/
   return {
     routes
   }

@@ -12,6 +12,16 @@ import { useUserStore } from '../stores/user'
  * with the Router instance.
  */
 
+window.popStateDetected = false
+window.addEventListener('popstate', () => {
+  window.popStateDetected = true
+})
+
+const routerHistory = {
+  stack: []
+}
+
+
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
@@ -28,18 +38,39 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-      // this route requires auth, check if logged in
-      // if not, redirect to login page.
-      const { user } = useUserStore()
-      if (!user.active.data.id) {
-        Router.push({ path: '/authorization' })
+    /*
+    const IsItABackButton = window.popStateDetected
+    window.popStateDetected = false
+    const isRoot = from.fullPath.split('/').length == 2;
+
+    if(isRoot && to.fullPath == routerHistory.stack[1] && !IsItABackButton){
+      routerHistory.stack.shift();
+      Router.go(-1);
+    } 
+
+      if(!isRoot && IsItABackButton){
+        routerHistory.stack[0] = to.fullPath;
+        next({ path: '/'+from.fullPath.split('/')[1] });
+      } 
+      */
+      
+      if (to.matched.some(record => record.meta.requiresAuth)) {
+        // this route requires auth, check if logged in
+        // if not, redirect to login page.
+        const { user } = useUserStore()
+        if (!user.active.data.id) {
+          next({ path: '/authorization' })
+        } else {
+          next(); // go to wherever I'm going
+        }
       } else {
-        next() // go to wherever I'm going
+        next(); // does not require auth, make sure to always call next()!
       }
-    } else {
-      next() // does not require auth, make sure to always call next()!
-    }
+      /*
+      routerHistory.stack.unshift(to.fullPath);
+      if(routerHistory.stack.length > 10){
+        routerHistory.stack.pop();
+      }*/
   })
 
   return Router

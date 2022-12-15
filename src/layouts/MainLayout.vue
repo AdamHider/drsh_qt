@@ -6,7 +6,7 @@
         <ClassroomToggle/>
         <q-toolbar-title></q-toolbar-title>
         <q-btn flat round dense icon="emoji_events" class="q-mr-sm" to="/user/achievements"/>
-        <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/edit/settings"/>
+        <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
       </q-toolbar>
     </q-header>
     <q-footer bordered class="bg-white text-primary ">

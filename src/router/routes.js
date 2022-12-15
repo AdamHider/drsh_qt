@@ -1,8 +1,12 @@
+import MainLayout from 'layouts/MainLayout.vue'
+import AuthorizationLayout from 'layouts/AuthorizationLayout.vue'
+import EditLayout from 'layouts/EditLayout.vue'
+import BasicLayout from 'layouts/BasicLayout.vue'
 
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => MainLayout,
     redirect: '/home',
     children: [
       {
@@ -28,50 +32,50 @@ const routes = [
     ]
   },
   {
-    path: '/authorization',
+    path: '/',
     component: () => import('layouts/AuthorizationLayout.vue'),
     children: [
       {
-        path: '/authorization',
+        path: 'authorization',
         component: () => import('pages/UserStartup.vue'),
         meta: { noBottomBar: true }
       },
       {
-        path: 'classroom-join',
+        path: 'authorization/classroom-join',
         redirect: 'classroom-join/code=0'
       },
       {
-        path: 'classroom-join/code=:code',
+        path: 'authorization/classroom-join/code=:code',
         component: () => import('pages/ClassroomJoin.vue'),
         meta: { noBottomBar: true }
       },
       {
-        path: 'sign-in',
+        path: 'authorization/sign-in',
         component: () => import('pages/UserSignIn.vue'),
         meta: { noBottomBar: true }
       },
       {
-        path: 'sign-up',
+        path: 'authorization/sign-up',
         redirect: 'authorization/sign-up/step1'
       },
       {
-        path: 'sign-up/step:step',
+        path: 'authorization/sign-up/step:step',
         component: () => import('pages/UserSignUp.vue'),
         meta: { noBottomBar: true }
       },
       {
-        path: '/user-activate-:activation_code',
+        path: '/authorization/user-activate-:activation_code',
         component: () => import('pages/UserActivate.vue'),
         meta: { noBottomBar: true }
       }
     ]
   },
   {
-    path: '/edit',
+    path: '/',
     component: () => import('src/layouts/EditLayout.vue'),
     children: [
       {
-        path: 'user',
+        path: 'user/edit',
         component: () => import('pages/UserEdit.vue'),
         meta: { noBottomBar: true }
       },
@@ -81,7 +85,7 @@ const routes = [
         meta: { noBottomBar: true }
       },
       {
-        path: 'settings',
+        path: 'user/settings',
         component: () => import('pages/Settings.vue'),
         meta: { noBottomBar: true }
       }
