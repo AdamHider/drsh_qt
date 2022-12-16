@@ -78,11 +78,11 @@ const routes = [
       },
       {
         path: 'user/edit/password',
-        component: () => import('src/pages/UserEditPassword.vue')
+        component: () => import('pages/UserEditPassword.vue')
       },
       {
         path: 'user/settings',
-        component: () => import('src/pages/UserSettings.vue.vue')
+        component: () => import('pages/UserSettings.vue')
       }
     ]
   },
@@ -93,11 +93,18 @@ const routes = [
       {
         path: 'notifications',
         component: () => import('pages/Notifications.vue'),
-        meta: { requiresAuth: true }
+        meta: { 
+          pageTitle: 'Notifications',
+          requiresAuth: true
+        }
       },
       {
         path: 'user/achievements',
-        component: () => import('pages/UserAchievements.vue')
+        component: () => import('pages/UserAchievements.vue'),
+        meta: { 
+          pageTitle: 'Achievements',
+          requiresAuth: true
+        }
       }
     ]
   },

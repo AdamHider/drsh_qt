@@ -19,10 +19,20 @@
               >
               <div :class="`absolute-${captionMode} text-center text-white flex flex-center`">
                 <div>
-                  <div class="text-h6">{{classroomItem.title}}</div>
+                  <div class="text-bold">{{classroomItem.title}}</div>
                   <div class="subtitle">{{classroomItem.code}}</div>
                 </div>
               </div>
+              <q-icon v-if="classroomItem.code == user.active.authorization.classroom_code" 
+                class="absolute-bottom-right all-pointer-events" 
+                size="32px" 
+                name="check" 
+                color="white" 
+                style="bottom: 8px; right: 8px">
+                <q-tooltip>
+                  Tooltip
+                </q-tooltip>
+              </q-icon>
             </q-img>
         </q-card>
       </swiper-slide>
@@ -70,7 +80,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const { user, signIn } = useUserStore()
+const { user, signIn, save } = useUserStore()
 const { classroom, getList } = useClassroom()
 
 if (user.active.data.id) {
@@ -95,17 +105,14 @@ const select = async (index) => {
   if (activeItem.value.code === user.active.authorization.classroom_code) {
     return false
   }
-  const auth = {
-    username: user.active.authorization.username,
-    password: user.active.authorization.password,
-    classroom_code: activeItem.value.code
+  const fields = {
+      active_classroom_code: activeItem.value.code
   }
-  await signIn(auth)
+  await save({fields: fields});
   return router.push('/user')
 }
 
 const onSwiper = (swiper) => {
-  console.log('swiper')
   if (classroom.list[swiper.activeIndex]) {
     activeItem.value = classroom.list[swiper.activeIndex]
   } else {

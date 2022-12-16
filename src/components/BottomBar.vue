@@ -1,7 +1,7 @@
 <template>
     <q-tabs>
         <q-route-tab
-            icon="home"
+            icon="rocket_launch"
             :to="routes.home"
             exact
         />

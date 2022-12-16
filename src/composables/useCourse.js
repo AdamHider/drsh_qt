@@ -1,13 +1,14 @@
 import { reactive } from 'vue'
-import { api } from '../services/'
-const courses = reactive({
+import { api } from '../services'
+const course = reactive({
     list: []
 });
 
-export function useCourses() {
+export function useCourse() {
     async function getList () {
         try{
-            courses.list = await api.courses.getList();
+            const courseResponse = await api.course.getList();
+            course.list = courseResponse.data;
         } catch(e){
             console.log(e)
             throw new Error(`Courses are null: `+e); 
@@ -16,6 +17,6 @@ export function useCourses() {
     
     return {
         getList,
-        courses
+        course
     }
 }

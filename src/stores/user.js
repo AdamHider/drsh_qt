@@ -89,12 +89,12 @@ export const useUserStore = defineStore('drsh_user_store', () => {
         const userResponse = await api.user.get();
         const userAuth = user.active.authorization;
         userAuth.username = userResponse.data.username;
-        console.log(user.active);
         update({authorization: userAuth, data: userResponse.data})
       }
       showMessage('User data saved!');
       return saveResponse;
     }
+    
     async function savePassword (data) {
       const saveResponse = await api.user.savePassword(data)
       if (saveResponse.success) {

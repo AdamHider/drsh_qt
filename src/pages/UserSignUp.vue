@@ -35,6 +35,7 @@
                 :type="formData.fields.password.reveal ? 'text' : 'password'"
                 no-error-icon
                 label="Pin password"
+                autocomplete="off"
                 mask="####"
               />
               <q-input v-else
@@ -250,7 +251,7 @@ const validate = async function () {
     if (authResponse.success) {
       const logged = await signIn(authResponse.data)
       buttonLoading.value = false
-      if (logged.success) return router.push('/user-dashboard')
+      if (logged.success) return router.push('/user')
     } else {
       formData.fields[steps[formData.step]].errors = authResponse.message
     }

@@ -13,10 +13,9 @@ async function init () {
   await autoSignIn()
 
   const { getActive, getList } = useClassroom()
-  getActive()
+  if(user.active.data.id) getActive()
 
-  watch(user.active, (newData, oldData) => {
-    console.log('watched')
+  watch(user.active.data, (newData, oldData) => {
     getActive()
     getList()
   })

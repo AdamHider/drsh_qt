@@ -18,12 +18,25 @@
         <q-card-section class="q-pb-none">
           <div class="text-h6">Choose your classroom</div>
         </q-card-section>
-        <q-card-section class="q-pt-none q-px-none">
+        <q-card-section class="q-pa-none">
           <ClassroomSlider
-            :slidesPerView=1.5
+            :slidesPerView=1.3
             :centerAligned="false"
             :withButton="false"
-            slideHeight="170"
+            slideHeight="140"
+            :navigation="false"
+            captionMode="full"
+          />
+        </q-card-section>
+        <q-card-section class="q-py-none">
+          <div class="text-h6">Classroom courses</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none q-px-none">
+          <CourseSlider
+            :slidesPerView=1.8
+            :centerAligned="false"
+            :withButton="false"
+            slideHeight="140"
             :navigation="false"
             captionMode="full"
           />
@@ -36,6 +49,7 @@
 import { ref } from 'vue'
 import { useClassroom } from '../composables/useClassroom'
 import ClassroomSlider from '../components/ClassroomSlider.vue'
+import CourseSlider from '../components/CourseSlider.vue'
 import { CONFIG } from '../config.js'
 
 const { classroom } = useClassroom()
