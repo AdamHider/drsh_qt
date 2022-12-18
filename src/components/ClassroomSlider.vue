@@ -5,7 +5,7 @@
       :modules="[Navigation, Pagination, Scrollbar, A11y]"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="classroom.list.findIndex((classroom) => classroom.code == user.active.authorization.classroom_code)"
+      :initialSlide="classroom.list.findIndex((classroom) => classroom.code == user.active.data.profile.active_classroom_code)"
       :navigation="props.navigation"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
@@ -23,11 +23,11 @@
                   <div class="subtitle">{{classroomItem.code}}</div>
                 </div>
               </div>
-              <q-icon v-if="classroomItem.code == user.active.authorization.classroom_code" 
-                class="absolute-bottom-right all-pointer-events" 
-                size="32px" 
-                name="check" 
-                color="white" 
+              <q-icon v-if="classroomItem.code == user.active.data.profile.active_classroom_code"
+                class="absolute-bottom-right all-pointer-events"
+                size="32px"
+                name="check"
+                color="white"
                 style="bottom: 8px; right: 8px">
                 <q-tooltip>
                   Tooltip
@@ -47,7 +47,7 @@
         </q-card>
       </swiper-slide>
     </swiper>
-    <q-btn v-if="props.withButton" color="primary" rounded="lg" @click="select()" :disabled="(activeItem.code == user.active.authorization.classroom_code)">
+    <q-btn v-if="props.withButton" color="primary" rounded="lg" @click="select()" :disabled="(activeItem.code == user.active.data.profile.active_classroom_code)">
       <template v-if="(activeItem.id !== 0)">
         Enter {{activeItem.title}}
       </template>
@@ -80,7 +80,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const { user, signIn, save } = useUserStore()
+const { user, save } = useUserStore()
 const { classroom, getList } = useClassroom()
 
 if (user.active.data.id) {
@@ -102,13 +102,13 @@ const select = async (index) => {
   } else {
     return router.push('/classroom/join')
   }
-  if (activeItem.value.code === user.active.authorization.classroom_code) {
+  if (activeItem.value.code === user.active.data.profile.active_classroom_code) {
     return false
   }
   const fields = {
-      active_classroom_code: activeItem.value.code
+    active_classroom_code: activeItem.value.code
   }
-  await save({fields: fields});
+  await save({ fields })
   return router.push('/user')
 }
 

@@ -113,6 +113,6 @@ const validate = async function () {
   }
   const logged = await signIn(userAuth)
   buttonLoading.value = false
-  if (logged.success) return router.push('/authorization')
+  if (logged.success) return router.push('/user')
 }
 </script>

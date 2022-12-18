@@ -1,22 +1,29 @@
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import { api } from '../services'
-const course = reactive({
-    list: []
-});
+import { useUserStore } from '../stores/user'
 
-export function useCourse() {
-    async function getList () {
-        try{
-            const courseResponse = await api.course.getList();
-            course.list = courseResponse.data;
-        } catch(e){
-            console.log(e)
-            throw new Error(`Courses are null: `+e); 
-        }      
+const course = reactive({
+  list: []
+})
+
+export function useCourse () {
+  async function getList () {
+    try {
+      const courseResponse = await api.course.getList()
+      course.list = courseResponse.data
+    } catch (e) {
+      console.log(e)
+      throw new Error('Courses are null: ' + e)
     }
-    
-    return {
-        getList,
-        course
-    }
+  }
+  const { user } = useUserStore()
+
+  watch(user.active, (newData, oldData) => {
+    getList()
+  })
+
+  return {
+    getList,
+    course
+  }
 }

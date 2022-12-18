@@ -20,7 +20,7 @@ export class ApiService {
     const resource = this.setResource(context, method);
     const body = this.setBody(params);
     await jQuery.ajax({
-      url: resource,  
+      url: resource,
       method: "POST",
       data: body,
       xhrFields: {
@@ -63,23 +63,20 @@ export class Api extends ApiService{
         get: (params) =>  {
             return this.post('user', 'getItem', params)
         },
-        signUp: (params) =>  {
-            return this.post('user', 'addItem', params)
-        },
-        signOut: (params) =>  {
-            return this.post('user', 'signOut', params);
-        },
-        signIn: (params) => {
-            return this.post('user', 'signIn', params);
-        },
-        activate: (params) => {
-            return this.post('user', 'activate', params)
-        },
         save: (params) => {
             return this.post('user', 'saveItem', params)
         },
         savePassword: (params) => {
             return this.post('user', 'savePassword', params)
+        },
+        signUp: (params) =>  {
+            return this.post('userAuth', 'addItem', params)
+        },
+        signOut: (params) =>  {
+            return this.post('userAuth', 'signOut', params);
+        },
+        signIn: (params) => {
+            return this.post('userAuth', 'signIn', params);
         },
         checkUsername: (params) => {
             return this.post('user', 'checkUsername', params);

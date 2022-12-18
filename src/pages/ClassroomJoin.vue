@@ -68,6 +68,10 @@ const validate = async function () {
   const valid = await form.value.validate()
   loading.value = true
   if (valid) {
+    if (!user.active.data.id) {
+      user.active.authorization.classroom_code = formData.fields.classroom_code.value
+      return router.push('/authorization')
+    }
     const auth = {
       username: user.active.authorization.username,
       password: user.active.authorization.password,
@@ -76,7 +80,7 @@ const validate = async function () {
     await signOut()
     const isset = await signIn(auth)
     loading.value = false
-    if (isset) return router.push('/user-startup')
+    if (isset) return router.push('/authorization')
     formData.fields.classroom_code.errors = 'Error'
   }
 }
