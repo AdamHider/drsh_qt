@@ -71,13 +71,14 @@
 
 <script setup >
 import { useUserStore } from '../stores/user'
-import { reactive, ref } from 'vue'
+import { reactive, ref, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const form = ref(null)
 const buttonLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
+const redirectedFrom = inject('redirectedFrom')
 
 const formData = reactive({
   step: route.params.step * 1,
@@ -113,6 +114,9 @@ const validate = async function () {
   }
   const logged = await signIn(userAuth)
   buttonLoading.value = false
-  if (logged.success) return router.push('/user')
+  if (logged.success) {
+    if (redirectedFrom) return router.push(redirectedFrom.fullPath)
+    return router.push('/user')
+  }
 }
 </script>

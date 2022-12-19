@@ -86,6 +86,9 @@ export class Api extends ApiService{
         }
     }
     classroom = {
+        subscribe: (params) =>  {
+            return this.post('classroom', 'subscribe', params)
+        },
         getActive: (params) =>  {
             return this.post('classroom', 'getItem', params)
         },

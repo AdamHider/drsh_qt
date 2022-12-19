@@ -192,13 +192,14 @@
 
 <script setup >
 import { useUserStore } from '../stores/user'
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const { signUp, signIn } = useUserStore()
 const route = useRoute()
 const router = useRouter()
 
+const redirectedFrom = inject('redirectedFrom')
 const buttonLoading = ref(false)
 const termsDialog = ref(false)
 const form = ref(null)
@@ -239,7 +240,7 @@ const formData = reactive({
 const steps = [
   '', '', 'password', 'passwordConfirm', 'terms'
 ]
-
+console.log(redirectedFrom);
 const validate = async function () {
   formData.valid = await form.value.validate()
   if (formData.step === 4) {
@@ -251,7 +252,11 @@ const validate = async function () {
     if (authResponse.success) {
       const logged = await signIn(authResponse.data)
       buttonLoading.value = false
-      if (logged.success) return router.push('/user')
+
+      if (logged.success) {
+        if(redirectedFrom) return router.push(redirectedFrom.fullPath)
+        return router.push('/user')
+      }
     } else {
       formData.fields[steps[formData.step]].errors = authResponse.message
     }

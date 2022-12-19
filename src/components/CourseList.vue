@@ -26,11 +26,6 @@
 <script setup>
 import { useCourses } from '../composables/useCourses.js'
 
-const { courses, getList } = useCourses();
-getList();
-
-
-
-
+const { courses } = useCourses();
 
 </script>

@@ -8,3 +8,27 @@ h1, h2, h3, h4, h5, h6{
     margin: 0;
     font-weight: bold;
 }
+
+.rounded-sm{
+    border-radius: $small-border-radius;
+}
+.rounded-md{
+    border-radius: $generic-border-radius;
+}
+
+.border-sm{
+    border-width: 1px;
+    border-style: solid;
+}
+.border-md{
+    border-width: 2px;
+    border-style: solid;
+}
+.border-lg{
+    border-width: 3px;
+    border-style: solid;
+}
+
+.border-positive{
+    border-color: $positive;
+}

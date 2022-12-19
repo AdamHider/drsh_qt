@@ -33,7 +33,7 @@
             <q-card-section class="q-px-none">
                 <q-card >
                     <q-card-section >
-                        <q-item class="q-pa-none">
+                        <q-item class="q-pa-none" v-if="classroom.active.id">
                             <q-item-section avatar>
                                 <q-avatar>
                                     <img :src="`${CONFIG.API_HOST}${classroom.active?.introimage}`" />
@@ -48,6 +48,15 @@
                                 flat
                                 to="/user-startup"
                                 icon="autorenew" />
+                            </q-item-section>
+                        </q-item>
+                        <q-item class="q-pa-none" v-else>
+                            <q-item-section avatar>
+                                <q-skeleton type="QAvatar" />
+                            </q-item-section>
+                            <q-item-section class="text-left">
+                                <q-skeleton type="text" />
+                                <q-skeleton type="text"/>
                             </q-item-section>
                         </q-item>
                     </q-card-section>

@@ -2,20 +2,22 @@
     <swiper
       v-if="user.active.data.id"
       ref="classroomSlider"
-      :modules="[Navigation, Pagination, Scrollbar, A11y]"
+      :modules="[Navigation]"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="classroom.list.findIndex((classroom) => classroom.code == user.active.data.profile.active_classroom_code)"
+      :initialSlide="classroom.list.findIndex((classroom) => classroom.is_active)"
       :navigation="props.navigation"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
       <swiper-slide v-for="(classroomItem, index) in classroom.list" :key="index" :class="'text-center'" @click="select(index)">
-        <q-card class="q-ma-md">
+        <q-card flat :class="`q-ma-sm ${(classroomItem.is_active) ? 'active' : ''}`">
+          <q-card-section class="q-pa-xs">
             <q-img
               fit="cover"
+              class="rounded-borders"
               :src="(CONFIG.API_HOST+classroomItem.fulltext_image)"
-              :style="`height: ${props.slideHeight}px;`"
+              :style="`height: ${props.slideHeight}px`"
               >
               <div :class="`absolute-${captionMode} text-center text-white flex flex-center`">
                 <div>
@@ -23,31 +25,25 @@
                   <div class="subtitle">{{classroomItem.code}}</div>
                 </div>
               </div>
-              <q-icon v-if="classroomItem.code == user.active.data.profile.active_classroom_code"
-                class="absolute-bottom-right all-pointer-events"
-                size="32px"
-                name="check"
-                color="white"
-                style="bottom: 8px; right: 8px">
-                <q-tooltip>
-                  Tooltip
-                </q-tooltip>
-              </q-icon>
             </q-img>
+          </q-card-section>
         </q-card>
       </swiper-slide>
       <swiper-slide :class="'text-center'" @click="select(false)">
-        <q-card class="q-ma-md">
+        <q-card flat class="q-ma-sm">
+          <q-card-section class="q-pa-xs">
             <q-img
+              class="rounded-borders"
               :style="`height: ${props.slideHeight}px;`">
               <div class="absolute-full text-center text-white flex flex-center">
                 <q-icon size="30px" name="add"></q-icon>
               </div>
             </q-img>
+          </q-card-section>
         </q-card>
       </swiper-slide>
     </swiper>
-    <q-btn v-if="props.withButton" color="primary" rounded="lg" @click="select()" :disabled="(activeItem.code == user.active.data.profile.active_classroom_code)">
+    <q-btn v-if="props.withButton" color="primary" rounded="lg" @click="select()" :disabled="(activeItem.is_active)">
       <template v-if="(activeItem.id !== 0)">
         Enter {{activeItem.title}}
       </template>
@@ -61,7 +57,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
+import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { CONFIG } from '../config.js'
 
@@ -81,11 +77,7 @@ const props = defineProps({
 
 const router = useRouter()
 const { user, save } = useUserStore()
-const { classroom, getList } = useClassroom()
-
-if (user.active.data.id) {
-  getList()
-}
+const { classroom } = useClassroom()
 
 const activeItem = ref({})
 const classroomSlider = ref(null)
@@ -102,11 +94,17 @@ const select = async (index) => {
   } else {
     return router.push('/classroom/join')
   }
-  if (activeItem.value.code === user.active.data.profile.active_classroom_code) {
+  if (activeItem.value.is_active) {
     return false
   }
+
+  const activeIndex = classroom.list.findIndex((classroom) => (classroom.code === user.active.data.profile.active_classroom_code))
+  if (activeIndex > -1) classroom.list[activeIndex].is_active = false
+  classroom.list[index].is_active = true
+
   const fields = {
-    active_classroom_code: activeItem.value.code
+    active_classroom_code: activeItem.value.code,
+    active_course_id: 0
   }
   await save({ fields })
   return router.push('/user')
@@ -127,3 +125,13 @@ const onSlideChange = (swiper) => {
   }
 }
 </script>
+
+<style scoped lang="scss">
+.q-card > .q-card__section:first-child{
+  border: 3px solid rgba(0, 0, 0, 0.12);
+  border-radius: $huge-border-radius;
+}
+.q-card.active > .q-card__section:first-child{
+  border-color: $positive;
+}
+</style>

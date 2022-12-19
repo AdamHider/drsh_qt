@@ -47,8 +47,8 @@ import { useUserStore } from '../stores/user'
 const form = ref(null)
 const loading = ref(false)
 const router = useRouter()
-const { checkIfExists } = useClassroom()
-const { user, signIn, signOut } = useUserStore()
+const { checkIfExists, subscribe } = useClassroom()
+const { user, signIn, signOut, save } = useUserStore()
 
 const formData = reactive({
   valid: true,
@@ -68,19 +68,14 @@ const validate = async function () {
   const valid = await form.value.validate()
   loading.value = true
   if (valid) {
-    if (!user.active.data.id) {
-      user.active.authorization.classroom_code = formData.fields.classroom_code.value
-      return router.push('/authorization')
+    const fields = {
+      active_classroom_code: formData.fields.classroom_code.value
     }
-    const auth = {
-      username: user.active.authorization.username,
-      password: user.active.authorization.password,
-      classroom_code: formData.fields.classroom_code.value
+    const subscribed = await subscribe({classroom_code: formData.fields.classroom_code.value})
+    if(subscribed.success){
+      await save({ fields })
+      return router.push('/user')
     }
-    await signOut()
-    const isset = await signIn(auth)
-    loading.value = false
-    if (isset) return router.push('/authorization')
     formData.fields.classroom_code.errors = 'Error'
   }
 }

@@ -6,7 +6,7 @@ import BasicLayout from 'layouts/BasicLayout.vue'
 const routes = [
   {
     path: '/',
-    component: () => MainLayout,
+    component: MainLayout,
     redirect: '/home',
     children: [
       {
@@ -37,8 +37,7 @@ const routes = [
     children: [
       {
         path: 'authorization',
-        component: () => import('pages/UserStartup.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('pages/UserStartup.vue')
       },
       {
         path: 'classroom/join',
@@ -47,12 +46,11 @@ const routes = [
       {
         path: 'classroom/join/code=:code',
         component: () => import('pages/ClassroomJoin.vue'),
-        meta: { noBottomBar: true }
+        meta: { requiresAuth: true }
       },
       {
         path: 'authorization/sign-in',
-        component: () => import('pages/UserSignIn.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('pages/UserSignIn.vue')
       },
       {
         path: 'authorization/sign-up',
@@ -93,7 +91,7 @@ const routes = [
       {
         path: 'notifications',
         component: () => import('pages/Notifications.vue'),
-        meta: { 
+        meta: {
           pageTitle: 'Notifications',
           requiresAuth: true
         }
@@ -101,7 +99,7 @@ const routes = [
       {
         path: 'user/achievements',
         component: () => import('pages/UserAchievements.vue'),
-        meta: { 
+        meta: {
           pageTitle: 'Achievements',
           requiresAuth: true
         }

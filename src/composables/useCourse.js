@@ -1,13 +1,16 @@
 import { reactive, watch } from 'vue'
 import { api } from '../services'
-import { useUserStore } from '../stores/user'
+import { useClassroom } from '../composables/useClassroom'
 
 const course = reactive({
-  list: []
+  list: [],
+  isLoading: false
 })
+const { classroom } = useClassroom()
 
 export function useCourse () {
   async function getList () {
+    course.isLoading = true
     try {
       const courseResponse = await api.course.getList()
       course.list = courseResponse.data
@@ -15,15 +18,14 @@ export function useCourse () {
       console.log(e)
       throw new Error('Courses are null: ' + e)
     }
+    course.isLoading = false
   }
-  const { user } = useUserStore()
-
-  watch(user.active, (newData, oldData) => {
-    getList()
-  })
-
   return {
     getList,
     course
   }
 }
+
+watch(() => classroom.active.id, async (newData, oldData) => {
+  useCourse().getList()
+})

@@ -1,4 +1,4 @@
-import { reactive, watch } from 'vue'
+import { reactive } from 'vue'
 import { api } from '../services/index.js'
 
 const classroom = reactive({
@@ -7,13 +7,12 @@ const classroom = reactive({
 })
 
 export function useClassroom () {
+  async function subscribe (params) {
+    return api.classroom.subscribe(params)
+  }
   async function getActive () {
-    try {
-      const classroomResponse = await api.classroom.getActive()
-      classroom.active = classroomResponse.data
-    } catch (e) {
-      throw new Error('classroom are null: ' + e)
-    }
+    const classroomResponse = await api.classroom.getActive()
+    classroom.active = classroomResponse.data
   }
   async function getList () {
     try {
@@ -35,6 +34,7 @@ export function useClassroom () {
     getActive,
     getList,
     checkIfExists,
-    classroom
+    classroom,
+    subscribe
   }
 }

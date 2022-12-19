@@ -23,8 +23,8 @@
           <q-btn flat  color="primary" to="/authorization/sign-up">sign up</q-btn>
         </q-card-section>
         <q-separator v-if="(Object.keys(user.list).length > 0)" class="q-mx-md"></q-separator>
-        <q-card-section>
-          <q-btn v-if="(Object.keys(user.list).length > 0)" color="dark" flat @click="dialog=true">Choose existing accounts</q-btn>
+        <q-card-section  v-if="(Object.keys(user.list).length > 0)">
+          <q-btn color="dark" flat @click="dialog=true">Choose existing accounts</q-btn>
         </q-card-section>
       </q-card>
         <q-dialog v-model="dialog">
@@ -60,23 +60,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
 import { useUserStore } from '../stores/user'
 import ClassroomSlider from '../components/ClassroomSlider.vue'
 import PageHeader from '../components/PageHeader.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute ()
+const redirectedFrom = inject('redirectedFrom')
 
 const dialog = ref(false)
 const btnLoading = ref([])
 
 const switchUser = async (userItem, key) => {
-  btnLoading.value[key] = true
-  await signIn(userItem.authorization, userItem.activeClassroom)
-  btnLoading.value[key] = false
-  dialog.value = false
-  return router.push('/user')
+    btnLoading.value[key] = true
+    await signIn(userItem.authorization, userItem.activeClassroom)
+    btnLoading.value[key] = false
+    dialog.value = false
+    if(redirectedFrom) return router.push(redirectedFrom.fullPath)
+    return router.push('/user')
 }
 
 const { signOut, signIn, user } = useUserStore()
