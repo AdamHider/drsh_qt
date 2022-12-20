@@ -1,6 +1,7 @@
 import MainLayout from 'layouts/MainLayout.vue'
 import AuthorizationLayout from 'layouts/AuthorizationLayout.vue'
 import EditLayout from 'layouts/EditLayout.vue'
+import ItemLayout from 'layouts/ItemLayout.vue'
 import BasicLayout from 'layouts/BasicLayout.vue'
 
 const routes = [
@@ -20,13 +21,19 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
-        path: 'classroom',
-        component: () => import('pages/Classroom.vue'),
-        meta: { requiresAuth: true }
-      },
-      {
         path: 'user',
         component: () => import('pages/UserDashboard.vue'),
+        meta: { requiresAuth: true }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: ItemLayout,
+    children: [
+      {
+        path: 'classroom',
+        component: () => import('pages/Classroom.vue'),
         meta: { requiresAuth: true }
       }
     ]

@@ -25,7 +25,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const isRootPage = ref(false)
 
-provide('redirectedFrom', route.redirectedFrom);
+provide('redirectedFrom', route.redirectedFrom)
 isRootPage.value = (route.fullPath.split('/').length === 2)
 
 watch(route, (currentValue, oldValue) => {

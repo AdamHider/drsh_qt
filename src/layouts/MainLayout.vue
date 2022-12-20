@@ -1,7 +1,7 @@
 <template>
   <AppBackground/>
   <q-layout view="hHh LpR fFf">
-    <q-header class="transparent text-white">
+    <q-header class="transparent text-white rounded-b-md"  ref="header">
       <q-toolbar >
         <ClassroomToggle/>
         <q-toolbar-title></q-toolbar-title>
@@ -20,16 +20,38 @@
       </router-view>
     </q-page-container>
   </q-layout>
+  <q-scroll-observer @scroll="onScroll" />
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
 import AppBackground from 'components/AppBackground.vue'
 import BottomBar from 'components/BottomBar.vue'
 import { useRoute } from 'vue-router'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
+import { ref } from 'vue'
+
+const header = ref(null)
 
 const route = useRoute()
 if (route.meta.noBottomBar) {}
 
+const onScroll = (event) => {
+  if (event.position.top > 0) {
+    header.value.$el.classList.add('header-sticky')
+  } else {
+    header.value.$el.classList.remove('header-sticky')
+  }
+  console.log(header.value)
+}
 </script>
+<style scoped>
+.q-header{
+  transition: 0.2s ease;
+}
+.q-header.header-sticky{
+  background: #fff !important;
+  color: var(--q-dark) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+}
+</style>

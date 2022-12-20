@@ -23,8 +23,6 @@
 <script setup>
 import AppBackground from 'components/AppBackground.vue'
 import { useRoute } from 'vue-router'
-
 const route = useRoute()
-
 
 </script>

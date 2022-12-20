@@ -1,6 +1,11 @@
 <template>
     <q-page class="bg-white" >
-      <q-img :src="`${CONFIG.API_HOST}${classroom.active?.fulltext_image}`" style="max-height: 300px;"/>
+      <q-toolbar class="absolute text-white" style="z-index: 100">
+          <q-toolbar-title>{{ classroom.active?.title }}</q-toolbar-title>
+          <q-btn class="q-mx-sm" text-color="black" icon="share"/>
+          <q-btn class="q-mx-sm" text-color="black" icon="more_vert"/>
+      </q-toolbar>
+      <q-img :src="`${CONFIG.API_HOST}${classroom.active?.fulltext_image}`" style="max-height: 200px;"/>
       <q-card flat class="my-card" style="margin-top: -15px;">
         <q-card-section>
           <q-avatar

@@ -2,22 +2,6 @@
     <q-page class="flex justify-center content-end  text-center full-width">
         <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
             <q-card-section>
-                <q-linear-progress
-                    color="white"
-                    :model-value="(user.active.data.profile?.level.percentage / 100)"
-                    size="20px"
-                    dark stripe rounded
-                ></q-linear-progress>
-                <div class="row q-ma-sm text-white">
-                    <div class="col text-left">
-                        <b>Level {{user.active.data.profile?.level.id}}</b>
-                    </div>
-                    <div class="col  text-right">
-                        <b>{{user.active.data.profile?.total_points}}/{{user.active.data.profile?.level.points_to}}</b>
-                    </div>
-                </div>
-            </q-card-section>
-            <q-card-section>
                 <q-img
                     :src="`${CONFIG.API_HOST}/images/dershane/hero_${user.active.data.profile?.hero}_hello.png`"
                     style="max-width: 250px; width: 170px;"
@@ -25,7 +9,23 @@
                 />
             </q-card-section>
         </q-card>
-        <q-card color="white" class="relative text-center q-pl-sm q-pr-sm q-pt-md q-pb-md rounded-borders rounded-b-0" style="padding-top: 30px;">
+        <q-card class="relative text-center q-pl-sm q-pr-sm q-pt-md q-pb-md rounded-borders rounded-b-0" style="padding-top: 30px;">
+            <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
+              <q-linear-progress
+                  color="positive"
+                  :model-value="(user.active.data.profile?.level.percentage / 100)"
+                  size="15px"
+                   stripe rounded
+              ></q-linear-progress>
+              <div class="row q-ma-sm">
+                  <div class="col text-left">
+                      <b>Level {{user.active.data.profile?.level.id}}</b>
+                  </div>
+                  <div class="col text-right">
+                      <b>{{user.active.data.profile?.total_points}}/{{user.active.data.profile?.level.points_to}}</b>
+                  </div>
+              </div>
+            </q-card-section>
             <q-card-section>
                 <div class="text-h5"><b>{{user.active.data.name}}</b></div>
             </q-card-section>
