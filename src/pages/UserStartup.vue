@@ -1,15 +1,5 @@
 <template>
     <q-page class="flex justify-center items-end full-height full-width text-center">
-      <PageHeader v-if="user.active?.data.id" title="User Dashboard" subtitle="Choose your classroom" text-color="white"/>
-      <Suspense v-if="user.active?.data.id">
-        <ClassroomSlider
-            :slidesPerView="1.3"
-            :centerAligned="true"
-            :withButton="true"
-            slideHeight="300"
-            captionMode="bottom"
-          />
-      </Suspense>
       <q-card class="rounded-b-0 full-width">
         <q-card-section v-if="user.active?.data.id" class="d-flex flex-no-wrap justify-space-between align-center">
             <h4 class="text-h6">{{user.active?.data.name}}</h4>
@@ -62,8 +52,6 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { useUserStore } from '../stores/user'
-import ClassroomSlider from '../components/ClassroomSlider.vue'
-import PageHeader from '../components/PageHeader.vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
@@ -82,6 +70,6 @@ const switchUser = async (userItem, key) => {
     return router.push('/user')
 }
 
-const { signOut, signIn, user } = useUserStore()
+const { signIn, user } = useUserStore()
 
 </script>

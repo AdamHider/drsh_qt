@@ -107,7 +107,6 @@ const select = async (index) => {
     active_course_id: 0
   }
   await save({ fields })
-  return router.push('/user')
 }
 
 const onSwiper = (swiper) => {

@@ -152,7 +152,7 @@ const saveChanges = async function () {
     }
     const saved = await savePassword(data)
     if (saved.success) {
-      return router.push('/user/edit')
+      return router.go(-1)
     } else {
       formData.fields[saved.data].errors = saved.message
     }

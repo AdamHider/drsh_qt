@@ -33,7 +33,7 @@
             <q-card-section class="q-px-none">
                 <q-card >
                     <q-card-section >
-                        <q-item class="q-pa-none" v-if="classroom.active.id">
+                        <q-item class="q-pa-none" v-if="classroom.active?.id">
                             <q-item-section avatar>
                                 <q-avatar>
                                     <img :src="`${CONFIG.API_HOST}${classroom.active?.introimage}`" />

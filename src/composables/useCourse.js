@@ -26,6 +26,6 @@ export function useCourse () {
   }
 }
 
-watch(() => classroom.active.id, async (newData, oldData) => {
+watch(() => classroom.active?.id, async (newData, oldData) => {
   useCourse().getList()
 })

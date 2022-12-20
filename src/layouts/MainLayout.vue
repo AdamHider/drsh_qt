@@ -30,17 +30,6 @@ import { useRoute } from 'vue-router'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 
 const route = useRoute()
+if (route.meta.noBottomBar) {}
 
-const bottomBar = ref(true)
-if (route.meta.noBottomBar) {
-  bottomBar.value = false
-}
-
-watch(route, (currentValue, oldValue) => {
-  if (currentValue.meta.noBottomBar) {
-    bottomBar.value = false
-  } else {
-    bottomBar.value = true
-  }
-})
 </script>

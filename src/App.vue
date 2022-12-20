@@ -15,7 +15,7 @@ async function init () {
   const { getActive, getList } = useClassroom()
   if (user.active.data.id) await getActive(); await getList()
 
-  watch(() => user.active.data.profile.active_classroom_code, (newData, oldData) => {
+  watch(() => user.active.data?.profile?.active_classroom_code, (newData, oldData) => {
     getActive()
     getList()
   })

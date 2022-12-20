@@ -15,8 +15,8 @@
           label="Name"
           required
         >
-          <template v-if="formData.valid" v-slot:append-inner>
-              <v-icon color="success" icon="mdi-check"></v-icon>
+          <template v-if="formData.fields.name.errors == ''" v-slot:append>
+              <q-icon color="positive" name="check"></q-icon>
           </template>
         </q-input>
         <q-input
@@ -27,21 +27,19 @@
           label="Name"
           required
         >
-          <template v-if="formData.valid" v-slot:append-inner>
-              <v-icon color="success" icon="mdi-check"></v-icon>
-          </template>
-          <template  v-slot:append-outer>
-              <v-icon color="success" icon="mdi-change"></v-icon>
+          <template v-if="formData.fields.username.errors == ''" v-slot:append>
+              <q-icon color="success" name="check"></q-icon>
           </template>
         </q-input>
         <q-card
           v-if="(formData.fields.username.suggestions.length > 0)"
           class="mx-auto pa-2"
         >
-          <q-list bordered separator>
+          <q-list bordered separator class="q-my-sm">
             <q-item
               v-for="(item, index) in formData.fields.username.suggestions"
               :key="index"
+              clickable
               :value="item"
               @click="(formData.fields.username.value = item); formData.fields.username.suggestions = []"
             >
@@ -54,7 +52,6 @@
         </q-card>
         <q-btn
             class="full-width"
-            rounded="lg"
             to="edit/password"
             append-icon="mdi-pencil"
             label="Change password"
@@ -127,7 +124,7 @@ const saveChanges = async function () {
     }
     const saved = await save(data)
     if (saved.success) {
-      return router.push('/user')
+      return router.go(-1)
     } else {
       formData.fields[saved.data].errors = saved.message
     }
