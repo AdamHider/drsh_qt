@@ -1,7 +1,7 @@
 <template>
   <AppBackground/>
   <q-layout view="hHh LpR fFf">
-    <q-header class="transparent text-white rounded-b-md"  ref="header">
+    <q-header reveal class="transparent text-white rounded-b-md"  ref="header">
       <q-toolbar >
         <ClassroomToggle/>
         <q-toolbar-title></q-toolbar-title>
