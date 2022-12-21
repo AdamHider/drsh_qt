@@ -77,7 +77,8 @@ const props = defineProps({
 
 const router = useRouter()
 const { user, save } = useUserStore()
-const { classroom } = useClassroom()
+const { classroom, getList } = useClassroom()
+getList()
 
 const activeItem = ref({})
 const classroomSlider = ref(null)

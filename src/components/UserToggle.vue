@@ -1,12 +1,12 @@
 <template  withBackground="true">
     <q-chip class="transparent no-shadow" style="color: inherit"
         clickable
-        icon-right="autorenew"
         @click="dialog = true"
     >
         <div class="ellipsis">
             <b>{{user.active.data?.name}}</b>
             <q-tooltip>{{user.active.data?.name}}</q-tooltip>
+            <q-icon name="expand_more" size="sm"></q-icon>
         </div>
     </q-chip>
     <q-dialog v-model="dialog">
@@ -48,11 +48,10 @@ const dialog = ref(false)
 const btnLoading = ref([])
 
 const switchUser = async (userItem, key) => {
-    btnLoading.value[key] = true
-    await signIn(userItem.authorization, userItem.activeClassroom)
-    btnLoading.value[key] = false
-    dialog.value = false
+  btnLoading.value[key] = true
+  await signIn(userItem.authorization, userItem.activeClassroom)
+  btnLoading.value[key] = false
+  dialog.value = false
 }
-
 
 </script>

@@ -19,5 +19,4 @@
 <script setup>
 import { message } from '../composable/useAppMessage'
 
-
 </script>

@@ -44,33 +44,28 @@
                 </q-item>
             </q-card-section>
             <q-card-section class="q-pa-none">
-                <div class="q-mb-md row q-col-gutter-md full-width">
-                    <div class="col-6">
+                <div class="q-mb-md q-mx-sm row text-center">
+                    <div class="col">
                         <div class="text-h5"><b>{{user.active.data.profile?.total_exercises}}</b></div>
                         <div class="text-caption text-grey">Exercises</div>
                         <q-tooltip activator="parent" location="top">
                             Total exercises that you have done
                         </q-tooltip>
                     </div>
-                    <div class="col-6">
+                    <q-separator vertical/>
+                    <div class="col">
                         <div class="text-h5"><b>{{user.active.data.profile?.total_points}}</b></div>
                         <div class="text-caption text-grey">Points</div>
                         <q-tooltip activator="parent" location="top">
                             Total points that you have scored
                         </q-tooltip>
                     </div>
-                    <div class="col-6">
+                    <q-separator vertical/>
+                    <div class="col">
                         <div class="text-h5"><b>{{user.active.data.profile?.total_classrooms}}</b></div>
                         <div class="text-caption text-grey">Classrooms</div>
                         <q-tooltip activator="parent" location="top">
                             Total classrooms that you are member of
-                        </q-tooltip>
-                    </div>
-                    <div class="col-6">
-                        <div class="text-h5"><b>{{user.active.data.profile?.total_achievements}}</b></div>
-                        <div class="text-caption text-grey">Achievements</div>
-                        <q-tooltip activator="parent" location="top">
-                            Total achievements that you have gained
                         </q-tooltip>
                     </div>
                 </div>
@@ -79,7 +74,6 @@
                 <div class="text-h6">Achievements</div>
                 <router-link to="user/achievements">Show all</router-link>
             </q-card-section>
-            <Suspense>
                 <UserAchievementsSlider
                     :slidesPerView=2.4
                     :centerAligned="false"
@@ -88,7 +82,6 @@
                     :navigation="false"
                     captionMode="full"
                 />
-            </Suspense>
             <q-card-section>
                 <q-btn
                     class="full-width"
@@ -110,7 +103,6 @@ import { useRouter } from 'vue-router'
 import { CONFIG } from '../config.js'
 
 const { user, signOut } = useUserStore()
-const { classroom } = useClassroom()
 const router = useRouter()
 
 const exitUser = async function () {

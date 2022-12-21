@@ -1,6 +1,7 @@
 import MainLayout from 'layouts/MainLayout.vue'
 import AuthorizationLayout from 'layouts/AuthorizationLayout.vue'
 import EditLayout from 'layouts/EditLayout.vue'
+import ClassroomLayout from 'layouts/ClassroomLayout.vue'
 import ItemLayout from 'layouts/ItemLayout.vue'
 import BasicLayout from 'layouts/BasicLayout.vue'
 import UserLayout from 'layouts/UserLayout.vue'
@@ -20,7 +21,7 @@ const routes = [
         path: 'lessons-:category_id',
         component: () => import('pages/Lessons.vue'),
         meta: { requiresAuth: true }
-      },
+      }
     ]
   },
   {
@@ -30,7 +31,7 @@ const routes = [
       {
         path: 'user',
         component: () => import('pages/UserDashboard.vue'),
-        meta: { 
+        meta: {
           pageTitle: 'Profile',
           requiresAuth: true
         }
@@ -39,7 +40,7 @@ const routes = [
   },
   {
     path: '/',
-    component: ItemLayout,
+    component: ClassroomLayout,
     children: [
       {
         path: 'classroom',

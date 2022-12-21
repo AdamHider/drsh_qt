@@ -6,12 +6,16 @@
             exact
         />
         <q-route-tab
+            icon="search"
+            exact
+        />
+        <q-route-tab
             icon="group"
             :to="routes.classroom"
             exact
         />
         <q-route-tab
-            icon="notifications"
+            icon="bar_chart"
             :to="routes.notifications"
             exact
         />

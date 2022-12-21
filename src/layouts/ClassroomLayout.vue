@@ -3,9 +3,10 @@
   <q-layout view="hHh LpR fFf">
     <q-header reveal class="transparent text-white rounded-b-md"  ref="header">
       <q-toolbar >
-        <UserToggle/>
+        <ClassroomToggle/>
         <q-toolbar-title></q-toolbar-title>
-        <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
+        <q-btn flat round dense class="q-mr-sm" icon="share"/>
+        <q-btn flat round dense class="q-mr-sm"  icon="more_vert"/>
       </q-toolbar>
     </q-header>
     <q-footer bordered class="bg-white text-primary ">
@@ -25,7 +26,7 @@
 <script setup>
 import AppBackground from 'components/AppBackground.vue'
 import BottomBar from 'components/BottomBar.vue'
-import UserToggle from '../components/UserToggle.vue'
+import ClassroomToggle from '../components/ClassroomToggle.vue'
 import { ref } from 'vue'
 
 const header = ref(null)

@@ -49,15 +49,17 @@ const props = defineProps({
   captionMode: String
 })
 
-const router = useRouter()
-const { user, save } = useUserStore()
+const { user } = useUserStore()
 const { getListByUser } = useAchievement()
 const achievements = ref([])
-achievements.value = await getListByUser()
+
+const load = async function () {
+  achievements.value = await getListByUser()
+}
+load()
 
 const onSwiper = (swiper) => {
 }
 const onSlideChange = (swiper) => {
 }
 </script>
-
