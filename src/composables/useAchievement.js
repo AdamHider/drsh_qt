@@ -18,9 +18,19 @@ export function useAchievement () {
       throw new Error('Courses are null: ' + e)
     }
   }
+  async function getListByUser () {
+    try {
+      const achievementListResponse = await api.achievements.getList()
+      return achievementListResponse.data
+    } catch (e) {
+      console.log(e)
+      throw new Error('Courses are null: ' + e)
+    }
+  }
 
   return {
     getList,
+    getListByUser,
     achievements
   }
 }

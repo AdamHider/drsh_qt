@@ -3,7 +3,7 @@
   <q-layout view="hHh LpR fFf">
     <q-header reveal class="transparent text-white rounded-b-md"  ref="header">
       <q-toolbar >
-        <ClassroomToggle/>
+        <UserToggle/>
         <q-toolbar-title></q-toolbar-title>
         <q-btn flat round dense icon="emoji_events" class="q-mr-sm" to="/user/achievements"/>
         <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
@@ -27,7 +27,7 @@
 import AppBackground from 'components/AppBackground.vue'
 import BottomBar from 'components/BottomBar.vue'
 import { useRoute } from 'vue-router'
-import ClassroomToggle from '../components/ClassroomToggle.vue'
+import UserToggle from '../components/UserToggle.vue'
 import { ref } from 'vue'
 
 const header = ref(null)
@@ -41,7 +41,6 @@ const onScroll = (event) => {
   } else {
     header.value.$el.classList.remove('header-sticky')
   }
-  console.log(header.value)
 }
 </script>
 <style scoped>

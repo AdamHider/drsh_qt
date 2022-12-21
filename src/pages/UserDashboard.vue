@@ -9,15 +9,15 @@
                 />
             </q-card-section>
         </q-card>
-        <q-card class="relative text-center q-pl-sm q-pr-sm q-pt-md q-pb-md rounded-borders rounded-b-0" style="padding-top: 30px;">
+        <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="padding-top: 30px;">
             <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
               <q-linear-progress
                   color="positive"
                   :model-value="(user.active.data.profile?.level.percentage / 100)"
-                  size="15px"
+                  size="12px"
                    stripe rounded
               ></q-linear-progress>
-              <div class="row q-ma-sm">
+              <div class="row q-ma-sm ">
                   <div class="col text-left">
                       <b>Level {{user.active.data.profile?.level.id}}</b>
                   </div>
@@ -27,102 +27,77 @@
               </div>
             </q-card-section>
             <q-card-section>
-                <div class="text-h5"><b>{{user.active.data.name}}</b></div>
+                <q-item class="q-pa-none">
+                    <q-item-section class="text-left">
+                        <div class="text-h5"><b>{{user.active.data.name}}</b></div>
+                        <div class="text-grey">Active student</div>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-btn
+                            flat
+                            to="/user/edit"
+                            color="grey"
+                            icon="edit"
+                        >
+                        </q-btn>
+                    </q-item-section>
+                </q-item>
             </q-card-section>
-
-            <q-card-section class="q-px-none">
-                <q-card >
-                    <q-card-section >
-                        <q-item class="q-pa-none" v-if="classroom.active?.id">
-                            <q-item-section avatar>
-                                <q-avatar>
-                                    <img :src="`${CONFIG.API_HOST}${classroom.active?.introimage}`" />
-                                </q-avatar>
-                            </q-item-section>
-                            <q-item-section class="text-left">
-                                <div class="text-h6">{{classroom.active?.title}}</div>
-                                <div class="text-grey">Current classroom</div>
-                            </q-item-section>
-                            <q-item-section side>
-                                <q-btn
-                                flat
-                                to="/user-startup"
-                                icon="autorenew" />
-                            </q-item-section>
-                        </q-item>
-                        <q-item class="q-pa-none" v-else>
-                            <q-item-section avatar>
-                                <q-skeleton type="QAvatar" />
-                            </q-item-section>
-                            <q-item-section class="text-left">
-                                <q-skeleton type="text" />
-                                <q-skeleton type="text"/>
-                            </q-item-section>
-                        </q-item>
-                    </q-card-section>
-                </q-card>
+            <q-card-section class="q-pa-none">
+                <div class="q-mb-md row q-col-gutter-md full-width">
+                    <div class="col-6">
+                        <div class="text-h5"><b>{{user.active.data.profile?.total_exercises}}</b></div>
+                        <div class="text-caption text-grey">Exercises</div>
+                        <q-tooltip activator="parent" location="top">
+                            Total exercises that you have done
+                        </q-tooltip>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-h5"><b>{{user.active.data.profile?.total_points}}</b></div>
+                        <div class="text-caption text-grey">Points</div>
+                        <q-tooltip activator="parent" location="top">
+                            Total points that you have scored
+                        </q-tooltip>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-h5"><b>{{user.active.data.profile?.total_classrooms}}</b></div>
+                        <div class="text-caption text-grey">Classrooms</div>
+                        <q-tooltip activator="parent" location="top">
+                            Total classrooms that you are member of
+                        </q-tooltip>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-h5"><b>{{user.active.data.profile?.total_achievements}}</b></div>
+                        <div class="text-caption text-grey">Achievements</div>
+                        <q-tooltip activator="parent" location="top">
+                            Total achievements that you have gained
+                        </q-tooltip>
+                    </div>
+                </div>
             </q-card-section>
-            <q-btn
-                block
-                to="/user/edit"
-                class="full-width"
-                append-icon="mdi-account-edit"
-            >
-                <label>Edit profile</label>
-            </q-btn>
-            <div class="q-mt-sm q-mb-md row q-col-gutter-md">
-                <div class="col-6">
-                    <q-card class="text-left" rounded="lg">
-                        <q-card-section class="q-py-sm">
-                            <div class="text-h5">{{user.active.data.profile?.total_exercises}}</div>
-                            <div class="text-caption text-grey">Exercises</div>
-                            <q-tooltip activator="parent" location="top">
-                                Total exercises that you have done
-                            </q-tooltip>
-                        </q-card-section>
-                    </q-card>
-                </div>
-                <div class="col-6">
-                    <q-card class="text-left" rounded="lg">
-                        <q-card-section class="q-py-sm">
-                            <div class="text-h5">{{user.active.data.profile?.total_points}}</div>
-                            <div class="text-caption text-grey">Points</div>
-                            <q-tooltip activator="parent" location="top">
-                                Total points that you have scored
-                            </q-tooltip>
-                        </q-card-section>
-                    </q-card>
-                </div>
-                <div class="col-6">
-                    <q-card class="text-left" rounded="lg">
-                        <q-card-section class="q-py-sm">
-                            <div class="text-h5">{{user.active.data.profile?.total_classrooms}}</div>
-                            <div class="text-caption text-grey">Classrooms</div>
-                            <q-tooltip activator="parent" location="top">
-                                Total classrooms that you are member of
-                            </q-tooltip>
-                        </q-card-section>
-                    </q-card>
-                </div>
-                <div class="col-6">
-                    <q-card class="text-left" rounded="lg">
-                        <q-card-section class="q-py-sm">
-                            <div class="text-h5">{{user.active.data.profile?.total_achievements}}</div>
-                            <div class="text-caption text-grey">Achievements</div>
-                            <q-tooltip activator="parent" location="top">
-                                Total achievements that you have gained
-                            </q-tooltip>
-                        </q-card-section>
-                    </q-card>
-                </div>
-            </div>
-            <q-btn
-                class="full-width"
-                color="primary"
-                @click="exitUser(); "
-                append-icon="mdi-logout-variant"
-                label="Sign out"
-            />
+            <q-card-section class="q-py-none flex justify-between items-center">
+                <div class="text-h6">Achievements</div>
+                <router-link to="user/achievements">Show all</router-link>
+            </q-card-section>
+            <Suspense>
+                <UserAchievementsSlider
+                    :slidesPerView=2.4
+                    :centerAligned="false"
+                    :withButton="false"
+                    slideHeight="100"
+                    :navigation="false"
+                    captionMode="full"
+                />
+            </Suspense>
+            <q-card-section>
+                <q-btn
+                    class="full-width"
+                    color="primary"
+                    @click="exitUser(); "
+                    append-icon="mdi-logout-variant"
+                    label="Sign out"
+                />
+            </q-card-section>
         </q-card>
     </q-page>
 </template>
@@ -130,6 +105,7 @@
 <script setup>
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
+import UserAchievementsSlider from '../components/UserAchievementsSlider.vue'
 import { useRouter } from 'vue-router'
 import { CONFIG } from '../config.js'
 
