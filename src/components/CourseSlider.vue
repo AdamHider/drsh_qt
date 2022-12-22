@@ -1,6 +1,6 @@
 <template>
     <swiper
-      v-if="user.active.data.id"
+      v-if="user.active.data?.id"
       class="courseSlider"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
@@ -72,27 +72,27 @@ const props = defineProps({
 const { user, save } = useUserStore()
 const { course, getList } = useCourse()
 
-if (user.active.data.id) {
+if (user.active?.data.id) {
   getList()
 }
 
 let courseSlider
 const select = async (index) => {
-  if (course.list[index].id === user.active.data.profile.active_course_id) {
+  if (course.list[index].id === user.active?.data.profile.active_course_id) {
     return false
   }
-  const activeIndex = course.list.findIndex((course) => (course.id === user.active.data.profile.active_course_id))
+  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.profile.active_course_id))
   if (activeIndex > -1) course.list[activeIndex].is_active = false
   course.list[index].is_active = true
   const fields = {
     active_course_id: course.list[index].id
   }
-  courseSlider.slideTo(index)
+  // courseSlider.slideTo(index)
   save({ fields })
 }
 
 const onSwiper = (swiper) => {
-  courseSlider = document.querySelector('.courseSlider').swiper
+  // courseSlider = document.querySelector('.courseSlider').swiper
 }
 
 </script>

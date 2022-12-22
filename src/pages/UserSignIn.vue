@@ -1,4 +1,8 @@
 <template>
+  <q-app-header class="transparent text-white">
+      <q-btn flat round dense icon="arrow_back" v-on:click="$router.go(-1);" v:slot="back-button"></q-btn>
+      <q-toolbar-title></q-toolbar-title>
+  </q-app-header>
   <q-page class="flex justify-center items-end full-height full-width text-center">
     <q-form
       ref="form"

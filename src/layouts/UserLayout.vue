@@ -14,7 +14,7 @@
     <q-page-container>
       <router-view v-slot="{ Component }">
         <keep-alive>
-          <component :is="Component" />
+          <component :is="Component"/>
         </keep-alive>
       </router-view>
     </q-page-container>
@@ -26,10 +26,13 @@
 import AppBackground from 'components/AppBackground.vue'
 import AppBottomBar from 'components/AppBottomBar.vue'
 import UserToggle from '../components/UserToggle.vue'
+import { useRoute } from 'vue-router'
 import { ref } from 'vue'
+const route = useRoute()
 
 const header = ref(null)
 
+console.log('mounted LAYOUT')
 const onScroll = (event) => {
   if (event.position.top > 0) {
     header.value.$el.classList.add('header-sticky')

@@ -10,7 +10,6 @@ const routes = [
   {
     path: '/',
     component: MainLayout,
-    redirect: '/home',
     children: [
       {
         path: 'home',
@@ -31,31 +30,14 @@ const routes = [
         }
       },
       {
+        path: 'authorization',
+        component: () => import('pages/UserStartup.vue'),
+        meta: { noBottomBar: true }
+      },
+      {
         path: 'classroom',
         component: () => import('pages/Classroom.vue'),
         meta: { requiresAuth: true }
-      }
-    ]
-  },
-  {
-    path: '/',
-    component: UserLayout,
-    children: [
-    ]
-  },
-  {
-    path: '/',
-    component: ClassroomLayout,
-    children: [
-    ]
-  },
-  {
-    path: '/',
-    component: AuthorizationLayout,
-    children: [
-      {
-        path: 'authorization',
-        component: () => import('pages/UserStartup.vue')
       },
       {
         path: 'classroom/join',
@@ -68,7 +50,8 @@ const routes = [
       },
       {
         path: 'authorization/sign-in',
-        component: () => import('pages/UserSignIn.vue')
+        component: () => import('pages/UserSignIn.vue'),
+        meta: { noBottomBar: true }
       },
       {
         path: 'authorization/sign-up',
@@ -76,11 +59,13 @@ const routes = [
       },
       {
         path: 'authorization/sign-up/step:step',
-        component: () => import('pages/UserSignUp.vue')
+        component: () => import('pages/UserSignUp.vue'),
+        meta: { noBottomBar: true }
       },
       {
         path: '/authorization/user-activate-:activation_code',
-        component: () => import('pages/UserActivate.vue')
+        component: () => import('pages/UserActivate.vue'),
+        meta: { noBottomBar: true }
       }
     ]
   },

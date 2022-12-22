@@ -13,7 +13,11 @@
       <AppBottomBar/>
     </q-footer>
     <q-page-container>
-      <router-view/>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" :key="route.fullPath"/>
+        </keep-alive>
+      </router-view>
     </q-page-container>
   </q-layout>
   <q-scroll-observer @scroll="onScroll" />
@@ -24,6 +28,8 @@ import AppBackground from 'components/AppBackground.vue'
 import AppBottomBar from 'components/AppBottomBar.vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
 const header = ref(null)
 

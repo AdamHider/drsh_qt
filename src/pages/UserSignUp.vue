@@ -1,7 +1,9 @@
-<style>
-</style>
 <template>
-    <q-page class="flex justify-center items-end full-height full-width text-center">
+    <q-app-header class="transparent text-white">
+        <q-btn flat round dense icon="arrow_back" v-on:click="$router.go(-1);" v:slot="back-button"></q-btn>
+        <q-toolbar-title></q-toolbar-title>
+    </q-app-header>
+    <q-page class="flex justify-center items-end full-height full-width text-center" style="padding-top: 50px">
       <q-form
         ref="form"
         v-model="formData.valid"
@@ -240,7 +242,7 @@ const formData = reactive({
 const steps = [
   '', '', 'password', 'passwordConfirm', 'terms'
 ]
-console.log(redirectedFrom);
+console.log(redirectedFrom)
 const validate = async function () {
   formData.valid = await form.value.validate()
   if (formData.step === 4) {
@@ -254,7 +256,7 @@ const validate = async function () {
       buttonLoading.value = false
 
       if (logged.success) {
-        if(redirectedFrom) return router.push(redirectedFrom.fullPath)
+        if (redirectedFrom) return router.push(redirectedFrom.fullPath)
         return router.push('/user')
       }
     } else {
