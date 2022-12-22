@@ -2,7 +2,7 @@
   <AppBackground/>
   <q-layout view="hHh LpR fFf">
     <q-header reveal class="transparent text-white rounded-b-md"  ref="header">
-      <q-toolbar >
+      <q-toolbar>
         <ClassroomToggle/>
         <q-toolbar-title></q-toolbar-title>
         <q-btn flat round dense class="q-mr-sm" icon="share"/>
@@ -10,14 +10,10 @@
       </q-toolbar>
     </q-header>
     <q-footer bordered class="bg-white text-primary ">
-      <BottomBar/>
+      <AppBottomBar/>
     </q-footer>
     <q-page-container>
-      <router-view v-slot="{ Component }">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
-      </router-view>
+      <router-view/>
     </q-page-container>
   </q-layout>
   <q-scroll-observer @scroll="onScroll" />
@@ -25,7 +21,7 @@
 
 <script setup>
 import AppBackground from 'components/AppBackground.vue'
-import BottomBar from 'components/BottomBar.vue'
+import AppBottomBar from 'components/AppBottomBar.vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 import { ref } from 'vue'
 

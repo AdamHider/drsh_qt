@@ -1,10 +1,18 @@
 <template>
-    <q-page class="bg-white" :style="`padding-top: ${backgroundImageHeight - 50 - 15}px`">
+    <q-app-header>
+      <ClassroomToggle/>
+      <q-toolbar-title></q-toolbar-title>
+      <q-btn flat round dense class="q-mr-sm" icon="share"/>
+      <q-btn flat round dense class="q-mr-sm"  icon="more_vert"/>
+    </q-app-header>
+    <q-page-container>
+      <q-page>
+    <div class="bg-white" :style="`padding-top: ${backgroundImageHeight - 50}px; min-height: inherit`">
       <q-img
         :src="`${CONFIG.API_HOST}${classroom.active?.fulltext_image}`"
         :style="`max-height: ${backgroundImageHeight}px; position: fixed; top: 0;`"
       />
-      <q-card flat class="my-card" style="margin-top: -15px;">
+      <q-card flat style="margin-top: -15px;">
         <q-card-section>
           <div class="row no-wrap items-center">
             <div class="col text-h6 ellipsis">
@@ -18,9 +26,6 @@
           <div v-if="classroom.active?.description" class="text-grey">
             {{ classroom.active?.description }}
           </div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
           <div v-if="classroom.active?.address" class="text-caption text-grey">
             <q-icon name="location_on" size="sm"></q-icon>
             {{ classroom.active?.address }}
@@ -30,7 +35,6 @@
             {{ classroom.active?.institution }}
           </div>
         </q-card-section>
-
         <q-separator />
 
         <q-tabs
@@ -40,26 +44,66 @@
           <q-tab name="main" icon="grid_view" label="Main" />
           <q-tab name="leaderboard" icon="bar_chart" label="Score" />
         </q-tabs>
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="main">
-            <div class="text-h6">Mails</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        <q-tab-panels v-model="tab" animated swipeable keep-alive>
+          <q-tab-panel name="main" class="q-px-none" >
+            <q-card flat>
+              <q-card-section class="q-py-none flex justify-between items-center">
+                  <div class="text-h6">Homeworks</div>
+                  <router-link to="classroom/homeworks">Show all</router-link>
+              </q-card-section>
+              <q-card-section class="q-pa-none">
+                
+                  <CourseSlider
+                    :slidesPerView=1.8
+                    :centerAligned="false"
+                    :withButton="false"
+                    slideHeight="140"
+                    :navigation="false"
+                    captionMode="full"
+                  />
+              </q-card-section>
+              <q-card-section class="q-py-none flex justify-between items-center">
+                  <div class="text-h6">Challenges</div>
+                  <router-link to="classroom/homeworks">Show all</router-link>
+              </q-card-section>
+              <q-card-section class="q-pa-none">
+                  <CourseSlider
+                    :slidesPerView=1.8
+                    :centerAligned="false"
+                    :withButton="false"
+                    slideHeight="140"
+                    :navigation="false"
+                    captionMode="full"
+                  />
+              </q-card-section>
+            </q-card>
           </q-tab-panel>
 
           <q-tab-panel name="leaderboard">
-            <div class="text-h6">Alarms</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <q-card flat>
+              <q-card-section class="q-py-none">
+                  <div class="text-h6">Leaderboard</div>
+              </q-card-section>
+              <q-card-section class="q-pa-none">
+                  
+              </q-card-section>
+            </q-card>
           </q-tab-panel>
 
         </q-tab-panels>
 
       </q-card>
-    </q-page>
+    </div>
+      </q-page>
+    </q-page-container>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
+import CourseSlider from '../components/CourseSlider.vue'
+import ClassroomToggle from '../components/ClassroomToggle.vue'
 import { useClassroom } from '../composables/useClassroom'
+
 import { CONFIG } from '../config.js'
 import { useUserStore } from '../stores/user'
 const { user } = useUserStore()

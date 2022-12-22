@@ -9,7 +9,7 @@
       </q-toolbar>
     </q-header>
     <q-footer bordered class="bg-white text-primary ">
-      <BottomBar/>
+      <AppBottomBar/>
     </q-footer>
     <q-page-container>
       <router-view v-slot="{ Component }">
@@ -24,7 +24,7 @@
 
 <script setup>
 import AppBackground from 'components/AppBackground.vue'
-import BottomBar from 'components/BottomBar.vue'
+import AppBottomBar from 'components/AppBottomBar.vue'
 import UserToggle from '../components/UserToggle.vue'
 import { ref } from 'vue'
 

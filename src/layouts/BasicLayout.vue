@@ -8,7 +8,7 @@
         </q-toolbar>
     </q-header>
     <q-footer bordered class="bg-white text-primary ">
-      <BottomBar/>
+      <AppBottomBar/>
     </q-footer>
     <q-page-container >
       <router-view v-slot="{ Component }">

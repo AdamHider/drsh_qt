@@ -1,6 +1,6 @@
-import QSegment from '../components/QSegment'
+import AppHeader from '../components/AppHeader.vue'
 
 // we globally register our component with Vue
 export default ({ app }) => {
-  app.component('q-segment', QSegment)
+  app.component('q-app-header', AppHeader)
 }

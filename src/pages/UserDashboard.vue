@@ -1,5 +1,12 @@
 <template>
-    <q-page class="flex justify-center content-end  text-center full-width">
+    <q-app-header>
+        <UserToggle/>
+        <q-toolbar-title></q-toolbar-title>
+        <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
+    </q-app-header>
+    <q-page-container>
+      <q-page>
+    <div class="flex justify-center content-end  text-center full-width" style="min-height: inherit;">
         <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
             <q-card-section>
                 <q-img
@@ -11,20 +18,20 @@
         </q-card>
         <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="padding-top: 30px;">
             <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
-              <q-linear-progress
-                  color="positive"
-                  :model-value="(user.active.data.profile?.level.percentage / 100)"
-                  size="12px"
-                   stripe rounded
-              ></q-linear-progress>
-              <div class="row q-ma-sm ">
-                  <div class="col text-left">
-                      <b>Level {{user.active.data.profile?.level.id}}</b>
-                  </div>
-                  <div class="col text-right">
-                      <b>{{user.active.data.profile?.total_points}}/{{user.active.data.profile?.level.points_to}}</b>
-                  </div>
-              </div>
+            <q-linear-progress
+                color="positive"
+                :model-value="(user.active.data.profile?.level.percentage / 100)"
+                size="12px"
+                stripe rounded
+            ></q-linear-progress>
+            <div class="row q-ma-sm ">
+                <div class="col text-left">
+                    <b>Level {{user.active.data.profile?.level.id}}</b>
+                </div>
+                <div class="col text-right">
+                    <b>{{user.active.data.profile?.total_points}}/{{user.active.data.profile?.level.points_to}}</b>
+                </div>
+            </div>
             </q-card-section>
             <q-card-section>
                 <q-item class="q-pa-none">
@@ -92,12 +99,15 @@
                 />
             </q-card-section>
         </q-card>
-    </q-page>
+    </div>
+      </q-page>
+    </q-page-container>
 </template>
 
 <script setup>
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
+import UserToggle from '../components/UserToggle.vue'
 import UserAchievementsSlider from '../components/UserAchievementsSlider.vue'
 import { useRouter } from 'vue-router'
 import { CONFIG } from '../config.js'

@@ -21,13 +21,7 @@ const routes = [
         path: 'lessons-:category_id',
         component: () => import('pages/Lessons.vue'),
         meta: { requiresAuth: true }
-      }
-    ]
-  },
-  {
-    path: '/',
-    component: UserLayout,
-    children: [
+      },
       {
         path: 'user',
         component: () => import('pages/UserDashboard.vue'),
@@ -35,18 +29,24 @@ const routes = [
           pageTitle: 'Profile',
           requiresAuth: true
         }
+      },
+      {
+        path: 'classroom',
+        component: () => import('pages/Classroom.vue'),
+        meta: { requiresAuth: true }
       }
+    ]
+  },
+  {
+    path: '/',
+    component: UserLayout,
+    children: [
     ]
   },
   {
     path: '/',
     component: ClassroomLayout,
     children: [
-      {
-        path: 'classroom',
-        component: () => import('pages/Classroom.vue'),
-        meta: { requiresAuth: true }
-      }
     ]
   },
   {

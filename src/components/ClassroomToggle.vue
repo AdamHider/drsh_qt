@@ -1,8 +1,6 @@
 <template  withBackground="true">
-    <q-chip class="transparent no-shadow"
+    <q-chip class="transparent no-shadow"  style="color: inherit"
         clickable
-        icon-right="autorenew"
-        text-color="white"
         @click="dialog = true"
     >
         <q-avatar size="30px">
@@ -11,6 +9,7 @@
         <div class="ellipsis">
             <b>{{classroom.active?.title}}</b>
             <q-tooltip>{{classroom.active?.title}}</q-tooltip>
+            <q-icon name="expand_more" size="sm"></q-icon>
         </div>
     </q-chip>
     <q-dialog v-model="dialog" position="top">

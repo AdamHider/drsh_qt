@@ -6,5 +6,5 @@
 
 <script setup >
 import AchievementList from '../components/AchievementList.vue'
-
+console.log('mounted ach')
 </script>
