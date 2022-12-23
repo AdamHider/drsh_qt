@@ -3,12 +3,17 @@ import { api } from '../services'
 import { useClassroom } from '../composables/useClassroom'
 
 const course = reactive({
+  active: {},
   list: [],
   isLoading: false
 })
 const { classroom } = useClassroom()
 
 export function useCourse () {
+  async function getActive () {
+    const courseResponse = await api.course.getActive()
+    course.active = courseResponse.data
+  }
   async function getList () {
     course.isLoading = true
     try {
@@ -22,10 +27,12 @@ export function useCourse () {
   }
   return {
     getList,
+    getActive,
     course
   }
 }
 
 watch(() => classroom.active?.id, async (newData, oldData) => {
   useCourse().getList()
+  useCourse().getActive()
 })

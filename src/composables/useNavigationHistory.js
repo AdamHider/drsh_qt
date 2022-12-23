@@ -3,7 +3,8 @@ import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
 
 const routes = reactive({
-  home: '/home',
+  course: '/course',
+  explore: '/explore',
   classroom: '/classroom',
   notifications: '/notifications',
   user: '/user'

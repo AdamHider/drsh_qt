@@ -8,9 +8,9 @@
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
-      <swiper-slide v-for="(achievementItem, index) in achievements" :key="index" :class="'text-center'" @click="select(index)">
+      <swiper-slide v-for="(achievementItem, index) in achievements" :key="index" :class="'text-center'">
         <q-card flat class="q-ma-sm">
-          <q-card-section class="q-pa-xs" >
+          <q-card-section class="q-pa-xs">
               <q-img
                 fit="cover"
                 class="rounded-borders"

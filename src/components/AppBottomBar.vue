@@ -2,11 +2,12 @@
     <q-tabs>
         <q-route-tab
             icon="rocket_launch"
-            :to="routes.home"
+            :to="routes.course"
             exact
         />
         <q-route-tab
             icon="search"
+            :to="routes.explore"
             exact
         />
         <q-route-tab

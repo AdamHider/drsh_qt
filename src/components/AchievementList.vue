@@ -5,7 +5,7 @@
             <q-spinner color="primary" name="dots" size="40px" />
             </div>
         </template>
-        <q-card  v-for="(achievement, index) in achievements.list" :key="index" class="q-ma-sm">
+        <q-card  v-for="(achievement, index) in achievement.list" :key="index" class="q-ma-sm">
             <q-card-section >
             <q-item class="q-pa-none bg-white">
                 <q-item-section avatar>
@@ -42,7 +42,7 @@
 import { useAchievement } from '../composables/useAchievement'
 import { CONFIG } from '../config.js'
 
-const { achievements, getList } = useAchievement()
+const { achievement, getList } = useAchievement()
 
 const onLoad = async function (index, done) {
   const isDone = await getList(index)

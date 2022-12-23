@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 import { api } from '../services/index'
-const achievements = reactive({
+const achievement = reactive({
   list: [],
   limit: 8,
   offset: 0
@@ -8,10 +8,10 @@ const achievements = reactive({
 
 export function useAchievement () {
   async function getList (index) {
-    achievements.offset = achievements.limit * index
+    achievement.offset = achievement.limit * index
     try {
-      const achievementListResponse = await api.achievements.getList({ limit: achievements.limit, offset: achievements.offset })
-      achievements.list = achievements.list.concat(achievementListResponse.data)
+      const achievementListResponse = await api.achievement.getList({ limit: achievement.limit, offset: achievement.offset })
+      achievement.list = achievement.list.concat(achievementListResponse.data)
       return achievementListResponse.data.length == 0
     } catch (e) {
       console.log(e)
@@ -20,7 +20,7 @@ export function useAchievement () {
   }
   async function getListByUser () {
     try {
-      const achievementListResponse = await api.achievements.getList()
+      const achievementListResponse = await api.achievement.getList()
       return achievementListResponse.data
     } catch (e) {
       console.log(e)
@@ -31,6 +31,6 @@ export function useAchievement () {
   return {
     getList,
     getListByUser,
-    achievements
+    achievement
   }
 }

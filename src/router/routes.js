@@ -1,10 +1,6 @@
 import MainLayout from 'layouts/MainLayout.vue'
-import AuthorizationLayout from 'layouts/AuthorizationLayout.vue'
 import EditLayout from 'layouts/EditLayout.vue'
-import ClassroomLayout from 'layouts/ClassroomLayout.vue'
-import ItemLayout from 'layouts/ItemLayout.vue'
 import BasicLayout from 'layouts/BasicLayout.vue'
-import UserLayout from 'layouts/UserLayout.vue'
 
 const routes = [
   {
@@ -12,8 +8,13 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: 'home',
-        component: () => import('pages/Home.vue'),
+        path: 'course',
+        component: () => import('pages/CoursePage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: 'explore',
+        component: () => import('pages/ExplorePage.vue'),
         meta: { requiresAuth: true }
       },
       {
@@ -28,6 +29,18 @@ const routes = [
           pageTitle: 'Profile',
           requiresAuth: true
         }
+      },
+      {
+        path: 'user/edit',
+        component: () => import('pages/UserEdit.vue')
+      },
+      {
+        path: 'user/edit/password',
+        component: () => import('pages/UserEditPassword.vue')
+      },
+      {
+        path: 'user/settings',
+        component: () => import('pages/UserSettings.vue')
       },
       {
         path: 'authorization',
@@ -66,24 +79,6 @@ const routes = [
         path: '/authorization/user-activate-:activation_code',
         component: () => import('pages/UserActivate.vue'),
         meta: { noBottomBar: true }
-      }
-    ]
-  },
-  {
-    path: '/',
-    component: EditLayout,
-    children: [
-      {
-        path: 'user/edit',
-        component: () => import('pages/UserEdit.vue')
-      },
-      {
-        path: 'user/edit/password',
-        component: () => import('pages/UserEditPassword.vue')
-      },
-      {
-        path: 'user/settings',
-        component: () => import('pages/UserSettings.vue')
       }
     ]
   },

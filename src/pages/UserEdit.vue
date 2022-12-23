@@ -1,5 +1,10 @@
 <template>
-  <q-page class="bg-white q-pa-sm">
+  <q-app-header class="bg-white rounded-b-md bordered" reveal>
+      <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+      <q-toolbar-title>User Edit</q-toolbar-title>
+      <q-btn flat icon="check" @click="saveChanges()"/>
+  </q-app-header>
+  <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
       <q-form
         ref="form"
         v-model="formData.valid"
@@ -147,8 +152,5 @@ watch(() => formData.fields.email.value, async (currentValue, oldValue) => {
     formData.fields.email.errors = result.message
     formData.valid = false
   }
-})
-defineExpose({
-  saveChanges
 })
 </script>
