@@ -2,14 +2,14 @@ import { reactive } from 'vue'
 import { api } from '../services/index'
 const lesson = reactive({
   list: [],
-  limit: 6,
+  limit: 10,
   offset: 0
 })
 
 export function useLesson () {
   async function getList (index) {
-      console.log(index)
-    lesson.offset = lesson.limit * (index-1)
+    console.log(index)
+    lesson.offset = lesson.limit * (index - 1)
     try {
       const lessonListResponse = await api.lesson.getList({ limit: lesson.limit, offset: lesson.offset })
       lesson.list = lessonListResponse.data.reverse().concat(lesson.list)
