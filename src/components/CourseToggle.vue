@@ -6,9 +6,12 @@
         <q-avatar size="30px">
           <img :src="`${CONFIG.API_HOST}${course.active?.image}`"/>
         </q-avatar>
-        <div class="ellipsis" style="max-width: 100px;">
+        <div v:if="course.active?.title" class="ellipsis" style="max-width: 100px;">
             <b>{{course.active?.title}}</b>
             <q-tooltip>{{course.active?.title}}</q-tooltip>
+        </div>
+        <div v:else>
+            <b>Choose course</b>
         </div>
           <q-icon name="expand_more" size="sm"></q-icon>
     </q-chip>
@@ -39,13 +42,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { watch, ref, defineEmits } from 'vue'
 import { useCourse } from '../composables/useCourse'
 import CourseSlider from '../components/CourseSlider.vue'
 import { CONFIG } from '../config.js'
 
+const emit = defineEmits(['update:dialogOpened'])
 const { course } = useCourse()
+const props = defineProps({
+  dialogOpened: Boolean
+})
 
 const dialog = ref(false)
+if (props.dialogOpened) dialog.value = true
+
+watch(props, () => {
+  if (props.dialogOpened) dialog.value = true
+})
+watch(dialog, () => {
+  emit('update:dialogOpened', dialog)
+})
 
 </script>
