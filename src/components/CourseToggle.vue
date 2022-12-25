@@ -1,23 +1,24 @@
 <template  withBackground="true">
-    <q-chip class="transparent no-shadow"  style="color: inherit"
-        clickable
-        @click="dialog = true"
+    <q-chip class="transparent no-shadow"
+      style="color: inherit"
+      clickable
+      @click="dialog = true"
     >
         <q-avatar size="30px">
           <img :src="`${CONFIG.API_HOST}${course.active?.image}`"/>
         </q-avatar>
-        <div v:if="course.active?.title" class="ellipsis" style="max-width: 100px;">
+        <div v-if="course.active?.title" class="ellipsis" style="max-width: 100px;">
             <b>{{course.active?.title}}</b>
             <q-tooltip>{{course.active?.title}}</q-tooltip>
         </div>
-        <div v:else>
+        <div v-else>
             <b>Choose course</b>
         </div>
           <q-icon name="expand_more" size="sm"></q-icon>
     </q-chip>
-    <q-dialog v-model="dialog" position="top">
+    <q-dialog v-model="dialog" position="bottom" allow-focus-outside >
       <q-card>
-        <q-card-section class="q-py-none">
+        <q-card-section>
           <div class="text-h6">Choose course</div>
         </q-card-section>
         <q-card-section class="q-pt-none q-px-none relative-position ">
@@ -48,6 +49,7 @@ import CourseSlider from '../components/CourseSlider.vue'
 import { CONFIG } from '../config.js'
 
 const emit = defineEmits(['update:dialogOpened'])
+
 const { course } = useCourse()
 const props = defineProps({
   dialogOpened: Boolean

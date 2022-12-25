@@ -1,22 +1,29 @@
 <template>
-    <q-app-header class="transparent text-white rounded-b-md" reveal>
-      <CourseToggle v-bind:dialogOpened="dialog" v-on:update:dialogOpened="dialog = $event"/>
+    <q-app-header class="transparent text-white rounded-b-md" reveal  ref="header">
+      <CourseToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event"/>
       <q-toolbar-title></q-toolbar-title>
       <q-btn flat round dense class="q-mr-sm" icon="share"/>
       <q-btn flat round dense class="q-mr-sm"  icon="more_vert"/>
     </q-app-header>
-    <q-page  class="flex justify-center items-end full-height full-width text-center" style="padding-top: 50px" >
-      <q-card flat class="transparent">
-        <q-card-section v-if="course.active?.id">
-          <div class="text-h6">{{course.active?.title}}</div>
-        </q-card-section>
-        <q-card-section class="text-white" v-else>
-          <div class="text-h6">Choose course</div>
-          <div class="text-caption">And start your investigation</div>
-          <q-btn color="dark" @click="dialog=true">Choose</q-btn>
-        </q-card-section>
-      </q-card>
-      <LessonList v-if="course.active?.id"/>
+    <q-page  class=" items-end full-height full-width text-center" style="padding-top: 50px" >
+      <q-scroll-area class="absolute-top absolute-left full-width full-height" style="z-index: 10;">
+        <LessonList v-if="course.active?.id" :disable="dialog.active"/>
+        <q-card flat class="transparent">
+          <q-card-section v-if="course.active?.id" class="text-white" >
+            <div class="text-h6">{{course.active?.title}}</div>
+            <div class="text-caption">Investigate to the infinity</div>
+          </q-card-section>
+          <q-card-section v-else class="text-white" >
+            <div class="text-h6">Choose course</div>
+            <div class="text-caption">And start your investigation</div>
+            <q-btn color="dark" @click="dialog.active=true">Choose</q-btn>
+          </q-card-section>
+        </q-card>
+        <q-page-sticky position="bottom">
+          <q-img :src="`${CONFIG.API_HOST}/images/dershane/robot/rocket.png`" width="50px"/>
+        </q-page-sticky>
+        <q-scroll-observer @scroll="onScroll" />
+      </q-scroll-area>
     </q-page>
 </template>
 
@@ -24,19 +31,21 @@
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
 import CourseSlider from '../components/CourseSlider.vue'
-import { ref, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
+import { CONFIG } from '../config.js'
 
 const { user } = useUserStore()
 
-const dialog = ref(false)
-
+const dialog = reactive({ active: false })
+const header = ref(null)
+const onScroll = function (event) { console.log(header); header.value.onScroll(event) }
+console.log('mounted')
 const { course, getActive } = useCourse()
 
 getActive()
 watch(() => user.active?.data.profile?.active_course_id, async (newData, oldData) => {
   getActive()
 })
-
 </script>

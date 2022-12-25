@@ -8,7 +8,6 @@ const lesson = reactive({
 
 export function useLesson () {
   async function getList (index) {
-    console.log(index)
     lesson.offset = lesson.limit * (index - 1)
     try {
       const lessonListResponse = await api.lesson.getList({ limit: lesson.limit, offset: lesson.offset })

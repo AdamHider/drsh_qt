@@ -5,18 +5,16 @@
         <slot/>
       </q-toolbar>
     </q-page-sticky>
-    <q-scroll-observer @scroll="onScroll" />
 </template>
 
 <script setup>
 import { ref, onActivated } from 'vue'
 import { useRoute } from 'vue-router'
-const route = useRoute();
+const route = useRoute()
 const props = defineProps({
   reveal: Boolean,
   class: String
 })
-
 const header = ref(null)
 let revealOffset = 0
 const onScroll = (event) => {
@@ -44,7 +42,7 @@ const checkReveal = (event) => {
 onActivated(() => {
   revealOffset = 0
   header.value.$el.classList.remove('header-reveal')
-});
+})
 
 </script>
 <style scoped>
