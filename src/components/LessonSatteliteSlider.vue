@@ -1,0 +1,89 @@
+<template>
+    <swiper
+      v-if="lesson.active.id"
+      :modules="[Navigation]"
+      :slides-per-view="props.slidesPerView"
+      :centeredSlides="props.centerAligned"
+      :navigation="props.navigation"
+      @swiper="onSwiper"
+      @slideChange="onSlideChange"
+    >
+      <swiper-slide v-for="(satteliteItem, index) in lesson.active.sattelites?.list" :key="index" :class="'text-center'">
+        <q-card flat class="transparent q-ma-sm" 
+            :disabled="(satteliteItem.block.is_blocked === true) ? true : null">
+            <q-btn v-if="satteliteItem.block.is_blocked === true" 
+                color="white" 
+                text-color="dark" 
+                class="absolute-top"
+                style="top: 10px; left: 10px; z-index: 5"
+                round 
+                icon="lock"
+            ></q-btn>
+            <router-link v-else 
+                :to="`/lesson-startup-${satteliteItem.id}`"
+                class="absolute-top absolute-left full-width full-height"
+                style="z-index: 101"
+            ></router-link>
+            <q-card-section class="q-pa-none transparent no-shadow text-center" style="width: 100px; min-height: 100px">
+                <div class="absolute-top flex justify-center items-center full-width full-height">
+                    <q-circular-progress v-if="!satteliteItem.block.is_blocked" 
+                        rounded
+                        show-value
+                        :value="satteliteItem.exercise?.current_progress || 0"
+                        size="40px"
+                        :thickness="0.22"
+                        color="orange"
+                        track-color="white-transparent1"
+                        class="q-ma-none"
+                        style="z-index: 50; left: 0; background: none;"
+                    >
+                        <b class="text-white ">{{ satteliteItem.exercise?.current_progress || 0 }}%</b>
+                    </q-circular-progress>
+                </div>
+                <q-img
+                    :src="`${CONFIG.API_HOST}/${satteliteItem.image}`"
+                    loading="lazy"
+                    spinner-color="white">
+                </q-img>
+            </q-card-section>
+            <q-card-section class="text-center text-white q-pa-none">
+                <div class="text-bold">{{satteliteItem.intro?.subtitle}}</div>
+                <div class="row q-ma-sm">
+                    <div class="col text-left"></div>
+                    <div class="col  text-right">
+                        <b>{{satteliteItem.exercise?.current_page}}</b>
+                    </div>
+                </div>
+            </q-card-section>
+        </q-card>
+      </swiper-slide>
+    </swiper>
+</template>
+<script setup>
+import { ref, onActivated } from 'vue'
+import { useRouter } from 'vue-router'
+import { useLesson } from '../composables/useLesson'
+import { Navigation } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { CONFIG } from '../config.js'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/scrollbar'
+
+const props = defineProps({
+  slidesPerView: Number,
+  centerAligned: Boolean,
+  slideHeight: String,
+  navigation: Boolean,
+  captionMode: String
+})
+
+const { lesson } = useLesson()
+
+const onSwiper = (swiper) => {
+}
+const onSlideChange = (swiper) => {
+}
+</script>

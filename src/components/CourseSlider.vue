@@ -53,6 +53,7 @@
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import { defineEmits } from 'vue'
 import { CONFIG } from '../config.js'
 
 import 'swiper/css'
@@ -69,6 +70,8 @@ const props = defineProps({
   captionMode: String
 })
 
+const emits = defineEmits(['select'])
+
 const { user, save } = useUserStore()
 const { course, getList } = useCourse()
 
@@ -81,6 +84,7 @@ const select = async (index) => {
   if (course.list[index].id === user.active?.data.profile.active_course_id) {
     return false
   }
+  emits('select');
   const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.profile.active_course_id))
   if (activeIndex > -1) course.list[activeIndex].is_active = false
   course.list[index].is_active = true

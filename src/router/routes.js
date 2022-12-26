@@ -1,6 +1,4 @@
 import MainLayout from 'layouts/MainLayout.vue'
-import EditLayout from 'layouts/EditLayout.vue'
-import BasicLayout from 'layouts/BasicLayout.vue'
 
 const routes = [
   {
@@ -79,13 +77,12 @@ const routes = [
         path: '/authorization/user-activate-:activation_code',
         component: () => import('pages/UserActivate.vue'),
         meta: { noBottomBar: true }
-      }
-    ]
-  },
-  {
-    path: '/',
-    component: BasicLayout,
-    children: [
+      },
+      {
+        path: '/lesson-startup-:lesson_id',
+        component: () => import('pages/LessonStartup.vue'),
+        meta: { noBottomBar: true }
+      },
       {
         path: 'notifications',
         component: () => import('pages/Notifications.vue'),

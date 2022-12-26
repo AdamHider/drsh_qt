@@ -36,6 +36,7 @@
             slideHeight="140"
             :navigation="false"
             captionMode="full"
+            @select="select"
           />
         </q-card-section>
       </q-card>
@@ -57,6 +58,10 @@ const props = defineProps({
 
 const dialog = ref(false)
 if (props.dialogOpened) dialog.value = true
+
+const select = () => {
+  dialog.value = false
+}
 
 watch(props, () => {
   if (props.dialogOpened) dialog.value = true
