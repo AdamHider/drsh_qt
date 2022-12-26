@@ -16,11 +16,6 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
-        path: 'lessons-:category_id',
-        component: () => import('pages/Lessons.vue'),
-        meta: { requiresAuth: true }
-      },
-      {
         path: 'user',
         component: () => import('pages/UserDashboard.vue'),
         meta: {
@@ -79,8 +74,13 @@ const routes = [
         meta: { noBottomBar: true }
       },
       {
-        path: '/lesson-startup-:lesson_id',
+        path: 'lesson-startup-:lesson_id',
         component: () => import('pages/LessonStartup.vue'),
+        meta: { noBottomBar: true }
+      },
+      {
+        path: 'lesson-:lesson_id',
+        component: () => import('src/pages/LessonItem.vue'),
         meta: { noBottomBar: true }
       },
       {

@@ -1,4 +1,4 @@
-import { reactive, watch } from 'vue'
+import { reactive } from 'vue'
 import { api } from '../services/index.js'
 
 const classroom = reactive({

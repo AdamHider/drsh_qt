@@ -6,7 +6,7 @@
       <q-btn flat round dense class="q-mr-sm"  icon="more_vert"/>
     </q-app-header>
     <q-page  class=" items-end full-height full-width text-center" >
-      <q-scroll-area class="absolute-top absolute-left full-width full-height"  
+      <q-scroll-area class="absolute-top absolute-left full-width full-height"
         :content-style="{
           display: 'flex',
           justifyContent: 'end',
@@ -35,7 +35,6 @@
 <script setup>
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
-import CourseSlider from '../components/CourseSlider.vue'
 import { ref, reactive, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'

@@ -18,7 +18,20 @@
             <div class="text-h5"><b>{{lesson.active.intro?.subtitle}}</b></div>
             <div class="text-caption">{{lesson.active.intro?.description_text}}</div>
         </q-card-section>
-        <q-card-section>
+        <q-card-section v-if="lesson.active.master_lesson?.id">
+            <div class="text-caption">
+              This lesson is sattelite of
+              <router-link :to="`/lesson-startup-${lesson.active.master_lesson.id}`">
+                {{ lesson.active.master_lesson.intro.subtitle }}
+              </router-link>
+            </div>
+        </q-card-section>
+        <q-card-actions class="text-right">
+          <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="start(lesson.active.id)"></q-btn>
+          <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue" color="positive" @click="start(lesson.active.id)"></q-btn>
+          <q-btn v-else class="full-width" label="Start" color="primary" @click="start(lesson.active.id)"></q-btn>
+        </q-card-actions>
+        <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
             <div class="text-h6">Sattelites</div>
         </q-card-section>
         <LessonSatteliteSlider
@@ -28,6 +41,7 @@
             slideHeight="100"
             :navigation="false"
             captionMode="full"
+            @select="select"
         />
     </q-card>
     <q-page-sticky
@@ -41,33 +55,61 @@
         spinner-color="white"
         />
     </q-page-sticky>
-    <q-page-sticky position="bottom" class="q-pa-md">
-        <q-btn class="full-width" label="Start" color="primary"></q-btn>
-    </q-page-sticky>
+    <q-dialog v-model="dialog">
+      <q-card flat class="relative text-center" style="overflow: visible">
+          <q-img
+              class=""
+              :src="`${CONFIG.API_HOST}/${activeSattelite.image}`"
+              style="max-width: 250px; width: 180px; margin-top: -80px"
+              no-spinner
+          />
+        <q-card-section class="text-left">
+            <div class="text-h5"><b>{{activeSattelite.intro?.subtitle}}</b></div>
+            <div class="text-caption">{{activeSattelite.intro?.description_text}}</div>
+        </q-card-section>
+        <q-card-actions class="text-right">
+          <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="start(activeSattelite.id)"></q-btn>
+          <q-btn v-else-if="activeSattelite.exercise?.id" class="full-width" label="Continue" color="positive" @click="start(activeSattelite.id)"></q-btn>
+          <q-btn v-else class="full-width" label="Start" color="primary" @click="start(activeSattelite.id)"></q-btn>
+        </q-card-actions>
+      </q-card>
+
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup>
-import { useUserStore } from '../stores/user'
 import { useLesson } from '../composables/useLesson'
+import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { onActivated } from 'vue'
+import { ref, onActivated, watch } from 'vue'
 import { CONFIG } from '../config.js'
 
 const { lesson, getItem, getSatteliteList } = useLesson()
-const { user, signOut } = useUserStore()
+const { addItem } = useExercise()
 const router = useRouter()
 const route = useRoute()
+const dialog = ref(false)
+const activeSattelite = ref({})
 
-onActivated(async () => {
-    await getItem(route.params.lesson_id)
-    
-    getSatteliteList()
-})
-const exitUser = async function () {
-  await signOut()
-  return router.push('/authorization')
+const select = (index) => {
+  activeSattelite.value = lesson.active.sattelites.list[index]
+  dialog.value = true
+}
+const start = async (lessonId) => {
+  const exerciseCreated = await addItem(lessonId)
+  console.log(exerciseCreated)
+  if (exerciseCreated) router.push(`/lesson-${lessonId}`)
 }
 
+onActivated(async () => {
+  await getItem(route.params.lesson_id)
+  getSatteliteList()
+})
+
+watch(() => route.params.lesson_id, async () => {
+  await getItem(route.params.lesson_id)
+  getSatteliteList()
+})
 </script>

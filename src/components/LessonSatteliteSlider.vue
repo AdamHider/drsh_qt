@@ -8,25 +8,20 @@
       @swiper="onSwiper"
       @slideChange="onSlideChange"
     >
-      <swiper-slide v-for="(satteliteItem, index) in lesson.active.sattelites?.list" :key="index" :class="'text-center'">
-        <q-card flat class="transparent q-ma-sm" 
+      <swiper-slide v-for="(satteliteItem, index) in lesson.active.sattelites?.list" :key="index" :class="'text-center'" @click="select(index)">
+        <q-card flat class="transparent q-ma-sm"
             :disabled="(satteliteItem.block.is_blocked === true) ? true : null">
-            <q-btn v-if="satteliteItem.block.is_blocked === true" 
-                color="white" 
-                text-color="dark" 
+            <q-btn v-if="satteliteItem.block.is_blocked === true"
+                color="white"
+                text-color="dark"
                 class="absolute-top"
                 style="top: 10px; left: 10px; z-index: 5"
-                round 
+                round
                 icon="lock"
             ></q-btn>
-            <router-link v-else 
-                :to="`/lesson-startup-${satteliteItem.id}`"
-                class="absolute-top absolute-left full-width full-height"
-                style="z-index: 101"
-            ></router-link>
             <q-card-section class="q-pa-none transparent no-shadow text-center" style="width: 100px; min-height: 100px">
                 <div class="absolute-top flex justify-center items-center full-width full-height">
-                    <q-circular-progress v-if="!satteliteItem.block.is_blocked" 
+                    <q-circular-progress v-if="!satteliteItem.block.is_blocked"
                         rounded
                         show-value
                         :value="satteliteItem.exercise?.current_progress || 0"
@@ -60,8 +55,7 @@
     </swiper>
 </template>
 <script setup>
-import { ref, onActivated } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineEmits } from 'vue'
 import { useLesson } from '../composables/useLesson'
 import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -72,6 +66,8 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
+const emits = defineEmits(['select'])
+
 const props = defineProps({
   slidesPerView: Number,
   centerAligned: Boolean,
@@ -81,6 +77,10 @@ const props = defineProps({
 })
 
 const { lesson } = useLesson()
+
+const select = async (index) => {
+  emits('select', index)
+}
 
 const onSwiper = (swiper) => {
 }

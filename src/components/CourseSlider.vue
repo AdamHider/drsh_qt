@@ -79,24 +79,21 @@ if (user.active?.data.id) {
   getList()
 }
 
-let courseSlider
 const select = async (index) => {
   if (course.list[index].id === user.active?.data.profile.active_course_id) {
     return false
   }
-  emits('select');
+  emits('select')
   const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.profile.active_course_id))
   if (activeIndex > -1) course.list[activeIndex].is_active = false
   course.list[index].is_active = true
   const fields = {
     active_course_id: course.list[index].id
   }
-  // courseSlider.slideTo(index)
   save({ fields })
 }
 
 const onSwiper = (swiper) => {
-  // courseSlider = document.querySelector('.courseSlider').swiper
 }
 
 </script>
