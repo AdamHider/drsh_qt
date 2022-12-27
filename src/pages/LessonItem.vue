@@ -1,5 +1,5 @@
 <template>
-    <q-app-header class="transparent rounded-b-md" reveal>
+    <q-app-header class="bg-white rounded-b-md" reveal>
         <q-btn flat icon="close"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-linear-progress 
             rounded size="20px" 

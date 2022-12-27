@@ -29,10 +29,21 @@
                 dense bordered
                 hide-dropdown-icon
                 v-model="formData.fields[index].value"
-                :options="input.variants"
+                :options="formData.fields[index].options"
                 :style="{ display: 'inline-block', minWidth: '50px', height: '35px', textAlign: 'center' }"
                 :input-style="{ height: '25px', backgroundColor: 'black' }"
-            />
+            >
+                <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                        <q-item-section avatar >
+                            <q-icon :name="scope.opt.icon" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>{{ scope.opt.label }}</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </template>
+            </q-select>
         </Teleport>
     </div>
 
@@ -61,7 +72,19 @@ const renderData = () => {
 }
 const renderFields = () => {
     for(var k in props.pageData.fields){
-        formData.fields.push({value: '', options: props.pageData.fields[k].variants})
+        let field = props.pageData.fields[k]
+        let value = ''
+        let options = field.variants
+        if(field.answer){
+            if(field.answer.is_correct == 'wrong') {
+                value = field.answer.wrong_answer
+                options = [{label: field.answer.correct_answer, disable: true}]
+            } else {
+                value = field.answer.correct_answer
+                options = [{label: field.answer.correct_answer, disable: true}]
+            }
+        }
+        formData.fields.push({value: value, options: options})
     }
 }
 
