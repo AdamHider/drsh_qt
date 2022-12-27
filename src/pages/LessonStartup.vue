@@ -86,10 +86,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { ref, onActivated, watch } from 'vue'
 import { CONFIG } from '../config.js'
 
-const { lesson, getItem, getSatteliteList } = useLesson()
-const { addItem } = useExercise()
 const router = useRouter()
 const route = useRoute()
+const { lesson, getItem, getSatteliteList } = useLesson()
+const { addItem } = useExercise()
 const dialog = ref(false)
 const activeSattelite = ref({})
 

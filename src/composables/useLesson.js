@@ -32,6 +32,14 @@ export function useLesson () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
     lesson.active.sattelites = lessonResponse.data
   }
+  async function getPage (action) {
+    const lessonPageResponse = await api.lesson.getPage({ lesson_id: lesson.active.id, action: action})
+    lesson.active.page = lessonPageResponse.data
+  }
+  async function saveAnswer (answers) {
+    const lessonAnswerResponse = await api.lesson.saveAnswer({ filter: {lesson_id: lesson.active.id}, answers: answers})
+    lesson.active.page = lessonAnswerResponse.data
+  }
   function clear () {
     lesson.list = []
   }
@@ -40,7 +48,8 @@ export function useLesson () {
     getItem,
     getList,
     getSatteliteList,
-    clear,
+    getPage,
+    saveAnswer,
     lesson
   }
 }
