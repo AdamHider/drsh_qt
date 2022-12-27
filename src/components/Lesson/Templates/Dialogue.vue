@@ -34,12 +34,13 @@
                 :input-style="{ height: '25px', backgroundColor: 'black' }"
             >
                 <template v-slot:option="scope">
-                    <q-item v-bind="scope.itemProps">
+                    <q-item v-bind="scope.itemProps" class="positive">
                         <q-item-section avatar >
-                            <q-icon :name="scope.opt.icon" />
+                            <q-icon v-if="scope.opt.is_correct" name="check" />
+                            <q-icon v-else name="close" />
                         </q-item-section>
                         <q-item-section>
-                            <q-item-label>{{ scope.opt.label }}</q-item-label>
+                            <q-item-label >{{ scope.opt.label }}</q-item-label>
                         </q-item-section>
                     </q-item>
                 </template>
@@ -78,10 +79,13 @@ const renderFields = () => {
         if(field.answer){
             if(field.answer.is_correct == 'wrong') {
                 value = field.answer.wrong_answer
-                options = [{label: field.answer.correct_answer, disable: true}]
+                options = [
+                    {label: field.answer.wrong_answer, disable: true, is_correct: false},
+                    {label: field.answer.correct_answer, disable: true, is_correct: true}
+                ]
             } else {
                 value = field.answer.correct_answer
-                options = [{label: field.answer.correct_answer, disable: true}]
+                options = [{label: field.answer.correct_answer, disable: true, is_correct: true}]
             }
         }
         formData.fields.push({value: value, options: options})
