@@ -28,7 +28,7 @@
         </q-card-section>
         <q-card-actions class="text-right">
           <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="start(lesson.active.id)"></q-btn>
-          <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue" color="positive" @click="start(lesson.active.id)"></q-btn>
+          <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue" color="positive" :to="`/lesson-${lesson.active.id}`"></q-btn>
           <q-btn v-else class="full-width" label="Start" color="primary" @click="start(lesson.active.id)"></q-btn>
         </q-card-actions>
         <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
@@ -69,7 +69,7 @@
         </q-card-section>
         <q-card-actions class="text-right">
           <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="start(activeSattelite.id)"></q-btn>
-          <q-btn v-else-if="activeSattelite.exercise?.id" class="full-width" label="Continue" color="positive" @click="start(activeSattelite.id)"></q-btn>
+          <q-btn v-else-if="activeSattelite.exercise?.id" class="full-width" label="Continue" color="positive" :to="`/lesson-${activeSattelite.id}`"></q-btn>
           <q-btn v-else class="full-width" label="Start" color="primary" @click="start(activeSattelite.id)"></q-btn>
         </q-card-actions>
       </q-card>

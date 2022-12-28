@@ -35,10 +35,12 @@ export function useLesson () {
   async function getPage (action) {
     const lessonPageResponse = await api.lesson.getPage({ lesson_id: lesson.active.id, action: action})
     lesson.active.page = lessonPageResponse.data
+    return lessonPageResponse.data;
   }
   async function saveAnswer (answers) {
     const lessonAnswerResponse = await api.lesson.saveAnswer({ filter: {lesson_id: lesson.active.id}, answers: answers})
     lesson.active.page = lessonAnswerResponse.data
+    return lessonAnswerResponse.data;
   }
   function clear () {
     lesson.list = []
