@@ -1,9 +1,9 @@
 <template>
     <q-card>
-        <q-img 
+        <q-img
             cover
-            width="250px" 
-            :src="`${CONFIG.API_HOST}/${pageData?.data.image}`" />  
+            width="250px"
+            :src="`${CONFIG.API_HOST}/${pageData?.data.image}`" />
     </q-card>
     <q-list>
       <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
@@ -40,7 +40,7 @@
                         <q-item>
                             <q-item-section>
                                 <q-item-label v-if="formData.fields[index].value !== ''">
-                                    Your answer: 
+                                    Your answer:
                                     <b :class="`text-${(formData.fields[index].answer.is_correct == 'correct') ? 'positive' : 'negative'}`">
                                         {{ formData.fields[index].value }}
                                     </b>
@@ -65,60 +65,59 @@
 
 <script setup>
 import { reactive, watch, defineEmits, onActivated } from 'vue'
+import { useLesson } from '../../../composables/useLesson'
 import { CONFIG } from '../../../config.js'
 
-const props = defineProps({
-    pageData: Object
-})
+const { lesson } = useLesson()
 const emits = defineEmits(['update-answer'])
 
 const replicaList = reactive({
-    list: []
+  list: []
 })
 const formData = reactive({
-    fields: []
+  fields: []
 })
 const renderData = () => {
-    console.log('renderData')
-    replicaList.list = [];
-    for(var i in props.pageData.data.replica_list){
-        if(props.pageData.data.replica_list[i].text.indexOf('input') > -1){
-            let inputIndex = props.pageData.data.replica_list[i].text.match(/{{input[0-9]+}}/g)[0].match(/[0-9]+/g)[0];
-            props.pageData.data.replica_list[i].text = props.pageData.data.replica_list[i].text.replace(/\{\{input[0-9]+\}\}/, `<span id="input_${inputIndex}"></span>` )
-        }
-        replicaList.list.push(props.pageData.data.replica_list[i]);
+  console.log('renderData')
+  replicaList.list = []
+  for (const i in lesson.active.page.data.replica_list) {
+    if (lesson.active.page.data.replica_list[i].text.indexOf('input') > -1) {
+      const inputIndex = lesson.active.page.data.replica_list[i].text.match(/{{input[0-9]+}}/g)[0].match(/[0-9]+/g)[0]
+      lesson.active.page.data.replica_list[i].text = lesson.active.page.data.replica_list[i].text.replace(/\{\{input[0-9]+\}\}/, `<span id="input_${inputIndex}"></span>`)
     }
+    replicaList.list.push(lesson.active.page.data.replica_list[i])
+  }
 }
 const renderFields = () => {
-    if(!props.pageData.fields) return
-    for(var k in props.pageData.fields){
-        let field = props.pageData.fields[k]
-        let value = ''
-        let options = field.variants
-        if(field.answer){
-            if(field.answer.is_correct == 'wrong') {
-                value = field.answer.wrong_answer
-                options = []
-            } else {
-                value = field.answer.correct_answer
-                options = []
-            }
-        }
-        formData.fields.push({value: value, options: options, index: field.index, answer: field.answer })
+  if (!lesson.active.page.fields) return
+  for (const k in lesson.active.page.fields) {
+    const field = lesson.active.page.fields[k]
+    let value = ''
+    let options = field.variants
+    if (field.answer) {
+      if (field.answer.is_correct == 'wrong') {
+        value = field.answer.wrong_answer
+        options = []
+      } else {
+        value = field.answer.correct_answer
+        options = []
+      }
     }
-    emits('update-answer', formData.fields)
+    formData.fields.push({ value, options, index: field.index, answer: field.answer })
+  }
+  emits('update-answer', formData.fields)
 }
 
 renderData()
 renderFields()
 
 onActivated(() => {
-    renderData()
-    renderFields()
+  renderData()
+  renderFields()
 })
 
 watch(formData.fields, (newValue, oldValue) => {
-    emits('update-answer', formData.fields)
+  emits('update-answer', formData.fields)
 })
 
 </script>

@@ -19,17 +19,17 @@
                 <q-separator color="white"/>
             </q-card>
             <div v-else :class="`col-auto`">
-                <q-card class="transparent no-shadow q-ma-sm" 
+                <q-card class="transparent no-shadow q-ma-sm"
                     :disabled="(lesson.block.is_blocked === true) ? true : null">
-                    <q-btn v-if="lesson.block.is_blocked === true" 
-                        color="white" 
-                        text-color="dark" 
+                    <q-btn v-if="lesson.block.is_blocked === true"
+                        color="white"
+                        text-color="dark"
                         class="absolute-top"
                         style="top: 10px; left: 10px; z-index: 5"
-                        round 
+                        round
                         icon="lock"
                     ></q-btn>
-                    <router-link v-else 
+                    <router-link v-else
                         :to="`/lesson-startup-${lesson.id}`"
                         class="absolute-top absolute-left full-width full-height"
                         style="z-index: 101"
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="absolute-top flex justify-center items-center full-width full-height">
-                            <q-circular-progress v-if="!lesson.block.is_blocked" 
+                            <q-circular-progress v-if="!lesson.block.is_blocked"
                                 rounded
                                 show-value
                                 :value="lesson.exercise?.current_progress || 0"
@@ -127,25 +127,25 @@ const lessonList = ref([])
 const onLoad = async function (index, done) {
   if (disable.value) return false
   const isDone = await getList(index)
-  composeList();
+  composeList()
   done(isDone)
 }
 const composeList = () => {
-    let lessons = lesson.list
-    lessonList.value = [];
-    for(let i = lesson.list.length-1; i >= 0; i--){
-        if(checkGroup(lesson.list[i])){
-            lessonList.value.unshift({...lesson.list[i], ...{type: 'group'}})
-        }
-        lessonList.value.unshift({...lesson.list[i], ...{type: 'lesson'}})
+  const lessons = lesson.list
+  lessonList.value = []
+  for (let i = lesson.list.length - 1; i >= 0; i--) {
+    if (checkGroup(lesson.list[i])) {
+      lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'group' } })
     }
+    lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'lesson' } })
+  }
 }
 const checkGroup = (lesson) => {
-    if(lesson.parent_id !== currentParentId.value){
-        currentParentId.value = lesson.parent_id;
-        return true;
-    }
-    return false;
+  if (lesson.parent_id !== currentParentId.value) {
+    currentParentId.value = lesson.parent_id
+    return true
+  }
+  return false
 }
 const onIntersection = (entry) => {
   groupBackground.value = entry.target.attributes.groupBackground.value
@@ -157,9 +157,9 @@ onActivated(() => {
 })
 
 watch(() => course.active?.id, async (newData, oldData) => {
-    infiniteList.value.setIndex(0)
-    infiniteList.value.resume()
-    infiniteList.value.trigger()
+  infiniteList.value.setIndex(0)
+  infiniteList.value.resume()
+  infiniteList.value.trigger()
 })
 </script>
 <style scoped>
