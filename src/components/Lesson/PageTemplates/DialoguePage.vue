@@ -1,0 +1,77 @@
+<template>
+    <q-card v-if="lesson.active.page?.data?.image">
+        <q-img
+            cover
+            width="250px"
+            :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
+    </q-card>
+    <q-list>
+      <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
+        <q-item-section avatar>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+          </q-avatar>
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label lines="1"><b>{{ replica.name }}</b></q-item-label>
+          <q-item-label lines="2" v-html="replica.text"></q-item-label>
+        </q-item-section>
+        <q-item-section side top>
+          1 min ago
+        </q-item-section>
+      </q-item>
+    </q-list>
+
+</template>
+
+<script setup>
+import { reactive, watch, onMounted, defineEmits } from 'vue'
+import { useLesson } from '../../../composables/useLesson'
+import { CONFIG } from '../../../config.js'
+
+const emits = defineEmits(['onRendered'])
+
+const { lesson } = useLesson()
+
+const replicaList = reactive({
+  list: []
+})
+
+const renderData = () => {
+  replicaList.list = []
+  for (const i in lesson.active.page.data.replica_list) {
+    if (lesson.active.page.data.replica_list[i].text.indexOf('input') > -1) {
+      const inputIndex = lesson.active.page.data.replica_list[i].text.match(/{{input[0-9]+}}/g)[0].match(/[0-9]+/g)[0]
+      lesson.active.page.data.replica_list[i].text = lesson.active.page.data.replica_list[i].text.replace(/\{\{input[0-9]+\}\}/, `<span id="input_${inputIndex}"></span>`)
+    }
+    replicaList.list.push(lesson.active.page.data.replica_list[i])
+  }
+}
+
+renderData()
+
+onMounted(() => {
+  emits('onRendered', true)
+})
+
+watch(() => lesson.active.page, (newValue, oldValue) => {
+  renderData()
+})
+
+</script>
+
+<style lang="scss">
+.q-select.q-select-inline .q-field__control,
+.q-select.q-select-inline .q-field__native {
+  min-height: 18px;
+  padding: 0;
+}
+
+.q-select.correct-answer.q-field--standard .q-field__control::before{
+    border-color: $positive;
+}
+.q-select.wrong-answer.q-field--standard .q-field__control::before{
+    border-color: $negative;
+}
+</style>

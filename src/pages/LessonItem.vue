@@ -12,10 +12,9 @@
                 <div class="text-h6"><b>{{lesson.active.page?.header?.title}}</b></div>
                 <div class="text-subtitle1">{{lesson.active.page?.header?.subtitle}}</div>
             </q-card-section>
-            <q-card-section>
-            </q-card-section>
         </q-card>
-        <component :is="PageTemplate"  @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"/>
+        <component :is="PageTemplate" @onRendered="rendered = true"/>
+        <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"/>
     </q-page>
     <q-footer expand position="bottom">
         <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved"/>
@@ -31,10 +30,15 @@ import { ref, computed, defineAsyncComponent, onActivated } from 'vue'
 const route = useRoute()
 const router = useRouter()
 const { lesson, getItem, getPage, saveAnswer } = useLesson()
-const pageTemplateTitle = ref(false)
-const pageReload = ref(true)
+
 const pageAnswers = ref({})
-const PageTemplate = computed(() => pageTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/PageTemplates/${pageTemplateTitle.value}.vue`)) : null)
+const rendered = ref(false)
+
+const pageTemplateTitle = ref(false)
+const formTemplateTitle = ref(false)
+
+const PageTemplate = computed(() => pageTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/PageTemplates/${pageTemplateTitle.value}Page.vue`)) : null)
+const FormTemplate = computed(() => formTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/FormTemplates/${formTemplateTitle.value}Form.vue`)) : null)
 
 const load = async () => {
   await getItem(route.params.lesson_id)
@@ -42,17 +46,17 @@ const load = async () => {
 }
 load()
 
-onActivated(async () => {
-  load()
-})
-
 const onPageChanged = async (action) => {
   pageTemplateTitle.value = false
+  formTemplateTitle.value = false
   const pageResponse = await getPage(action)
   if (!pageResponse) {
-    return router.push(`/lesson-startup-${route.params.lesson_id}`)
+    // return router.push(`/lesson-startup-${route.params.lesson_id}`)
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
+  if (lesson.active.page?.header.form_template) {
+    formTemplateTitle.value = lesson.active.page?.header.form_template.charAt(0).toUpperCase() + lesson.active.page?.header.form_template.slice(1)
+  }
 }
 const onAnswerSaved = async () => {
   const answers = {}

@@ -1,6 +1,6 @@
 <template>
     <div class="full-width" style="align-self: end">
-      <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" reverse class="relative-position" style="z-index: 1;padding-top: 50px">
+      <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" reverse class="relative-position" style="z-index: 1">
         <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
           <q-item-section avatar>
             <q-avatar>
@@ -33,10 +33,9 @@
 </template>
 
 <script setup>
-import { reactive, ref, watch, defineEmits, onActivated, isReactive  } from 'vue'
+import { reactive, ref, watch, defineEmits } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { CONFIG } from '../../../config.js'
-
 
 const { lesson } = useLesson()
 
@@ -78,7 +77,7 @@ const setSortIndex = function () {
 }
 
 const renderData = () => {
-    replicaList.list = []
+  replicaList.list = []
   for (const i in lesson.active.page.data.replica_list) {
     const replica = lesson.active.page.data.replica_list[i]
     replica.rendered = true
@@ -151,9 +150,8 @@ renderData()
 renderFields()
 
 watch(() => lesson.active.page, (newValue, oldValue) => {
-    
-    current_answer_index.value = 0
-    current_input_index.value = 0
+  current_answer_index.value = 0
+  current_input_index.value = 0
   renderData()
   renderFields()
 })
