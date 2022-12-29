@@ -1,9 +1,9 @@
 <template>
-    <q-card>
+    <q-card v-if="lesson.active.page?.data?.image">
         <q-img
             cover
             width="250px"
-            :src="`${CONFIG.API_HOST}/${pageData?.data.image}`" />
+            :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
     </q-card>
     <q-list>
       <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
@@ -69,7 +69,7 @@ import { useLesson } from '../../../composables/useLesson'
 import { CONFIG } from '../../../config.js'
 
 const { lesson } = useLesson()
-const emits = defineEmits(['update-answer'])
+const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 
 const replicaList = reactive({
   list: []
@@ -89,6 +89,7 @@ const renderData = () => {
   }
 }
 const renderFields = () => {
+  formData.fields = [];
   if (!lesson.active.page.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
@@ -111,7 +112,7 @@ const renderFields = () => {
 renderData()
 renderFields()
 
-onActivated(() => {
+watch(() => lesson.active.page, (newValue, oldValue) => {
   renderData()
   renderFields()
 })

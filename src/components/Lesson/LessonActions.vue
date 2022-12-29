@@ -1,5 +1,5 @@
 <template>
-    <q-toolbar class="bg-white ">
+    <q-toolbar class="bg-white " v-if="lesson.active.page">
         <div class="row">
             <q-btn 
                 v-if="(

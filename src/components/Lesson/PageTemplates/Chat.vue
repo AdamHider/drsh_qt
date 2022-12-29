@@ -1,15 +1,5 @@
 <template>
-    <q-scroll-area class=" full-width full-height"
-        :content-style="{
-          display: 'flex',
-          justifyContent: 'end',
-          flexDirection: 'column'}"
-        style="
-          min-height: 400px;
-          z-index: 100;
-          align-self: end;
-          margin-bottom: 60px"
-      >
+    <div class="full-width" style="align-self: end">
       <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" reverse class="relative-position" style="z-index: 1;padding-top: 50px">
         <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
           <q-item-section avatar>
@@ -27,9 +17,7 @@
           </q-item-section>
         </q-item>
       </q-infinite-scroll>
-    </q-scroll-area>
-    <q-page-sticky v-if="formData.fields[current_input_index]" position="bottom" expanded>
-      <q-input
+      <q-input v-if="formData.fields[current_input_index]"
           outlined
           autogrow
           placeholder="Enter message..."
@@ -41,16 +29,17 @@
           <q-btn round dense flat icon="send" @click="emits('onAnswerSaved')" />
           </template>
       </q-input>
-    </q-page-sticky>
-
+      </div>
 </template>
 
 <script setup>
-import { reactive, ref, watch, defineEmits, onActivated } from 'vue'
+import { reactive, ref, watch, defineEmits, onActivated, isReactive  } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { CONFIG } from '../../../config.js'
 
+
 const { lesson } = useLesson()
+
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 
 const replicaList = reactive({
@@ -89,6 +78,7 @@ const setSortIndex = function () {
 }
 
 const renderData = () => {
+    replicaList.list = []
   for (const i in lesson.active.page.data.replica_list) {
     const replica = lesson.active.page.data.replica_list[i]
     replica.rendered = true
@@ -97,7 +87,6 @@ const renderData = () => {
         break
       } else {
         var answer = lesson.active.page.answers.answers[current_answer_index.value]
-        console.log(answer)
         if (answer.is_correct == 'correct') {
           replica.text = answer.correct_answer
           replica.reaction = funny_emojis[current_input_index.value]
@@ -137,18 +126,12 @@ const renderData = () => {
         })
       }
     }
-    /*
-        if(empty($system_answers[$index])){
-            $current_input_index = $index + 1;
-            break;
-        } */
   }
-  console.log(current_answer_index)
-  console.log(replicaList.list)
   markRendered()
   setSortIndex()
 }
 const renderFields = () => {
+  formData.fields = {}
   if (!lesson.active.page.fields || lesson.active.page.answers.is_finished) return
   const field = lesson.active.page.fields[current_answer_index.value]
   let value = ''
@@ -167,7 +150,10 @@ const renderFields = () => {
 renderData()
 renderFields()
 
-onActivated(() => {
+watch(() => lesson.active.page, (newValue, oldValue) => {
+    
+    current_answer_index.value = 0
+    current_input_index.value = 0
   renderData()
   renderFields()
 })

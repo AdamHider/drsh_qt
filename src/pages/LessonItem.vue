@@ -15,7 +15,7 @@
             <q-card-section>
             </q-card-section>
         </q-card>
-        <component :is="PageTemplate" v-if="pageReload" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"/>
+        <component :is="PageTemplate"  @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"/>
     </q-page>
     <q-footer expand position="bottom">
         <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved"/>
@@ -43,11 +43,10 @@ const load = async () => {
 load()
 
 onActivated(async () => {
-
+  load()
 })
 
 const onPageChanged = async (action) => {
-  console.log('page changed')
   pageTemplateTitle.value = false
   const pageResponse = await getPage(action)
   if (!pageResponse) {
@@ -60,9 +59,7 @@ const onAnswerSaved = async () => {
   for (const i in pageAnswers.value) {
     answers[i] = pageAnswers.value[i].value
   }
-  pageReload.value = false
   await saveAnswer(answers)
-  pageReload.value = true
 }
 
 </script>
