@@ -17,41 +17,25 @@
           </q-item-section>
         </q-item>
       </q-infinite-scroll>
-      <q-input v-if="formData.fields[current_input_index]"
-          outlined
-          autogrow
-          placeholder="Enter message..."
-          v-model="formData.fields[current_input_index].value"
-          :options="formData.fields[current_input_index].options"
-          class="full-width"
-      >
-          <template v-slot:append>
-          <q-btn round dense flat icon="send" @click="emits('onAnswerSaved')" />
-          </template>
-      </q-input>
       </div>
 </template>
 
 <script setup>
-import { reactive, ref, watch, defineEmits } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { CONFIG } from '../../../config.js'
 
 const { lesson } = useLesson()
 
-const emits = defineEmits(['update-answer', 'onAnswerSaved'])
+const emits = defineEmits(['onRendered'])
+
 
 const replicaList = reactive({
   list: []
 })
-const formData = reactive({
-  fields: {}
-})
-
 const funny_emojis = ['😀', '😉', '😊', '😎', '😍', '🙂', '👍']
 const sad_emojis = ['😟', '😞', '😥', '😨', '😩']
 const current_answer_index = ref(0)
-const current_input_index = ref(0)
 
 const markRendered = function () {
   replicaList.list.reverse()
@@ -77,6 +61,7 @@ const setSortIndex = function () {
 }
 
 const renderData = () => {
+  if(!lesson.active.page) return
   replicaList.list = []
   for (const i in lesson.active.page.data.replica_list) {
     const replica = lesson.active.page.data.replica_list[i]
@@ -88,10 +73,10 @@ const renderData = () => {
         var answer = lesson.active.page.answers.answers[current_answer_index.value]
         if (answer.is_correct == 'correct') {
           replica.text = answer.correct_answer
-          replica.reaction = funny_emojis[current_input_index.value]
+          replica.reaction = funny_emojis[i]
         } else {
           replica.text = answer.wrong_answer
-          replica.reaction = sad_emojis[current_input_index.value]
+          replica.reaction = sad_emojis[i]
         }
         if (answer.tmp_answer !== '') {
           replicaList.list.push({
@@ -111,7 +96,6 @@ const renderData = () => {
         }
       }
       current_answer_index.value++
-      current_input_index.value++
     }
     replicaList.list.push(replica)
 
@@ -129,41 +113,18 @@ const renderData = () => {
   markRendered()
   setSortIndex()
 }
-const renderFields = () => {
-  formData.fields = {}
-  if (!lesson.active.page.fields || lesson.active.page.answers.is_finished) return
-  const field = lesson.active.page.fields[current_answer_index.value]
-  let value = ''
-  const options = field.variants
-  if (field.answer) {
-    if (field.answer.is_correct == 'wrong') {
-      value = field.answer.wrong_answer
-    } else {
-      value = field.answer.correct_answer
-    }
-  }
-  formData.fields[current_answer_index.value] = { value, options, index: field.index }
-  emits('update-answer', formData.fields)
-}
 
 renderData()
-renderFields()
+
+onMounted(() => {
+  emits('onRendered', true)
+})
 
 watch(() => lesson.active.page, (newValue, oldValue) => {
   current_answer_index.value = 0
-  current_input_index.value = 0
   renderData()
-  renderFields()
 })
 
-watch(formData.fields, (newValue, oldValue) => {
-  emits('update-answer', formData.fields)
-})
 
 </script>
 
-<style lang="scss" scoped>
-.q-page-sticky--shrink > div{
-  width: 100%;
-}
-</style>

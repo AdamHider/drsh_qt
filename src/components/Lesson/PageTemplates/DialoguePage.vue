@@ -42,8 +42,12 @@ const renderData = () => {
   replicaList.list = []
   for (const i in lesson.active.page.data.replica_list) {
     if (lesson.active.page.data.replica_list[i].text.indexOf('input') > -1) {
-      const inputIndex = lesson.active.page.data.replica_list[i].text.match(/{{input[0-9]+}}/g)[0].match(/[0-9]+/g)[0]
-      lesson.active.page.data.replica_list[i].text = lesson.active.page.data.replica_list[i].text.replace(/\{\{input[0-9]+\}\}/, `<span id="input_${inputIndex}"></span>`)
+      const inputs = lesson.active.page.data.replica_list[i].text.match(/{{input[0-9]+}}/g)
+      for(var k in inputs){
+        const inputIndex = inputs[k].match(/[0-9]+/g)[0]
+        console.log(inputIndex);
+        lesson.active.page.data.replica_list[i].text = lesson.active.page.data.replica_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
+      }
     }
     replicaList.list.push(lesson.active.page.data.replica_list[i])
   }
