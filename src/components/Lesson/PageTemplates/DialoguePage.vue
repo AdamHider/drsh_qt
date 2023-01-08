@@ -1,4 +1,5 @@
 <template>
+  <div style="padding-top: 50px">
     <q-card v-if="lesson.active.page?.data?.image">
         <q-img
             cover
@@ -22,7 +23,7 @@
         </q-item-section>
       </q-item>
     </q-list>
-
+  </div>
 </template>
 
 <script setup>
@@ -43,9 +44,9 @@ const renderData = () => {
   for (const i in lesson.active.page.data.replica_list) {
     if (lesson.active.page.data.replica_list[i].text.indexOf('input') > -1) {
       const inputs = lesson.active.page.data.replica_list[i].text.match(/{{input[0-9]+}}/g)
-      for(var k in inputs){
+      for (const k in inputs) {
         const inputIndex = inputs[k].match(/[0-9]+/g)[0]
-        console.log(inputIndex);
+        console.log(inputIndex)
         lesson.active.page.data.replica_list[i].text = lesson.active.page.data.replica_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
       }
     }
@@ -57,10 +58,6 @@ renderData()
 
 onMounted(() => {
   emits('onRendered', true)
-})
-
-watch(() => lesson.active.page, (newValue, oldValue) => {
-  renderData()
 })
 
 </script>

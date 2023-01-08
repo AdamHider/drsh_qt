@@ -5,12 +5,15 @@
             rounded size="20px"
             :value="(lesson.active.page?.exercise?.data.current_page / lesson.active.page?.exercise?.data.total_pages )"
             color="warning"  />
+        <q-chip dense  color="transparent" text-color="orange" icon-right="star">
+            <b>{{ lesson.active.page?.exercise.data.totals.total }}</b>
+        </q-chip>
     </q-app-header>
     <q-page class="bg-white flex  full-width full-height" style="padding-top: 50px">
-        <q-card flat class="relative text-left full-width" style="z-index: 1;">
-            <q-card-section>
-                <div class="text-h6"><b>{{lesson.active.page?.header?.title}}</b></div>
-                <div class="text-subtitle1">{{lesson.active.page?.header?.subtitle}}</div>
+        <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 50px">
+            <q-card-section class="q-py-none">
+                <div class="text-subtitle1"><b>{{lesson.active.page?.header?.title}}</b></div>
+                <div class="text-caption">{{lesson.active.page?.header?.subtitle}}</div>
             </q-card-section>
         </q-card>
         <component :is="PageTemplate" @onRendered="rendered = true"/>
@@ -25,7 +28,7 @@
 import LessonActions from '../components/Lesson/LessonActions.vue'
 import { useLesson } from '../composables/useLesson'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed, defineAsyncComponent, onActivated } from 'vue'
+import { ref, computed, defineAsyncComponent } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -47,6 +50,7 @@ const load = async () => {
 load()
 
 const onPageChanged = async (action) => {
+  rendered.value = false
   pageTemplateTitle.value = false
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
@@ -54,10 +58,11 @@ const onPageChanged = async (action) => {
     // return router.push(`/lesson-startup-${route.params.lesson_id}`)
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
-  if (lesson.active.page?.header.form_template) {
+  if (lesson.active.page?.header.form_template && pageTemplateTitle.value) {
     formTemplateTitle.value = lesson.active.page?.header.form_template.charAt(0).toUpperCase() + lesson.active.page?.header.form_template.slice(1)
   }
 }
+
 const onAnswerSaved = async () => {
   const answers = {}
   for (const i in pageAnswers.value) {

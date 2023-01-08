@@ -1,23 +1,32 @@
 <template>
-    <div class="full-width" style="align-self: end">
-      <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" reverse class="relative-position" style="z-index: 1">
-        <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
-          <q-item-section avatar>
-            <q-avatar>
-              <img src="https://cdn.quasar.dev/img/avatar2.jpg">
-            </q-avatar>
-          </q-item-section>
+    <div class="full-width q-pa-md" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers.is_finished) ? 0 : 120}px`" >
+          <q-chat-message  v-for="(replica, index) in replicaList.list" :key="index"
+            :sent="replica.type !== 'question'"
+            text-color="white"
+            bg-color="primary"
+            avatar="https://cdn.quasar.dev/img/avatar4.jpg"
+            name="me"
+          >
+            <div>
+              <span v-html="replica.text"></span>
+            </div>
+          </q-chat-message>
+          <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
+            <q-item-section avatar>
+              <q-avatar>
+                <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+              </q-avatar>
+            </q-item-section>
 
-          <q-item-section>
-            <q-item-label lines="1"><b>{{ lesson.active.page.data.second_person_name }}</b></q-item-label>
-            <q-item-label lines="2" v-html="replica.text"></q-item-label>
-          </q-item-section>
-          <q-item-section side top>
-            1 min ago
-          </q-item-section>
-        </q-item>
-      </q-infinite-scroll>
-      </div>
+            <q-item-section>
+              <q-item-label lines="1"><b>{{ lesson.active.page.data.second_person_name }}</b></q-item-label>
+              <q-item-label lines="2" v-html="replica.text"></q-item-label>
+            </q-item-section>
+            <q-item-section side top>
+              1 min ago
+            </q-item-section>
+          </q-item>
+    </div>
 </template>
 
 <script setup>
@@ -28,7 +37,6 @@ import { CONFIG } from '../../../config.js'
 const { lesson } = useLesson()
 
 const emits = defineEmits(['onRendered'])
-
 
 const replicaList = reactive({
   list: []
@@ -61,7 +69,7 @@ const setSortIndex = function () {
 }
 
 const renderData = () => {
-  if(!lesson.active.page) return
+  if (!lesson.active.page) return
   replicaList.list = []
   for (const i in lesson.active.page.data.replica_list) {
     const replica = lesson.active.page.data.replica_list[i]
@@ -118,13 +126,22 @@ renderData()
 
 onMounted(() => {
   emits('onRendered', true)
+  window.scrollTo(0, document.body.scrollHeight)
 })
 
 watch(() => lesson.active.page, (newValue, oldValue) => {
   current_answer_index.value = 0
   renderData()
+  console.log('scroll bottom')
+  setTimeout(() => {
+    window.scrollTo(0, document.body.scrollHeight)
+  }, 100)
 })
-
 
 </script>
 
+<style>
+.q-page{
+  align-content: end;
+}
+</style>
