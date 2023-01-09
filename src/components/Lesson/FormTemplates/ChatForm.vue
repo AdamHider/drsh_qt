@@ -28,6 +28,7 @@
             bottom-slots
             placeholder="Enter message..."
             v-model="formData.fields[currentFieldIndex].value"
+            @keydown.enter.prevent="saveAnswer"
             class="full-width"
             style="align-self: end;"
         >
@@ -35,8 +36,38 @@
             <template v-slot:counter>
               <b>{{ currentTipCorrectness }}%</b>
             </template>
+
+            <template v-slot:prepend>
+              <q-btn-dropdown flat class="q-pa-sm" color="gray"  dropdown-icon="more_vert">
+                <q-list>
+                  <q-item clickable
+                      v-if="(
+                        lesson.active.page?.exercise.data.current_page != 0
+                        && lesson.active.page?.exercise.data.back_attempts > 0
+                      )"
+                      @click="emits('onPageChanged', 'previous')">
+                    <q-item-section>
+                      <q-item-label>Back</q-item-label>
+                    </q-item-section>
+                  </q-item>
+
+                  <q-item clickable
+                      v-if="(
+                          lesson.active.page?.fields
+                          && !lesson.active.page?.answers.is_finished
+                          && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
+                          && lesson.active.page?.exercise.data.skip_attempts > 0
+                      )"
+                      @click="emits('onPageChanged', 'skip')">
+                    <q-item-section>
+                      <q-item-label>Skip</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
+            </template>
             <template v-slot:append>
-              <q-btn round dense flat icon="send" @click="emits('onAnswerSaved')" />
+              <q-btn round dense flat icon="send" :disabled="!formData.fields[currentFieldIndex].value" @click="saveAnswer" />
             </template>
         </q-input>
       </q-card-section>
@@ -48,7 +79,7 @@
 import { ref, reactive, watch, defineEmits } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 
-const emits = defineEmits(['update-answer', 'onAnswerSaved'])
+const emits = defineEmits(['update-answer', 'onAnswerSaved', 'onPageChanged'])
 const { lesson } = useLesson()
 
 const currentFieldIndex = ref(0)
@@ -67,7 +98,7 @@ const renderFields = () => {
   if (lesson.active.page.answers.answers) {
     lastAnswerIndex = (lesson.active.page.answers.answers?.length - 1)
     const lastExistingAnswer = lesson.active.page.answers.answers[lastAnswerIndex]
-    if (!lastExistingAnswer.is_temp) {
+    if (lastExistingAnswer && !lastExistingAnswer.is_temp) {
       lastAnswerIndex++
     }
   }
@@ -88,6 +119,11 @@ const onInput = function () {
     }
   }
   if (!currentTipCorrect.value) currentTip.value = formData.fields[currentFieldIndex.value].variants[0]
+}
+
+const saveAnswer = function () {
+  if (!formData.fields[currentFieldIndex.value].value) return false
+  emits('onAnswerSaved')
 }
 renderFields()
 
@@ -171,6 +207,7 @@ const simplifySpecialChars = function (str) {
   return str
 }
 </script>
+
 <style lang="scss" scoped>
 .q-page-sticky--shrink > div{
   width: 100%;

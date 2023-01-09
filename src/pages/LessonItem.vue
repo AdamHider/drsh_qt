@@ -17,7 +17,7 @@
             </q-card-section>
         </q-card>
         <component :is="PageTemplate" @onRendered="rendered = true"/>
-        <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"/>
+        <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
     </q-page>
     <q-footer expand position="bottom">
         <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved"/>
@@ -50,6 +50,10 @@ const load = async () => {
 load()
 
 const onPageChanged = async (action) => {
+  if (!lesson.active.page) {
+    router.go(-1)
+  }
+
   rendered.value = false
   pageTemplateTitle.value = false
   formTemplateTitle.value = false

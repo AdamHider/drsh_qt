@@ -14,7 +14,28 @@
                     :ref="el => { fieldsRefs[index] = el }"
                     @popup-show="matchStart(index)"
                 >
-                  <template v-slot:no-option v-if="lesson.active.page?.data.match_variants"></template>
+                  <template v-slot:no-option v-if="lesson.active.page?.data.match_variants">
+                    <q-page-sticky v-if="matchMode" class="q-mb-md" expand position="bottom" >
+                      <q-card style="width: 350px">
+                        <q-card-section>
+                          <q-chip v-for="(field, index) in lesson.active.page?.data.match_variants" :key="index"
+                              @click="matchEnd(index)"
+                              clickable
+                              :color="field.selected ? 'positive' : 'primary'"
+                              text-color="white"
+                          >
+                                <span v-if="field.image" class="ui label large quiz-input-variant anim anim-fadeInFromRight" :data-value="field.answer" :data-key="index+1">
+                                    <h4>{{ index+1 }}</h4>
+                                    <img :src="`images/${field.image}`" />
+                                </span>
+                                <span v-else class="ui label large quiz-input-variant wrtmode-true" :data-variant_index="index" :data-value="field.answer">
+                                  {{ field.answer }}
+                                </span>
+                            </q-chip>
+                          </q-card-section>
+                      </q-card>
+                    </q-page-sticky>
+                  </template>
                   <template v-slot:no-option v-if="formData.fields[index].answer">
                         <q-item>
                             <q-item-section>
@@ -39,25 +60,6 @@
             </Teleport>
         </div>
     </div>
-    <q-page-sticky v-if="matchMode" expanded position="bottom" >
-      <q-card style="width: 350px">
-        <q-card-section>
-          <q-chip v-for="(field, index) in lesson.active.page?.data.match_variants" :key="index"  
-            @click="matchEnd(index)"
-            clickable
-            :color="field.selected ? 'positive' : 'primary'" 
-            text-color="white">
-              <span v-if="field.image" class="ui label large quiz-input-variant anim anim-fadeInFromRight" :data-value="field.answer"  :data-key="index+1">
-                  <h4>{{ index+1 }}</h4>
-                  <img :src="`images/${field.image}`" />
-              </span>
-              <span v-else class="ui label large quiz-input-variant wrtmode-true" :data-variant_index="index" :data-value="field.answer">
-                {{ field.answer }}
-              </span>
-          </q-chip>
-        </q-card-section>
-    </q-card>
-  </q-page-sticky>
 </template>
 
 <script setup>
@@ -95,8 +97,10 @@ const renderFields = () => {
 }
 
 const matchEnd = (variantIndex) => {
-  if(lesson.active.page.data.match_variants[variantIndex].selected){
-    if(lesson.active.page.data.match_variants[variantIndex].selectedTarget == currentIndex.value){
+  const prevVariantIndex = lesson.active.page.data.match_variants.findIndex(variant => variant.answer === formData.fields[currentIndex.value].value)
+  if (lesson.active.page.data.match_variants[prevVariantIndex]) lesson.active.page.data.match_variants[prevVariantIndex].selected = false
+  if (lesson.active.page.data.match_variants[variantIndex].selected) {
+    if (lesson.active.page.data.match_variants[variantIndex].selectedTarget == currentIndex.value) {
       lesson.active.page.data.match_variants[variantIndex].selected = false
       formData.fields[currentIndex.value].value = ''
       return
@@ -106,14 +110,14 @@ const matchEnd = (variantIndex) => {
   lesson.active.page.data.match_variants[variantIndex].selected = true
   lesson.active.page.data.match_variants[variantIndex].selectedTarget = currentIndex.value
   formData.fields[currentIndex.value].value = lesson.active.page?.data.match_variants[variantIndex].answer
-  matchMode.value = false
-  currentIndex.value = false
 }
+
 const matchStart = (fieldIndex) => {
-  if(lesson.active.page.answers) return
+  if (lesson.active.page.answers.is_finished) return
   matchMode.value = true
   currentIndex.value = fieldIndex
 }
+
 renderFields()
 
 watch(() => lesson.active.page, (newValue, oldValue) => {

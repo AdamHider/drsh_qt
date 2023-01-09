@@ -1,31 +1,30 @@
 <template>
     <div class="full-width q-pa-md" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers.is_finished) ? 0 : 120}px`" >
-          <q-chat-message  v-for="(replica, index) in replicaList.list" :key="index"
+      <transition v-for="(replica, index) in replicaList.list" :key="index"
+      appear
+        :enter-active-class="(!replica.rendered) ? `animated slideInUp animationDelay${replica.sort_index}` : ''"
+      >
+          <q-chat-message
             :sent="replica.type !== 'question'"
             text-color="white"
-            bg-color="primary"
+            :bg-color="(replica.type !== 'question') ? 'positive' : 'primary' "
             avatar="https://cdn.quasar.dev/img/avatar4.jpg"
-            name="me"
+            :name="(replica.type !== 'question') ? 'me' : lesson.active.page?.data.second_person_name"
           >
             <div>
               <span v-html="replica.text"></span>
             </div>
           </q-chat-message>
-          <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
-            <q-item-section avatar>
-              <q-avatar>
-                <img src="https://cdn.quasar.dev/img/avatar2.jpg">
-              </q-avatar>
-            </q-item-section>
+      </transition>
 
-            <q-item-section>
-              <q-item-label lines="1"><b>{{ lesson.active.page.data.second_person_name }}</b></q-item-label>
-              <q-item-label lines="2" v-html="replica.text"></q-item-label>
-            </q-item-section>
-            <q-item-section side top>
-              1 min ago
-            </q-item-section>
-          </q-item>
+      <q-chat-message
+        v-if="isTyping"
+        name="Jane"
+        avatar="https://cdn.quasar.dev/img/avatar5.jpg"
+        bg-color="amber"
+      >
+        <q-spinner-dots size="2rem" />
+      </q-chat-message>
     </div>
 </template>
 
@@ -44,12 +43,16 @@ const replicaList = reactive({
 const funny_emojis = ['😀', '😉', '😊', '😎', '😍', '🙂', '👍']
 const sad_emojis = ['😟', '😞', '😥', '😨', '😩']
 const current_answer_index = ref(0)
+const isTyping = ref(true)
 
 const markRendered = function () {
   replicaList.list.reverse()
   const replicas_reversed = replicaList.list
   for (const i in replicas_reversed) {
-    if (replicas_reversed[i].type == 'answer') break
+    if (replicas_reversed[i].type == 'answer') {
+      replicas_reversed[i].rendered = false
+      break
+    }
     replicas_reversed[i].rendered = false
   }
 
@@ -120,6 +123,8 @@ const renderData = () => {
   }
   markRendered()
   setSortIndex()
+  console.log(replicaList.list)
+  isTyping.value = false
 }
 
 renderData()
@@ -130,9 +135,9 @@ onMounted(() => {
 })
 
 watch(() => lesson.active.page, (newValue, oldValue) => {
+  isTyping.value = true
   current_answer_index.value = 0
   renderData()
-  console.log('scroll bottom')
   setTimeout(() => {
     window.scrollTo(0, document.body.scrollHeight)
   }, 100)
@@ -141,7 +146,13 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
 </script>
 
 <style>
-.q-page{
-  align-content: end;
+.animationDelay1{
+  animation-delay: 250ms
+}
+.animationDelay2{
+  animation-delay: 500ms
+}
+.animationDelay3{
+  animation-delay: 750ms
 }
 </style>
