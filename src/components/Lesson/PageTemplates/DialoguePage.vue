@@ -1,12 +1,11 @@
 <template>
-  <div style="padding-top: 50px">
-    <q-card v-if="lesson.active.page?.data?.image">
+  <div class="full-width" style="padding-top: 50px">
+    <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md">
         <q-img
             cover
-            width="250px"
             :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
     </q-card>
-    <q-list>
+    <q-list class="q-mb-md">
       <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
         <q-item-section avatar>
           <q-avatar>
@@ -16,10 +15,7 @@
 
         <q-item-section>
           <q-item-label lines="1"><b>{{ replica.name }}</b></q-item-label>
-          <q-item-label lines="2" v-html="replica.text"></q-item-label>
-        </q-item-section>
-        <q-item-section side top>
-          1 min ago
+          <q-item-label lines="3" ><div v-html="replica.text"></div></q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -27,7 +23,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, onMounted, defineEmits } from 'vue'
+import { reactive, onMounted, defineEmits } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { CONFIG } from '../../../config.js'
 

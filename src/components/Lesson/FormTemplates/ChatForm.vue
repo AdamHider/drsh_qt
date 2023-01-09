@@ -33,10 +33,6 @@
             style="align-self: end;"
         >
 
-            <template v-slot:counter>
-              <b>{{ currentTipCorrectness }}%</b>
-            </template>
-
             <template v-slot:prepend>
               <q-btn-dropdown flat class="q-pa-sm" color="gray"  dropdown-icon="more_vert">
                 <q-list>
@@ -138,15 +134,17 @@ watch(formData.fields, (newValue, oldValue) => {
 })
 
 const findTip = function (answer) {
-  var simplified_input = simplifyUserInput(formData.fields[currentFieldIndex.value].value)
-  var simplified_answer = simplifyUserInput(answer)
+  const simplifiedInput = simplifyUserInput(formData.fields[currentFieldIndex.value].value)
+  const simplifiedAnswer = simplifyUserInput(answer)
   /* =========NON STRICT MATCH========= */
-  var simplified_input = simplifySpecialChars(simplified_input)
-  var simplified_answer = simplifySpecialChars(simplified_answer)
+  /*
+  var simplifiedInput = simplifySpecialChars(simplifiedInput)
+  var simplifiedAnswer = simplifySpecialChars(simplifiedAnswer)
+  */
   /* =========NON STRICT MATCH========= */
 
-  const simplified_input_exploded = simplified_input.trim().split(' ')
-  const simplified_answer_exploded = simplified_answer.trim().split(' ')
+  const simplifiedInputExploded = simplifiedInput.trim().split(' ')
+  const simplifiedAnswerExploded = simplifiedAnswer.trim().split(' ')
   /*
   if (mod_languages.current_writing_mode == 'cyrillic') {
     tip = transliterate(tip, 'cyrillize')
@@ -154,32 +152,33 @@ const findTip = function (answer) {
   */
   let total = 0
   let correct = 0
-  if (simplified_input_exploded.length > simplified_answer_exploded.length) {
+  if (simplifiedInputExploded.length > simplifiedAnswerExploded.length) {
     return false
   }
-  for (let i = 0; i < simplified_input_exploded.length; i++) {
+  for (let i = 0; i < simplifiedInputExploded.length; i++) {
     total++
-    if (simplified_answer_exploded[i] == '{name}' || (simplified_answer_exploded[i] && simplified_answer_exploded[i].indexOf('_') === 0)) {
+    if (simplifiedAnswerExploded[i] === '{name}' || (simplifiedAnswerExploded[i] && simplifiedAnswerExploded[i].indexOf('_') === 0)) {
       correct++
       continue
     }
-    if (simplified_answer_exploded[i].indexOf(simplified_input_exploded[i]) == 0) {
+    if (simplifiedAnswerExploded[i].indexOf(simplifiedInputExploded[i]) === 0) {
       correct++
       continue
     }
-    if (simplified_answer_exploded[i] !== simplified_input_exploded[i]) {
+    if (simplifiedAnswerExploded[i] !== simplifiedInputExploded[i]) {
       continue
     }
   }
 
-  return total == correct
+  return total === correct
 }
 
 const simplifyUserInput = function (str) {
   str = str.toLowerCase()
   const findArray = [',', '.', ')', '!', '?', '-', '  ', '   ', '   ']
   const replaceArray = ['', '', '', '', '', '', ' ', ' ', ' ']
-  let i, regex = [], map = {}
+  let i, regex = []
+  const map = {}
   for (i = 0; i < findArray.length; i++) {
     regex.push(findArray[i].replace(/([-[\]{}()*+?.\\^$|#,])/g, '\\$1'))
     map[findArray[i]] = replaceArray[i]
@@ -195,7 +194,8 @@ const simplifySpecialChars = function (str) {
   str = str.toLowerCase()
   const findArray = ['ı', 'ğ', 'ü', 'ş', 'ö', 'ç', 'â', 'ñ']
   const replaceArray = ['i', 'g', 'u', 's', 'o', 'c', 'a', 'n']
-  let i, regex = [], map = {}
+  let i, regex = []
+  const map = {}
   for (i = 0; i < findArray.length; i++) {
     regex.push(findArray[i].replace(/([-[\]{}()*+?.\\^$|#,])/g, '\\$1'))
     map[findArray[i]] = replaceArray[i]

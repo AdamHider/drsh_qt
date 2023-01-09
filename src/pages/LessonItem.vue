@@ -50,16 +50,12 @@ const load = async () => {
 load()
 
 const onPageChanged = async (action) => {
-  if (!lesson.active.page) {
-    router.go(-1)
-  }
-
   rendered.value = false
   pageTemplateTitle.value = false
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
   if (!pageResponse) {
-    // return router.push(`/lesson-startup-${route.params.lesson_id}`)
+    router.go(-1)
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
   if (lesson.active.page?.header.form_template && pageTemplateTitle.value) {

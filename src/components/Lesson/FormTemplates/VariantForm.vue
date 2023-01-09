@@ -7,10 +7,10 @@
                     hide-dropdown-icon
                     v-model="formData.fields[index].value"
                     :options="formData.fields[index].options"
-                    :color="(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct == 'correct') ? 'positive' : 'negative') : 'primary'"
+                    :color="(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'positive' : 'negative') : 'primary'"
                     :style="{ display: 'inline-block', minWidth: '50px', height: '18px', justifyContent: 'center', verticalAlign: 'bottom'  }"
                     behavior="menu"
-                    :class="`q-select-inline ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct == 'correct') ? 'correct-answer' : 'wrong-answer') : ''}`"
+                    :class="`q-select-inline ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'correct-answer' : 'wrong-answer') : ''}`"
                     highlighted
                 >
                     <template v-slot:no-option v-if="formData.fields[index].answer">
@@ -18,7 +18,7 @@
                             <q-item-section>
                                 <q-item-label v-if="formData.fields[index].value !== ''">
                                     Your answer:
-                                    <b :class="`text-${(formData.fields[index].answer.is_correct == 'correct') ? 'positive' : 'negative'}`">
+                                    <b :class="`text-${(formData.fields[index].answer.is_correct) ? 'positive' : 'negative'}`">
                                         {{ formData.fields[index].value }}
                                     </b>
                                 </q-item-label>
@@ -27,9 +27,9 @@
                                 </q-item-label>
                             </q-item-section>
                         </q-item>
-                        <q-item v-if="formData.fields[index].answer.is_correct == 'wrong'" class="q-pt-none">
+                        <q-item v-if="!formData.fields[index].answer.is_correct" class="q-pt-none">
                             <q-item-section>
-                                <q-item-label>Correct answer: <b  class="text-positive">{{ formData.fields[index].answer.correct_answer }}</b></q-item-label>
+                                <q-item-label>Correct answer: <b  class="text-positive">{{ formData.fields[index].answer.answer }}</b></q-item-label>
                             </q-item-section>
                         </q-item>
                     </template>
@@ -57,13 +57,8 @@ const renderFields = () => {
     let value = ''
     let options = field.variants
     if (field.answer) {
-      if (field.answer.is_correct === 'wrong') {
-        value = field.answer.wrong_answer
-        options = []
-      } else {
-        value = field.answer.correct_answer
-        options = []
-      }
+      value = field.answer.value
+      options = []
     }
     formData.fields.push({ value, options, index: field.index, answer: field.answer })
   }
