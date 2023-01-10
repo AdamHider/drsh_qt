@@ -10,13 +10,14 @@ const lessonAudio = reactive({
   currentTime: false,
   currentTimePre: 0,
   totalDuration: 0,
-  breakBetween: 500,
-  intervalLength: 100,
+  breakBetween: 0,
+  intervalLength: 10,
   progress: {}
 })
 
 export function useLessonAudio () {
   function loadAudio () {
+    let loadedCount = 0
     const audioLinks = document.querySelectorAll('.lesson-page .play-audio')
     for (let e = 0; e < audioLinks.length; e++) {
       const source = audioLinks[e].dataset.audio
@@ -24,11 +25,15 @@ export function useLessonAudio () {
       const audio = new Audio(`${CONFIG.API_HOST}/media/audio/lessons/${source}.mp3?1`)
       audio.currentIndex = e
       audio.onloadeddata = function (e) {
-        lessonAudio.list[e.target.currentIndex] = e.target
+        loadedCount++
+        lessonAudio.list[e.target.currentIndex] = {
+          element: e.target,
+          currentTime: 0
+        }
         lessonAudio.totalDuration += e.target.duration
       }
     }
-    lessonAudio.totalDuration += (lessonAudio.breakBetween / 1000 * (audioLinks.length - 1))
+    // lessonAudio.totalDuration += (lessonAudio.breakBetween / 1000 * (audioLinks.length - 1))
   }
 
   function pauseAudio () {
@@ -78,19 +83,20 @@ export function useLessonAudio () {
   }
 
   function playAudioAll (index) {
-    let chunkTime
     if (!lessonAudio.is_playing) {
       return false
     }
     if (!lessonAudio.active.currentTime || lessonAudio.active.currentTime == lessonAudio.active.duration) {
-      lessonAudio.active = lessonAudio.list[lessonAudio.active_index]
+      lessonAudio.active = lessonAudio.list[lessonAudio.active_index].element
     }
     lessonAudio.active.play().catch((e) => { return false })
     lessonAudio.active.onplaying = function () {
       if (!lessonAudio.progress.interval) {
         clearInterval(lessonAudio.progress.interval)
         lessonAudio.progress.interval = setInterval(function () {
-          lessonAudio.currentTime = lessonAudio.currentTimePre + lessonAudio.active.currentTime
+          lessonAudio.list[lessonAudio.active_index].currentTime = lessonAudio.active.currentTime
+          lessonAudio.currentTime += lessonAudio.intervalLength / 1000
+          lessonAudio.currentTime = Number((lessonAudio.currentTime).toFixed(2))
           setProgress()
         }, lessonAudio.intervalLength)
       }
@@ -102,7 +108,6 @@ export function useLessonAudio () {
           return false
         }
         setTimeout(function () {
-          lessonAudio.currentTimePre += lessonAudio.active.duration + (lessonAudio.breakBetween / 1000)
           return playAudioAll()
         }, lessonAudio.breakBetween)
       } else {
@@ -117,7 +122,7 @@ export function useLessonAudio () {
 
   function setProgress () {
     lessonAudio.progress.value = (lessonAudio.currentTime * 100 / lessonAudio.totalDuration) / 100
-    console.log(lessonAudio.currentTime)
+    console.log(lessonAudio.list[lessonAudio.active_index])
   }
 
   return {
