@@ -9,7 +9,7 @@
             <b>{{ lesson.active.page?.exercise.data.totals.total }}</b>
         </q-chip>
     </q-app-header>
-    <q-page class="bg-white flex  full-width full-height" style="padding-top: 50px">
+    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px">
         <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 50px">
             <q-card-section class="q-py-none">
                 <div class="text-subtitle1"><b>{{lesson.active.page?.header?.title}}</b></div>

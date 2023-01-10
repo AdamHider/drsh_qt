@@ -5,11 +5,13 @@
             cover
             :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
     </q-card>
+    <LessonAudioPlayer/>
     <q-list class="q-mb-md">
       <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
         <q-item-section avatar>
           <q-avatar>
             <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+            <a class="play-audio absolute" :data-audio="replica.audio_link" @click="playAudio(replica.audio_link)"><q-icon name="play_arrow"/></a>
           </q-avatar>
         </q-item-section>
 
@@ -24,12 +26,15 @@
 
 <script setup>
 import { reactive, onMounted, defineEmits } from 'vue'
+import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['onRendered'])
 
 const { lesson } = useLesson()
+const { lessonAudio, playAudio, loadAudio } = useLessonAudio()
 
 const replicaList = reactive({
   list: []
@@ -54,6 +59,7 @@ renderData()
 
 onMounted(() => {
   emits('onRendered', true)
+  loadAudio()
 })
 
 </script>
