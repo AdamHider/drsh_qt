@@ -1,20 +1,42 @@
 <template>
-    <q-card class="bg-white text-dark no-border-radius">
-        <div v-if="lessonAudio.list.length > 0" class="row">
-          <q-linear-progress v-for="(audio, index) in lessonAudio.list"
-            :key="index"
-            instant-feedback
-            :animation-speed="100"
-            size="15px"
-            :value="(audio?.currentTime * 100 / audio?.element.duration) / 100"
-            color="secondary"
-            class="col q-mt-sm"/>
+    <q-card class="transparent absolute-bottom full-width full-height flex" flat>
+        <div v-if="!lessonAudio.is_playing"
+            @click="lessonAudio.is_playing = true; playAudioAll();"
+            class="absolute full-width full-height flex justify-center content-center"
+        >
+            <q-btn
+                color="accent"
+                icon="play_arrow"
+                size="lg"
+            />
         </div>
-        <q-btn-group>
-            <q-btn v-if="!lessonAudio.is_playing" color="accent" icon="play_arrow" @click="lessonAudio.is_playing = true; playAudioAll();"/>
-            <q-btn v-if="lessonAudio.is_playing" color="accent" icon="pause" @click="pauseAudio"/>
-            <q-btn v-if="lessonAudio.is_playing" color="accent" icon="stop" @click="stopAudio"/>
-        </q-btn-group>
+        <div v-if="lessonAudio.is_playing"
+            @click="pauseAudio"
+            class="absolute full-width full-height flex justify-center content-center"
+        >
+            <q-btn
+                color="accent"
+                icon="pause"
+                size="lg"
+            />
+        </div>
+        <q-toolbar class="self-end" style="background: #00000070;">
+            <q-btn v-if="!lessonAudio.is_playing" flat color="white" dense icon="play_arrow" @click="lessonAudio.is_playing = true; playAudioAll();"/>
+            <q-btn v-if="lessonAudio.is_playing" flat color="white" dense icon="pause" @click="pauseAudio"/>
+            <q-toolbar-title>
+                <div v-if="lessonAudio.list.length > 0" class="row full-width rounded-borders" style="background: #ffffffb0; overflow: hidden;">
+                    <q-linear-progress v-for="(audio, index) in lessonAudio.list"
+                        :key="index"
+                        instant-feedback
+                        size="15px"
+                        :value="(audio?.currentTime * 100 / audio?.element.duration) / 100"
+                        color="primary"
+                        class="col"
+                        @click="playAudio(audio?.filename)"
+                        :style="`flex: ${audio?.element.duration}; border-left: 1px solid #0f4e8c;`"/>
+            </div>
+            </q-toolbar-title>
+        </q-toolbar>
     </q-card>
 </template>
 
@@ -22,7 +44,7 @@
 import { computed } from 'vue'
 import { useLessonAudio } from '../../composables/useLessonAudio'
 
-const { lessonAudio, playAudioAll, pauseAudio, stopAudio } = useLessonAudio()
+const { lessonAudio, playAudioAll, playAudio, pauseAudio, stopAudio } = useLessonAudio()
 
 console.log()
 

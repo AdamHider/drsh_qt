@@ -6,7 +6,7 @@
             :value="(lesson.active.page?.exercise?.data.current_page / lesson.active.page?.exercise?.data.total_pages )"
             color="warning"  />
         <q-chip dense  color="transparent" text-color="orange" icon-right="star">
-            <b>{{ lesson.active.page?.exercise.data.totals.total }}</b>
+            <b>{{ lesson.active.page?.exercise?.data.totals.total }}</b>
         </q-chip>
     </q-app-header>
     <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px">
@@ -56,6 +56,7 @@ const onPageChanged = async (action) => {
   const pageResponse = await getPage(action)
   if (!pageResponse) {
     router.go(-1)
+    return
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
   if (lesson.active.page?.header.form_template && pageTemplateTitle.value) {

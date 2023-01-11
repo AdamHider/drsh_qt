@@ -4,20 +4,34 @@
         <q-img
             cover
             :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
+        <LessonAudioPlayer/>
     </q-card>
-    <LessonAudioPlayer/>
     <q-list class="q-mb-md">
       <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
         <q-item-section avatar>
           <q-avatar>
             <img src="https://cdn.quasar.dev/img/avatar2.jpg">
-            <a class="play-audio absolute" :data-audio="replica.audio_link" @click="playAudio(replica.audio_link)"><q-icon name="play_arrow"/></a>
           </q-avatar>
         </q-item-section>
 
         <q-item-section>
           <q-item-label lines="1"><b>{{ replica.name }}</b></q-item-label>
           <q-item-label lines="3" ><div v-html="replica.text"></div></q-item-label>
+        </q-item-section>
+        <q-item-section v-if="replica.audio_link" side>
+          <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"
+            flat
+            class="play-audio"
+            :data-audio="replica.audio_link"
+            @click="pauseAudio()"
+            icon="pause"
+          />
+          <q-btn  v-else
+            class="play-audio"
+            :data-audio="replica.audio_link"
+            @click="playAudio(replica.audio_link)"
+            icon="play_arrow"
+          />
         </q-item-section>
       </q-item>
     </q-list>
@@ -34,7 +48,7 @@ import { CONFIG } from '../../../config.js'
 const emits = defineEmits(['onRendered'])
 
 const { lesson } = useLesson()
-const { lessonAudio, playAudio, loadAudio } = useLessonAudio()
+const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
 const replicaList = reactive({
   list: []
