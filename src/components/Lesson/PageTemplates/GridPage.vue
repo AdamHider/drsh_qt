@@ -1,7 +1,7 @@
 <template>
-  <div class="full-width content-start row q-col-gutter-sm" style="padding-top: 50px">
+  <div class="full-width content-start row " style="padding-top: 50px">
     <div class="col-6" v-for="(column, index) in columnList.list" :key="index">
-      <q-card>
+      <q-card class="q-ma-sm">
             <q-img
               class="col"
               :src="`${CONFIG.API_HOST}/${column.image}`"
@@ -34,7 +34,6 @@ const renderData = () => {
       const inputs = lesson.active.page.data.column_list[i].text.match(/{{input[0-9]+}}/g)
       for (const k in inputs) {
         const inputIndex = inputs[k].match(/[0-9]+/g)[0]
-        console.log(inputIndex)
         lesson.active.page.data.column_list[i].text = lesson.active.page.data.column_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
       }
     }

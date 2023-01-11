@@ -1,5 +1,5 @@
 <template>
-    <q-card v-if="lesson.active.page?.answers.is_finished" class="bg-white text-dark no-border-radius">
+    <q-card v-if="lesson.active.page?.answers?.is_finished" class="bg-white text-dark no-border-radius">
         <q-card-section>
             <div class="text-h5">
               <b v-if="answerPercentage == 100">Perfect!</b>
@@ -7,10 +7,10 @@
               <b v-else-if="answerPercentage < 50">You could better</b>
             </div>
             <div><b>Your result: </b></div>
-            <div class="text-h5"><b>{{ lesson.active.page?.answers.totals.total }}</b> <q-icon name="star"></q-icon></div>
+            <div class="text-h5"><b>{{ lesson.active.page?.answers?.totals.total }}</b> <q-icon name="star"></q-icon></div>
         </q-card-section>
     </q-card>
-    <q-toolbar class="bg-white" v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers.is_finished)">
+    <q-toolbar class="bg-white" v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
             <q-btn
                 v-if="(
                     lesson.active.page?.exercise.data.current_page != 0
@@ -25,7 +25,7 @@
             <q-btn
                 v-if="(
                     (!lesson.active.page?.fields
-                    || lesson.active.page?.answers.is_finished)
+                    || lesson.active.page?.answers?.is_finished)
                     && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
                 )"
                 style="flex: 2"
@@ -36,7 +36,7 @@
             <q-btn
                 v-if="(
                     lesson.active.page?.fields
-                    && !lesson.active.page?.answers.is_finished
+                    && !lesson.active.page?.answers?.is_finished
                 )"
                 style="flex: 2"
                 color="primary"
@@ -46,7 +46,7 @@
             <q-btn
                 v-if="(
                     lesson.active.page?.fields
-                    && !lesson.active.page?.answers.is_finished
+                    && !lesson.active.page?.answers?.is_finished
                     && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
                     && lesson.active.page?.exercise.data.skip_attempts > 0
                 )"
@@ -58,12 +58,11 @@
             <q-btn
                 v-if="(
                     (!lesson.active.page?.fields
-                    || lesson.active.page?.answers.is_finished)
+                    || lesson.active.page?.answers?.is_finished)
                     && lesson.active.page?.exercise.data.current_page == lesson.active.page?.exercise.data.total_pages - 1
                 )"
-                flat
-                class="col"
-                text-color="dark"
+                style="flex: 2"
+                color="primary"
                 label="Finish"
                 @click="next"
             ></q-btn>
@@ -76,7 +75,7 @@ import { computed } from 'vue'
 
 const emits = defineEmits(['onPageChanged', 'onAnswerSaved'])
 
-const answerPercentage = computed(() => lesson.active.page?.answers.totals.correct * 100 / lesson.active.page?.answers.totals.answers)
+const answerPercentage = computed(() => lesson.active.page?.answers?.totals.correct * 100 / lesson.active.page?.answers?.totals.answers)
 
 const { lesson } = useLesson()
 

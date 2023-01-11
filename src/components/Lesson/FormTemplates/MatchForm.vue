@@ -16,7 +16,7 @@
                     @popup-hide="matchEnd(false)"
                 >
                   <template v-slot:no-option v-if="lesson.active.page?.data.match_variants">
-                      <q-card>
+                      <q-card flat>
                         <q-card-section>
                           <q-chip v-for="(field, index) in lesson.active.page?.data.match_variants" :key="index"
                               @click="matchEnd(index)"

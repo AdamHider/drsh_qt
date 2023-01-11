@@ -28,7 +28,7 @@
 import LessonActions from '../components/Lesson/LessonActions.vue'
 import { useLesson } from '../composables/useLesson'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, computed, defineAsyncComponent } from 'vue'
+import { ref, computed, onActivated, defineAsyncComponent } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -47,7 +47,10 @@ const load = async () => {
   await getItem(route.params.lesson_id)
   onPageChanged()
 }
-load()
+
+onActivated(() => {
+  load()
+})
 
 const onPageChanged = async (action) => {
   rendered.value = false

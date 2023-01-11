@@ -31,7 +31,7 @@
                         size="15px"
                         :value="(audio?.currentTime * 100 / audio?.element.duration) / 100"
                         color="primary"
-                        class="col"
+                        class="col cursor-pointer"
                         @click="playAudio(audio?.filename)"
                         :style="`flex: ${audio?.element.duration}; border-left: 1px solid #0f4e8c;`"/>
             </div>
@@ -45,7 +45,5 @@ import { computed } from 'vue'
 import { useLessonAudio } from '../../composables/useLessonAudio'
 
 const { lessonAudio, playAudioAll, playAudio, pauseAudio, stopAudio } = useLessonAudio()
-
-console.log()
 
 </script>

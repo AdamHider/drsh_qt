@@ -1,6 +1,9 @@
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 import { api } from '../services/index'
 import { CONFIG } from '../config.js'
+import { useLesson } from '../composables/useLesson'
+
+const { lesson } = useLesson()
 
 const lessonAudio = reactive({
   list: [],
@@ -12,6 +15,7 @@ const lessonAudio = reactive({
 
 export function useLessonAudio () {
   function loadAudio () {
+    lessonAudio.list = []
     lessonAudio.activeIndex = 0
     const audioLinks = document.querySelectorAll('.lesson-page .play-audio')
     for (let e = 0; e < audioLinks.length; e++) {
@@ -26,7 +30,6 @@ export function useLessonAudio () {
           currentTime: 0,
           filename: e.target.currentFilename
         }
-        console.log(lessonAudio.list)
       }
     }
   }
@@ -42,7 +45,6 @@ export function useLessonAudio () {
     lessonAudio.activeIndex = 0
     for (const i in lessonAudio.list) {
       if (excludeIndex == i) {
-        console.log(lessonAudio.list[i])
         continue
       }
       lessonAudio.list[i].element.currentTime = 0
@@ -57,7 +59,6 @@ export function useLessonAudio () {
 
   function playAudio (link) {
     const activeIndex = lessonAudio.list.findIndex((audio) => audio.element.src == `${CONFIG.API_HOST}/media/audio/lessons/${link}.mp3?1`)
-    console.log(activeIndex)
     stopAudio(activeIndex)
     lessonAudio.activeIndex = activeIndex
     fitTimeline(lessonAudio.activeIndex)
@@ -120,3 +121,9 @@ export function useLessonAudio () {
     playAudioAll
   }
 }
+
+watch(() => lesson.active.page?.header.index, async (newData, oldData) => {
+  if (useLessonAudio().lessonAudio.list.length > 0) {
+    useLessonAudio().stopAudio()
+  }
+})
