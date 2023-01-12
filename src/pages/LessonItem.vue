@@ -58,7 +58,7 @@ const onPageChanged = async (action) => {
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
   if (!pageResponse) {
-    router.go(-1)
+    // router.go(-1)
     return
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)

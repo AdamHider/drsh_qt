@@ -118,7 +118,7 @@
                     </q-item-section>
 
                     <q-item-section side>
-                        <q-btn>Open</q-btn>
+                        <q-btn @click="openSkipped(skippedPage.index)">Open</q-btn>
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -156,6 +156,9 @@ const back = async () => {
 }
 const skip = async () => {
   emits('onPageChanged', 'skip')
+}
+const openSkipped = async (index) => {
+  emits('onPageChanged', `open_skipped|${index}`)
 }
 const close = async () => {
   router.go(-1)
