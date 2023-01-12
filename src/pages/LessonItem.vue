@@ -1,6 +1,6 @@
 <template>
     <q-app-header class="bg-white rounded-b-md" reveal>
-        <q-btn flat icon="close"  @click="$router.go(-1);" v:slot="back-button"/>
+
         <q-linear-progress
             rounded size="20px"
             :value="(lesson.active.page?.exercise?.data.current_page / lesson.active.page?.exercise?.data.total_pages )"
@@ -76,3 +76,25 @@ const onAnswerSaved = async () => {
 }
 
 </script>
+<style lang="scss">
+
+.q-select.q-select-inline .q-field__control,
+.q-select.q-select-inline .q-field__native {
+  min-height: 18px;
+  padding: 0;
+}
+
+.green-word{
+  color: $positive
+}
+.orange-word{
+  color: $accent
+}
+
+.q-select.correct-answer.q-field--standard .q-field__control::before{
+    border-color: $positive;
+}
+.q-select.wrong-answer.q-field--standard .q-field__control::before{
+    border-color: $negative;
+}
+</style>

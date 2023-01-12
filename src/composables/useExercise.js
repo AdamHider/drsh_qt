@@ -10,9 +10,14 @@ export function useExercise () {
     const exerciseResponse = await api.exercise.addItem({ lesson_id: lessonId })
     return exerciseResponse.data
   }
+  async function redoItem (lessonId) {
+    const exerciseResponse = await api.exercise.redoItem({ lesson_id: lessonId })
+    return exerciseResponse.data
+  }
 
   return {
     addItem,
+    redoItem,
     exercise
   }
 }

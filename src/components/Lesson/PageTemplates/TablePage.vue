@@ -7,19 +7,23 @@
         <LessonAudioPlayer/>
     </q-card>
     <div class="q-px-md q-pb-md" >
-      <q-markup-table >
-        <thead>
+      <q-markup-table
+        flat
+        bordered
+        separator="cell"
+      >
+        <thead v-if="table.header?.length > 0">
           <tr>
             <th v-for="(th, thIndex) in table.header" :key="thIndex">
               {{ th.text }}
             </th>
           </tr>
         </thead>
-        <tr class="col-6" v-for="(row, index) in table.rows" :key="index">
-          <td v-for="(column, colIndex) in row.column_list" :key="colIndex" >
-              <span v-html="column.text"></span>
+        <tr v-for="(row, index) in table.rows" :key="index">
+          <td v-for="(column, colIndex) in row.column_list" :key="colIndex" class="relative-position" style="white-space: normal;">
+              <div v-html="column.text"  class="q-py-sm"></div>
 
-              <span v-if="column.audio_link">
+              <div v-if="column.audio_link" class="absolute-right">
                 <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == column.audio_link && lessonAudio.is_playing"
                   flat
                   dense
@@ -36,9 +40,9 @@
                   class="play-audio"
                   :data-audio="column.audio_link"
                   @click="playAudio(column.audio_link)"
-                  icon="play_arrow"
+                  icon="volume_up"
                 />
-              </span>
+              </div>
           </td>
         </tr>
       </q-markup-table>

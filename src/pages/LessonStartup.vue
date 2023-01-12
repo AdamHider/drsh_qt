@@ -27,7 +27,7 @@
             </div>
         </q-card-section>
         <q-card-actions class="text-right">
-          <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="start(lesson.active.id)"></q-btn>
+          <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="redo(lesson.active.id)"></q-btn>
           <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue" color="positive" :to="`/lesson-${lesson.active.id}`"></q-btn>
           <q-btn v-else class="full-width" label="Start" color="primary" @click="start(lesson.active.id)"></q-btn>
         </q-card-actions>
@@ -68,7 +68,7 @@
             <div class="text-caption">{{activeSattelite.intro?.description_text}}</div>
         </q-card-section>
         <q-card-actions class="text-right">
-          <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="start(activeSattelite.id)"></q-btn>
+          <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="redo(activeSattelite.id)"></q-btn>
           <q-btn v-else-if="activeSattelite.exercise?.id" class="full-width" label="Continue" color="positive" :to="`/lesson-${activeSattelite.id}`"></q-btn>
           <q-btn v-else class="full-width" label="Start" color="primary" @click="start(activeSattelite.id)"></q-btn>
         </q-card-actions>
@@ -89,7 +89,7 @@ import { CONFIG } from '../config.js'
 const router = useRouter()
 const route = useRoute()
 const { lesson, getItem, getSatteliteList } = useLesson()
-const { addItem } = useExercise()
+const { addItem, redoItem } = useExercise()
 const dialog = ref(false)
 const activeSattelite = ref({})
 
@@ -99,8 +99,11 @@ const select = (index) => {
 }
 const start = async (lessonId) => {
   const exerciseCreated = await addItem(lessonId)
-  console.log(exerciseCreated)
   if (exerciseCreated) router.push(`/lesson-${lessonId}`)
+}
+const redo = async (lessonId) => {
+  const exerciseRedoCreated = await redoItem(lessonId)
+  if (exerciseRedoCreated) router.push(`/lesson-${lessonId}`)
 }
 
 onActivated(async () => {

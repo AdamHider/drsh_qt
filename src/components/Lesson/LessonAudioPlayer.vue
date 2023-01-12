@@ -1,5 +1,5 @@
 <template>
-    <q-card class="transparent absolute-bottom full-width full-height flex" flat>
+    <q-card  v-if="lessonAudio.list.length > 0" class="transparent absolute-bottom full-width full-height flex" flat>
         <div v-if="!lessonAudio.is_playing"
             @click="lessonAudio.is_playing = true; playAudioAll();"
             class="absolute full-width full-height flex justify-center content-center"
@@ -24,7 +24,7 @@
             <q-btn v-if="!lessonAudio.is_playing" flat color="white" dense icon="play_arrow" @click="lessonAudio.is_playing = true; playAudioAll();"/>
             <q-btn v-if="lessonAudio.is_playing" flat color="white" dense icon="pause" @click="pauseAudio"/>
             <q-toolbar-title>
-                <div v-if="lessonAudio.list.length > 0" class="row full-width rounded-borders" style="background: #ffffffb0; overflow: hidden;">
+                <div  class="row full-width rounded-borders" style="background: #ffffffb0; overflow: hidden;">
                     <q-linear-progress v-for="(audio, index) in lessonAudio.list"
                         :key="index"
                         instant-feedback

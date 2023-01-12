@@ -29,6 +29,7 @@
             placeholder="Enter message..."
             v-model="formData.fields[currentFieldIndex].value"
             @keydown.enter.prevent="saveAnswer"
+            @paste="e => e.preventDefault()"
             class="full-width"
             style="align-self: end;"
         >

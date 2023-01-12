@@ -11,68 +11,134 @@
         </q-card-section>
     </q-card>
     <q-toolbar class="bg-white" v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
-            <q-btn
-                v-if="(
+        <q-btn-dropdown  class="q-pa-sm" color="grey"  dropdown-icon="more_vert">
+            <q-list>
+                <q-item clickable
+                    v-if="(
                     lesson.active.page?.exercise.data.current_page != 0
                     && lesson.active.page?.exercise.data.back_attempts > 0
-                )"
-                flat
-                style="flex: 1"
-                text-color="dark"
-                label="Back"
-                @click="back"
-            ></q-btn>
-            <q-btn
-                v-if="(
-                    (!lesson.active.page?.fields
-                    || lesson.active.page?.answers?.is_finished)
-                    && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
-                )"
-                style="flex: 2"
-                color="positive"
-                label="Next"
-                @click="next"
-            ></q-btn>
-            <q-btn
-                v-if="(
-                    lesson.active.page?.fields
-                    && !lesson.active.page?.answers?.is_finished
-                )"
-                style="flex: 2"
-                color="primary"
-                label="Confirm"
-                @click="confirm"
-            ></q-btn>
-            <q-btn
-                v-if="(
-                    lesson.active.page?.fields
-                    && !lesson.active.page?.answers?.is_finished
-                    && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
-                    && lesson.active.page?.exercise.data.skip_attempts > 0
-                )"
-                flat
-                style="flex: 1"
-                text-color="dark"
-                label="Skip"
-            ></q-btn>
-            <q-btn
-                v-if="(
-                    (!lesson.active.page?.fields
-                    || lesson.active.page?.answers?.is_finished)
-                    && lesson.active.page?.exercise.data.current_page == lesson.active.page?.exercise.data.total_pages - 1
-                )"
-                style="flex: 2"
-                color="primary"
-                label="Finish"
-                @click="next"
-            ></q-btn>
+                    )"
+                    @click="back">
+                    <q-item-section>
+                        <q-item-label>Previous exercise</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-avatar
+                            size="sm"
+                            :color="(lesson.active.page?.exercise.data.back_attempts > 1) ? 'positive' : 'negative' "
+                            text-color="white"
+                        >
+                            {{ lesson.active.page?.exercise.data.back_attempts }}
+                        </q-avatar>
+                    </q-item-section>
+                </q-item>
+                <q-item clickable
+                    v-if="(
+                        lesson.active.page?.fields
+                        && !lesson.active.page?.answers.is_finished
+                        && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
+                        && lesson.active.page?.exercise.data.skip_attempts > 0
+                    )"
+                    @click="skip">
+                    <q-item-section>
+                        <q-item-label>Skip exercise</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-avatar
+                            size="sm"
+                            :color="(lesson.active.page?.exercise.data.skip_attempts > 1) ? 'positive' : 'negative' "
+                            text-color="white"
+                        >
+                            {{ lesson.active.page?.exercise.data.skip_attempts }}
+                        </q-avatar>
+                    </q-item-section>
+                </q-item>
+                <q-item clickable
+                    v-if="lesson.active.page?.exercise.data.skipped_pages.length > 0"
+                    @click="skippedDialog = true"
+                >
+                    <q-item-section>Skipped exercises</q-item-section>
+                    <q-item-section side>
+                        <q-icon name="keyboard_arrow_right" />
+                    </q-item-section>
+                </q-item>
+                <q-item clickable color="negative"
+                    @click="close">
+                    <q-item-section>
+                        <q-item-label>Close lesson</q-item-label>
+                    </q-item-section>
+                </q-item>
+            </q-list>
+        </q-btn-dropdown>
+        <q-btn
+            v-if="(
+                (!lesson.active.page?.fields
+                || lesson.active.page?.answers?.is_finished)
+                && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
+            )"
+            style="flex: 2"
+            color="positive"
+            label="Next"
+            @click="next"
+        ></q-btn>
+        <q-btn
+            v-if="(
+                lesson.active.page?.fields
+                && !lesson.active.page?.answers?.is_finished
+            )"
+            style="flex: 2"
+            color="primary"
+            label="Confirm"
+            @click="confirm"
+        ></q-btn>
+        <q-btn
+            v-if="(
+                (!lesson.active.page?.fields
+                || lesson.active.page?.answers?.is_finished)
+                && lesson.active.page?.exercise.data.current_page == lesson.active.page?.exercise.data.total_pages - 1
+            )"
+            style="flex: 2"
+            color="primary"
+            label="Finish"
+            @click="next"
+        ></q-btn>
     </q-toolbar>
+
+    <q-dialog v-model="skippedDialog">
+        <q-card style="min-width: 300px">
+            <q-card-section>
+                <div class="text-h6">Choose skipped page</div>
+            </q-card-section>
+            <q-list lines="two">
+                <q-item clickable v-ripple
+                    v-for="(skippedPage, skippedPageIndex) in lesson.active.page?.exercise.data.skipped_pages" :key="skippedPageIndex">
+
+                    <q-item-section>
+                        <q-item-label lines="1"><b>{{skippedPage.index}}.</b> {{skippedPage.title}}</q-item-label>
+                    </q-item-section>
+
+                    <q-item-section side>
+                        <q-btn>Open</q-btn>
+                    </q-item-section>
+                </q-item>
+            </q-list>
+            <q-card-actions align="right" class="bg-white text-teal">
+                <q-btn flat label="CLOSE" v-close-popup />
+            </q-card-actions>
+        </q-card>
+
+    </q-dialog>
+
 </template>
 
 <script setup>
 import { useLesson } from '../../composables/useLesson'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
+const skippedDialog = ref(false)
+
+const router = useRouter()
 const emits = defineEmits(['onPageChanged', 'onAnswerSaved'])
 
 const answerPercentage = computed(() => lesson.active.page?.answers?.totals.correct * 100 / lesson.active.page?.answers?.totals.answers)
@@ -90,6 +156,9 @@ const back = async () => {
 }
 const skip = async () => {
   emits('onPageChanged', 'skip')
+}
+const close = async () => {
+  router.go(-1)
 }
 
 </script>

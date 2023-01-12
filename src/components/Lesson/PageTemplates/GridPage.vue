@@ -5,8 +5,15 @@
             <q-img
               class="col"
               :src="`${CONFIG.API_HOST}/${column.image}`"
-            />
-          <q-card-section vertical class="flex flex-center">
+            >
+              <q-chip v-if="column.flag">
+                <q-avatar>
+                  <img  :src="`${CONFIG.API_HOST}/${column.flag.image}`"/>
+                </q-avatar>
+                {{ column.flag.text }}
+              </q-chip>
+            </q-img>
+          <q-card-section vertical class="flex flex-center text-center">
             <div v-html="column.text"></div>
           </q-card-section>
       </q-card>

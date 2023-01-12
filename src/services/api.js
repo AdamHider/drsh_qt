@@ -73,6 +73,10 @@ export class Api extends ApiService{
         addItem: (params) => {
             return this.post('exercise', 'addItem', params)
         },
+        redoItem: (params) => {
+            return this.post('exercise', 'redoItem', params)
+        },
+        
     }
 
     notifications = {

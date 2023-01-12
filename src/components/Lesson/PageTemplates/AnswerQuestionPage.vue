@@ -5,7 +5,14 @@
           <q-img
             class="col"
             :src="`${CONFIG.API_HOST}/${block.image}`"
-          />
+            >
+            <q-chip v-if="block.flag">
+                <q-avatar>
+                  <img  :src="`${CONFIG.API_HOST}/${block.flag.image}`"/>
+                </q-avatar>
+                {{ block.flag.text }}
+            </q-chip>
+          </q-img>
         <q-card-section vertical class="col-7 flex flex-center">
           <div v-html="block.text"></div>
         </q-card-section>
@@ -49,25 +56,3 @@ onMounted(() => {
 })
 
 </script>
-
-<style lang="scss" >
-.q-select.q-select-inline .q-field__control,
-.q-select.q-select-inline .q-field__native {
-  min-height: 18px;
-  padding: 0;
-}
-
-.green-word{
-  color: $positive
-}
-.orange-word{
-  color: $accent
-}
-
-.q-select.correct-answer.q-field--standard .q-field__control::before{
-    border-color: $positive;
-}
-.q-select.wrong-answer.q-field--standard .q-field__control::before{
-    border-color: $negative;
-}
-</style>
