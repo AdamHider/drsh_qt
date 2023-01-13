@@ -1,6 +1,6 @@
 <template>
     <q-app-header class="bg-white rounded-b-md" reveal>
-
+        <q-btn flat icon="close"  @click="closeLesson();" v:slot="back-button"/>
         <q-linear-progress
             rounded size="20px"
             :value="(lesson.active.page?.exercise?.data.current_page / lesson.active.page?.exercise?.data.total_pages )"
@@ -75,6 +75,9 @@ const onAnswerSaved = async () => {
   await saveAnswer(answers)
 }
 
+const closeLesson = () => {
+  router.go(-1)
+}
 </script>
 <style lang="scss">
 

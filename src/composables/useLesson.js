@@ -42,9 +42,6 @@ export function useLesson () {
     lesson.active.page = lessonAnswerResponse.data
     return lessonAnswerResponse.data
   }
-  function clear () {
-    lesson.list = []
-  }
 
   return {
     getItem,

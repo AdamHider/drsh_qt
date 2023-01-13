@@ -11,7 +11,7 @@
         </q-card-section>
     </q-card>
     <q-toolbar class="bg-white" v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
-        <q-btn-dropdown  class="q-pa-sm" color="grey"  dropdown-icon="more_vert">
+        <q-btn-dropdown v-model="extraActions" class="q-pa-sm" color="grey"  dropdown-icon="more_vert">
             <q-list>
                 <q-item clickable
                     v-if="(
@@ -34,38 +34,21 @@
                 </q-item>
                 <q-item clickable
                     v-if="(
-                        lesson.active.page?.fields
-                        && !lesson.active.page?.answers.is_finished
-                        && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
-                        && lesson.active.page?.exercise.data.skip_attempts > 0
+                        lesson.active.page?.answers?.is_finished
+                        && lesson.active.page?.exercise.data.again_attempts > 0
                     )"
-                    @click="skip">
+                    @click="again">
                     <q-item-section>
-                        <q-item-label>Skip exercise</q-item-label>
+                        <q-item-label>Again</q-item-label>
                     </q-item-section>
                     <q-item-section side>
                         <q-avatar
                             size="sm"
-                            :color="(lesson.active.page?.exercise.data.skip_attempts > 1) ? 'positive' : 'negative' "
+                            :color="(lesson.active.page?.exercise.data.again_attempts > 1) ? 'positive' : 'negative' "
                             text-color="white"
                         >
-                            {{ lesson.active.page?.exercise.data.skip_attempts }}
+                            {{ lesson.active.page?.exercise.data.again_attempts }}
                         </q-avatar>
-                    </q-item-section>
-                </q-item>
-                <q-item clickable
-                    v-if="lesson.active.page?.exercise.data.skipped_pages.length > 0"
-                    @click="skippedDialog = true"
-                >
-                    <q-item-section>Skipped exercises</q-item-section>
-                    <q-item-section side>
-                        <q-icon name="keyboard_arrow_right" />
-                    </q-item-section>
-                </q-item>
-                <q-item clickable color="negative"
-                    @click="close">
-                    <q-item-section>
-                        <q-item-label>Close lesson</q-item-label>
                     </q-item-section>
                 </q-item>
             </q-list>
@@ -134,11 +117,10 @@
 <script setup>
 import { useLesson } from '../../composables/useLesson'
 import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 const skippedDialog = ref(false)
+const extraActions = ref(false)
 
-const router = useRouter()
 const emits = defineEmits(['onPageChanged', 'onAnswerSaved'])
 
 const answerPercentage = computed(() => lesson.active.page?.answers?.totals.correct * 100 / lesson.active.page?.answers?.totals.answers)
@@ -147,21 +129,18 @@ const { lesson } = useLesson()
 
 const next = async () => {
   emits('onPageChanged', 'next')
+  extraActions.value = false
 }
 const confirm = async () => {
   emits('onAnswerSaved')
+  extraActions.value = false
 }
 const back = async () => {
   emits('onPageChanged', 'previous')
+  extraActions.value = false
 }
-const skip = async () => {
-  emits('onPageChanged', 'skip')
+const again = async () => {
+  emits('onPageChanged', 'again')
+  extraActions.value = false
 }
-const openSkipped = async (index) => {
-  emits('onPageChanged', `open_skipped|${index}`)
-}
-const close = async () => {
-  router.go(-1)
-}
-
 </script>
