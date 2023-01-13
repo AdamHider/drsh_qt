@@ -3,7 +3,7 @@
     <q-layout view="hHh LpR fFf">
       <q-page-container>
           <router-view v-slot="{ Component }">
-            <keep-alive>
+            <keep-alive >
               <component :is="Component"/>
             </keep-alive>
           </router-view>

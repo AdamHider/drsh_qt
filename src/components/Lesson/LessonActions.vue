@@ -1,5 +1,5 @@
 <template>
-    <q-card v-if="lesson.active.page?.answers?.is_finished" class="bg-white text-dark no-border-radius">
+    <q-card v-if="lesson.active.page?.answers?.is_finished" flat class="bg-white text-dark ">
         <q-card-section>
             <div class="text-h5">
               <b v-if="answerPercentage == 100">Perfect!</b>
@@ -10,13 +10,14 @@
             <div class="text-h5"><b>{{ lesson.active.page?.answers?.totals.total }}</b> <q-icon name="star"></q-icon></div>
         </q-card-section>
     </q-card>
-    <q-toolbar class="bg-white" v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
-        <q-btn-dropdown v-model="extraActions" class="q-pa-sm" color="grey"  dropdown-icon="more_vert">
+    <q-toolbar
+        v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
+        <q-btn-dropdown v-model="extraActions" class="q-mr-md" color="grey"  dropdown-icon="more_vert">
             <q-list>
                 <q-item clickable
-                    v-if="(
-                    lesson.active.page?.exercise.data.current_page != 0
-                    && lesson.active.page?.exercise.data.back_attempts > 0
+                    :disable="(
+                    lesson.active.page?.exercise.data.current_page == 0
+                    || lesson.active.page?.exercise.data.back_attempts == 0
                     )"
                     @click="back">
                     <q-item-section>
@@ -33,9 +34,9 @@
                     </q-item-section>
                 </q-item>
                 <q-item clickable
-                    v-if="(
-                        lesson.active.page?.answers?.is_finished
-                        && lesson.active.page?.exercise.data.again_attempts > 0
+                    :disable="(
+                        !lesson.active.page?.answers?.is_finished
+                        || lesson.active.page?.exercise.data.again_attempts == 0
                     )"
                     @click="again">
                     <q-item-section>

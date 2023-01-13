@@ -9,7 +9,7 @@
             <b>{{ lesson.active.page?.exercise?.data.totals.total }}</b>
         </q-chip>
     </q-app-header>
-    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px">
+    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px;">
         <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 50px">
             <q-card-section class="q-py-none">
                 <div class="text-subtitle1"><b>{{lesson.active.page?.header?.title}}</b></div>
@@ -19,7 +19,7 @@
         <component :is="PageTemplate" @onRendered="rendered = true"/>
         <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
     </q-page>
-    <q-footer expand position="bottom">
+    <q-footer expand position="bottom" class="bg-white lesson-bottombar ">
         <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved"/>
     </q-footer>
 </template>
@@ -58,7 +58,7 @@ const onPageChanged = async (action) => {
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
   if (!pageResponse) {
-    // router.go(-1)
+    router.go(-1)
     return
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
@@ -100,4 +100,9 @@ const closeLesson = () => {
 .q-select.wrong-answer.q-field--standard .q-field__control::before{
     border-color: $negative;
 }
+
+.lesson-bottombar{
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.12);
+}
+
 </style>

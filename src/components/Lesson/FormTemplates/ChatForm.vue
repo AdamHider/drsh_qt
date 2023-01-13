@@ -64,7 +64,7 @@
               </q-btn-dropdown>
             </template>
             <template v-slot:append>
-              <q-btn round dense flat icon="send" :disabled="!formData.fields[currentFieldIndex].value" @click="saveAnswer" />
+              <q-btn round dense flat icon="send" :disabled="!formData.fields[currentFieldIndex]?.value" @click="saveAnswer" />
             </template>
         </q-input>
       </q-card-section>
@@ -89,7 +89,8 @@ const formData = reactive({
 })
 
 const renderFields = () => {
-  formData.fields = {}
+  formData.fields = { }
+  console.log('renderFields')
   if (!lesson.active.page.fields || lesson.active.page.answers.is_finished) return
   let lastAnswerIndex = 0
   if (lesson.active.page.answers.answers) {
@@ -99,13 +100,19 @@ const renderFields = () => {
       lastAnswerIndex++
     }
   }
+  console.log(lastAnswerIndex)
   currentFieldIndex.value = lastAnswerIndex
   formData.fields[currentFieldIndex.value] = lesson.active.page.fields[currentFieldIndex.value]
+  onInput()
   emits('update-answer', formData.fields)
 }
 const onInput = function () {
   currentTipCorrectness.value = 0
-  if (!formData.fields[currentFieldIndex.value].value) return
+  console.log('works1')
+  currentTip.value = formData.fields[currentFieldIndex.value]?.variants[0]
+  console.log('works2')
+  console.log(formData.fields[currentFieldIndex.value])
+  if (!formData.fields[currentFieldIndex.value]?.value) return
   for (const i in formData.fields[currentFieldIndex.value].variants) {
     const tip = formData.fields[currentFieldIndex.value].variants[i]
     currentTipCorrect.value = findTip(tip)
@@ -115,7 +122,6 @@ const onInput = function () {
       return
     }
   }
-  if (!currentTipCorrect.value) currentTip.value = formData.fields[currentFieldIndex.value].variants[0]
 }
 
 const saveAnswer = function () {
@@ -128,20 +134,24 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
   currentFieldIndex.value = 0
   renderFields()
 })
+watch(() => currentFieldIndex, (newValue, oldValue) => {
+  onInput()
+})
 
-watch(formData.fields, (newValue, oldValue) => {
+watch(() => formData.fields[currentFieldIndex.value]?.value, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
+  console.log('update-answer')
   onInput()
 })
 
 const findTip = function (answer) {
-  const simplifiedInput = simplifyUserInput(formData.fields[currentFieldIndex.value].value)
-  const simplifiedAnswer = simplifyUserInput(answer)
+  let simplifiedInput = simplifyUserInput(formData.fields[currentFieldIndex.value].value)
+  let simplifiedAnswer = simplifyUserInput(answer)
   /* =========NON STRICT MATCH========= */
-  /*
-  var simplifiedInput = simplifySpecialChars(simplifiedInput)
-  var simplifiedAnswer = simplifySpecialChars(simplifiedAnswer)
-  */
+
+  simplifiedInput = simplifySpecialChars(simplifiedInput)
+  simplifiedAnswer = simplifySpecialChars(simplifiedAnswer)
+
   /* =========NON STRICT MATCH========= */
 
   const simplifiedInputExploded = simplifiedInput.trim().split(' ')

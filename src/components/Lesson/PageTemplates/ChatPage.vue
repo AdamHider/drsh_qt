@@ -1,8 +1,8 @@
 <template>
-    <div class="full-width q-pa-md chat-container" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers.is_finished) ? 20 : 120}px`" >
+    <div class="full-width q-pa-md chat-container" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers.is_finished) ? 30 : 120}px`" >
       <transition v-for="(replica, index) in replicaList.list" :key="index"
         appear
-        :enter-active-class="(!replica.rendered) ? `animated slideInUp animationDelay${replica.sortIndex}` : ''"
+        :enter-active-class="(!replica.rendered) ? `animated fadeInUp animationDelay${replica.sortIndex}` : ''"
       >
           <q-chat-message
             :sent="replica.type !== 'question'"
@@ -16,8 +16,11 @@
                 style="min-width: 40px; width: 40px; height: 40px"
               >
             </template>
-            <div class="q-px-sm">
+            <div class="q-px-sm relative-position">
               <span v-html="replica.text"></span>
+              <q-chip v-if="replica.type !== 'question'" class="absolute" style="bottom: -2em; left: -2em; width: 2em; min-width: 2em; padding: 0.3em;">
+                {{ replica.reaction }}
+              </q-chip>
             </div>
           </q-chat-message>
       </transition>
@@ -47,6 +50,7 @@ const replicaList = reactive({
 })
 const funnyEmojis = ['😀', '😉', '😊', '😎', '😍', '🙂', '👍']
 const sadEmojis = ['😟', '😞', '😥', '😨', '😩']
+
 const currentAnswerIndex = ref(0)
 const isTyping = ref(true)
 
@@ -89,10 +93,10 @@ const renderData = () => {
         var answer = lesson.active.page.answers.answers[currentAnswerIndex.value]
         if (answer.is_correct) {
           replica.text = answer.value
-          replica.reaction = funnyEmojis[i]
+          replica.reaction = funnyEmojis[currentAnswerIndex.value]
         } else {
           replica.text = answer.value
-          replica.reaction = sadEmojis[i]
+          replica.reaction = sadEmojis[currentAnswerIndex.value]
         }
         if (answer.tmp_answer !== '') {
           replicaList.list.push({
