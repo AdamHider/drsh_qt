@@ -38,27 +38,23 @@
               <q-btn-dropdown flat class="q-pa-sm" color="gray"  dropdown-icon="more_vert">
                 <q-list>
                   <q-item clickable
-                      v-if="(
-                        lesson.active.page?.exercise.data.current_page != 0
-                        && lesson.active.page?.exercise.data.back_attempts > 0
+                      :disable="(
+                      lesson.active.page?.exercise.data.current_page == 0
+                      || lesson.active.page?.exercise.data.back_attempts == 0
                       )"
-                      @click="emits('onPageChanged', 'previous')">
-                    <q-item-section>
-                      <q-item-label>Back</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable
-                      v-if="(
-                          lesson.active.page?.fields
-                          && !lesson.active.page?.answers.is_finished
-                          && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
-                          && lesson.active.page?.exercise.data.skip_attempts > 0
-                      )"
-                      @click="emits('onPageChanged', 'skip')">
-                    <q-item-section>
-                      <q-item-label>Skip</q-item-label>
-                    </q-item-section>
+                      @click="backDialog=true">
+                      <q-item-section>
+                          <q-item-label>Previous exercise</q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                          <q-avatar
+                              size="sm"
+                              :color="(lesson.active.page?.exercise.data.back_attempts > 1) ? 'positive' : 'negative' "
+                              text-color="white"
+                          >
+                              {{ lesson.active.page?.exercise.data.back_attempts }}
+                          </q-avatar>
+                      </q-item-section>
                   </q-item>
                 </q-list>
               </q-btn-dropdown>
@@ -70,15 +66,32 @@
       </q-card-section>
     </q-card>
   </q-page-sticky>
+
+  <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Persistent</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Click/Tap on the backdrop.
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancel" color="grey" v-close-popup />
+          <q-btn flat label="Continue" @click="back" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
 import { ref, reactive, watch, defineEmits } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved', 'onPageChanged'])
 const { lesson } = useLesson()
 
+const backDialog = ref(false)
 const currentFieldIndex = ref(0)
 const currentTip = ref(false)
 const currentTipCorrect = ref(null)
@@ -90,7 +103,6 @@ const formData = reactive({
 
 const renderFields = () => {
   formData.fields = { }
-  console.log('renderFields')
   if (!lesson.active.page.fields || lesson.active.page.answers.is_finished) return
   let lastAnswerIndex = 0
   if (lesson.active.page.answers.answers) {
@@ -100,18 +112,13 @@ const renderFields = () => {
       lastAnswerIndex++
     }
   }
-  console.log(lastAnswerIndex)
   currentFieldIndex.value = lastAnswerIndex
   formData.fields[currentFieldIndex.value] = lesson.active.page.fields[currentFieldIndex.value]
-  onInput()
   emits('update-answer', formData.fields)
 }
 const onInput = function () {
   currentTipCorrectness.value = 0
-  console.log('works1')
   currentTip.value = formData.fields[currentFieldIndex.value]?.variants[0]
-  console.log('works2')
-  console.log(formData.fields[currentFieldIndex.value])
   if (!formData.fields[currentFieldIndex.value]?.value) return
   for (const i in formData.fields[currentFieldIndex.value].variants) {
     const tip = formData.fields[currentFieldIndex.value].variants[i]
@@ -130,6 +137,17 @@ const saveAnswer = function () {
 }
 renderFields()
 
+const back = async () => {
+  emits('onPageChanged', 'previous')
+}
+onBeforeRouteLeave((to, from) => {
+  if (backDialog.value) {
+    backDialog.value = false
+    return false
+  }
+  return true
+})
+
 watch(() => lesson.active.page, (newValue, oldValue) => {
   currentFieldIndex.value = 0
   renderFields()
@@ -140,7 +158,6 @@ watch(() => currentFieldIndex, (newValue, oldValue) => {
 
 watch(() => formData.fields[currentFieldIndex.value]?.value, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
-  console.log('update-answer')
   onInput()
 })
 

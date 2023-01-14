@@ -132,7 +132,6 @@ const renderData = () => {
   }
   markRendered()
   setSortIndex()
-  console.log(replicaList.list)
   isTyping.value = false
 }
 
