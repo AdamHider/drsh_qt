@@ -38,47 +38,60 @@
               <q-btn-dropdown flat class="q-pa-sm" color="gray"  dropdown-icon="more_vert">
                 <q-list>
                   <q-item clickable
-                      v-if="(
-                        lesson.active.page?.exercise.data.current_page != 0
-                        && lesson.active.page?.exercise.data.back_attempts > 0
+                      :disable="(
+                      lesson.active.page?.exercise.data.current_page == 0
+                      || lesson.active.page?.exercise.data.back_attempts == 0
                       )"
-                      @click="emits('onPageChanged', 'previous')">
-                    <q-item-section>
-                      <q-item-label>Back</q-item-label>
-                    </q-item-section>
-                  </q-item>
-
-                  <q-item clickable
-                      v-if="(
-                          lesson.active.page?.fields
-                          && !lesson.active.page?.answers.is_finished
-                          && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
-                          && lesson.active.page?.exercise.data.skip_attempts > 0
-                      )"
-                      @click="emits('onPageChanged', 'skip')">
-                    <q-item-section>
-                      <q-item-label>Skip</q-item-label>
-                    </q-item-section>
+                      @click="backDialog=true">
+                      <q-item-section>
+                          <q-item-label>Previous exercise</q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                          <q-avatar
+                              size="sm"
+                              :color="(lesson.active.page?.exercise.data.back_attempts > 1) ? 'positive' : 'negative' "
+                              text-color="white"
+                          >
+                              {{ lesson.active.page?.exercise.data.back_attempts }}
+                          </q-avatar>
+                      </q-item-section>
                   </q-item>
                 </q-list>
               </q-btn-dropdown>
             </template>
             <template v-slot:append>
-              <q-btn round dense flat icon="send" :disabled="!formData.fields[currentFieldIndex].value" @click="saveAnswer" />
+              <q-btn round dense flat icon="send" :disabled="!formData.fields[currentFieldIndex]?.value" @click="saveAnswer" />
             </template>
         </q-input>
       </q-card-section>
     </q-card>
   </q-page-sticky>
+
+  <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Persistent</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Click/Tap on the backdrop.
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancel" color="grey" v-close-popup />
+          <q-btn flat label="Continue" @click="back" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
 import { ref, reactive, watch, defineEmits } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { onBeforeRouteLeave } from 'vue-router'
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved', 'onPageChanged'])
 const { lesson } = useLesson()
 
+const backDialog = ref(false)
 const currentFieldIndex = ref(0)
 const currentTip = ref(false)
 const currentTipCorrect = ref(null)
@@ -89,8 +102,8 @@ const formData = reactive({
 })
 
 const renderFields = () => {
-  formData.fields = {}
-  if (!lesson.active.page?.fields || lesson.active.page?.answers.is_finished) return
+  formData.fields = { }
+  if (!lesson.active.page.fields || lesson.active.page.answers.is_finished) return
   let lastAnswerIndex = 0
   if (lesson.active.page.answers.answers) {
     lastAnswerIndex = (lesson.active.page.answers.answers?.length - 1)
@@ -105,7 +118,8 @@ const renderFields = () => {
 }
 const onInput = function () {
   currentTipCorrectness.value = 0
-  if (!formData.fields[currentFieldIndex.value].value) return
+  currentTip.value = formData.fields[currentFieldIndex.value]?.variants[0]
+  if (!formData.fields[currentFieldIndex.value]?.value) return
   for (const i in formData.fields[currentFieldIndex.value].variants) {
     const tip = formData.fields[currentFieldIndex.value].variants[i]
     currentTipCorrect.value = findTip(tip)
@@ -115,7 +129,6 @@ const onInput = function () {
       return
     }
   }
-  if (!currentTipCorrect.value) currentTip.value = formData.fields[currentFieldIndex.value].variants[0]
 }
 
 const saveAnswer = function () {
@@ -124,24 +137,38 @@ const saveAnswer = function () {
 }
 renderFields()
 
+const back = async () => {
+  emits('onPageChanged', 'previous')
+}
+onBeforeRouteLeave((to, from) => {
+  if (backDialog.value) {
+    backDialog.value = false
+    return false
+  }
+  return true
+})
+
 watch(() => lesson.active.page, (newValue, oldValue) => {
   currentFieldIndex.value = 0
   renderFields()
 })
+watch(() => currentFieldIndex, (newValue, oldValue) => {
+  onInput()
+})
 
-watch(formData.fields, (newValue, oldValue) => {
+watch(() => formData.fields[currentFieldIndex.value]?.value, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
   onInput()
 })
 
 const findTip = function (answer) {
-  const simplifiedInput = simplifyUserInput(formData.fields[currentFieldIndex.value].value)
-  const simplifiedAnswer = simplifyUserInput(answer)
+  let simplifiedInput = simplifyUserInput(formData.fields[currentFieldIndex.value].value)
+  let simplifiedAnswer = simplifyUserInput(answer)
   /* =========NON STRICT MATCH========= */
-  /*
-  var simplifiedInput = simplifySpecialChars(simplifiedInput)
-  var simplifiedAnswer = simplifySpecialChars(simplifiedAnswer)
-  */
+
+  simplifiedInput = simplifySpecialChars(simplifiedInput)
+  simplifiedAnswer = simplifySpecialChars(simplifiedAnswer)
+
   /* =========NON STRICT MATCH========= */
 
   const simplifiedInputExploded = simplifiedInput.trim().split(' ')

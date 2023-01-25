@@ -1,5 +1,5 @@
 <template>
-    <q-card v-if="lesson.active.page?.answers?.is_finished" class="bg-white text-dark no-border-radius">
+    <q-card v-if="lesson.active.page?.answers?.is_finished" flat class="bg-white text-dark ">
         <q-card-section>
             <div class="text-h5">
               <b v-if="answerPercentage == 100">Perfect!</b>
@@ -10,15 +10,16 @@
             <div class="text-h5"><b>{{ lesson.active.page?.answers?.totals.total }}</b> <q-icon name="star"></q-icon></div>
         </q-card-section>
     </q-card>
-    <q-toolbar class="bg-white" v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
-        <q-btn-dropdown v-model="extraActions" class="q-pa-sm" color="grey"  dropdown-icon="more_vert">
+    <q-toolbar
+        v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
+        <q-btn-dropdown v-model="extraActions" class="q-mr-md" color="grey"  dropdown-icon="more_vert">
             <q-list>
                 <q-item clickable
-                    v-if="(
-                    lesson.active.page?.exercise.data.current_page != 0
-                    && lesson.active.page?.exercise.data.back_attempts > 0
+                    :disable="(
+                    lesson.active.page?.exercise.data.current_page == 0
+                    || lesson.active.page?.exercise.data.back_attempts == 0
                     )"
-                    @click="back">
+                    @click="backDialog = true">
                     <q-item-section>
                         <q-item-label>Previous exercise</q-item-label>
                     </q-item-section>
@@ -33,11 +34,11 @@
                     </q-item-section>
                 </q-item>
                 <q-item clickable
-                    v-if="(
-                        lesson.active.page?.answers?.is_finished
-                        && lesson.active.page?.exercise.data.again_attempts > 0
+                    :disable="(
+                        !lesson.active.page?.answers?.is_finished
+                        || lesson.active.page?.exercise.data.again_attempts == 0
                     )"
-                    @click="again">
+                    @click="againDialog=true">
                     <q-item-section>
                         <q-item-label>Again</q-item-label>
                     </q-item-section>
@@ -87,29 +88,49 @@
         ></q-btn>
     </q-toolbar>
 
-    <q-dialog v-model="skippedDialog">
-        <q-card style="min-width: 300px">
-            <q-card-section>
-                <div class="text-h6">Choose skipped page</div>
-            </q-card-section>
-            <q-list lines="two">
-                <q-item clickable v-ripple
-                    v-for="(skippedPage, skippedPageIndex) in lesson.active.page?.exercise.data.skipped_pages" :key="skippedPageIndex">
+    <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Persistent</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Click/Tap on the backdrop.
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancel" color="grey" v-close-popup />
+          <q-btn flat label="Continue" @click="back" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
-                    <q-item-section>
-                        <q-item-label lines="1"><b>{{skippedPage.index}}.</b> {{skippedPage.title}}</q-item-label>
-                    </q-item-section>
+    <q-dialog v-model="againDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Persistent</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Click/Tap on the backdrop.
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancel" color="grey" v-close-popup />
+          <q-btn flat label="Continue" @click="again" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
-                    <q-item-section side>
-                        <q-btn @click="openSkipped(skippedPage.index)">Open</q-btn>
-                    </q-item-section>
-                </q-item>
-            </q-list>
-            <q-card-actions align="right" class="bg-white text-teal">
-                <q-btn flat label="CLOSE" v-close-popup />
-            </q-card-actions>
-        </q-card>
-
+    <q-dialog v-model="confirmDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Persistent</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Click/Tap on the backdrop.
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancel" color="grey" v-close-popup />
+          <q-btn flat label="Continue" @click="confirm" v-close-popup />
+        </q-card-actions>
+      </q-card>
     </q-dialog>
 
 </template>
@@ -117,13 +138,22 @@
 <script setup>
 import { useLesson } from '../../composables/useLesson'
 import { computed, ref } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
-const skippedDialog = ref(false)
+const backDialog = ref(false)
+const againDialog = ref(false)
+const confirmDialog = ref(false)
+
 const extraActions = ref(false)
 
 const emits = defineEmits(['onPageChanged', 'onAnswerSaved'])
+const props = defineProps({
+  pageAnswers: Object
+})
 
 const answerPercentage = computed(() => lesson.active.page?.answers?.totals.correct * 100 / lesson.active.page?.answers?.totals.answers)
+
+const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (props.pageAnswers[i].value !== '') return false } return true })
 
 const { lesson } = useLesson()
 
@@ -132,6 +162,10 @@ const next = async () => {
   extraActions.value = false
 }
 const confirm = async () => {
+  if (!confirmDialog.value && isEmptyAnswer.value) {
+    confirmDialog.value = true
+    return
+  }
   emits('onAnswerSaved')
   extraActions.value = false
 }
@@ -143,4 +177,20 @@ const again = async () => {
   emits('onPageChanged', 'again')
   extraActions.value = false
 }
+
+onBeforeRouteLeave((to, from) => {
+  if (backDialog.value) {
+    backDialog.value = false
+    return false
+  }
+  if (againDialog.value) {
+    againDialog.value = false
+    return false
+  }
+  if (confirmDialog.value) {
+    confirmDialog.value = false
+    return false
+  }
+  return true
+})
 </script>

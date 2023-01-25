@@ -19,7 +19,7 @@
 
         <q-item-section>
           <q-item-label lines="1"><b>{{ replica.name }}</b></q-item-label>
-          <q-item-label lines="3" ><div v-html="replica.text"></div></q-item-label>
+          <q-item-label style="white-space: break-spaces;"><div v-html="replica.text"></div></q-item-label>
         </q-item-section>
         <q-item-section v-if="replica.audio_link" side>
           <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"

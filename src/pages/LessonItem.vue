@@ -1,6 +1,6 @@
 <template>
     <q-app-header class="bg-white rounded-b-md" reveal>
-        <q-btn flat icon="close"  @click="closeLesson();" v:slot="back-button"/>
+        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <q-linear-progress
             rounded size="20px"
             :value="(lesson.active.page?.exercise?.data.current_page / lesson.active.page?.exercise?.data.total_pages )"
@@ -9,7 +9,7 @@
             <b>{{ lesson.active.page?.exercise?.data.totals.total }}</b>
         </q-chip>
     </q-app-header>
-    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px">
+    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px;">
         <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 50px">
             <q-card-section class="q-py-none">
                 <div class="text-subtitle1"><b>{{lesson.active.page?.header?.title}}</b></div>
@@ -19,15 +19,29 @@
         <component :is="PageTemplate" @onRendered="rendered = true"/>
         <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
     </q-page>
-    <q-footer expand position="bottom">
-        <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved"/>
+    <q-footer expand position="bottom" class="bg-white lesson-bottombar ">
+        <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved" :pageAnswers="pageAnswers"/>
     </q-footer>
+    <q-dialog v-model="closeDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Persistent</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Click/Tap on the backdrop.
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancel" color="grey" v-close-popup />
+          <q-btn flat label="Continue" @click="closeLesson" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
 import LessonActions from '../components/Lesson/LessonActions.vue'
 import { useLesson } from '../composables/useLesson'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, computed, onActivated, defineAsyncComponent } from 'vue'
 
 const route = useRoute()
@@ -39,6 +53,7 @@ const rendered = ref(false)
 
 const pageTemplateTitle = ref(false)
 const formTemplateTitle = ref(false)
+const closeDialog = ref(false)
 
 const PageTemplate = computed(() => pageTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/PageTemplates/${pageTemplateTitle.value}Page.vue`)) : null)
 const FormTemplate = computed(() => formTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/FormTemplates/${formTemplateTitle.value}Form.vue`)) : null)
@@ -59,7 +74,7 @@ const onPageChanged = async (action) => {
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
   if (!pageResponse) {
-    // router.go(-1)
+    router.go(-1)
     return
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
@@ -79,6 +94,13 @@ const onAnswerSaved = async () => {
 const closeLesson = () => {
   router.go(-1)
 }
+onBeforeRouteLeave((to, from) => {
+  if (closeDialog.value) {
+    closeDialog.value = false
+    return false
+  }
+  return true
+})
 </script>
 <style lang="scss">
 
@@ -101,4 +123,9 @@ const closeLesson = () => {
 .q-select.wrong-answer.q-field--standard .q-field__control::before{
     border-color: $negative;
 }
+
+.lesson-bottombar{
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.12);
+}
+
 </style>

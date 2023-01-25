@@ -1,6 +1,6 @@
 <template>
   <div class="full-width" style="padding-top: 50px">
-    <q-card class="q-ma-md" v-for="(block, index) in blockList.list" :key="index">
+    <q-card class="q-mb-md q-mx-md" v-for="(block, index) in blockList.list" :key="index">
       <q-card-section horizontal>
           <q-img
             class="col"
