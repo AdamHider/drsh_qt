@@ -7,7 +7,7 @@
             cover
             :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
         </q-card-section>
-        <LessonAudioPlayer/>
+        <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>
     <q-list class="q-mb-md">
       <q-item  v-for="(replica, index) in itemList.list" :key="index" dense >
@@ -37,12 +37,15 @@
 
 <script setup>
 import { reactive, watch, onMounted, defineEmits } from 'vue'
+import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['onRendered'])
 
 const { lesson } = useLesson()
+const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
 const itemList = reactive({
   list: []
