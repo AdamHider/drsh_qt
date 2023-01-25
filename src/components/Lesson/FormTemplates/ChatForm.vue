@@ -90,7 +90,7 @@ const formData = reactive({
 
 const renderFields = () => {
   formData.fields = {}
-  if (!lesson.active.page.fields || lesson.active.page.answers.is_finished) return
+  if (!lesson.active.page?.fields || lesson.active.page?.answers.is_finished) return
   let lastAnswerIndex = 0
   if (lesson.active.page.answers.answers) {
     lastAnswerIndex = (lesson.active.page.answers.answers?.length - 1)

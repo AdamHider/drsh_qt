@@ -49,6 +49,7 @@ const load = async () => {
 }
 
 onActivated(() => {
+  console.log('load')
   load()
 })
 

@@ -83,7 +83,7 @@ import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, onActivated, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { CONFIG } from '../config.js'
 
 const router = useRouter()
@@ -106,12 +106,13 @@ const redo = async (lessonId) => {
   if (exerciseRedoCreated) router.push(`/lesson-${lessonId}`)
 }
 
-onActivated(async () => {
+onMounted(async () => {
   await getItem(route.params.lesson_id)
   getSatteliteList()
 })
 
 watch(() => route.params.lesson_id, async () => {
+  if (route.name !== 'lesson-startup') return
   await getItem(route.params.lesson_id)
   getSatteliteList()
 })

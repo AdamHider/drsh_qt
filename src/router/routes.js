@@ -75,11 +75,13 @@ const routes = [
       },
       {
         path: 'lesson-startup-:lesson_id',
+        name: 'lesson-startup',
         component: () => import('pages/LessonStartup.vue'),
         meta: { noBottomBar: true }
       },
       {
         path: 'lesson-:lesson_id',
+        name: 'lesson',
         component: () => import('src/pages/LessonItem.vue'),
         meta: { noBottomBar: true }
       },

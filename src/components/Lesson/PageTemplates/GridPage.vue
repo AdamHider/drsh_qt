@@ -55,18 +55,3 @@ onMounted(() => {
 })
 
 </script>
-
-<style lang="scss" >
-.q-select.q-select-inline .q-field__control,
-.q-select.q-select-inline .q-field__native {
-  min-height: 18px;
-  padding: 0;
-}
-
-.q-select.correct-answer.q-field--standard .q-field__control::before{
-    border-color: $positive;
-}
-.q-select.wrong-answer.q-field--standard .q-field__control::before{
-    border-color: $negative;
-}
-</style>
