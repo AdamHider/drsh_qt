@@ -19,6 +19,7 @@ export function useLessonAudio () {
     lessonAudio.activeIndex = 0
     const audioLinks = document.querySelectorAll('.lesson-page .play-audio')
     for (let e = 0; e < audioLinks.length; e++) {
+      if (!audioLinks[e].dataset.audio || audioLinks[e].dataset.audio == 'false') continue
       const source = audioLinks[e].dataset.audio
       audioLinks[e].dataset.audio_index = e
       const audio = new Audio(`${CONFIG.API_HOST}/media/audio/lessons/${source}.mp3?1`)
@@ -53,12 +54,16 @@ export function useLessonAudio () {
   }
   function fitTimeline (index) {
     for (let i = 0; i < index; i++) {
-      lessonAudio.list[i].currentTime = lessonAudio.list[i].element.duration
+      if (lessonAudio.list[i]) {
+        lessonAudio.list[i].currentTime = lessonAudio.list[i].element.duration
+      }
     }
   }
 
   function playAudio (link) {
-    const activeIndex = lessonAudio.list.findIndex((audio) => audio.element.src == `${CONFIG.API_HOST}/media/audio/lessons/${link}.mp3?1`)
+    if (lessonAudio.list.length == 0) return
+    const activeIndex = lessonAudio.list.findIndex((audio) => audio?.element.src == `${CONFIG.API_HOST}/media/audio/lessons/${link}.mp3?1`)
+    if (activeIndex == -1) return false
     stopAudio(activeIndex)
     lessonAudio.activeIndex = activeIndex
     fitTimeline(lessonAudio.activeIndex)

@@ -70,10 +70,10 @@
   <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Persistent</div>
+          <div class="text-h6">Are you sure?</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Click/Tap on the backdrop.
+          You are gonna go back. You reaaly want to?
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
           <q-btn flat label="Cancel" color="grey" v-close-popup />
@@ -103,7 +103,7 @@ const formData = reactive({
 
 const renderFields = () => {
   formData.fields = { }
-  if (!lesson.active.page.fields || lesson.active.page.answers.is_finished) return
+  if (!lesson.active.page || !lesson.active.page.fields || lesson.active.page.answers.is_finished) return
   let lastAnswerIndex = 0
   if (lesson.active.page.answers.answers) {
     lastAnswerIndex = (lesson.active.page.answers.answers?.length - 1)

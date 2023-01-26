@@ -10,7 +10,7 @@ export function useAchievement () {
   async function getList (index) {
     achievement.offset = achievement.limit * index
     try {
-      const achievementListResponse = await api.achievement.getList({ limit: achievement.limit, offset: achievement.offset })
+      const achievementListResponse = await api.achievements.getList({ limit: achievement.limit, offset: achievement.offset })
       achievement.list = achievement.list.concat(achievementListResponse.data)
       return achievementListResponse.data.length == 0
     } catch (e) {
@@ -20,7 +20,7 @@ export function useAchievement () {
   }
   async function getListByUser () {
     try {
-      const achievementListResponse = await api.achievement.getList()
+      const achievementListResponse = await api.achievements.getList()
       return achievementListResponse.data
     } catch (e) {
       console.log(e)

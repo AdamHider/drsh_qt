@@ -8,7 +8,27 @@
           />
         </q-card-section>
         <q-card-section vertical :class="`q-pa-none ${(!data.data.is_form) ? 'flex flex-center text-center' : ''}`">
-          <div v-if="!data.data.is_form" class="text-h6"><b v-html="data.data.text"></b></div>
+          <div v-if="!data.data.is_form" class="text-h6">
+            <b v-html="data.data.text"></b>
+            <span v-if="data.data.audio_link" >
+              <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == data.data.audio_link && lessonAudio.is_playing"
+                flat
+                class="play-audio"
+                :data-audio="data.data.audio_link"
+                @click="pauseAudio()"
+                color="gray"
+                icon="pause"
+              />
+              <q-btn  v-else
+                flat
+                class="play-audio"
+                :data-audio="data.data.audio_link"
+                @click="playAudio(data.data.audio_link)"
+                color="gray"
+                icon="volume_up"
+              />
+            </span>
+          </div>
           <div v-else v-html="data.data.text"></div>
         </q-card-section>
     </q-card>
@@ -18,11 +38,13 @@
 <script setup>
 import { reactive, watch, onMounted, defineEmits } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['onRendered'])
 
 const { lesson } = useLesson()
+const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
 const data = reactive({
   data: []
@@ -39,13 +61,13 @@ const renderData = () => {
     }
   }
   data.data = lesson.active.page.data
-  console.log(data.data)
 }
 
 renderData()
 
 onMounted(() => {
   emits('onRendered', true)
+  loadAudio()
 })
 
 </script>

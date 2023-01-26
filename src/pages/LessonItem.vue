@@ -25,10 +25,10 @@
     <q-dialog v-model="closeDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Persistent</div>
+          <div class="text-h6">Close lesson</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Click/Tap on the backdrop.
+          Are you sure? You can back to it whenever you want though
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
           <q-btn flat label="Cancel" color="grey" v-close-popup />

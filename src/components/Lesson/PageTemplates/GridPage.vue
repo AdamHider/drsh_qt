@@ -16,6 +16,22 @@
           <q-card-section vertical class="flex flex-center text-center">
             <div v-html="column.text"></div>
           </q-card-section>
+          <q-card-section v-if="column.audio_link"  class="q-pt-none">
+            <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == column.audio_link && lessonAudio.is_playing"
+              flat
+              class="play-audio full-width"
+              :data-audio="column.audio_link"
+              @click="pauseAudio()"
+              icon="pause"
+            />
+            <q-btn  v-else
+              class="play-audio full-width"
+              flat
+              :data-audio="column.audio_link"
+              @click="playAudio(column.audio_link)"
+              icon="volume_up"
+            />
+          </q-card-section>
       </q-card>
     </div>
   </div>
@@ -24,9 +40,11 @@
 <script setup>
 import { reactive, watch, onMounted, defineEmits } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['onRendered'])
+const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
 const { lesson } = useLesson()
 
@@ -52,6 +70,7 @@ renderData()
 
 onMounted(() => {
   emits('onRendered', true)
+  loadAudio()
 })
 
 </script>

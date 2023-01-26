@@ -54,7 +54,7 @@ const renderFields = () => {
   if (!lesson.active.page?.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
-    let value = ''
+    let value
     let options = field.variants
     if (field.answer) {
       value = field.answer.value

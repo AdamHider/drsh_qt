@@ -5,12 +5,13 @@
                 <div class="row justify-between  full-width">
                   <div class="col-6 q-pa-sm " v-for="(image, imageIndex) in formData.fields[index].options" :key="imageIndex">
                     <q-card v-if="!formData.fields[index].answer"
-                      :class="`${(formData.fields[index].value == image.text) ?  'bg-positive text-white' : ''}`"
-                      @click="formData.fields[index].value = image.text">
+                      :class="`${(formData.fields[index].value == image.text) ?  'bg-positive text-white' : ''} `"
+                      @click="formData.fields[index].value = image.text; playAudio(image.audio_link)">
                         <q-card-section class="q-pa-sm ">
                           <q-img
                             v-if="image.image"
-                            class="rounded-borders"
+                            :data-audio="image.audio_link"
+                            class="rounded-borders play-audio"
                             :src="`${CONFIG.API_HOST}/${image.image}`"
                           />
                         </q-card-section>
@@ -23,6 +24,7 @@
                         <q-card-section class="q-pa-sm ">
                           <q-img
                             v-if="image.image"
+                            :data-audio="image.audio_link"
                             class="rounded-borders"
                             :src="`${CONFIG.API_HOST}/${image.image}`"
                           />
@@ -39,12 +41,15 @@
 </template>
 
 <script setup>
-import { reactive, watch, defineEmits } from 'vue'
+import { reactive, watch, defineEmits, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
+
 const { lesson } = useLesson()
+const { playAudio, loadAudio } = useLessonAudio()
 
 const formData = reactive({
   fields: []
@@ -54,7 +59,7 @@ const renderFields = () => {
   if (!lesson.active.page.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
-    let value = false
+    let value
     const options = field.variants
     if (field.answer) {
       value = field.answer.value
@@ -72,6 +77,10 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
 
 watch(formData.fields, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
+})
+
+onMounted(() => {
+  loadAudio()
 })
 </script>
 
