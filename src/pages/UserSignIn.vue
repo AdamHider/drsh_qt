@@ -118,7 +118,7 @@ const validate = async function () {
   }
   const logged = await signIn(userAuth)
   buttonLoading.value = false
-  if (logged.success) {
+  if (!logged.error) {
     if (redirectedFrom) return router.push(redirectedFrom.fullPath)
     return router.push('/user')
   }

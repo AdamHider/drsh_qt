@@ -40,9 +40,9 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   async function signIn (auth) {
     if (!auth) { return }
     const result = await api.user.signIn(auth)
-    if (result.success) {
+    if (!result.error) {
       const userResponse = await api.user.get()
-      update({ authorization: auth, data: userResponse.data })
+      update({ authorization: auth, data: userResponse })
     }
     showMessage('You have signed successfully!')
     return result
@@ -50,16 +50,16 @@ export const useUserStore = defineStore('drsh_user_store', () => {
 
   async function autoSignIn () {
     const userResponse = await api.user.get()
-    if (user.active.data.id && user.active.data.id != userResponse.data.id) {
+    if (user.active.data.id && user.active.data.id != userResponse.id) {
       const result = await signIn(user.active.authorization)
-      if (!result.success) {
+      if (result.error) {
         signOut()
       }
     }
-    if (userResponse.data.id != 0) {
+    if (userResponse.id != 0) {
       const userAuth = user.active.authorization
-      userAuth.username = userResponse.data.username
-      update({ authorization: userAuth, data: userResponse.data })
+      userAuth.username = userResponse.username
+      update({ authorization: userAuth, data: userResponse })
     }
   }
 
@@ -71,18 +71,18 @@ export const useUserStore = defineStore('drsh_user_store', () => {
 
   async function signUp (auth) {
     const authResponse = await api.user.signUp(auth)
-    if (authResponse.success) {
-      update({ authorization: authResponse.data })
+    if (!authResponse.error) {
+      update({ authorization: { username: authResponse.username, password: auth.password } })
     }
     return authResponse
   }
   async function save (data) {
     const saveResponse = await api.user.save(data)
-    if (saveResponse.success) {
+    if (!saveResponse.error) {
       const userResponse = await api.user.get()
       const userAuth = user.active.authorization
-      userAuth.username = userResponse.data.username
-      update({ authorization: userAuth, data: userResponse.data })
+      userAuth.username = userResponse.username
+      update({ authorization: userAuth, data: userResponse })
     }
     showMessage('User data saved!')
     return saveResponse
@@ -90,11 +90,11 @@ export const useUserStore = defineStore('drsh_user_store', () => {
 
   async function savePassword (data) {
     const saveResponse = await api.user.savePassword(data)
-    if (saveResponse.success) {
+    if (!saveResponse.error) {
       const userResponse = await api.user.get()
       const userAuth = user.active.authorization
       userAuth.password = data.password
-      update({ authorization: userAuth, data: userResponse.data })
+      update({ authorization: userAuth, data: userResponse })
     }
     showMessage('User data saved!')
     return saveResponse
@@ -103,7 +103,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   async function activate (code) {
     await signOut()
     const result = await api.user.activate(code)
-    if (result.success) {
+    if (!result.error) {
       await signIn(user.active.authorization)
     }
     return result

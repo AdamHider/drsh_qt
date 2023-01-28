@@ -2,6 +2,10 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"name": "mektepium-app",
+			"path": "w:\\Wamp.NET\\sites\\mektepium-app"
 		}
 	],
 	"settings": {}

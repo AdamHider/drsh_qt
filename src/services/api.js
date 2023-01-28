@@ -7,33 +7,42 @@ export class ApiService {
     Object.assign(this, config);
   }
   setResource = (context, method) =>  {
-    return this.baseUrl+`index.php?option=com_dershane&scope=${context}&method=${method}&format=raw`;
+    context = context.charAt(0).toUpperCase() + context.slice(1);
+    return this.baseUrl+`${context}/${method}`;
   }
-  setBody = (params) => {
-    return {
-      request_data: params
+  setHeaders = () =>  {
+    const headers = {
+        "Content-Type": "application/json"
     };
+    if(localStorage['x-sid']) headers['x-sid'] = localStorage['x-sid'];
+    return headers;
   }
+
   post = async(context, method, params = {}) =>  {
     var self = this;
     let responseData = {};
     const resource = this.setResource(context, method);
-    const body = this.setBody(params);
-    await jQuery.ajax({
-      url: resource,
-      method: "POST",
-      data: body,
-      xhrFields: {
-        withCredentials: true
-      }
-    })
-      .done(function(response, textStatus, request){
-        responseData = JSON.parse(response);
-      })
-      .fail(function(){
-        responseData = false;
-      });
-      return responseData;
+    const headers = this.setHeaders(context, method);
+
+    await fetch(resource, {
+        method: 'POST', // or 'PUT'
+        credentials: 'include',
+        headers: headers,	
+        body: JSON.stringify(params),
+        })
+        .then((response) => {
+            if(response.headers.get('x-sid')){
+                localStorage.setItem('x-sid', response.headers.get('x-sid'))
+            } 
+            return response.json()
+        })
+        .then((data) => {
+            responseData = data;
+        })
+        .catch((error) => {
+            responseData = error;
+        });
+    return responseData;
   }
 }
 
@@ -95,13 +104,15 @@ export class Api extends ApiService{
             return this.post('user', 'savePassword', params)
         },
         signUp: (params) =>  {
-            return this.post('userAuth', 'addItem', params)
+            return this.post('user', 'signUp', params)
         },
-        signOut: (params) =>  {
-            return this.post('userAuth', 'signOut', params);
+        signOut: async (params) =>  {
+            const result = await this.post('user', 'signOut', params);
+            localStorage.removeItem('x-sid')
+            return result
         },
         signIn: (params) => {
-            return this.post('userAuth', 'signIn', params);
+            return this.post('user', 'signIn', params);
         },
         checkUsername: (params) => {
             return this.post('user', 'checkUsername', params);
