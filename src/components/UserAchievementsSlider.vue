@@ -14,14 +14,14 @@
               <q-img
                 fit="cover"
                 class="rounded-borders"
-                :src="(CONFIG.API_HOST+achievementItem.image)"
+                :src="achievementItem.image"
                 :style="`height: ${props.slideHeight}px; background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)`"
                 >
               </q-img>
             </q-card-section>
             <q-card-section  class="text-center q-pa-sm">
-                <div class="text-bold">{{achievementItem.description.title.ru}}</div>
-                <div class="text-caption text-grey">{{achievementItem.description.description.ru}}</div>
+                <div class="text-bold">{{achievementItem.title}}</div>
+                <div class="text-caption text-grey">{{achievementItem.description}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>

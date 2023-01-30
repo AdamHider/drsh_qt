@@ -8,7 +8,7 @@
     <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
         <q-card-section>
             <q-img
-                :src="`${CONFIG.API_HOST}/images/dershane/hero_${user.active.data.profile?.hero}_hello.png`"
+                :src="user.active.data.profile?.character?.image"
                 style="max-width: 250px; width: 170px;"
                 no-spinner
             />
@@ -34,7 +34,7 @@
         <q-card-section>
             <q-item class="q-pa-none">
                 <q-item-section class="text-left">
-                    <div class="text-h5"><b>{{user.active.data.name}}</b></div>
+                    <div class="text-h5"><b>{{user.active.data.username}}</b></div>
                     <div class="text-grey">Active student</div>
                 </q-item-section>
                 <q-item-section side>
@@ -101,17 +101,14 @@
 </template>
 
 <script setup>
-import MainLayout from '../layouts/MainLayout.vue'
 import { useUserStore } from '../stores/user'
-import { useClassroom } from '../composables/useClassroom'
 import UserToggle from '../components/UserToggle.vue'
 import UserAchievementsSlider from '../components/UserAchievementsSlider.vue'
 import { useRouter } from 'vue-router'
-import { CONFIG } from '../config.js'
 
 const { user, signOut } = useUserStore()
 const router = useRouter()
-console.log('mounted USER')
+console.log(user.active.data.profile?.character)
 const exitUser = async function () {
   await signOut()
   return router.push('/authorization')

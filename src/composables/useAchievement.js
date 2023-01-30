@@ -9,13 +9,13 @@ const achievement = reactive({
 export function useAchievement () {
   async function getList (index) {
     achievement.offset = achievement.limit * index
-    const achievementListResponse = await api.achievements.getList({ limit: achievement.limit, offset: achievement.offset })
-    achievement.list = achievement.list.concat(achievementListResponse.data)
-    return achievementListResponse.data.length == 0
+    const achievementListResponse = await api.achievements.getList({ mode: 'all', limit: achievement.limit, offset: achievement.offset })
+    achievement.list = achievement.list.concat(achievementListResponse)
+    return achievementListResponse.length == 0
   }
   async function getListByUser () {
-    const achievementListResponse = await api.achievements.getList()
-    return achievementListResponse.data
+    const achievementListResponse = await api.achievements.getList({ mode: 'user', limit: 5, offset: 0 })
+    return achievementListResponse
   }
 
   return {

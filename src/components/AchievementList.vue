@@ -11,14 +11,14 @@
                 <q-item-section avatar>
                     <q-avatar size="80px">
                         <q-img
-                          :src="`${CONFIG.API_HOST}/images/dershane/${achievement.image}`"
+                          :src="achievement.image"
                           loading="lazy"
                           spinner-color="white"/>
                     </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left">
-                    <div class="text-bold">{{achievement.description.title.ru}}</div>
-                    <div class="text-grey">{{achievement.description.description.ru}}</div>
+                    <div class="text-bold">{{achievement.title}}</div>
+                    <div class="text-grey">{{achievement.description}}</div>
                     <div class="row q-ma-sm">
                         <div class="col text-left"></div>
                         <div class="col  text-right">
