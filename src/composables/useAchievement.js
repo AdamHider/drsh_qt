@@ -8,7 +8,7 @@ const achievement = reactive({
 
 export function useAchievement () {
   async function getList (index) {
-    achievement.offset = achievement.limit * index
+    if (achievement.list.length > 0) achievement.offset = achievement.limit * index
     const achievementListResponse = await api.achievements.getList({ mode: 'all', limit: achievement.limit, offset: achievement.offset })
     achievement.list = achievement.list.concat(achievementListResponse)
     return achievementListResponse.length == 0

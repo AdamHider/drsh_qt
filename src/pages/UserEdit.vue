@@ -13,18 +13,6 @@
         class="full-width"
       >
         <q-input
-          v-model="formData.fields.name.value"
-          :rules="formData.fields.name.rules"
-          :error-message="formData.fields.name.errors"
-          :error="formData.fields.name.errors !== ''"
-          label="Name"
-          required
-        >
-          <template v-if="formData.fields.name.errors == ''" v-slot:append>
-              <q-icon color="positive" name="check"></q-icon>
-          </template>
-        </q-input>
-        <q-input
           v-model="formData.fields.username.value"
           :rules="formData.fields.username.rules"
           :error-message="formData.fields.username.errors"
@@ -65,8 +53,18 @@
           v-model="formData.fields.email.value"
           :rules="formData.fields.email.rules"
           :error-message="formData.fields.email.errors"
+          :error="formData.fields.email.errors !== ''"
           label="E-mail"
-          required
+        ></q-input>
+        <q-input
+          v-model="formData.fields.phone.value"
+          :rules="formData.fields.phone.rules"
+          :error-message="formData.fields.phone.errors"
+          :error="formData.fields.phone.errors !== ''"
+          mask="+# (###) ### - ## - ##"
+          fill-mask
+          unmasked-value
+          label="Phone"
         ></q-input>
       </q-form>
   </q-page>
@@ -87,15 +85,6 @@ const formData = reactive({
   passwordIsPin: true,
   valid: true,
   fields: {
-    name: {
-      value: user.active.data.name,
-      rules: [
-        v => !!v || 'Name is required',
-        v => v.length > 3 || 'Name must be at least 3 characters long'
-      ],
-      errors: '',
-      suggestions: []
-    },
     username: {
       value: user.active.data.username,
       rules: [
@@ -108,13 +97,17 @@ const formData = reactive({
     email: {
       value: user.active.data.email,
       rules: [
-        v => v === '' || ((/.+@.+\..+/.test(v)) || 'E-mail must be valid')
+        v => v === '' || (v !== '' && ((/.+@.+\..+/.test(v)))) || 'E-mail must be valid'
+      ],
+      errors: ''
+    },
+    phone: {
+      value: user.active.data.phone,
+      rules: [
+        v => v === '' || (v !== '' && (/\(?([0-9]{4})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(v))) || 'Phone must be valid'
       ],
       errors: '',
-      required: false
-    },
-    terms: {
-      value: false
+      suggestions: []
     }
   }
 })
@@ -123,12 +116,13 @@ const saveChanges = async function () {
   formData.valid = await form.value.validate()
   if (formData.valid) {
     const data = {
-      name: formData.fields.name.value,
+      user_id: user.active.data.id,
       username: formData.fields.username.value,
-      email: formData.fields.email.value
+      email: formData.fields.email.value,
+      phone: formData.fields.phone.value
     }
     const saved = await save(data)
-    if (saved.success) {
+    if (!saved.error) {
       return router.go(-1)
     } else {
       formData.fields[saved.data].errors = saved.message
@@ -139,17 +133,18 @@ const saveChanges = async function () {
 watch(() => formData.fields.username.value, async (currentValue, oldValue) => {
   formData.fields.username.errors = ''
   const result = await checkUsername({ username: currentValue })
-  if (!result.success) {
-    formData.fields.username.errors = result.message
+  if (result) {
+    formData.fields.username.suggestions = result
+    formData.fields.username.errors = 'Username is in use'
   }
-  formData.fields.username.suggestions = result.data
 })
 watch(() => formData.fields.email.value, async (currentValue, oldValue) => {
   formData.fields.email.errors = ''
-  if (!currentValue) return
+  if (!currentValue || /.+@.+\..+/.test(currentValue) === false) return
   const result = await checkEmail({ email: currentValue })
-  if (!result.success) {
-    formData.fields.email.errors = result.message
+  console.log(result.messages)
+  if (result.error) {
+    formData.fields.email.errors = result.messages.error
     formData.valid = false
   }
 })

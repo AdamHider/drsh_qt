@@ -153,10 +153,10 @@ const saveChanges = async function () {
     const data = {
       old_password: formData.fields.oldPassword.value,
       password: formData.fields.password.value,
-      passwordConfirm: formData.fields.passwordConfirm.value
+      password_confirm: formData.fields.passwordConfirm.value
     }
     const saved = await savePassword(data)
-    if (saved.success) {
+    if (!saved.error) {
       return router.go(-1)
     } else {
       formData.fields[saved.data].errors = saved.message

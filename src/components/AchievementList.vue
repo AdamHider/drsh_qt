@@ -22,12 +22,12 @@
                     <div class="row q-ma-sm">
                         <div class="col text-left"></div>
                         <div class="col  text-right">
-                            <b>{{achievement.achievement_progress.current_progress}}/{{achievement.achievement_progress.target_progress}}</b>
+                            <b>{{achievement.progress.current}}/{{achievement.progress.target}}</b>
                         </div>
                     </div>
                     <q-linear-progress
-                        :color="(achievement.achievement_progress.percentage/100) >= 1 ? 'positive' : 'primary'"
-                        :value="(achievement.achievement_progress.percentage/100)"
+                        :color="(achievement.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
+                        :value="(achievement.progress.percentage/100)"
                         size="20px"
                         rounded
                     ></q-linear-progress>
