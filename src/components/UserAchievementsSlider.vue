@@ -20,8 +20,8 @@
               </q-img>
             </q-card-section>
             <q-card-section  class="text-center q-pa-sm">
-                <div class="text-bold">{{achievementItem.title}}</div>
-                <div class="text-caption text-grey">{{achievementItem.description}}</div>
+                <div class="text-bold">{{achievementItem.description.title}}</div>
+                <div class="text-caption text-grey">{{achievementItem.description.description}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>

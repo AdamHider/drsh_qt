@@ -5,7 +5,7 @@
       :modules="[Navigation]"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="classroom.list.findIndex((classroom) => classroom.is_active)"
+      :initialSlide="classroom.list?.findIndex((classroom) => classroom.is_active)"
       :navigation="props.navigation"
       @swiper="onSwiper"
       @slideChange="onSlideChange"
@@ -16,13 +16,13 @@
             <q-img
               fit="cover"
               class="rounded-borders"
-              :src="(CONFIG.API_HOST+classroomItem.fulltext_image)"
+              :src="classroomItem.background_image"
               :style="`height: ${props.slideHeight}px`"
               >
               <div :class="`absolute-${captionMode} text-center text-white flex flex-center`">
                 <div>
-                  <div class="text-bold">{{classroomItem.title}}</div>
-                  <div class="subtitle">{{classroomItem.code}}</div>
+                  <div class="text-bold">{{classroomItem.description.title}}</div>
+                  <div class="subtitle">{{classroomItem.description.code}}</div>
                 </div>
               </div>
             </q-img>
@@ -111,6 +111,7 @@ const select = async (index) => {
 }
 
 const onSwiper = (swiper) => {
+  if (classroom.list.length == 0) return
   if (classroom.list[swiper.activeIndex]) {
     activeItem.value = classroom.list[swiper.activeIndex]
   } else {
@@ -118,6 +119,7 @@ const onSwiper = (swiper) => {
   }
 }
 const onSlideChange = (swiper) => {
+  if (classroom.list.length == 0) return
   if (classroom.list[swiper.activeIndex]) {
     activeItem.value = classroom.list[swiper.activeIndex]
   } else {

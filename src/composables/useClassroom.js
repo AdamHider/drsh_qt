@@ -12,12 +12,12 @@ export function useClassroom () {
   }
   async function getActive () {
     const classroomResponse = await api.classroom.getActive()
-    classroom.active = classroomResponse.data
+    classroom.active = classroomResponse
   }
   async function getList () {
     try {
       const classroomListResponse = await api.classroom.getList({ mode: 'by_user' })
-      classroom.list = classroomListResponse.data
+      classroom.list = classroomListResponse
     } catch (e) {
       throw new Error('classroom are null: ' + e)
     }

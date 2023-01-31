@@ -71,8 +71,8 @@ const validate = async function () {
     const fields = {
       active_classroom_code: formData.fields.classroom_code.value
     }
-    const subscribed = await subscribe({classroom_code: formData.fields.classroom_code.value})
-    if(subscribed.success){
+    const subscribed = await subscribe({ classroom_code: formData.fields.classroom_code.value })
+    if (!subscribed.error) {
       await save({ fields })
       return router.push('/user')
     }
@@ -94,7 +94,7 @@ onMounted(() => {
 watch(() => formData.fields.classroom_code.value, async (currentValue, oldValue) => {
   if (currentValue.length > 5) {
     const checkResponse = await checkIfExists(currentValue)
-    if (!checkResponse.success) {
+    if (checkResponse.error) {
       formData.valid = false
       formData.fields.classroom_code.errors = checkResponse.message
       return

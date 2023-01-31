@@ -4,7 +4,7 @@
       class="courseSlider"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="course.list.findIndex((course) => course.is_active)"
+      :initialSlide="course.list?.findIndex((course) => course.is_active)"
       :navigation="props.navigation"
       @swiper="onSwiper"
     >

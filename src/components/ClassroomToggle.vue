@@ -4,7 +4,7 @@
         @click="dialog = true"
     >
         <q-avatar size="30px">
-          <img :src="`${CONFIG.API_HOST}${classroom.active?.introimage}`"/>
+          <img :src="classroom.active?.image"/>
         </q-avatar>
         <div class="ellipsis">
             <b>{{classroom.active?.title}}</b>

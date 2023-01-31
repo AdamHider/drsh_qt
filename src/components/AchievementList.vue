@@ -17,8 +17,8 @@
                     </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left">
-                    <div class="text-bold">{{achievement.title}}</div>
-                    <div class="text-grey">{{achievement.description}}</div>
+                    <div class="text-bold">{{achievement.description.title}}</div>
+                    <div class="text-grey">{{achievement.description.description}}</div>
                     <div class="row q-ma-sm">
                         <div class="col text-left"></div>
                         <div class="col  text-right">
