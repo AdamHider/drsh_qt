@@ -27,13 +27,13 @@ export class ApiService {
     await fetch(resource, {
         method: 'POST', // or 'PUT'
         credentials: 'include',
-        headers: headers,	
+        headers: headers,
         body: JSON.stringify(params),
         })
         .then((response) => {
             if(response.headers.get('x-sid')){
                 localStorage.setItem('x-sid', response.headers.get('x-sid'))
-            } 
+            }
             return response.json()
         })
         .then((data) => {
@@ -85,7 +85,7 @@ export class Api extends ApiService{
         redoItem: (params) => {
             return this.post('exercise', 'redoItem', params)
         },
-        
+
     }
 
     notifications = {
@@ -100,8 +100,11 @@ export class Api extends ApiService{
         save: (params) => {
             return this.post('user', 'saveItem', params)
         },
+        saveProfile: (params) => {
+            return this.post('user', 'saveItemProfile', params)
+        },
         savePassword: (params) => {
-            return this.post('user', 'savePassword', params)
+            return this.post('user', 'saveItemPassword', params)
         },
         signUp: (params) =>  {
             return this.post('user', 'signUp', params)

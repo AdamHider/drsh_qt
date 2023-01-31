@@ -76,7 +76,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const { user, save } = useUserStore()
+const { user, saveProfile } = useUserStore()
 const { classroom, getList } = useClassroom()
 getList()
 
@@ -103,11 +103,11 @@ const select = async (index) => {
   if (activeIndex > -1) classroom.list[activeIndex].is_active = false
   classroom.list[index].is_active = true
 
-  const fields = {
-    active_classroom_code: activeItem.value.code,
-    active_course_id: 0
+  const data = {
+    classroom_id: activeItem.value.id,
+    course_id: 0
   }
-  await save({ fields })
+  await saveProfile(data)
 }
 
 const onSwiper = (swiper) => {
