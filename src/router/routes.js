@@ -1,5 +1,11 @@
 import MainLayout from 'layouts/MainLayout.vue'
-
+import { useUserStore } from '../stores/user'
+const checkIfSigned = function (to, from) {
+  const { user } = useUserStore()
+  if (user.active.data.id) {
+    return { path: '/user' }
+  }
+}
 const routes = [
   {
     path: '/',
@@ -36,11 +42,6 @@ const routes = [
         component: () => import('pages/UserSettings.vue')
       },
       {
-        path: 'authorization',
-        component: () => import('pages/UserStartup.vue'),
-        meta: { noBottomBar: true }
-      },
-      {
         path: 'classroom',
         component: () => import('pages/Classroom.vue'),
         meta: { requiresAuth: true }
@@ -55,9 +56,16 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'authorization',
+        component: () => import('pages/UserStartup.vue'),
+        meta: { noBottomBar: true },
+        beforeEnter: checkIfSigned
+      },
+      {
         path: 'authorization/sign-in',
         component: () => import('pages/UserSignIn.vue'),
-        meta: { noBottomBar: true }
+        meta: { noBottomBar: true },
+        beforeEnter: checkIfSigned
       },
       {
         path: 'authorization/sign-up',
@@ -66,12 +74,14 @@ const routes = [
       {
         path: 'authorization/sign-up/step:step',
         component: () => import('pages/UserSignUp.vue'),
-        meta: { noBottomBar: true }
+        meta: { noBottomBar: true },
+        beforeEnter: checkIfSigned
       },
       {
         path: '/authorization/user-activate-:activation_code',
         component: () => import('pages/UserActivate.vue'),
-        meta: { noBottomBar: true }
+        meta: { noBottomBar: true },
+        beforeEnter: checkIfSigned
       },
       {
         path: 'lesson-startup-:lesson_id',

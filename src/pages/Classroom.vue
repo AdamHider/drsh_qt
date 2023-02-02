@@ -7,22 +7,22 @@
   </q-app-header>
   <q-page class="bg-white" :style="`padding-top: ${backgroundImageHeight}px;`">
     <q-img
-      :src="`${CONFIG.API_HOST}${classroom?.active?.fulltext_image}`"
+      :src="classroom?.active?.background_image"
       :style="`max-height: ${backgroundImageHeight}px; position: fixed; top: 0;`"
     />
     <q-card flat style="margin-top: -15px;">
       <q-card-section>
         <div class="row no-wrap items-center">
           <div class="col text-h6 ellipsis">
-            {{ classroom.active?.title }}
+            {{ classroom.active?.description?.title }}
           </div>
           <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
             <q-icon name="place" />
             250 ft
           </div>
         </div>
-        <div v-if="classroom.active?.description" class="text-grey">
-          {{ classroom.active?.description }}
+        <div v-if="classroom.active?.description?.description" class="text-grey">
+          {{ classroom.active?.description?.description }}
         </div>
         <div v-if="classroom.active?.address" class="text-caption text-grey">
           <q-icon name="location_on" size="sm"></q-icon>

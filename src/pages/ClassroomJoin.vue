@@ -48,7 +48,7 @@ const form = ref(null)
 const loading = ref(false)
 const router = useRouter()
 const { checkIfExists, subscribe } = useClassroom()
-const { user, signIn, signOut, save } = useUserStore()
+const { user, signIn, signOut, saveProfile } = useUserStore()
 
 const formData = reactive({
   valid: true,
@@ -68,13 +68,13 @@ const validate = async function () {
   const valid = await form.value.validate()
   loading.value = true
   if (valid) {
-    const fields = {
-      active_classroom_code: formData.fields.classroom_code.value
+    const data = {
+      classroom_code: formData.fields.classroom_code.value
     }
-    const subscribed = await subscribe({ classroom_code: formData.fields.classroom_code.value })
-    if (!subscribed.error) {
-      await save({ fields })
-      return router.push('/user')
+    const classroomResponse = await subscribe(data)
+    if (!classroomResponse.error) {
+      await saveProfile({ classroom_id: classroomResponse.id })
+      return router.push('/classroom')
     }
     formData.fields.classroom_code.errors = 'Error'
   }

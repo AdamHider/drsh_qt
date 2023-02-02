@@ -55,19 +55,19 @@ import { useUserStore } from '../stores/user'
 import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
-const route = useRoute ()
+const route = useRoute()
 const redirectedFrom = inject('redirectedFrom')
 
 const dialog = ref(false)
 const btnLoading = ref([])
 
 const switchUser = async (userItem, key) => {
-    btnLoading.value[key] = true
-    await signIn(userItem.authorization, userItem.activeClassroom)
-    btnLoading.value[key] = false
-    dialog.value = false
-    if(redirectedFrom) return router.push(redirectedFrom.fullPath)
-    return router.push('/user')
+  btnLoading.value[key] = true
+  await signIn(userItem.authorization, userItem.activeClassroom)
+  btnLoading.value[key] = false
+  dialog.value = false
+  if (redirectedFrom) return router.push(redirectedFrom.fullPath)
+  return router.push('/user')
 }
 
 const { signIn, user } = useUserStore()
