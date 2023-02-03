@@ -11,18 +11,18 @@ const lesson = reactive({
 export function useLesson () {
   async function getItem (lessonId) {
     const lessonResponse = await api.lesson.getItem({ id: lessonId })
-    lesson.active = lessonResponse.data
+    lesson.active = lessonResponse
   }
   async function getList (index) {
     lesson.offset = lesson.limit * (index - 1)
     try {
       const lessonListResponse = await api.lesson.getList({ limit: lesson.limit, offset: lesson.offset })
       if (lesson.offset > 0) {
-        lesson.list = lessonListResponse.data.reverse().concat(lesson.list)
+        lesson.list = lessonListResponse.reverse().concat(lesson.list)
       } else {
-        lesson.list = lessonListResponse.data.reverse()
+        lesson.list = lessonListResponse.reverse()
       }
-      return lessonListResponse.data.length === 0
+      return lessonListResponse.length === 0
     } catch (e) {
       console.log(e)
       throw new Error('Courses are null: ' + e)
@@ -30,17 +30,17 @@ export function useLesson () {
   }
   async function getSatteliteList () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
-    lesson.active.sattelites = lessonResponse.data
+    lesson.active.sattelites = lessonResponse
   }
   async function getPage (action) {
     const lessonPageResponse = await api.lesson.getPage({ lesson_id: lesson.active.id, action })
-    lesson.active.page = lessonPageResponse.data
-    return lessonPageResponse.data
+    lesson.active.page = lessonPageResponse
+    return lessonPageResponse
   }
   async function saveAnswer (answers) {
     const lessonAnswerResponse = await api.lesson.saveAnswer({ filter: { lesson_id: lesson.active.id }, answers })
-    lesson.active.page = lessonAnswerResponse.data
-    return lessonAnswerResponse.data
+    lesson.active.page = lessonAnswerResponse
+    return lessonAnswerResponse
   }
 
   return {

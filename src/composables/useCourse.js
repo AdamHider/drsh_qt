@@ -12,13 +12,13 @@ const { classroom } = useClassroom()
 export function useCourse () {
   async function getActive () {
     const courseResponse = await api.course.getActive()
-    course.active = courseResponse.data
+    course.active = courseResponse
   }
   async function getList () {
     course.isLoading = true
     try {
       const courseResponse = await api.course.getList()
-      course.list = courseResponse.data
+      course.list = courseResponse
     } catch (e) {
       console.log(e)
       throw new Error('Courses are null: ' + e)

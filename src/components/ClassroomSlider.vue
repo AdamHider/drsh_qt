@@ -99,7 +99,7 @@ const select = async (index) => {
     return false
   }
 
-  const activeIndex = classroom.list.findIndex((classroom) => (classroom.code === user.active.data.profile.active_classroom_code))
+  const activeIndex = classroom.list.findIndex((classroom) => (classroom.id === user.active.data.profile.classroom_id))
   if (activeIndex > -1) classroom.list[activeIndex].is_active = false
   classroom.list[index].is_active = true
 

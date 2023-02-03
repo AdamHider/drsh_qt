@@ -14,7 +14,7 @@
               <q-img
                 fit="cover"
                 class="rounded-borders"
-                :src="(CONFIG.API_HOST+courseItem.image)"
+                :src="courseItem.background_image"
                 :style="`height: ${props.slideHeight}px;`"
                 >
                 <div :class="`absolute-${captionMode} text-left text-white flex flex-center  `">
@@ -42,8 +42,8 @@
               </q-img>
             </q-card-section>
             <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold">{{courseItem.data.title}}</div>
-                <div class="text-caption text-grey">{{courseItem.data.title_tag}}</div>
+                <div class="text-bold">{{courseItem.description.title}}</div>
+                <div class="text-caption text-grey">{{courseItem.description.title_tag}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>
@@ -72,7 +72,7 @@ const props = defineProps({
 
 const emits = defineEmits(['select'])
 
-const { user, save } = useUserStore()
+const { user, saveProfile } = useUserStore()
 const { course, getList } = useCourse()
 
 if (user.active?.data.id) {
@@ -80,17 +80,17 @@ if (user.active?.data.id) {
 }
 
 const select = async (index) => {
-  if (course.list[index].id === user.active?.data.profile.active_course_id) {
+  if (course.list[index].id === user.active?.data.profile.course_id) {
     return false
   }
   emits('select')
-  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.profile.active_course_id))
+  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.profile.course_id))
   if (activeIndex > -1) course.list[activeIndex].is_active = false
   course.list[index].is_active = true
-  const fields = {
-    active_course_id: course.list[index].id
+  const data = {
+    course_id: course.list[index].id
   }
-  save({ fields })
+  saveProfile(data)
 }
 
 const onSwiper = (swiper) => {

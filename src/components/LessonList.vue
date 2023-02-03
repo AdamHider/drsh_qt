@@ -8,8 +8,8 @@
         <div v-for="(lesson, index) in lessonList" :key="index"
             :class="`row q-px-lg ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
             v-intersection="onIntersection"
-            :groupBackground="lesson.parent_description.background_image"
-            :groupGradient="lesson.parent_description.background_gradient"
+            :groupBackground="lesson.course_section.background_image"
+            :groupGradient="lesson.course_section.background_gradient"
         >
             <q-card v-if="lesson.type == 'group'" class="transparent text-white full-width" flat >
                 <q-card-section>
@@ -20,8 +20,8 @@
             </q-card>
             <div v-else :class="`col-auto`">
                 <q-card class="transparent no-shadow q-ma-sm"
-                    :disabled="(lesson.block.is_blocked === true) ? true : null">
-                    <q-btn v-if="lesson.block.is_blocked === true"
+                    :disabled="(lesson.is_blocked === true) ? true : null">
+                    <q-btn v-if="lesson.is_blocked === true"
                         color="white"
                         text-color="dark"
                         class="absolute-top"
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="absolute-top flex justify-center items-center full-width full-height">
-                            <q-circular-progress v-if="!lesson.block.is_blocked"
+                            <q-circular-progress v-if="!lesson.is_blocked"
                                 rounded
                                 show-value
                                 :value="lesson.exercise?.current_progress || 0"
