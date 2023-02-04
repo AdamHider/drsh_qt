@@ -5,11 +5,11 @@
       @click="dialog = true"
     >
         <q-avatar size="30px">
-          <img :src="`${CONFIG.API_HOST}${course.active?.image}`"/>
+          <img :src="course.active?.image"/>
         </q-avatar>
-        <div v-if="course.active?.title" class="ellipsis" style="max-width: 100px;">
-            <b>{{course.active?.title}}</b>
-            <q-tooltip>{{course.active?.title}}</q-tooltip>
+        <div v-if="course.active?.description?.title" class="ellipsis" style="max-width: 100px;">
+            <b>{{course.active?.description.title}}</b>
+            <q-tooltip>{{course.active?.description.title}}</q-tooltip>
         </div>
         <div v-else>
             <b>Choose course</b>
@@ -62,7 +62,6 @@ if (props.dialogOpened) dialog.value = true
 const select = () => {
   dialog.value = false
 }
-
 watch(props, () => {
   if (props.dialogOpened) dialog.value = true
 })

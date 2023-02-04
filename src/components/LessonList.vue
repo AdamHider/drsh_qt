@@ -13,8 +13,8 @@
         >
             <q-card v-if="lesson.type == 'group'" class="transparent text-white full-width" flat >
                 <q-card-section>
-                    <div class="text-h6">{{ lesson.parent_title }}</div>
-                    <div class="text-caption">{{ lesson.parent_description.description }}</div>
+                    <div class="text-h6">{{ lesson.course_section.description.title }}</div>
+                    <div class="text-caption">{{ lesson.course_section.description.description }}</div>
                 </q-card-section>
                 <q-separator color="white"/>
             </q-card>
@@ -46,7 +46,7 @@
                             }">
                                 <img
                                 class="ui circular mini image"
-                                :src="`${CONFIG.API_HOST}/${satellite.image}`"
+                                :src="satellite.image"
                                 :style="{
                                     width: `${satellite.size}px`,
                                     top: `calc(-${satellite.size}px/2)`,
@@ -71,7 +71,7 @@
                             </q-circular-progress>
                         </div>
                         <q-img
-                            :src="`${CONFIG.API_HOST}/${lesson.image}`"
+                            :src="lesson.image"
                             loading="lazy"
                             spinner-color="white">
                         </q-img>
@@ -94,7 +94,7 @@
         :style="`background: ${groupGradient}; transform: none`"
         >
         <q-img
-        :src="`${CONFIG.API_HOST}/${groupBackground}`"
+        :src="groupBackground"
         class="absolute-top absolute-left full-width full-height"
         loading="lazy"
         spinner-color="white"
@@ -141,15 +141,15 @@ const composeList = () => {
   }
 }
 const checkGroup = (lesson) => {
-  if (lesson.parent_id !== currentParentId.value) {
-    currentParentId.value = lesson.parent_id
+  if (lesson.course_section_id !== currentParentId.value) {
+    currentParentId.value = lesson.course_section_id
     return true
   }
   return false
 }
 const onIntersection = (entry) => {
-  groupBackground.value = entry.target.attributes.groupBackground.value
-  groupGradient.value = entry.target.attributes.groupGradient.value
+  groupBackground.value = entry.target.attributes.groupBackground?.value
+  groupGradient.value = entry.target.attributes.groupGradient?.value
 }
 onDeactivated(() => {
 })

@@ -73,7 +73,7 @@ const props = defineProps({
 const emits = defineEmits(['select'])
 
 const { user, saveProfile } = useUserStore()
-const { course, getList } = useCourse()
+const { course, getList, getActive } = useCourse()
 
 if (user.active?.data.id) {
   getList()
@@ -90,7 +90,8 @@ const select = async (index) => {
   const data = {
     course_id: course.list[index].id
   }
-  saveProfile(data)
+  await saveProfile(data)
+  getActive()
 }
 
 const onSwiper = (swiper) => {
