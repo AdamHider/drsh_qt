@@ -10,7 +10,7 @@ const lesson = reactive({
 
 export function useLesson () {
   async function getItem (lessonId) {
-    const lessonResponse = await api.lesson.getItem({ id: lessonId })
+    const lessonResponse = await api.lesson.getItem({ lesson_id: lessonId })
     lesson.active = lessonResponse
   }
   async function getList (index) {

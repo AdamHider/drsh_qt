@@ -72,10 +72,10 @@ export class Api extends ApiService{
             return this.post('lesson', 'getSatellites', params)
         },
         getPage: (params) => {
-            return this.post('page', 'getItem', params)
+            return this.post('lesson', 'getPage', params)
         },
         saveAnswer: (params) => {
-            return this.post('answer', 'saveAnswer', params)
+            return this.post('lesson', 'saveAnswer', params)
         }
     }
     exercise = {

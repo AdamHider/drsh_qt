@@ -3,11 +3,11 @@
       <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
     <q-toolbar-title></q-toolbar-title>
   </q-app-header>
-  <q-page class="text-center full-width" style="padding-top: 50px">
+  <q-page class="text-center full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
     <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;">
         <q-card-section>
             <q-img
-                :src="`${CONFIG.API_HOST}/${lesson.active.image}`"
+                :src="lesson.active.image"
                 style="max-width: 250px; width: 230px;"
                 no-spinner
             />
@@ -15,14 +15,14 @@
     </q-card>
     <q-card flat class="relative text-white text-left transparent full-width " style="z-index: 1;">
         <q-card-section>
-            <div class="text-h5"><b>{{lesson.active.intro?.subtitle}}</b></div>
-            <div class="text-caption">{{lesson.active.intro?.description_text}}</div>
+            <div class="text-h5"><b>{{lesson.active.description?.title}}</b></div>
+            <div class="text-caption">{{lesson.active.description?.description}}</div>
         </q-card-section>
-        <q-card-section v-if="lesson.active.master_lesson?.id">
+        <q-card-section v-if="lesson.active.parent_id">
             <div class="text-caption">
               This lesson is sattelite of
-              <router-link :to="`/lesson-startup-${lesson.active.master_lesson.id}`">
-                {{ lesson.active.master_lesson.intro.subtitle }}
+              <router-link :to="`/lesson-startup-${lesson.active.parent_id}`">
+                {{ lesson.active.master_lesson.title }}
               </router-link>
             </div>
         </q-card-section>
@@ -46,10 +46,10 @@
     </q-card>
     <q-page-sticky
         class="fixed full-width full-height"
-        :style="`background: ${lesson.active.parent_description?.background_gradient}; transform: none`"
+        :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
         >
         <q-img
-        :src="`${CONFIG.API_HOST}/${lesson.active.parent_description?.background_image}`"
+        :src="lesson.active.course_section?.background_image"
         class="absolute-top absolute-left full-width full-height"
         loading="lazy"
         spinner-color="white"
@@ -59,13 +59,13 @@
       <q-card flat class="relative text-center" style="overflow: visible">
           <q-img
               class=""
-              :src="`${CONFIG.API_HOST}/${activeSattelite.image}`"
+              :src="activeSattelite.image"
               style="max-width: 250px; width: 180px; margin-top: -80px"
               no-spinner
           />
         <q-card-section class="text-left">
-            <div class="text-h5"><b>{{activeSattelite.intro?.subtitle}}</b></div>
-            <div class="text-caption">{{activeSattelite.intro?.description_text}}</div>
+            <div class="text-h5"><b>{{activeSattelite.description?.title}}</b></div>
+            <div class="text-caption">{{activeSattelite.description?.description}}</div>
         </q-card-section>
         <q-card-actions class="text-right">
           <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="redo(activeSattelite.id)"></q-btn>
@@ -82,7 +82,7 @@
 import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, onMounted, watch } from 'vue'
 import { CONFIG } from '../config.js'
 
@@ -108,6 +108,10 @@ const redo = async (lessonId) => {
 
 onMounted(async () => {
   await getItem(route.params.lesson_id)
+  if (lesson.active.is_blocked) {
+    router.go(-1)
+    return
+  }
   getSatteliteList()
 })
 
@@ -115,5 +119,12 @@ watch(() => route.params.lesson_id, async () => {
   if (route.name !== 'lesson-startup') return
   await getItem(route.params.lesson_id)
   getSatteliteList()
+})
+onBeforeRouteLeave((to, from) => {
+  if (dialog.value) {
+    dialog.value = false
+    return false
+  }
+  return true
 })
 </script>
