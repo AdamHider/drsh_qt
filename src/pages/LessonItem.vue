@@ -64,7 +64,6 @@ const load = async () => {
 }
 
 onActivated(() => {
-  console.log('load')
   load()
 })
 
@@ -73,7 +72,8 @@ const onPageChanged = async (action) => {
   pageTemplateTitle.value = false
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
-  if (!pageResponse) {
+  console.log(pageResponse)
+  if (pageResponse.error) {
     router.go(-1)
     return
   }
