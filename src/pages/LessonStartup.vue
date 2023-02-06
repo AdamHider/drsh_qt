@@ -99,11 +99,11 @@ const select = (index) => {
 }
 const start = async (lessonId) => {
   const exerciseCreated = await addItem(lessonId)
-  if (exerciseCreated) router.push(`/lesson-${lessonId}`)
+  if (!exerciseCreated.error) router.push(`/lesson-${lessonId}`)
 }
 const redo = async (lessonId) => {
   const exerciseRedoCreated = await redoItem(lessonId)
-  if (exerciseRedoCreated) router.push(`/lesson-${lessonId}`)
+  if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
 
 onMounted(async () => {

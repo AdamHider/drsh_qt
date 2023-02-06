@@ -8,11 +8,11 @@ const exercise = reactive({
 export function useExercise () {
   async function addItem (lessonId) {
     const exerciseResponse = await api.exercise.addItem({ lesson_id: lessonId })
-    return exerciseResponse.data
+    return exerciseResponse
   }
   async function redoItem (lessonId) {
     const exerciseResponse = await api.exercise.redoItem({ lesson_id: lessonId })
-    return exerciseResponse.data
+    return exerciseResponse
   }
 
   return {
