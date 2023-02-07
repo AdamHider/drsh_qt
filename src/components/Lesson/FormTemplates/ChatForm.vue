@@ -39,8 +39,8 @@
                 <q-list>
                   <q-item clickable
                       :disable="(
-                      lesson.active.page?.exercise.data.current_page == 0
-                      || lesson.active.page?.exercise.data.back_attempts == 0
+                      lesson.active.page?.exercise?.data.current_page == 0
+                      || lesson.active.page?.exercise?.data.back_attempts == 0
                       )"
                       @click="backDialog=true">
                       <q-item-section>
@@ -49,10 +49,10 @@
                       <q-item-section side>
                           <q-avatar
                               size="sm"
-                              :color="(lesson.active.page?.exercise.data.back_attempts > 1) ? 'positive' : 'negative' "
+                              :color="(lesson.active.page?.exercise?.data.back_attempts > 1) ? 'positive' : 'negative' "
                               text-color="white"
                           >
-                              {{ lesson.active.page?.exercise.data.back_attempts }}
+                              {{ lesson.active.page?.exercise?.data.back_attempts }}
                           </q-avatar>
                       </q-item-section>
                   </q-item>

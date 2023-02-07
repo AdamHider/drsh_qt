@@ -14,7 +14,7 @@
         style="z-index: 10;" >
         <LessonList v-if="course.active?.id" :disable="dialog.active"/>
         <q-card flat class="transparent">
-          <q-card-section v-if="course.active?.id" class="text-white" style="padding-top: 80px">
+          <q-card-section v-if="course.active?.id" class="text-white" >
             <div class="text-h6">{{course.active?.title}}</div>
             <div class="text-caption">Investigate to the infinity</div>
           </q-card-section>

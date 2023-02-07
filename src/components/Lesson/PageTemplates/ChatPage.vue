@@ -102,7 +102,7 @@ const renderData = () => {
           replicaList.list.push({
             rendered: true,
             type: 'answer',
-            reaction: replica.reaction,
+            reaction: sadEmojis[currentAnswerIndex.value],
             text: answer.tmp_answer
           })
           replicaList.list.push({

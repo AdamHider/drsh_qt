@@ -38,9 +38,9 @@ export function useLesson () {
     return lessonPageResponse
   }
   async function saveAnswer (answers) {
-    const lessonAnswerResponse = await api.lesson.saveAnswer({ filter: { lesson_id: lesson.active.id }, answers })
-    lesson.active.page = lessonAnswerResponse
-    return lessonAnswerResponse
+    const exerciseAnswerResponse = await api.exercise.saveAnswer({ lesson_id: lesson.active.id, data: answers })
+    lesson.active.page = exerciseAnswerResponse
+    return exerciseAnswerResponse
   }
 
   return {

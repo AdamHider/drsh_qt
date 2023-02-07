@@ -22,7 +22,7 @@ export function useLessonAudio () {
       if (!audioLinks[e].dataset.audio || audioLinks[e].dataset.audio == 'false') continue
       const source = audioLinks[e].dataset.audio
       audioLinks[e].dataset.audio_index = e
-      const audio = new Audio(`${CONFIG.API_HOST}/media/audio/lessons/${source}.mp3?1`)
+      const audio = new Audio(`${CONFIG.API_HOST}/audio/${source}.mp3?1`)
       audio.currentIndex = e
       audio.currentFilename = source
       audio.onloadeddata = function (e) {

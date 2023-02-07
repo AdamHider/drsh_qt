@@ -127,15 +127,15 @@ const lessonList = ref([])
 const onLoad = async function (index, done) {
   if (disable.value) return false
   const isDone = await getList(index)
-  composeList()
+  if (!isDone) composeList()
   done(isDone)
 }
 const composeList = () => {
   const lessons = lesson.list
   lessonList.value = []
   for (let i = lesson.list.length - 1; i >= 0; i--) {
-    if (checkGroup(lesson.list[i])) {
-      lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'group' } })
+    if (checkGroup(lesson.list[i] && lesson.list[i].course_section)) {
+      lessonList.value.unshift({ ...{ course_section: lesson.list[i].course_section }, ...{ type: 'group' } })
     }
     lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'lesson' } })
   }

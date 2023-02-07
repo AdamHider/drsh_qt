@@ -73,9 +73,6 @@ export class Api extends ApiService{
         },
         getPage: (params) => {
             return this.post('lesson', 'getPage', params)
-        },
-        saveAnswer: (params) => {
-            return this.post('lesson', 'saveAnswer', params)
         }
     }
     exercise = {
@@ -85,6 +82,9 @@ export class Api extends ApiService{
         redoItem: (params) => {
             return this.post('exercise', 'redoItem', params)
         },
+        saveAnswer: (params) => {
+            return this.post('exercise', 'saveAnswer', params)
+        }
 
     }
 

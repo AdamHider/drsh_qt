@@ -16,8 +16,8 @@
             <q-list>
                 <q-item clickable
                     :disable="(
-                    lesson.active.page?.exercise.data.current_page == 0
-                    || lesson.active.page?.exercise.data.back_attempts == 0
+                    lesson.active.page?.exercise?.current_page == 0
+                    || lesson.active.page?.exercise?.back_attempts == 0
                     )"
                     @click="backDialog = true">
                     <q-item-section>
@@ -26,17 +26,17 @@
                     <q-item-section side>
                         <q-avatar
                             size="sm"
-                            :color="(lesson.active.page?.exercise.data.back_attempts > 1) ? 'positive' : 'negative' "
+                            :color="(lesson.active.page?.exercise?.back_attempts > 1) ? 'positive' : 'negative' "
                             text-color="white"
                         >
-                            {{ lesson.active.page?.exercise.data.back_attempts }}
+                            {{ lesson.active.page?.exercise?.back_attempts }}
                         </q-avatar>
                     </q-item-section>
                 </q-item>
                 <q-item clickable
                     :disable="(
                         !lesson.active.page?.answers?.is_finished
-                        || lesson.active.page?.exercise.data.again_attempts == 0
+                        || lesson.active.page?.exercise?.again_attempts == 0
                     )"
                     @click="againDialog=true">
                     <q-item-section>
@@ -45,10 +45,10 @@
                     <q-item-section side>
                         <q-avatar
                             size="sm"
-                            :color="(lesson.active.page?.exercise.data.again_attempts > 1) ? 'positive' : 'negative' "
+                            :color="(lesson.active.page?.exercise?.again_attempts > 1) ? 'positive' : 'negative' "
                             text-color="white"
                         >
-                            {{ lesson.active.page?.exercise.data.again_attempts }}
+                            {{ lesson.active.page?.exercise?.again_attempts }}
                         </q-avatar>
                     </q-item-section>
                 </q-item>
@@ -58,7 +58,7 @@
             v-if="(
                 (!lesson.active.page?.fields
                 || lesson.active.page?.answers?.is_finished)
-                && lesson.active.page?.exercise.data.current_page !== lesson.active.page?.exercise.data.total_pages - 1
+                && lesson.active.page?.exercise?.current_page !== lesson.active.page?.exercise?.total_pages - 1
             )"
             style="flex: 2"
             color="positive"
@@ -79,7 +79,7 @@
             v-if="(
                 (!lesson.active.page?.fields
                 || lesson.active.page?.answers?.is_finished)
-                && lesson.active.page?.exercise.data.current_page == lesson.active.page?.exercise.data.total_pages - 1
+                && lesson.active.page?.exercise?.current_page == lesson.active.page?.exercise?.total_pages - 1
             )"
             style="flex: 2"
             color="primary"
@@ -153,7 +153,7 @@ const props = defineProps({
 
 const answerPercentage = computed(() => lesson.active.page?.answers?.totals.correct * 100 / lesson.active.page?.answers?.totals.answers)
 
-const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (props.pageAnswers[i].value === undefined) return true } return false })
+const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (props.pageAnswers[i].value === '') return true } return false })
 
 const { lesson } = useLesson()
 

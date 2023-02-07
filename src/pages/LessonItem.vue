@@ -3,10 +3,10 @@
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <q-linear-progress
             rounded size="20px"
-            :value="(lesson.active.page?.exercise?.data.current_page / lesson.active.page?.exercise?.data.total_pages )"
+            :value="(lesson.active.page?.exercise?.current_page / lesson.active.page?.exercise?.total_pages )"
             color="warning"  />
         <q-chip dense  color="transparent" text-color="orange" icon-right="star">
-            <b>{{ lesson.active.page?.exercise?.data.totals.total }}</b>
+            <b>{{ lesson.active.page?.exercise?.totals.total }}</b>
         </q-chip>
     </q-app-header>
     <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px;">
@@ -72,7 +72,6 @@ const onPageChanged = async (action) => {
   pageTemplateTitle.value = false
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
-  console.log(pageResponse)
   if (pageResponse.error) {
     router.go(-1)
     return
