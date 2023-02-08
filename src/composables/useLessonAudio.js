@@ -127,7 +127,7 @@ export function useLessonAudio () {
   }
 }
 
-watch(() => lesson.active.page?.header.index, async (newData, oldData) => {
+watch(() => lesson.active.page?.header?.index, async (newData, oldData) => {
   if (useLessonAudio().lessonAudio.list.length > 0) {
     useLessonAudio().stopAudio()
   }

@@ -11,7 +11,7 @@
         </q-card-section>
     </q-card>
     <q-toolbar
-        v-if="lesson.active.page && (lesson.active.page?.header.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
+        v-if="lesson.active.page && (lesson.active.page?.header?.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
         <q-btn-dropdown v-model="extraActions" class="q-mr-md" color="grey"  dropdown-icon="more_vert">
             <q-list>
                 <q-item clickable
