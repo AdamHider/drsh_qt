@@ -21,7 +21,7 @@
             ></q-btn>
             <q-card-section class="q-pa-none transparent no-shadow text-center" style="width: 100px; min-height: 100px">
                 <div class="absolute-top flex justify-center items-center full-width full-height">
-                    <q-circular-progress v-if="!satelliteItem.is_blocked"
+                    <q-circular-progress v-if="satelliteItem.exercise_id && !satelliteItem.is_blocked"
                         rounded
                         show-value
                         :value="satelliteItem.exercise?.current_progress || 0"

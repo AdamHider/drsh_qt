@@ -70,14 +70,14 @@
   <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Are you sure?</div>
+          <div class="text-h6">Go back?</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          You are gonna go back. You reaaly want to?
+          You are going to the previous page. You realy want to?
         </q-card-section>
-        <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat label="Cancel" color="grey" v-close-popup />
-          <q-btn flat label="Continue" @click="back" v-close-popup />
+        <q-card-actions align="center">
+          <q-btn class="col" flat label="Cancel"  v-close-popup />
+          <q-btn class="col" color="primary" label="Continue" @click="back" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>

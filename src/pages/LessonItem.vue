@@ -32,7 +32,7 @@
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
           <q-btn flat label="Cancel" color="grey" v-close-popup />
-          <q-btn flat label="Continue" @click="closeLesson" v-close-popup />
+          <q-btn flat label="Continue" @click="closeLesson" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -54,6 +54,7 @@ const rendered = ref(false)
 const pageTemplateTitle = ref(false)
 const formTemplateTitle = ref(false)
 const closeDialog = ref(false)
+const closeConfirmed = ref(false)
 
 const PageTemplate = computed(() => pageTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/PageTemplates/${pageTemplateTitle.value}Page.vue`)) : null)
 const FormTemplate = computed(() => formTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/FormTemplates/${formTemplateTitle.value}Form.vue`)) : null)
@@ -62,8 +63,8 @@ const load = async () => {
   await getItem(route.params.lesson_id)
   onPageChanged()
 }
-
 onActivated(() => {
+  closeConfirmed.value = false
   load()
 })
 
@@ -73,6 +74,7 @@ const onPageChanged = async (action) => {
   formTemplateTitle.value = false
   const pageResponse = await getPage(action)
   if (pageResponse.error) {
+    closeConfirmed.value = true
     router.go(-1)
     return
   }
@@ -91,13 +93,15 @@ const onAnswerSaved = async () => {
 }
 
 const closeLesson = () => {
+  closeConfirmed.value = true
   router.go(-1)
 }
 onBeforeRouteLeave((to, from) => {
-  if (closeDialog.value) {
-    closeDialog.value = false
+  if (!closeConfirmed.value) {
+    closeDialog.value = true
     return false
   }
+  closeDialog.value = false
   return true
 })
 </script>

@@ -53,7 +53,6 @@ export default route(function (/* { store, ssrContext } */) {
         next({ path: '/'+from.fullPath.split('/')[1] });
       }
       */
-
     if (to.matched.some(record => record.meta.requiresAuth)) {
       // this route requires auth, check if logged in
       // if not, redirect to login page.

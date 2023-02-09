@@ -3,7 +3,7 @@
         <q-card-section>
             <div class="text-h5">
               <b v-if="answerPercentage == 100">Perfect!</b>
-              <b v-else-if="answerPercentage > 100 && answerPercentage >= 50">Good!</b>
+              <b v-else-if="answerPercentage < 100 && answerPercentage >= 50">Good!</b>
               <b v-else-if="answerPercentage < 50">You could better</b>
             </div>
             <div><b>Your result: </b></div>
@@ -20,6 +20,9 @@
                     || lesson.active.page?.exercise?.back_attempts == 0
                     )"
                     @click="backDialog = true">
+                    <q-item-section avatar>
+                      <q-icon name="arrow_back" />
+                    </q-item-section>
                     <q-item-section>
                         <q-item-label>Previous exercise</q-item-label>
                     </q-item-section>
@@ -39,6 +42,9 @@
                         || lesson.active.page?.exercise?.again_attempts == 0
                     )"
                     @click="againDialog=true">
+                    <q-item-section avatar>
+                      <q-icon name="replay" />
+                    </q-item-section>
                     <q-item-section>
                         <q-item-label>Again</q-item-label>
                     </q-item-section>
@@ -82,7 +88,8 @@
                 && lesson.active.page?.exercise?.current_page == lesson.active.page?.exercise?.total_pages - 1
             )"
             style="flex: 2"
-            color="primary"
+            color="positive"
+            icon="done_all"
             label="Finish"
             @click="next"
         ></q-btn>
@@ -91,14 +98,14 @@
     <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Are you sure?</div>
+          <div class="text-h6">Go back?</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          You are gonna go back. You reaaly want to?
+          You are going to the previous page. You realy want to?
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat label="Cancel" color="grey" v-close-popup />
-          <q-btn flat label="Continue" @click="back" v-close-popup />
+          <q-btn class="col" flat label="Cancel" v-close-popup />
+          <q-btn class="col" color="primary" label="Continue" @click="back" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -106,14 +113,14 @@
     <q-dialog v-model="againDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Persistent</div>
+          <div class="text-h6">Refresh the answer?</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Click/Tap on the backdrop.
+          Your current answer will be refreshed. Are you sure?
         </q-card-section>
-        <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat label="Cancel" color="grey" v-close-popup />
-          <q-btn flat label="Continue" @click="again" v-close-popup />
+        <q-card-actions align="center">
+          <q-btn class="col" flat label="Cancel" v-close-popup />
+          <q-btn class="col" color="primary" label="Refresh" @click="again" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -121,14 +128,14 @@
     <q-dialog v-model="confirmDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Persistent</div>
+          <div class="text-h6">Confirm the answer?</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Click/Tap on the backdrop.
+          Your answer seems to be incomplete. Please, try at least to complete it randomly=)
         </q-card-section>
-        <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat label="Cancel" color="grey" v-close-popup />
-          <q-btn flat label="Continue" @click="confirm" v-close-popup />
+        <q-card-actions align="around">
+          <q-btn class="col" flat label="Cancel" v-close-popup />
+          <q-btn class="col" color="primary"  label="Confirm" @click="confirm" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -154,7 +161,6 @@ const props = defineProps({
 const answerPercentage = computed(() => lesson.active.page?.answers?.totals.correct * 100 / lesson.active.page?.answers?.totals.answers)
 
 const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (props.pageAnswers[i].value === '') return true } return false })
-
 const { lesson } = useLesson()
 
 const next = async () => {

@@ -27,9 +27,9 @@
             </div>
         </q-card-section>
         <q-card-actions class="text-right">
-          <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="redo(lesson.active.id)"></q-btn>
-          <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue" color="positive" :to="`/lesson-${lesson.active.id}`"></q-btn>
-          <q-btn v-else class="full-width" label="Start" color="primary" @click="start(lesson.active.id)"></q-btn>
+          <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" icon="replay" color="warning" @click="redo(lesson.active.id)"></q-btn>
+          <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue"  icon="play_arrow" color="positive"  @click="open(lesson.active.id)"></q-btn>
+          <q-btn v-else class="full-width" label="Start" color="primary" icon="play_arrow" @click="start(lesson.active.id)"></q-btn>
         </q-card-actions>
         <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
             <div class="text-h6">Sattelites</div>
@@ -68,9 +68,9 @@
             <div class="text-caption">{{activeSattelite.description?.description}}</div>
         </q-card-section>
         <q-card-actions class="text-right">
-          <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" color="warning" @click="redo(activeSattelite.id)"></q-btn>
-          <q-btn v-else-if="activeSattelite.exercise?.id" class="full-width" label="Continue" color="positive" :to="`/lesson-${activeSattelite.id}`"></q-btn>
-          <q-btn v-else class="full-width" label="Start" color="primary" @click="start(activeSattelite.id)"></q-btn>
+          <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" icon="replay" color="warning" @click="redo(activeSattelite.id)"></q-btn>
+          <q-btn v-else-if="activeSattelite.exercise?.id" class="full-width" icon="play_arrow" label="Continue" color="positive" @click="open(activeSattelite.id)"></q-btn>
+          <q-btn v-else class="full-width" label="Start" color="primary" icon="play_arrow" @click="start(activeSattelite.id)"></q-btn>
         </q-card-actions>
       </q-card>
 
@@ -83,8 +83,7 @@ import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ref, onMounted, watch } from 'vue'
-import { CONFIG } from '../config.js'
+import { ref, watch, onActivated } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -98,15 +97,21 @@ const select = (index) => {
   dialog.value = true
 }
 const start = async (lessonId) => {
+  dialog.value = false
   const exerciseCreated = await addItem(lessonId)
   if (!exerciseCreated.error) router.push(`/lesson-${lessonId}`)
 }
+const open = async (lessonId) => {
+  dialog.value = false
+  router.push(`/lesson-${lessonId}`)
+}
 const redo = async (lessonId) => {
+  dialog.value = false
   const exerciseRedoCreated = await redoItem(lessonId)
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
 
-onMounted(async () => {
+onActivated(async () => {
   await getItem(route.params.lesson_id)
   if (lesson.active.is_blocked) {
     router.go(-1)
@@ -121,6 +126,7 @@ watch(() => route.params.lesson_id, async () => {
   getSatteliteList()
 })
 onBeforeRouteLeave((to, from) => {
+  console.log(to)
   if (dialog.value) {
     dialog.value = false
     return false

@@ -56,7 +56,7 @@ const formData = reactive({
 })
 const renderFields = () => {
   formData.fields = []
-  if (!lesson.active.page.fields) return
+  if (!lesson.active.page?.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
     let value = ''
