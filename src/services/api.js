@@ -53,6 +53,22 @@ export class Api extends ApiService{
             return this.post('achievement', 'getList', params)
         }
     }
+    challenges = {
+        getItem: (params) => {
+            return this.post('challenge', 'getItem', params)
+        },
+        getList: (params) => {
+            return this.post('challenge', 'getList', params)
+        }
+    }
+    homeworks = {
+        getItem: (params) => {
+            return this.post('homework', 'getItem', params)
+        },
+        getList: (params) => {
+            return this.post('homework', 'getList', params)
+        }
+    }
     course = {
         getList: (params) => {
             return this.post('course', 'getList', params)

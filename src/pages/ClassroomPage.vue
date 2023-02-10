@@ -100,6 +100,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue'
+import ClassroomToggle from '../components/ClassroomToggle.vue'
 import HomeworkSlider from '../components/HomeworkSlider.vue'
 import ChallengeSlider from '../components/ChallengeSlider.vue'
 import { useClassroom } from '../composables/useClassroom'
