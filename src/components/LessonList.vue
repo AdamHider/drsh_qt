@@ -13,7 +13,7 @@
         >
             <q-card v-if="lesson.type == 'group'" class="transparent text-white full-width" flat >
                 <q-card-section>
-                    <div class="text-h6">{{ lesson.course_section.description.title }}</div>
+                    <div class="text-h6"><b>{{ lesson.course_section.description.title }}</b></div>
                     <div class="text-caption">{{ lesson.course_section.description.description }}</div>
                 </q-card-section>
                 <q-separator color="white"/>
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="absolute-top flex justify-center items-center full-width full-height">
-                            <q-circular-progress v-if="!lesson.is_blocked"
+                            <q-circular-progress v-if="lesson.exercise_id && !lesson.is_blocked"
                                 rounded
                                 show-value
                                 :value="lesson.exercise?.current_progress || 0"
@@ -77,7 +77,7 @@
                         </q-img>
                     </q-card-section>
                     <q-card-section class="text-center text-white q-pa-none">
-                        <div class="text-bold">{{lesson.intro?.subtitle}}</div>
+                        <div class="text-bold">{{lesson.description?.title}}</div>
                         <div class="row q-ma-sm">
                             <div class="col text-left"></div>
                             <div class="col  text-right">

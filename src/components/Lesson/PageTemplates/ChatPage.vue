@@ -2,7 +2,7 @@
     <div class="full-width q-pa-md chat-container" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers.is_finished) ? 30 : 120}px`" >
       <transition v-for="(replica, index) in replicaList.list" :key="index"
         appear
-        :enter-active-class="(!replica.rendered) ? `animated fadeInUp animationDelay${replica.sortIndex}` : ''"
+        :enter-active-class="(!replica.rendered) ? `animated fadeInUp animation-delay-${replica.sortIndex}` : ''"
       >
           <q-chat-message
             :sent="replica.type !== 'question'"
@@ -154,15 +154,6 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
 </script>
 
 <style>
-.chat-container .animationDelay1{
-  animation-delay: 250ms
-}
-.chat-container .animationDelay2{
-  animation-delay: 500ms
-}
-.chat-container .animationDelay3{
-  animation-delay: 750ms
-}
 .chat-container .q-message-text:last-child{
   min-height: unset;
 }

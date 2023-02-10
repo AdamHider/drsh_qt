@@ -43,7 +43,7 @@ const routes = [
       },
       {
         path: 'classroom',
-        component: () => import('pages/Classroom.vue'),
+        component: () => import('pages/ClassroomPage.vue'),
         meta: { requiresAuth: true }
       },
       {

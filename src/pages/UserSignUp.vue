@@ -34,7 +34,7 @@
                 v-model="formData.fields.password.value"
                 :rules="formData.fields.password.rules"
                 :error-messages="formData.fields.password.errors"
-                :type="formData.fields.password.reveal ? 'text' : 'password'"
+                :type="formData.fields.password.reveal ? 'text' : 'text'"
                 no-error-icon
                 label="Pin password"
                 autocomplete="off"
@@ -86,7 +86,7 @@
               v-model="formData.fields.passwordConfirm.value"
               :rules="formData.fields.passwordConfirm.rules"
               :error-messages="formData.fields.passwordConfirm.errors"
-              :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
+              :type="formData.fields.passwordConfirm.reveal ? 'text' : 'text'"
               no-error-icon
               label="Pin password"
               mask="####"
@@ -270,6 +270,16 @@ const validate = async function () {
 
 watch(formData.fields, async (currentValue, oldValue) => {
   formData.valid = await form.value.validate()
+})
+watch(() => formData.fields.password.value, async (currentValue, oldValue) => {
+  if (formData.passwordIsPin && currentValue.length === 4) {
+    validate()
+  }
+})
+watch(() => formData.fields.passwordConfirm.value, async (currentValue, oldValue) => {
+  if (formData.passwordIsPin && currentValue.length === 4) {
+    validate()
+  }
 })
 watch(() => route.params.step, async (currentValue, oldValue) => {
   if (!formData.valid && route.params.step > formData.step) {

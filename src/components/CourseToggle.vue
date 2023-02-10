@@ -47,7 +47,6 @@
 import { watch, ref } from 'vue'
 import { useCourse } from '../composables/useCourse'
 import CourseSlider from '../components/CourseSlider.vue'
-import { CONFIG } from '../config.js'
 
 const emit = defineEmits(['update:dialogOpened'])
 

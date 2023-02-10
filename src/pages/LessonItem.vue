@@ -42,7 +42,7 @@
 import LessonActions from '../components/Lesson/LessonActions.vue'
 import { useLesson } from '../composables/useLesson'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ref, computed, onActivated, defineAsyncComponent } from 'vue'
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -63,7 +63,7 @@ const load = async () => {
   await getItem(route.params.lesson_id)
   onPageChanged()
 }
-onActivated(() => {
+onMounted(() => {
   closeConfirmed.value = false
   load()
 })

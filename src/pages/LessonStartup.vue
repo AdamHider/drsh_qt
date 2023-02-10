@@ -6,14 +6,25 @@
   <q-page class="text-center full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
     <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;">
         <q-card-section>
-            <q-img
-                :src="lesson.active.image"
-                style="max-width: 250px; width: 230px;"
-                no-spinner
-            />
+            <transition
+                appear
+                enter-active-class="animated zoomIn animation-slow"
+                leave-active-class="animated rubberBand  animation-delay-1" >
+              <q-img
+                  v-if="transitionTrigger"
+                  :src="lesson.active.image"
+                  style="max-width: 250px; width: 230px;"
+                  no-spinner
+              />
+            </transition>
         </q-card-section>
     </q-card>
-    <q-card flat class="relative text-white text-left transparent full-width " style="z-index: 1;">
+    <transition
+      appear
+      enter-active-class="animated zoomIn animation-delay-1 "
+      leave-active-class="animated zoomOut">
+    <q-card flat class="relative text-white text-left transparent full-width " style="z-index: 1;"
+      v-if="transitionTrigger">
         <q-card-section>
             <div class="text-h5"><b>{{lesson.active.description?.title}}</b></div>
             <div class="text-caption">{{lesson.active.description?.description}}</div>
@@ -34,16 +45,22 @@
         <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
             <div class="text-h6">Sattelites</div>
         </q-card-section>
-        <LessonSatteliteSlider
-            :slidesPerView=3.4
-            :centerAligned="false"
-            :withButton="false"
-            slideHeight="100"
-            :navigation="false"
-            captionMode="full"
-            @select="select"
-        />
+        <transition
+          appear
+          enter-active-class="animated zoomIn animation-delay-2"
+          leave-active-class="animated zoomOut">
+            <LessonSatteliteSlider
+                :slidesPerView=3.4
+                :centerAligned="false"
+                :withButton="false"
+                slideHeight="100"
+                :navigation="false"
+                captionMode="full"
+                @select="select"
+            />
+        </transition>
     </q-card>
+    </transition>
     <q-page-sticky
         class="fixed full-width full-height"
         :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
@@ -83,7 +100,7 @@ import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ref, watch, onActivated } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -91,6 +108,7 @@ const { lesson, getItem, getSatteliteList } = useLesson()
 const { addItem, redoItem } = useExercise()
 const dialog = ref(false)
 const activeSattelite = ref({})
+const transitionTrigger = ref(false)
 
 const select = (index) => {
   activeSattelite.value = lesson.active.sattelites.list[index]
@@ -111,26 +129,21 @@ const redo = async (lessonId) => {
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
 
-onActivated(async () => {
+onMounted(async () => {
   await getItem(route.params.lesson_id)
+  transitionTrigger.value = true
   if (lesson.active.is_blocked) {
     router.go(-1)
     return
   }
   getSatteliteList()
 })
-
-watch(() => route.params.lesson_id, async () => {
-  if (route.name !== 'lesson-startup') return
-  await getItem(route.params.lesson_id)
-  getSatteliteList()
-})
 onBeforeRouteLeave((to, from) => {
-  console.log(to)
   if (dialog.value) {
     dialog.value = false
     return false
   }
+  transitionTrigger.value = false
   return true
 })
 </script>

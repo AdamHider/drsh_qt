@@ -15,17 +15,17 @@
         <LessonList v-if="course.active?.id" :disable="dialog.active"/>
         <q-card flat class="transparent">
           <q-card-section v-if="course.active?.id" class="text-white" >
-            <div class="text-h6">{{course.active?.title}}</div>
-            <div class="text-caption">Investigate to the infinity</div>
+            <div class="text-subtitle"><b>{{course.active?.description.title}}</b></div>
+            <div class="text-caption">{{course.active?.description.description}}</div>
           </q-card-section>
           <q-card-section v-else class="text-white" >
-            <div class="text-h6">Choose course</div>
+            <div class="text-subtitle"><b>Choose course</b></div>
             <div class="text-caption">And start your investigation</div>
             <q-btn color="dark" @click="dialog.active=true">Choose</q-btn>
           </q-card-section>
         </q-card>
         <q-page-sticky position="bottom" style="margin-bottom: 20px;">
-          <q-img :src="`${CONFIG.API_HOST}/images/dershane/robot/rocket.png`" width="50px"/>
+          <q-img :src="`/images/dershane/robot/rocket.png`" width="50px"/>
         </q-page-sticky>
         <q-scroll-observer @scroll="onScroll" />
       </q-scroll-area>
@@ -38,7 +38,6 @@ import CourseToggle from '../components/CourseToggle.vue'
 import { ref, reactive, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
-import { CONFIG } from '../config.js'
 
 const { user } = useUserStore()
 
@@ -49,7 +48,7 @@ const onScroll = function (event) { header.value.onScroll(event) }
 const { course, getActive } = useCourse()
 
 getActive()
-watch(() => user.active?.data.profile?.active_course_id, async (newData, oldData) => {
+watch(() => user.active?.data.profile?.course_id, async (newData, oldData) => {
   getActive()
 })
 </script>
