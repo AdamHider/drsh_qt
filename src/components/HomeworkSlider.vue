@@ -1,49 +1,63 @@
 <template>
     <swiper
       v-if="user.active.data?.id"
-      class="courseSlider"
+      class="homeworkSlider"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="course.list?.findIndex((course) => course.is_active)"
+      :initialSlide="homework.list?.findIndex((homework) => homework.is_active)"
       :navigation="props.navigation"
       @swiper="onSwiper"
     >
-      <swiper-slide v-for="(courseItem, index) in course.list" :key="index" :class="'text-center'" @click="select(index)">
-        <q-card :class="`q-ma-sm ${(courseItem.is_active) ? 'active' : ''}`" flat>
-            <q-card-section class="q-pa-xs" >
+      <swiper-slide v-for="(homeworkItem, index) in homework.list" :key="index" class="text-center" @click="select(index)">
+        <q-card
+            class="q-ma-sm "
+            flat>
+            <q-card-section class="q-ma-xs q-pa-none rounded-md-important"
+              :style="`background: ${homeworkItem.course_section.background_gradient}; transform: none`">
               <q-img
-                fit="cover"
-                class="rounded-borders"
-                :src="courseItem.background_image"
-                :style="`height: ${props.slideHeight}px;`"
+                :src="homeworkItem.course_section.background_image"
+                class="absolute-top absolute-left full-width full-height"
+                loading="lazy"
+                spinner-color="white"
+              >
+              </q-img>
+              <q-img
+                fit="contain"
+                :src="homeworkItem.image"
+                :style="`height: ${props.slideHeight}px; max-width: 120px;`"
                 >
-                <div :class="`absolute-${captionMode} text-left text-white flex flex-center  `">
-                  <q-circular-progress
-                    show-value
-                    class="text-white text-bold q-ma-md"
-                    :value="courseItem.progress.percentage"
-                    track-color="grey-5"
-                    size="60px"
-                    color="white"
+              </q-img>
+              <div class="absolute-bottom transparent ">
+                  <q-circular-progress v-if="homeworkItem.exercise_id && !homeworkItem.is_blocked"
+                      rounded
+                      show-value
+                      :value="homeworkItem.exercise?.current_progress || 0"
+                      size="50px"
+                      :thickness="0.22"
+                      color="orange"
+                      track-color="white-transparent1"
+                      class="q-ma-none"
+                      style="z-index: 50; left: 0; background: none;"
                   >
-                  {{ courseItem.progress.percentage }}%
+                      <b class="text-white ">{{ homeworkItem.exercise?.current_progress || 0 }}%</b>
                   </q-circular-progress>
                 </div>
-                <div class="absolute-bottom transparent">
+                <div class="text-left">
                   <q-chip
-                    dense
-                    class="absolute-bottom-left q-ma-sm"
-                    :color="((courseItem.is_active) ? 'orange' : 'grey')"
-                    text-color="white"
-                    icon-right="star" >
-                    <b>{{ courseItem.progress.total_points }}</b>
+                      v-if="homeworkItem.time_left_humanized"
+                      dense
+                      class="q-ma-sm"
+                      style="font-size: 13px"
+                      :color="((homeworkItem.time_left <= 3) ? 'red' : 'orange')"
+                      icon="sports_score"
+                      text-color="white">
+                      <b>{{ homeworkItem.time_left_humanized }}</b>
                   </q-chip>
                 </div>
-              </q-img>
             </q-card-section>
             <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold">{{courseItem.description.title}}</div>
-                <div class="text-caption text-grey">{{courseItem.description.title_tag}}</div>
+                <div class="text-bold max-two-lines">{{homeworkItem.description.title}}</div>
+                <div class="text-caption text-grey max-two-lines">{{homeworkItem.course_section.description.title}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>
@@ -51,10 +65,9 @@
 </template>
 <script setup>
 import { useUserStore } from '../stores/user'
-import { useCourse } from '../composables/useCourse'
+import { useHomework } from '../composables/useHomework'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { defineEmits } from 'vue'
-import { CONFIG } from '../config.js'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -72,39 +85,19 @@ const props = defineProps({
 
 const emits = defineEmits(['select'])
 
-const { user, saveProfile } = useUserStore()
-const { course, getList, getActive } = useCourse()
+const { user } = useUserStore()
+const { homework, getList } = useHomework()
 
 if (user.active?.data.id) {
-  getList()
+  homework.list = []
+  getList(0, 5)
 }
 
 const select = async (index) => {
-  if (course.list[index].id === user.active?.data.profile.course_id) {
-    return false
-  }
   emits('select')
-  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.profile.course_id))
-  if (activeIndex > -1) course.list[activeIndex].is_active = false
-  course.list[index].is_active = true
-  const data = {
-    course_id: course.list[index].id
-  }
-  await saveProfile(data)
-  getActive()
 }
 
 const onSwiper = (swiper) => {
 }
 
 </script>
-
-<style scoped lang="scss">
-.q-card > .q-card__section:first-child{
-  border: 3px solid rgba(0, 0, 0, 0.12);
-  border-radius: $huge-border-radius;
-}
-.q-card.active > .q-card__section:first-child{
-  border-color: $positive;
-}
-</style>

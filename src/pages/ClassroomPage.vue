@@ -52,21 +52,21 @@
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <HomeworkSlider
-                  :slidesPerView=1.8
+                  :slidesPerView=2.3
                   :centerAligned="false"
                   :withButton="false"
-                  slideHeight="140"
+                  slideHeight="150"
                   :navigation="false"
                   captionMode="full"
                 />
             </q-card-section>
             <q-card-section class="q-py-none flex justify-between items-center">
                 <div class="text-h6">Challenges</div>
-                <router-link to="classroom/homeworks">Show all</router-link>
+                <router-link to="classroom/challenges">Show all</router-link>
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <ChallengeSlider
-                  :slidesPerView=1.8
+                  :slidesPerView=1.4
                   :centerAligned="false"
                   :withButton="false"
                   slideHeight="140"
@@ -99,7 +99,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 import HomeworkSlider from '../components/HomeworkSlider.vue'
 import ChallengeSlider from '../components/ChallengeSlider.vue'

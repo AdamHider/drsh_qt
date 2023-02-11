@@ -1,22 +1,18 @@
 <template>
-    <swiper
-      v-if="user.active.data?.id"
-      class="challengeSlider"
-      :slides-per-view="props.slidesPerView"
-      :centeredSlides="props.centerAligned"
-      :initialSlide="challenge.list?.findIndex((challenge) => challenge.is_active)"
-      :navigation="props.navigation"
-      @swiper="onSwiper"
-    >
-      <swiper-slide v-for="(challengeItem, index) in challenge.list" :key="index" :class="'text-center'" @click="select(index)">
-        <q-card :class="`q-ma-sm ${(challengeItem.is_active) ? 'active' : ''}`" flat>
-            <q-card-section class="q-pa-xs" >
-              <q-img
-                fit="cover"
-                class="rounded-borders"
-                :src="challengeItem.image"
-                :style="`height: ${props.slideHeight}px;`"
-                >
+    <q-infinite-scroll @load="onLoad">
+        <template v-slot:loading>
+            <div class="row justify-center q-my-md">
+            <q-spinner color="primary" name="dots" size="40px" />
+            </div>
+        </template>
+        <q-card  v-for="(challengeItem, index) in challenge.list" :key="index" class="q-ma-sm">
+            <q-card-section class="text-left q-pa-none">
+                <q-img
+                    class="rounded-t"
+                    :src="challengeItem.image"
+                    loading="lazy"
+                    spinner-color="white"
+                />
                 <div :class="`absolute-${captionMode} text-left text-white flex flex-center`" v-if="challengeItem.progress.value > 0">
                   <q-circular-progress
                     show-value
@@ -64,51 +60,24 @@
                       <b>{{ challengeItem.value }}</b>
                   </q-chip>
                 </div>
-              </q-img>
-            </q-card-section>
-            <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold max-two-lines">{{challengeItem.description.title}}</div>
-                <div class="text-caption text-grey max-two-lines">{{challengeItem.description.description}}</div>
-                <div class="text-caption text-grey max-one-lines" v-if="challengeItem.winner_left && challengeItem.winner_left > 0">Winners left: {{challengeItem.winner_left}}</div>
-            </q-card-section>
-        </q-card>
-      </swiper-slide>
-    </swiper>
+            </q-card-section >
+            <q-card-section class="text-left">
+                <div class="text-bold">{{challengeItem.description.title}}</div>
+                <div class="text-grey">{{challengeItem.description.description}}</div>
+            </q-card-section >
+        </q-card >
+    </q-infinite-scroll>
 </template>
+
 <script setup>
-import { useUserStore } from '../stores/user'
+import { onActivated } from 'vue'
 import { useChallenge } from '../composables/useChallenge'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { defineEmits } from 'vue'
 
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import 'swiper/css/scrollbar'
-
-const props = defineProps({
-  slidesPerView: Number,
-  centerAligned: Boolean,
-  withButton: Boolean,
-  slideHeight: String,
-  navigation: Boolean,
-  captionMode: String
-})
-
-const emits = defineEmits(['select'])
-
-const { user } = useUserStore()
 const { challenge, getList } = useChallenge()
 
-if (user.active?.data.id) {
-  getList(0, 5)
-}
-
-const select = async (index) => {
-  emits('select')
-}
-
-const onSwiper = (swiper) => {
+const onLoad = async function (index, done) {
+  const isDone = await getList(index)
+  done(isDone)
 }
 
 </script>

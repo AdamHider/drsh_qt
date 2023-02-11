@@ -110,6 +110,14 @@ const routes = [
           pageTitle: 'Achievements',
           requiresAuth: true
         }
+      },
+      {
+        path: 'classroom/challenges',
+        component: () => import('pages/ChallengesPage.vue'),
+        meta: {
+          pageTitle: 'Challenges',
+          requiresAuth: true
+        }
       }
     ]
   },

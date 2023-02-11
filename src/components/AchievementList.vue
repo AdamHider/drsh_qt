@@ -5,29 +5,29 @@
             <q-spinner color="primary" name="dots" size="40px" />
             </div>
         </template>
-        <q-card  v-for="(achievement, index) in achievement.list" :key="index" class="q-ma-sm">
+        <q-card  v-for="(achievementItem, index) in achievement.list" :key="index" class="q-ma-sm">
             <q-card-section >
             <q-item class="q-pa-none bg-white">
                 <q-item-section avatar>
                     <q-avatar size="80px">
                         <q-img
-                          :src="achievement.image"
+                          :src="achievementItem.image"
                           loading="lazy"
                           spinner-color="white"/>
                     </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left">
-                    <div class="text-bold">{{achievement.description.title}}</div>
-                    <div class="text-grey">{{achievement.description.description}}</div>
+                    <div class="text-bold">{{achievementItem.description.title}}</div>
+                    <div class="text-grey">{{achievementItem.description.description}}</div>
                     <div class="row q-ma-sm">
                         <div class="col text-left"></div>
                         <div class="col  text-right">
-                            <b>{{achievement.progress.current}}/{{achievement.progress.target}}</b>
+                            <b>{{achievementItem.progress.current}}/{{achievementItem.progress.target}}</b>
                         </div>
                     </div>
                     <q-linear-progress
-                        :color="(achievement.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
-                        :value="(achievement.progress.percentage/100)"
+                        :color="(achievementItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
+                        :value="(achievementItem.progress.percentage/100)"
                         size="20px"
                         rounded
                     ></q-linear-progress>

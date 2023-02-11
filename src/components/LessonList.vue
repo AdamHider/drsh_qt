@@ -104,14 +104,11 @@
 
 <script setup>
 import { useLesson } from '../composables/useLesson'
-import { CONFIG } from '../config.js'
 import { ref, onActivated, onDeactivated, toRef, watch } from 'vue'
 import { useCourse } from '../composables/useCourse'
-import { useRouter } from 'vue-router'
 
-const { lesson, getList, clear } = useLesson()
+const { lesson, getList } = useLesson()
 const { course } = useCourse()
-const router = useRouter()
 
 const groupBackground = ref(null)
 const groupGradient = ref(null)
@@ -131,7 +128,6 @@ const onLoad = async function (index, done) {
   done(isDone)
 }
 const composeList = () => {
-  const lessons = lesson.list
   lessonList.value = []
   for (let i = lesson.list.length - 1; i >= 0; i--) {
     if (checkGroup(lesson.list[i] && lesson.list[i].course_section)) {

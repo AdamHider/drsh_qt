@@ -28,6 +28,16 @@ a{
 .rounded-md{
     border-radius: $generic-border-radius;
 }
+.rounded-md-important{
+    border-radius: $generic-border-radius !important;
+}
+.rounded-t{
+  border-top-left-radius: $generic-border-radius;
+  border-top-right-radius: $generic-border-radius;
+}
+.q-pa-none-important{
+    padding: 0 !important;
+}
 
 .border-sm{
     border-width: 1px;
@@ -67,4 +77,13 @@ a{
 }
 .animation-slower{
     animation-duration: 2000ms
+}
+
+.max-two-lines{
+   overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: 2;
+           line-clamp: 2; 
+   -webkit-box-orient: vertical;
 }
