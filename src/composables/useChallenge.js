@@ -3,29 +3,28 @@ import { api } from '../services/index'
 const challenge = reactive({
   active: {},
   list: [],
-  limit: 2,
+  limit: 3,
   offset: 0,
   chunkIndex: 0
 })
 
 export function useChallenge () {
-  async function getList (index, limit) {
-    if (limit) challenge.limit = limit
-    if (index === 0) challenge.offset = 0
+  async function getList (index) {
+    if (index <= challenge.chunkIndex) return false
     challenge.chunkIndex = index
-    if (challenge.list.length > 0) challenge.offset = challenge.limit * challenge.chunkIndex
+    challenge.offset = challenge.limit * (challenge.chunkIndex - 1)
     const challengeListResponse = await api.challenges.getList({ limit: challenge.limit, offset: challenge.offset })
-    if (challenge.chunkIndex === 0) {
-      challenge.list = challengeListResponse
-    } else {
-      challenge.list = challenge.list.concat(challengeListResponse)
-    }
-
+    challenge.list = challenge.list.concat(challengeListResponse)
     return challengeListResponse.length === 0
+  }
+  async function getListUpdates () {
+    const challengeListResponse = await api.challenges.getList({ limit: challenge.list.length, offset: 0 })
+    challenge.list = challengeListResponse
   }
 
   return {
     getList,
+    getListUpdates,
     challenge
   }
 }

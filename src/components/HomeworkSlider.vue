@@ -14,33 +14,35 @@
             flat>
             <q-card-section class="q-ma-xs q-pa-none rounded-md-important"
               :style="`background: ${homeworkItem.course_section.background_gradient}; transform: none`">
-              <q-img
-                :src="homeworkItem.course_section.background_image"
-                class="absolute-top absolute-left full-width full-height"
-                loading="lazy"
-                spinner-color="white"
-              >
-              </q-img>
-              <q-img
-                fit="contain"
-                :src="homeworkItem.image"
-                :style="`height: ${props.slideHeight}px; max-width: 120px;`"
-                >
-              </q-img>
-              <div class="absolute-bottom transparent ">
-                  <q-circular-progress v-if="homeworkItem.exercise_id && !homeworkItem.is_blocked"
-                      rounded
-                      show-value
-                      :value="homeworkItem.exercise?.current_progress || 0"
-                      size="50px"
-                      :thickness="0.22"
-                      color="orange"
-                      track-color="white-transparent1"
-                      class="q-ma-none"
-                      style="z-index: 50; left: 0; background: none;"
+                <div  class="relative-position">
+                  <q-img
+                    :src="homeworkItem.course_section.background_image"
+                    class="absolute-top absolute-left full-width full-height"
+                    loading="lazy"
+                    spinner-color="white"
                   >
-                      <b class="text-white ">{{ homeworkItem.exercise?.current_progress || 0 }}%</b>
-                  </q-circular-progress>
+                  </q-img>
+                  <q-img
+                    fit="contain"
+                    :src="homeworkItem.image"
+                    :style="`height: ${props.slideHeight}px; max-width: 120px;`"
+                    >
+                  </q-img>
+                  <div class="absolute-top full-height text-left text-white flex flex-center">
+                      <q-circular-progress v-if="homeworkItem.exercise_id && !homeworkItem.is_blocked"
+                          rounded
+                          show-value
+                          :value="homeworkItem.exercise?.current_progress || 0"
+                          size="50px"
+                          :thickness="0.22"
+                          color="orange"
+                          track-color="white-transparent1"
+                          class="q-ma-none"
+                          style="z-index: 50; left: 0; background: none;"
+                      >
+                          <b class="text-white ">{{ homeworkItem.exercise?.current_progress || 0 }}%</b>
+                      </q-circular-progress>
+                    </div>
                 </div>
                 <div class="text-left">
                   <q-chip
@@ -89,8 +91,7 @@ const { user } = useUserStore()
 const { homework, getList } = useHomework()
 
 if (user.active?.data.id) {
-  homework.list = []
-  getList(0, 5)
+  getList(1)
 }
 
 const select = async (index) => {

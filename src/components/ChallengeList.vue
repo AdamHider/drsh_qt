@@ -6,25 +6,26 @@
             </div>
         </template>
         <q-card  v-for="(challengeItem, index) in challenge.list" :key="index" class="q-ma-sm">
-            <q-card-section class="text-left q-pa-none">
+            <q-card-section class="text-left q-pa-none relative-position">
                 <q-img
                     class="rounded-t"
                     :src="challengeItem.image"
                     loading="lazy"
                     spinner-color="white"
-                />
-                <div :class="`absolute-${captionMode} text-left text-white flex flex-center`" v-if="challengeItem.progress.value > 0">
-                  <q-circular-progress
-                    show-value
-                    class="text-white text-bold q-ma-md"
-                    :value="challengeItem.progress.percentage"
-                    track-color="grey-5"
-                    size="60px"
-                    color="white"
-                  >
-                  {{ challengeItem.progress.percentage }}%
-                  </q-circular-progress>
-                </div>
+                >
+                  <div class="absolute-top full-height text-left text-white flex flex-center" v-if="challengeItem.progress.value > 0">
+                    <q-circular-progress
+                      show-value
+                      class="text-white text-bold q-ma-md"
+                      :value="challengeItem.progress.percentage"
+                      track-color="grey-5"
+                      size="60px"
+                      color="white"
+                    >
+                    {{ challengeItem.progress.percentage }}%
+                    </q-circular-progress>
+                  </div>
+                </q-img>
                 <div class="absolute-bottom transparent q-pa-none-important text-left">
                   <q-chip
                       v-if="challengeItem.time_left_humanized && !challengeItem.is_finished"
@@ -61,10 +62,11 @@
                   </q-chip>
                 </div>
             </q-card-section >
-            <q-card-section class="text-left">
-                <div class="text-bold">{{challengeItem.description.title}}</div>
-                <div class="text-grey">{{challengeItem.description.description}}</div>
-            </q-card-section >
+            <q-card-section  class="text-left q-pa-sm">
+                <div class="text-bold max-two-lines">{{challengeItem.description.title}}</div>
+                <div class="text-caption text-grey max-two-lines">{{challengeItem.description.description}}</div>
+                <div class="text-caption text-grey max-one-lines" v-if="challengeItem.winner_left && challengeItem.winner_left > 0">Winners left: {{challengeItem.winner_left}}</div>
+            </q-card-section>
         </q-card >
     </q-infinite-scroll>
 </template>
@@ -73,11 +75,14 @@
 import { onActivated } from 'vue'
 import { useChallenge } from '../composables/useChallenge'
 
-const { challenge, getList } = useChallenge()
+const { challenge, getList, getListUpdates } = useChallenge()
 
 const onLoad = async function (index, done) {
   const isDone = await getList(index)
   done(isDone)
 }
+onActivated(() => {
+  if (challenge.list.length > 0) getListUpdates()
+})
 
 </script>

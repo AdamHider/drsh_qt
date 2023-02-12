@@ -101,7 +101,7 @@ const { user } = useUserStore()
 const { challenge, getList } = useChallenge()
 
 if (user.active?.data.id) {
-  getList(0, 5)
+  getList(1, 5)
 }
 
 const select = async (index) => {
