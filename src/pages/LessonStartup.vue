@@ -37,6 +37,19 @@
               </router-link>
             </div>
         </q-card-section>
+        <q-card-section class="q-py-sm text-left"  v-if="!lesson.active?.is_blocked" >
+            <div class="row q-my-sm" >
+                <div class="col-12 self-end text-right">
+                    <b>{{lesson.active?.exercise?.data.progress_percentage || 0 }}%</b>
+                </div>
+            </div>
+            <q-linear-progress
+                :color="(lesson.active?.exercise?.data.progress_percentage/100) >= 1 ? 'positive' : 'primary'"
+                :value="(lesson.active?.exercise?.data.progress_percentage / 100) || 0"
+                size="12px"
+                rounded
+            ></q-linear-progress>
+        </q-card-section>
         <q-card-actions class="text-right">
           <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" icon="replay" color="warning" @click="redo(lesson.active.id)"></q-btn>
           <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue"  icon="play_arrow" color="positive"  @click="open(lesson.active.id)"></q-btn>

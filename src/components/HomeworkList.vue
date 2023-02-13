@@ -5,9 +5,15 @@
             <q-spinner color="primary" name="dots" size="40px" />
             </div>
         </template>
-        <q-card  v-for="(homeworkItem, index) in homework.list" :key="index" class="q-ma-sm"
+        <q-card  v-for="(homeworkItem, index) in homework.list" :key="index" class="q-ma-sm cursor-pointer"  @click="router.push(`homework-${homeworkItem.id}`)"
         :style="`background: ${homeworkItem.course_section.background_gradient}; transform: none`">
             <q-card-section >
+            <q-img
+            :src="homeworkItem.course_section.background_image"
+            class="absolute-top absolute-left full-width full-height"
+            loading="lazy"
+            spinner-color="white"
+            />
             <q-item class="q-pa-none">
                 <q-item-section avatar>
                     <q-avatar size="80px">
@@ -20,29 +26,28 @@
                 <q-item-section class="text-left text-white">
                     <div class="text-bold">{{homeworkItem.description.title}}</div>
                     <div class="text-caption">{{homeworkItem.description.description}}</div>
-                    <div class="text-left">
-                      <q-chip
-                          v-if="homeworkItem.time_left_humanized"
-                          dense
-                          class="q-mx-none"
-                          style="font-size: 13px"
-                          :color="((homeworkItem.time_left <= 3) ? 'red' : 'orange')"
-                          icon="sports_score"
-                          text-color="white">
-                          <b>{{ homeworkItem.time_left_humanized }}</b>
-                      </q-chip>
-                    </div>
-                    <div class="row q-ma-sm" v-if="homeworkItem.exercise?.data">
-                        <div class="col text-left"></div>
-                        <div class="col  text-right">
-                            <b>{{(homeworkItem.exercise?.data.current_page * 100 / homeworkItem.exercise?.data.total_pages) / 100}}</b>
+                    <div class="row q-my-sm" >
+                        <div class="col-10 text-left">
+
+                            <q-chip
+                                v-if="homeworkItem.time_left_humanized"
+                                dense
+                                class="q-px-sm q-ma-none"
+                                style="font-size: 13px"
+                                :color="((homeworkItem.time_left <= 3) ? 'red' : 'orange')"
+                                icon="sports_score"
+                                text-color="white">
+                                <b>{{ homeworkItem.time_left_humanized }}</b>
+                            </q-chip>
+                        </div>
+                        <div class="col-2 self-end text-right">
+                            <b>{{homeworkItem.exercise?.data.progress_percentage || 0 }}%</b>
                         </div>
                     </div>
                     <q-linear-progress
-                        v-if="homeworkItem.exercise?.data"
-                        :color="(homeworkItem.exercise?.current_progress/100) >= 1 ? 'positive' : 'primary'"
-                        :value="((homeworkItem.exercise?.data.current_page * 100 / homeworkItem.exercise?.data.total_pages) / 100)"
-                        size="10px"
+                        :color="(homeworkItem.exercise?.data.progress_percentage/100) >= 1 ? 'positive' : 'white'"
+                        :value="(homeworkItem.exercise?.data.progress_percentage / 100) || 0"
+                        size="12px"
                         rounded
                     ></q-linear-progress>
                 </q-item-section>
@@ -53,13 +58,19 @@
 </template>
 
 <script setup>
+import { onActivated } from 'vue'
 import { useHomework } from '../composables/useHomework'
+import { useRouter } from 'vue-router'
 
-const { homework, getList } = useHomework()
+const router = useRouter()
+const { homework, getList, getListUpdates } = useHomework()
 
 const onLoad = async function (index, done) {
   const isDone = await getList(index)
   done(isDone)
 }
+onActivated(() => {
+  if (homework.list.length > 0) getListUpdates()
+})
 
 </script>

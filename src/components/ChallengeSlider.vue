@@ -8,8 +8,12 @@
       :navigation="props.navigation"
       @swiper="onSwiper"
     >
-      <swiper-slide v-for="(challengeItem, index) in challenge.list" :key="index" :class="'text-center'" @click="select(index)">
-        <q-card :class="`q-ma-sm ${(challengeItem.is_active) ? 'active' : ''}`" flat>
+      <swiper-slide v-for="(challengeItem, index) in challenge.list" :key="index">
+        <q-card
+          :class="`q-ma-sm cursor-pointer ${(challengeItem.is_active) ? 'active' : ''}`"
+          @click="router.push(`challenge-${challengeItem.id}`)"
+          flat
+        >
             <q-card-section class="q-pa-xs" >
               <q-img
                 fit="cover"
@@ -39,6 +43,16 @@
                       icon="sports_score"
                       text-color="white">
                       <b>{{ challengeItem.time_left_humanized }}</b>
+                  </q-chip>
+                  <q-chip
+                      v-else-if="!challengeItem.is_finished"
+                      dense
+                      class="q-ma-sm"
+                      style="font-size: 13px"
+                      :color="'red'"
+                      icon="sports_score"
+                      text-color="white">
+                      <b>Hurry up!</b>
                   </q-chip>
                   <q-chip
                       v-if="challengeItem.is_finished"
@@ -79,7 +93,7 @@
 import { useUserStore } from '../stores/user'
 import { useChallenge } from '../composables/useChallenge'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { defineEmits } from 'vue'
+import { useRouter } from 'vue-router'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -95,7 +109,7 @@ const props = defineProps({
   captionMode: String
 })
 
-const emits = defineEmits(['select'])
+const router = useRouter()
 
 const { user } = useUserStore()
 const { challenge, getList } = useChallenge()
@@ -103,11 +117,6 @@ const { challenge, getList } = useChallenge()
 if (user.active?.data.id) {
   getList(1, 5)
 }
-
-const select = async (index) => {
-  emits('select')
-}
-
 const onSwiper = (swiper) => {
 }
 

@@ -5,7 +5,7 @@
             <q-spinner color="primary" name="dots" size="40px" />
             </div>
         </template>
-        <q-card  v-for="(challengeItem, index) in challenge.list" :key="index" class="q-ma-sm">
+        <q-card  v-for="(challengeItem, index) in challenge.list" :key="index" class="q-ma-sm cursor-pointer"   @click="router.push(`challenge-${challengeItem.id}`)">
             <q-card-section class="text-left q-pa-none relative-position">
                 <q-img
                     class="rounded-t"
@@ -36,6 +36,16 @@
                       icon="sports_score"
                       text-color="white">
                       <b>{{ challengeItem.time_left_humanized }}</b>
+                  </q-chip>
+                  <q-chip
+                      v-else-if="!challengeItem.is_finished"
+                      dense
+                      class="q-ma-sm"
+                      style="font-size: 13px"
+                      :color="'red'"
+                      icon="sports_score"
+                      text-color="white">
+                      <b>Hurry up!</b>
                   </q-chip>
                   <q-chip
                       v-if="challengeItem.is_finished"
@@ -74,7 +84,9 @@
 <script setup>
 import { onActivated } from 'vue'
 import { useChallenge } from '../composables/useChallenge'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const { challenge, getList, getListUpdates } = useChallenge()
 
 const onLoad = async function (index, done) {

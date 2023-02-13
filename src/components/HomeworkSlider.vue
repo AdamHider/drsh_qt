@@ -8,9 +8,10 @@
       :navigation="props.navigation"
       @swiper="onSwiper"
     >
-      <swiper-slide v-for="(homeworkItem, index) in homework.list" :key="index" class="text-center" @click="select(index)">
+      <swiper-slide v-for="(homeworkItem, index) in homework.list" :key="index" class="text-center">
         <q-card
-            class="q-ma-sm "
+            class="q-ma-sm cursor-pointer"
+            @click="router.push(`homework-${homeworkItem.id}`)"
             flat>
             <q-card-section class="q-ma-xs q-pa-none rounded-md-important"
               :style="`background: ${homeworkItem.course_section.background_gradient}; transform: none`">
@@ -20,8 +21,7 @@
                     class="absolute-top absolute-left full-width full-height"
                     loading="lazy"
                     spinner-color="white"
-                  >
-                  </q-img>
+                  />
                   <q-img
                     fit="contain"
                     :src="homeworkItem.image"
@@ -32,15 +32,15 @@
                       <q-circular-progress v-if="homeworkItem.exercise_id && !homeworkItem.is_blocked"
                           rounded
                           show-value
-                          :value="homeworkItem.exercise?.current_progress || 0"
+                          :value="homeworkItem.exercise?.data.progress_percentage || 0"
                           size="50px"
                           :thickness="0.22"
-                          color="orange"
+                          color="white"
                           track-color="white-transparent1"
                           class="q-ma-none"
                           style="z-index: 50; left: 0; background: none;"
                       >
-                          <b class="text-white ">{{ homeworkItem.exercise?.current_progress || 0 }}%</b>
+                          <b class="text-white ">{{ homeworkItem.exercise?.data.progress_percentage || 0 }}%</b>
                       </q-circular-progress>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
 import { useUserStore } from '../stores/user'
 import { useHomework } from '../composables/useHomework'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { defineEmits } from 'vue'
+import { useRouter } from 'vue-router'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -84,18 +84,13 @@ const props = defineProps({
   navigation: Boolean,
   captionMode: String
 })
-
-const emits = defineEmits(['select'])
+const router = useRouter()
 
 const { user } = useUserStore()
 const { homework, getList } = useHomework()
 
 if (user.active?.data.id) {
   getList(1)
-}
-
-const select = async (index) => {
-  emits('select')
 }
 
 const onSwiper = (swiper) => {

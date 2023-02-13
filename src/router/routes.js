@@ -120,10 +120,26 @@ const routes = [
         }
       },
       {
+        path: 'challenge-:challenge_id',
+        component: () => import('pages/ChallengePage.vue'),
+        meta: {
+          pageTitle: 'Challenge',
+          requiresAuth: true
+        }
+      },
+      {
         path: 'homeworks',
         component: () => import('pages/HomeworksPage.vue'),
         meta: {
           pageTitle: 'Homeworks',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'homework-:homework_id',
+        component: () => import('pages/HomeworkPage.vue'),
+        meta: {
+          pageTitle: 'Homework',
           requiresAuth: true
         }
       }

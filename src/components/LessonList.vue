@@ -59,15 +59,15 @@
                             <q-circular-progress v-if="lesson.exercise_id && !lesson.is_blocked"
                                 rounded
                                 show-value
-                                :value="lesson.exercise?.current_progress || 0"
+                                :value="lesson.exercise?.data.progress_percentage || 0"
                                 size="50px"
                                 :thickness="0.22"
-                                color="orange"
+                                color="white"
                                 track-color="white-transparent1"
                                 class="q-ma-none"
                                 style="z-index: 50; left: 0; background: none;"
                             >
-                                <b class="text-white ">{{ lesson.exercise?.current_progress || 0 }}%</b>
+                                <b class="text-white ">{{ lesson.exercise?.data.progress_percentage || 0 }}%</b>
                             </q-circular-progress>
                         </div>
                         <q-img
@@ -107,7 +107,7 @@ import { useLesson } from '../composables/useLesson'
 import { ref, onActivated, onDeactivated, toRef, watch } from 'vue'
 import { useCourse } from '../composables/useCourse'
 
-const { lesson, getList } = useLesson()
+const { lesson, getList, getListUpdates } = useLesson()
 const { course } = useCourse()
 
 const groupBackground = ref(null)
@@ -149,7 +149,11 @@ const onIntersection = (entry) => {
 }
 onDeactivated(() => {
 })
-onActivated(() => {
+onActivated(async () => {
+  if (lesson.list.length > 0) {
+    await getListUpdates()
+    composeList()
+  }
 })
 
 watch(() => course.active?.id, async (newData, oldData) => {

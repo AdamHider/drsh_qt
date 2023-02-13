@@ -48,12 +48,12 @@ export class ApiService {
 
 
 export class Api extends ApiService{
-    achievements = {
+    achievement = {
         getList: (params) => {
             return this.post('achievement', 'getList', params)
         }
     }
-    challenges = {
+    challenge = {
         getItem: (params) => {
             return this.post('challenge', 'getItem', params)
         },
@@ -61,7 +61,7 @@ export class Api extends ApiService{
             return this.post('challenge', 'getList', params)
         }
     }
-    homeworks = {
+    homework = {
         getItem: (params) => {
             return this.post('homework', 'getItem', params)
         },

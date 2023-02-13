@@ -9,20 +9,32 @@ const challenge = reactive({
 })
 
 export function useChallenge () {
+  async function getItem (challengeId) {
+    const challengeResponse = await api.challenge.getItem({ challenge_id: challengeId })
+    if (!challengeResponse.error) {
+      challenge.active = challengeResponse
+    }
+  }
   async function getList (index) {
     if (index <= challenge.chunkIndex) return false
     challenge.chunkIndex = index
     challenge.offset = challenge.limit * (challenge.chunkIndex - 1)
-    const challengeListResponse = await api.challenges.getList({ limit: challenge.limit, offset: challenge.offset })
-    challenge.list = challenge.list.concat(challengeListResponse)
-    return challengeListResponse.length === 0
+    const challengeListResponse = await api.challenge.getList({ limit: challenge.limit, offset: challenge.offset })
+    if (!challengeListResponse.error) {
+      challenge.list = challenge.list.concat(challengeListResponse)
+      return challengeListResponse.length === 0
+    }
+    return true
   }
   async function getListUpdates () {
-    const challengeListResponse = await api.challenges.getList({ limit: challenge.list.length, offset: 0 })
-    challenge.list = challengeListResponse
+    const challengeListResponse = await api.challenge.getList({ limit: challenge.list.length, offset: 0 })
+    if (!challengeListResponse.error) {
+      challenge.list = challengeListResponse
+    }
   }
 
   return {
+    getItem,
     getList,
     getListUpdates,
     challenge

@@ -21,14 +21,14 @@
                     <div class="text-grey">{{achievementItem.description.description}}</div>
                     <div class="row q-ma-sm">
                         <div class="col text-left"></div>
-                        <div class="col  text-right">
+                        <div class="col text-right">
                             <b>{{achievementItem.progress.current}}/{{achievementItem.progress.target}}</b>
                         </div>
                     </div>
                     <q-linear-progress
                         :color="(achievementItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
                         :value="(achievementItem.progress.percentage/100)"
-                        size="20px"
+                        size="12px"
                         rounded
                     ></q-linear-progress>
                 </q-item-section>
@@ -40,7 +40,6 @@
 
 <script setup>
 import { useAchievement } from '../composables/useAchievement'
-import { CONFIG } from '../config.js'
 
 const { achievement, getList } = useAchievement()
 

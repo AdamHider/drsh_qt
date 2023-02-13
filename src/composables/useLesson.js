@@ -28,6 +28,12 @@ export function useLesson () {
       throw new Error('Courses are null: ' + e)
     }
   }
+  async function getListUpdates () {
+    const lessonListResponse = await api.lesson.getList({ limit: lesson.list.length, offset: 0 })
+    if (!lessonListResponse.error) {
+      lesson.list = lessonListResponse.reverse()
+    }
+  }
   async function getSatteliteList () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
     lesson.active.sattelites = lessonResponse
@@ -46,6 +52,7 @@ export function useLesson () {
   return {
     getItem,
     getList,
+    getListUpdates,
     getSatteliteList,
     getPage,
     saveAnswer,
