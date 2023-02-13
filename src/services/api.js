@@ -100,6 +100,9 @@ export class Api extends ApiService{
         },
         saveAnswer: (params) => {
             return this.post('exercise', 'saveAnswer', params)
+        },
+        getLeaderboard: (params) => {
+            return this.post('exercise', 'getLeaderboard', params)
         }
 
     }

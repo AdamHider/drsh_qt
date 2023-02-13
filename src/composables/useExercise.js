@@ -14,10 +14,15 @@ export function useExercise () {
     const exerciseResponse = await api.exercise.redoItem({ lesson_id: lessonId })
     return exerciseResponse
   }
+  async function getLeaderboard (data) {
+    const exerciseResponse = await api.exercise.getLeaderboard(data)
+    return exerciseResponse
+  }
 
   return {
     addItem,
     redoItem,
+    getLeaderboard,
     exercise
   }
 }

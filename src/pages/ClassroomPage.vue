@@ -82,7 +82,7 @@
                 <div class="text-h6">Leaderboard</div>
             </q-card-section>
             <q-card-section class="q-pa-none">
-
+              <LeaderboardTable/>
             </q-card-section>
           </q-card>
         </q-tab-panel>
@@ -103,6 +103,7 @@ import { ref, reactive, watch } from 'vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 import HomeworkSlider from '../components/HomeworkSlider.vue'
 import ChallengeSlider from '../components/ChallengeSlider.vue'
+import LeaderboardTable from '../components/LeaderboardTable.vue'
 import { useClassroom } from '../composables/useClassroom'
 
 import { useUserStore } from '../stores/user'

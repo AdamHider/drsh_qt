@@ -41,7 +41,6 @@
 <script setup>
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
-import { CONFIG } from '../config.js'
 
 const { user, signIn } = useUserStore()
 const dialog = ref(false)
