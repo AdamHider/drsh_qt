@@ -15,8 +15,8 @@ export function useExercise () {
     return exerciseResponse
   }
   async function getLeaderboard (data) {
-    const exerciseResponse = await api.exercise.getLeaderboard(data)
-    return exerciseResponse
+    const leaderboardResponse = await api.exercise.getLeaderboard(data)
+    return leaderboardResponse
   }
 
   return {
