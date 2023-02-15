@@ -76,13 +76,27 @@
             </q-card-section>
           </q-card>
         </q-tab-panel>
-        <q-tab-panel name="leaderboard">
+        <q-tab-panel name="leaderboard" class="q-px-none" >
           <q-card flat>
-            <q-card-section class="q-py-none">
-                <div class="text-h6">Leaderboard</div>
+            <q-card-section class="q-py-none flex justify-between items-center">
+                <div class="text-h6">Table</div>
             </q-card-section>
             <q-card-section class="q-pa-none">
-              <LeaderboardTable/>
+                <LeaderboardTable
+                  :filterEnabled="true"
+                  :filterDateEnabled="true"
+                  :filterClassroomDefault="true"
+                />
+            </q-card-section>
+            <q-card-section class="q-py-none flex justify-between items-center">
+                <div class="text-h6">Statistic</div>
+            </q-card-section>
+            <q-card-section class="q-pa-none">
+                <LeaderboardChart
+                  :filterEnabled="false"
+                  :filterClassroomDefault="true"
+                  :filterDateDefault="'month'"
+                />
             </q-card-section>
           </q-card>
         </q-tab-panel>
@@ -104,6 +118,7 @@ import ClassroomToggle from '../components/ClassroomToggle.vue'
 import HomeworkSlider from '../components/HomeworkSlider.vue'
 import ChallengeSlider from '../components/ChallengeSlider.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
+import LeaderboardChart from '../components/LeaderboardChart.vue'
 import { useClassroom } from '../composables/useClassroom'
 
 import { useUserStore } from '../stores/user'

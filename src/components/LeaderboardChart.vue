@@ -5,26 +5,15 @@
       :filterClassroomEnabled="props.filterClassroomEnabled"
       :filterDateEnabled="props.filterDateEnabled"
     />
-    <div v-if="leaderboard.table.length > 0" class="relative-position">
+    <div v-if="leaderboard.chart.data?.length > 0" class="relative-position">
         <q-inner-loading :showing="isLoading"/>
-      <q-list >
-          <q-item v-for="(commonItem, commonKey) in leaderboard.table" :key="commonKey" class="q-my-sm q-px-none"  >
-              <q-item-section avatar>
-                  <q-avatar rounded  color="primary" text-color="white" size="50px">
-                      <q-icon name="star" color="blue-6" size="50px" class="absolute-top"/>
-                      <b style="z-index: 1">{{ commonItem.points }}</b>
-                  </q-avatar>
-              </q-item-section>
-              <q-item-section>
-                  <q-item-label><b>{{ commonItem.place }} place</b></q-item-label>
-                  <q-item-label caption lines="1">{{ commonItem.usernames }}</q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                  <q-icon name="chat_bubble" color="green" />
-              </q-item-section>
-          </q-item>
-      </q-list>
+        <apexchart
+          v-if="leaderboard.chart.options"
+          id="vuechart-example"
+          type="line"
+          :options="leaderboard.chart.options"
+          :series="leaderboard.chart.data"
+        ></apexchart>
     </div>
   </div>
 </template>
@@ -39,17 +28,40 @@ const { leaderboard, getLeaderboard } = useLeaderboard()
 const isLoading = ref(false)
 
 const props = defineProps({
-  filterEnabled: Boolean,
+  filterStatus: Boolean,
   filterClassroomEnabled: Boolean,
   filterClassroomDefault: Boolean,
   filterDateEnabled: Boolean,
   filterDateDefault: String
 })
 
-const loadTable = async () => {
+const chartOptionsDefault = {
+  chart: {
+    id: 'vuechart-example',
+    toolbar: {
+      show: false
+    }
+  },
+  stroke: {
+    curve: 'smooth'
+  },
+  xaxis: {
+    labels: {
+      show: true
+    },
+    categories: []
+  }
+}
+
+const loadChart = async () => {
   const filter = prepareFilter()
   isLoading.value = true
-  await getLeaderboard('table', filter)
+  await getLeaderboard('chart', filter)
+  chartOptionsDefault.xaxis.categories = leaderboard.chart.labels
+  if (window.innerWidth < 768) {
+    chartOptionsDefault.xaxis.labels.show = false
+  }
+  leaderboard.chart.options = { ...leaderboard.chart.options, ...chartOptionsDefault }
   isLoading.value = false
 }
 
@@ -62,11 +74,12 @@ const prepareFilter = () => {
   }
   return false
 }
-onActivated(async () => {
-  loadTable()
+
+onActivated(() => {
+  loadChart()
 })
 
 watch(leaderboard.filter, async (currentValue, oldValue) => {
-  loadTable()
+  loadChart()
 })
 </script>
