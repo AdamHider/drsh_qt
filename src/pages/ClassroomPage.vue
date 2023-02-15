@@ -78,24 +78,16 @@
         </q-tab-panel>
         <q-tab-panel name="leaderboard" class="q-px-none" >
           <q-card flat>
-            <q-card-section class="q-py-none flex justify-between items-center">
-                <div class="text-h6">Table</div>
-            </q-card-section>
             <q-card-section class="q-pa-none">
                 <LeaderboardTable
-                  :filterEnabled="true"
-                  :filterDateEnabled="true"
-                  :filterClassroomDefault="true"
+                  :allowed-filters="['time_period']"
+                  by-classroom
                 />
-            </q-card-section>
-            <q-card-section class="q-py-none flex justify-between items-center">
-                <div class="text-h6">Statistic</div>
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <LeaderboardChart
-                  :filterEnabled="false"
-                  :filterClassroomDefault="true"
-                  :filterDateDefault="'month'"
+                  :allowed-filters="['time_period']"
+                  by-classroom
                 />
             </q-card-section>
           </q-card>

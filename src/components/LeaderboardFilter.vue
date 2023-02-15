@@ -4,10 +4,10 @@
       v-model="formData.valid"
       autocomplete="off"
       class="full-width">
-          <div v-if="props.filterClassroomEnabled">
+          <div v-if="props.allowedFilters.includes('by_classroom')">
             <q-checkbox v-model="formData.fields.by_classroom.value" label="Classroom only" />
           </div>
-          <div class="q-pa-sm" v-if="props.filterDateEnabled">
+          <div class="q-pa-sm" v-if="props.allowedFilters.includes('time_period')">
             <q-option-group
               v-model="formData.fields.time_period.value"
               :options="formData.fields.time_period.options"
@@ -20,19 +20,17 @@
 </template>
 
 <script setup >
-import { useLeaderboard } from '../composables/useLeaderboard.js'
-import { reactive, ref, watch } from 'vue'
+import { onActivated, onMounted, reactive, ref, watch } from 'vue'
 
-const { leaderboard } = useLeaderboard()
+const emits = defineEmits(['update-filter'])
 
 const form = ref(null)
 
 const props = defineProps({
-  filterEnabled: Boolean,
-  filterClassroomEnabled: Boolean,
-  filterDateEnabled: Boolean
+  allowedFilters: Array,
+  byClassroom: Boolean,
+  timePeriod: String
 })
-
 const formData = reactive({
   valid: true,
   fields: {
@@ -58,9 +56,33 @@ const formData = reactive({
     }
   }
 })
-watch(formData.fields, async (currentValue, oldValue) => {
+onMounted(() => {
+  if (props.byClassroom) formData.fields.by_classroom.value = props.byClassroom
+  if (props.timePeriod) formData.fields.time_period.value = props.timePeriod
+})
+onActivated(() => {
+  if (props.byClassroom) formData.fields.by_classroom.value = props.byClassroom
+  if (props.timePeriod) formData.fields.time_period.value = props.timePeriod
+})
+const composeFilter = () => {
+  const filter = {}
   for (const i in formData.fields) {
-    leaderboard.filter[i] = formData.fields[i].value
+    if (props.allowedFilters.includes(i)) filter[i] = formData.fields[i].value
   }
+  return filter
+}
+watch(() => formData.fields.by_classroom.value, async (currentValue, oldValue) => {
+  if (props.byClassroom) {
+    formData.fields.by_classroom.value = props.byClassroom
+    return
+  }
+  emits('update-filter', composeFilter())
+})
+watch(() => formData.fields.time_period.value, async (currentValue, oldValue) => {
+  if (props.timePeriod) {
+    formData.fields.time_period.value = props.timePeriod
+    return
+  }
+  emits('update-filter', composeFilter())
 })
 </script>
