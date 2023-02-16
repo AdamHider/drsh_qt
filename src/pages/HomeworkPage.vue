@@ -23,7 +23,7 @@
               />
                 <q-img
                     :src="homework.active?.image"
-                    style="max-width: 250px; width: 230px;"
+                    style="max-width: 200px; width: 150px;"
                     no-spinner
                 />
           </q-card-section>
@@ -71,10 +71,10 @@
                     rounded
                 ></q-linear-progress>
             </q-card-section>
-            <q-card-actions v-if="!homework.active?.is_blocked" class="text-left">
+            <q-card-section v-if="!homework.active?.is_blocked" class="text-left">
               <q-btn class="full-width" label="Go to the lesson" color="primary" icon="rocket" @click="router.push(`lesson-startup-${homework.active?.lesson_id}`)"></q-btn>
-            </q-card-actions>
-            <q-card-actions v-else class="text-center">
+            </q-card-section>
+            <q-card-section v-else class="text-center">
 
               <q-banner class="bg-primary text-white rounded-borders">
                 This lesson is not yet available for you. Please, complete previous lessons first.
@@ -82,15 +82,27 @@
                   <q-btn flat class="full-width" label="Go to the previous" icon="rocket" @click="router.push(`lesson-startup-${homework.active?.unblock_after}`)"></q-btn>
                 </template>
               </q-banner>
-            </q-card-actions>
+            </q-card-section>
           </q-card>
         </q-tab-panel>
+      <q-tab-panel name="leaderboard" class="q-px-none" >
+        <q-card flat>
+          <q-card-section  class="q-pa-none ">
+            <LeaderboardTable
+              :allowed-filters="['time_period']"
+              by-classroom
+              :lesson-id="homework.active?.lesson_id"
+            />
+          </q-card-section>
+        </q-card>
+      </q-tab-panel>
       </q-tab-panels>
   </q-page>
 </template>
 
 <script setup>
 import { useHomework } from '../composables/useHomework'
+import LeaderboardTable from '../components/LeaderboardTable.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 

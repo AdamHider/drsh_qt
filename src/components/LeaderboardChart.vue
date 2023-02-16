@@ -41,7 +41,7 @@ const { getLeaderboard } = useExercise()
 const leaderboardData = reactive({
   filter: {
     by_classroom: false,
-    time_period: 'week'
+    time_period: 'all'
   },
   data: {},
   options: {}

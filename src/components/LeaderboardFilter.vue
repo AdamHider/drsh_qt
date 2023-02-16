@@ -7,14 +7,14 @@
           <div v-if="props.allowedFilters.includes('by_classroom')">
             <q-checkbox v-model="formData.fields.by_classroom.value" label="Classroom only" />
           </div>
-          <div class="q-pa-sm" v-if="props.allowedFilters.includes('time_period')">
-            <q-option-group
-              v-model="formData.fields.time_period.value"
-              :options="formData.fields.time_period.options"
-              color="primary"
-              inline
-              dense
-            />
+          <div v-if="props.allowedFilters.includes('time_period')">
+            <q-chip v-for="(option, optionKey) in formData.fields.time_period.options" :key="optionKey"
+              clickable
+              :color="(formData.fields.time_period.value == option.value) ? 'primary' : ''"
+              :text-color="(formData.fields.time_period.value == option.value) ? 'white' : ''"
+              @click="formData.fields.time_period.value = option.value">
+              <b>{{ option.label }}</b>
+            </q-chip>
           </div>
     </q-form>
 </template>
@@ -38,19 +38,19 @@ const formData = reactive({
       value: false
     },
     time_period: {
-      value: 'week',
+      value: 'all',
       options: [
         {
-          label: 'Week',
-          value: 'week'
+          label: 'All time',
+          value: 'all'
         },
         {
           label: 'Month',
           value: 'month'
         },
         {
-          label: 'All time',
-          value: 'all'
+          label: 'Week',
+          value: 'week'
         }
       ]
     }
