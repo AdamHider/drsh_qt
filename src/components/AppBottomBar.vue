@@ -17,7 +17,7 @@
         />
         <q-route-tab
             icon="bar_chart"
-            :to="routes.notifications"
+            :to="routes.leaderboard"
             exact
         />
         <q-route-tab

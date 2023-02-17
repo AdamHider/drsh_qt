@@ -6,7 +6,7 @@ const routes = reactive({
   course: '/course',
   explore: '/explore',
   classroom: '/classroom',
-  notifications: '/notifications',
+  leaderboard: '/leaderboard',
   user: '/user'
 })
 

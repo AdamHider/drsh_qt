@@ -53,6 +53,8 @@ const filterExpanded = ref(false)
 const props = defineProps({
   allowedFilters: Array,
   byClassroom: Boolean,
+  lessonId: String,
+  challengeId: String,
   timePeriod: String
 })
 
@@ -91,6 +93,8 @@ const loadChart = async () => {
 const prepareFilter = () => {
   if (props.byClassroom) leaderboardData.filter.by_classroom = props.byClassroom
   if (props.timePeriod) leaderboardData.filter.time_period = props.timePeriod
+  if (props.lessonId) leaderboardData.filter.lesson_id = props.lessonId
+  if (props.challengeId) leaderboardData.filter.challenge_id = props.challengeId
   return leaderboardData.filter
 }
 

@@ -3,7 +3,7 @@
     <q-card-section class="q-py-none flex justify-between items-center text-left">
       <div class="text-h6">Leaderboard</div>
       <q-icon
-        v-if="props.allowedFilters.length > 0"
+        v-if="props.allowedFilters && props.allowedFilters.length > 0"
         @click="filterExpanded = !filterExpanded"
         size="sm"
         color="gray"
@@ -23,17 +23,25 @@
       <q-list separator >
         <q-item v-for="(commonItem, commonKey) in leaderboardData.data" :key="commonKey" :active="commonItem.is_active" class="q-my-sm q-px-none text-left"  >
             <q-item-section avatar class="text-center">
-                  <div class="text-h6"><b>{{ commonItem.place }}</b></div>
+              <q-avatar size="40px"
+                :color="(commonItem.is_winner) ? 'orange' : 'white'"
+                :text-color="(commonItem.is_winner) ? 'white' : 'dark'"
+                >
+                <b>{{ commonItem.place }}</b>
+              </q-avatar>
             </q-item-section>
             <q-item-section>
               <q-item-label>
-                  <q-chip v-for="(userData, userKey) in commonItem.data" :key="userKey"
-                    color="white"
-                    :text-color="(userData.is_active == 1) ? 'primary' : ''"
-                    :title="userData.username"
-                  >
-                  <b >{{ userData.username }}</b>
-                </q-chip>
+                <span v-for="(userData, userKey) in commonItem.data.slice(0, 2)" :key="userKey" class="q-pa-none text-dark">
+                  <b :class="(userData.is_active == 1) ? 'text-primary' : 'text-dark'">{{ userData.username }}</b>
+                  <b v-if="commonItem.data.slice(0, 2)[userKey+1]">, </b>
+                </span>
+                <span v-if="commonItem.data.length > 2" class="text-dark">
+                  <b> and {{commonItem.data.length - 2}} more</b>
+                </span>
+                <div v-if="commonItem.finished_at_humanized" class="text-caption text-gray">
+                  {{commonItem.finished_at_humanized}}
+                </div>
               </q-item-label>
             </q-item-section>
             <q-item-section side>
@@ -67,6 +75,7 @@ const props = defineProps({
   allowedFilters: Array,
   byClassroom: Boolean,
   lessonId: String,
+  challengeId: String,
   timePeriod: String
 })
 
@@ -81,6 +90,7 @@ const loadTable = async () => {
 const prepareFilter = () => {
   if (props.byClassroom) leaderboardData.filter.by_classroom = props.byClassroom
   if (props.lessonId) leaderboardData.filter.lesson_id = props.lessonId
+  if (props.challengeId) leaderboardData.filter.challenge_id = props.challengeId
   if (props.timePeriod) leaderboardData.filter.time_period = props.timePeriod
   return leaderboardData.filter
 }
@@ -91,9 +101,11 @@ const updateFilter = (filter) => {
 }
 
 onActivated(async () => {
+  if (isLoading.value === true) return
   loadTable()
 })
 onMounted(async () => {
+  if (isLoading.value === true) return
   loadTable()
 })
 

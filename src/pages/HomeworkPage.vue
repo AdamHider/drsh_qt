@@ -55,10 +55,57 @@
           <q-card flat class="relative text-left transparent full-width " style="z-index: 1;"
             v-if="transitionTrigger">
             <q-card-section class="q-py-sm">
-                <div><b>Start date:</b> {{homework.active?.date_start_humanized}}</div>
-                <div><b>End date:</b> {{homework.active?.date_end_humanized}}</div>
+                <q-list separator>
+                  <q-item class="q-px-none">
+                    <q-item-section top avatar>
+                      <q-avatar color="primary" text-color="white" icon="ads_click" />
+                    </q-item-section>
+                    <q-item-section v-if="!homework.active?.is_blocked" class="text-left">
+                      <q-item-label>Complete lesson</q-item-label>
+                      <q-item-label caption lines="2">Just complete lesson within a.</q-item-label>
+                    </q-item-section>
+                    <q-item-section v-else class="text-left">
+                      <q-item-label>This lesson is not yet available for you</q-item-label>
+                      <q-item-label caption lines="2">Please, complete previous lessons first.</q-item-label>
+                    </q-item-section>
+                    <q-item-section v-if="!homework.active?.is_blocked && !homework.active?.is_finished" class="text-left">
+                      <q-btn v-if="!homework.active?.exercise?.finished_at" class="full-width" label="Start" color="primary" icon="rocket" @click="router.push(`lesson-startup-${homework.active?.lesson_id}`)"></q-btn>
+                      <q-btn v-else class="full-width" label="Done" color="positive" icon="check" @click="router.push(`lesson-startup-${homework.active?.lesson_id}`)"></q-btn>
+                    </q-item-section>
+                    <q-item-section v-else-if="homework.active?.is_blocked" class="text-left">
+                      <q-btn flat class="full-width" label="Go to the previous" icon="rocket" @click="router.push(`lesson-startup-${homework.active?.unblock_after}`)"></q-btn>
+                    </q-item-section>
+                  </q-item>
+                  <q-item  v-if="homework.active?.date_start_humanized"  class="q-px-none">
+                    <q-item-section top avatar>
+                      <q-avatar color="primary" text-color="white" icon="outlined_flag" />
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>Start date</q-item-label>
+                      <q-item-label caption lines="2">The date challenge starts.</q-item-label>
+                    </q-item-section>
+                    <q-item-section side class="text-dark">
+                      <b style="font-size: 16px">{{homework.active?.date_start_humanized}}</b>
+                    </q-item-section>
+                  </q-item>
+                  <q-item  v-if="homework.active?.date_end_humanized"  class="q-px-none">
+                    <q-item-section top avatar>
+                      <q-avatar color="primary" text-color="white" icon="flag" />
+                    </q-item-section>
+                    <q-item-section v-if="!homework.active?.is_finished">
+                      <q-item-label>End date</q-item-label>
+                      <q-item-label caption lines="2">The date challenge finishes.</q-item-label>
+                    </q-item-section>
+                    <q-item-section v-else>
+                      <q-item-label>This challenge is finished</q-item-label>
+                    </q-item-section>
+                    <q-item-section side class="text-dark">
+                      <b style="font-size: 16px">{{homework.active?.date_end_humanized}}</b>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
             </q-card-section>
-            <q-card-section class="q-py-sm text-left"  v-if="!homework.active?.is_blocked" >
+            <q-card-section class="q-py-sm text-left"  v-if="!homework.active?.is_blocked && !homework.active?.is_finished" >
                 <div class="row q-my-sm" >
                     <div class="col-12 self-end text-right">
                         <b>{{homework.active?.exercise?.data.progress_percentage || 0 }}%</b>
@@ -70,18 +117,6 @@
                     size="12px"
                     rounded
                 ></q-linear-progress>
-            </q-card-section>
-            <q-card-section v-if="!homework.active?.is_blocked" class="text-left">
-              <q-btn class="full-width" label="Go to the lesson" color="primary" icon="rocket" @click="router.push(`lesson-startup-${homework.active?.lesson_id}`)"></q-btn>
-            </q-card-section>
-            <q-card-section v-else class="text-center">
-
-              <q-banner class="bg-primary text-white rounded-borders">
-                This lesson is not yet available for you. Please, complete previous lessons first.
-                <template v-slot:action>
-                  <q-btn flat class="full-width" label="Go to the previous" icon="rocket" @click="router.push(`lesson-startup-${homework.active?.unblock_after}`)"></q-btn>
-                </template>
-              </q-banner>
             </q-card-section>
           </q-card>
         </q-tab-panel>

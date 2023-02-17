@@ -32,11 +32,19 @@ export function useChallenge () {
       challenge.list = challengeListResponse
     }
   }
+  async function addWinner (challengeId) {
+    const challengeWinnerResponse = await api.challenge.addWinnerItem({ challenge_id: challengeId })
+    if (!challengeWinnerResponse.error) {
+      return challengeWinnerResponse
+    }
+    return false
+  }
 
   return {
     getItem,
     getList,
     getListUpdates,
+    addWinner,
     challenge
   }
 }

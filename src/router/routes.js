@@ -142,6 +142,14 @@ const routes = [
           pageTitle: 'Homework',
           requiresAuth: true
         }
+      },
+      {
+        path: 'leaderboard',
+        component: () => import('pages/LeaderboardPage.vue'),
+        meta: {
+          pageTitle: 'Leaderboard',
+          requiresAuth: true
+        }
       }
     ]
   },

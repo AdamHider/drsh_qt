@@ -9,24 +9,13 @@
             enter-active-class="animated zoomIn animation-slow"
             leave-active-class="animated rubberBand  animation-delay-1" >
       <q-card v-if="transitionTrigger"
-          class="transparent no-shadow full-width"
+          class="transparent no-shadow full-width q-pa-md"
           style="position: relative; z-index: 1;"
         >
-          <q-card-section
-          class="q-ma-md"
-          :style="`background: ${challenge.active?.course_section?.background_gradient}; `">
-              <q-img
-                :src="challenge.active?.course_section?.background_image"
-                class="absolute-top absolute-left full-width full-height"
-                loading="lazy"
-                spinner-color="white"
-              />
-                <q-img
-                    :src="challenge.active?.image"
-                    style="max-width: 200px; width: 150px;"
-                    no-spinner
-                />
-          </q-card-section>
+            <q-img
+                :src="challenge.active?.image"
+                no-spinner
+            />
       </q-card>
     </transition>
     <transition
@@ -45,8 +34,71 @@
       <q-card flat class="relative text-left transparent full-width " style="z-index: 1;"
         v-if="transitionTrigger">
         <q-card-section class="q-py-sm">
-            <div><b>Start date:</b> {{challenge.active?.date_start_humanized}}</div>
-            <div><b>End date:</b> {{challenge.active?.date_end_humanized}}</div>
+          <q-list separator>
+            <q-item class="q-px-none">
+              <q-item-section top avatar>
+                <q-avatar color="primary" text-color="white" icon="ads_click" />
+              </q-item-section>
+              <q-item-section  v-if="challenge.active?.code == 'total_points'">
+                <q-item-label>Gain points</q-item-label>
+                <q-item-label caption lines="2">Just complete lessons and gain stars.</q-item-label>
+              </q-item-section>
+              <q-item-section  v-else-if="challenge.active?.code == 'total_points_first'">
+                <q-item-label>Gain points as soon as you can</q-item-label>
+                <q-item-label caption lines="2">Hurry up. Other participants can make it faster and win.</q-item-label>
+              </q-item-section>
+              <q-item-section side class="text-dark">
+                <b style="font-size: 16px">{{challenge.active?.value}} points</b>
+              </q-item-section>
+            </q-item>
+            <q-item  v-if="challenge.active?.date_start_humanized"  class="q-px-none">
+              <q-item-section top avatar>
+                <q-avatar color="primary" text-color="white" icon="outlined_flag" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Start date</q-item-label>
+                <q-item-label caption lines="2">The date challenge starts.</q-item-label>
+              </q-item-section>
+              <q-item-section side class="text-dark">
+                <b style="font-size: 16px">{{challenge.active?.date_start_humanized}}</b>
+              </q-item-section>
+            </q-item>
+            <q-item  v-if="challenge.active?.date_end_humanized && !challenge.active?.is_finished"  class="q-px-none">
+              <q-item-section top avatar>
+                <q-avatar color="primary" text-color="white" icon="flag" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>End date</q-item-label>
+                <q-item-label caption lines="2">The date challenge finishes.</q-item-label>
+              </q-item-section>
+              <q-item-section side class="text-dark">
+                <b style="font-size: 16px">{{challenge.active?.date_end_humanized}}</b>
+              </q-item-section>
+            </q-item>
+            <q-item  v-if="challenge.active?.is_finished"  class="q-px-none">
+              <q-item-section top avatar>
+                <q-avatar color="primary" text-color="white" icon="flag" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>This challenge is finished</q-item-label>
+              </q-item-section>
+              <q-item-section side class="text-dark">
+                <b style="font-size: 16px">{{challenge.active?.date_end_humanized}}</b>
+              </q-item-section>
+            </q-item>
+            <q-item  v-if="challenge.active?.is_finished && challenge.active?.is_winner"  class="q-px-none">
+              <q-item-section top avatar>
+                <q-avatar color="positive" text-color="white" icon="emoji_events" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>You are the winner!</q-item-label>
+              </q-item-section>
+              <q-item-section side class="text-dark" >
+                <q-btn icon="check" color="positive" label="Confirm" @click="confirmWinner" >
+                </q-btn>
+              </q-item-section>
+            </q-item>
+          </q-list>
         </q-card-section>
         <q-card-section class="q-py-sm text-left"  v-if="!challenge.active?.is_blocked" >
             <div class="row q-my-sm" >
@@ -65,24 +117,47 @@
     <q-card flat>
       <q-card-section  class="q-pa-none ">
         <LeaderboardTable
-          :allowed-filters="['time_period']"
-          by-classroom
+          :challenge-id="route.params.challenge_id"
         />
       </q-card-section>
     </q-card>
   </q-page>
+    <q-dialog v-model="winnerConfirmDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Close lesson</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Are you sure? You can back to it whenever you want though
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn flat label="Cancel" color="grey" v-close-popup />
+          <q-btn flat label="Continue" @click="closeLesson" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
+import { useUserStore } from '../stores/user'
 import { useChallenge } from '../composables/useChallenge'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
-const router = useRouter()
+const { user } = useUserStore()
 const route = useRoute()
-const { challenge, getItem } = useChallenge()
+const { challenge, getItem, addWinner } = useChallenge()
 const transitionTrigger = ref(false)
+const winnerConfirmDialog = ref(false)
+
+const confirmWinner = () => {
+  if (!user.active?.data.phone) {
+    winnerConfirmDialog.value = true
+    return
+  }
+  addWinner(route.params.challenge_id)
+}
 
 onMounted(async () => {
   await getItem(route.params.challenge_id)
