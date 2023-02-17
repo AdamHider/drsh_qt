@@ -76,16 +76,16 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     }
     return authResponse
   }
-  async function save (data) {
-    const saveResponse = await api.user.save(data)
-    if (!saveResponse.error) {
+  async function saveItem (data) {
+    const userSavedResponse = await api.user.save(data)
+    if (!userSavedResponse.error) {
       const userResponse = await api.user.get()
       const userAuth = user.active.authorization
       userAuth.username = userResponse.username
       update({ authorization: userAuth, data: userResponse })
     }
     showMessage('User data saved!')
-    return saveResponse
+    return userSavedResponse
   }
   async function saveProfile (data) {
     const saveProfileResponse = await api.user.saveProfile(data)
@@ -134,7 +134,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     autoSignIn,
     signOut,
     signUp,
-    save,
+    saveItem,
     saveProfile,
     savePassword,
     activate,

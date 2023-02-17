@@ -1,5 +1,5 @@
 <template>
-  <q-card  flat>
+  <q-card flat>
     <q-card-section class="q-py-none flex justify-between items-center">
       <div class="text-h6">Activity</div>
       <q-icon
@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { onActivated, ref, reactive } from 'vue'
+import { onActivated, onMounted, ref, reactive } from 'vue'
 import LeaderboardFilter from '../components/LeaderboardFilter.vue'
 import { useExercise } from '../composables/useExercise.js'
 
@@ -61,6 +61,7 @@ const props = defineProps({
 const chartOptionsDefault = {
   chart: {
     id: 'vuechart-example',
+    height: 250,
     toolbar: {
       show: false
     }
@@ -86,7 +87,6 @@ const loadChart = async () => {
     chartOptionsDefault.xaxis.labels.show = false
   }
   leaderboardData.options = { ...leaderboardData.options, ...chartOptionsDefault }
-  console.log(leaderboardData)
   isLoading.value = false
 }
 
@@ -103,7 +103,12 @@ const updateFilter = (filter) => {
   loadChart()
 }
 
-onActivated(() => {
+onActivated(async () => {
+  if (isLoading.value === true) return
+  loadChart()
+})
+onMounted(async () => {
+  if (isLoading.value === true) return
   loadChart()
 })
 

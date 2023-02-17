@@ -78,7 +78,7 @@ import { useRoute, useRouter } from 'vue-router'
 const form = ref(null)
 const route = useRoute()
 const router = useRouter()
-const { user, checkUsername, checkEmail, save } = useUserStore()
+const { user, checkUsername, checkEmail, saveItem } = useUserStore()
 
 const formData = reactive({
   step: route.params.step,
@@ -121,7 +121,7 @@ const saveChanges = async function () {
       email: formData.fields.email.value,
       phone: formData.fields.phone.value
     }
-    const saved = await save(data)
+    const saved = await saveItem(data)
     if (!saved.error) {
       return router.go(-1)
     } else {

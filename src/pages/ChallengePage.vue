@@ -51,6 +51,31 @@
                 <b style="font-size: 16px">{{challenge.active?.value}} points</b>
               </q-item-section>
             </q-item>
+
+            <q-item class="q-px-none">
+              <q-item-section top avatar>
+                <q-avatar color="primary" text-color="white" icon="timeline" />
+              </q-item-section>
+                <q-item-section >
+                  <q-item-label>Current progress</q-item-label>
+                <q-item-label caption lines="2">How close to the edge you are.</q-item-label>
+              </q-item-section>
+              <q-item-section side class="text-dark">
+                <b style="font-size: 16px">{{challenge.active?.progress.percentage || 0 }}%</b>
+              </q-item-section>
+            </q-item>
+            <q-item class="q-px-none" v-if="challenge.active?.winner_left > 0">
+              <q-item-section top avatar>
+                <q-avatar color="primary" text-color="white" icon="people" />
+              </q-item-section>
+                <q-item-section >
+                  <q-item-label>Winners left</q-item-label>
+                <q-item-label caption lines="2">How much winners are left.</q-item-label>
+              </q-item-section>
+              <q-item-section side class="text-dark">
+                <b style="font-size: 16px">{{challenge.active?.winner_left }}</b>
+              </q-item-section>
+            </q-item>
             <q-item  v-if="challenge.active?.date_start_humanized"  class="q-px-none">
               <q-item-section top avatar>
                 <q-avatar color="primary" text-color="white" icon="outlined_flag" />
@@ -94,24 +119,13 @@
                 <q-item-label>You are the winner!</q-item-label>
               </q-item-section>
               <q-item-section side class="text-dark" >
-                <q-btn icon="check" color="positive" label="Confirm" @click="confirmWinner" >
-                </q-btn>
+                <q-btn v-if="!challenge.active?.winner_confirmed" icon="check" color="positive" label="Confirm" @click="confirmWinner"/>
+                <q-btn v-else icon="check" disabled color="positive" label="Confirmed"/>
               </q-item-section>
             </q-item>
           </q-list>
         </q-card-section>
         <q-card-section class="q-py-sm text-left"  v-if="!challenge.active?.is_blocked" >
-            <div class="row q-my-sm" >
-                <div class="col-12 self-end text-right">
-                    <b>{{challenge.active?.progress.percentage || 0 }}%</b>
-                </div>
-            </div>
-            <q-linear-progress
-                :color="(challenge.active?.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
-                :value="(challenge.active?.progress.percentage / 100) || 0"
-                size="12px"
-                rounded
-            ></q-linear-progress>
         </q-card-section>
       </q-card>
     <q-card flat>
@@ -125,14 +139,31 @@
     <q-dialog v-model="winnerConfirmDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Close lesson</div>
+          <div class="text-h6">Confirm your contact info</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Are you sure? You can back to it whenever you want though
+          <q-form
+            ref="form"
+            v-model="formData.valid"
+            @submit.prevent="validate()"
+            autocomplete="off"
+            class="full-width"
+          >
+            <q-input
+              v-model="formData.fields.phone.value"
+              :rules="formData.fields.phone.rules"
+              :error-message="formData.fields.phone.errors"
+              :error="formData.fields.phone.errors !== ''"
+              mask="+# (###) ### - ## - ##"
+              fill-mask
+              unmasked-value
+              label="Phone"
+            ></q-input>
+          </q-form>
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
           <q-btn flat label="Cancel" color="grey" v-close-popup />
-          <q-btn flat label="Continue" @click="closeLesson" />
+          <q-btn flat label="Continue" :loading="savingUser" @click="saveUser" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -143,20 +174,50 @@ import { useUserStore } from '../stores/user'
 import { useChallenge } from '../composables/useChallenge'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import { useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
-const { user } = useUserStore()
+const { user, saveItem } = useUserStore()
 const route = useRoute()
 const { challenge, getItem, addWinner } = useChallenge()
 const transitionTrigger = ref(false)
 const winnerConfirmDialog = ref(false)
+const savingUser = ref(false)
+const form = ref(null)
 
-const confirmWinner = () => {
+const formData = reactive({
+  valid: true,
+  fields: {
+    phone: {
+      value: user.active.data.phone,
+      rules: [
+        v => v === '' || (v !== '' && (/\(?([0-9]{4})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(v))) || 'Phone must be valid'
+      ],
+      errors: '',
+      suggestions: []
+    }
+  }
+})
+const confirmWinner = async () => {
   if (!user.active?.data.phone) {
     winnerConfirmDialog.value = true
     return
   }
-  addWinner(route.params.challenge_id)
+  await addWinner(route.params.challenge_id)
+  await getItem(route.params.challenge_id)
+}
+
+const saveUser = async () => {
+  savingUser.value = true
+  formData.valid = await form.value.validate()
+  if (formData.valid) {
+    const userSavedResponse = await saveItem({ phone: formData.fields.phone.value })
+    if (!userSavedResponse.errors) {
+      await addWinner(route.params.challenge_id)
+      await getItem(route.params.challenge_id)
+      savingUser.value = false
+      winnerConfirmDialog.value = false
+    }
+  }
 }
 
 onMounted(async () => {
