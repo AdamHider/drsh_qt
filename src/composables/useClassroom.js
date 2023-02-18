@@ -10,8 +10,8 @@ export function useClassroom () {
   async function subscribe (params) {
     return api.classroom.subscribe(params)
   }
-  async function getActive () {
-    const classroomResponse = await api.classroom.getActive()
+  async function getItem (classroomId) {
+    const classroomResponse = await api.classroom.getItem({ classroom_id: classroomId })
     classroom.active = classroomResponse
   }
   async function getList () {
@@ -31,7 +31,7 @@ export function useClassroom () {
   }
 
   return {
-    getActive,
+    getItem,
     getList,
     checkIfExists,
     classroom,

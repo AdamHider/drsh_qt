@@ -15,19 +15,19 @@ export function useChallenge () {
       challenge.active = challengeResponse
     }
   }
-  async function getList (index) {
-    if (index <= challenge.chunkIndex) return false
-    challenge.chunkIndex = index
+  async function getList (filter) {
+    if (filter.page <= challenge.chunkIndex) return false
+    challenge.chunkIndex = filter.page
     challenge.offset = challenge.limit * (challenge.chunkIndex - 1)
-    const challengeListResponse = await api.challenge.getList({ limit: challenge.limit, offset: challenge.offset })
+    const challengeListResponse = await api.challenge.getList({ ...filter, ...{ limit: challenge.limit, offset: challenge.offset } })
     if (!challengeListResponse.error) {
       challenge.list = challenge.list.concat(challengeListResponse)
       return challengeListResponse.length === 0
     }
     return true
   }
-  async function getListUpdates () {
-    const challengeListResponse = await api.challenge.getList({ limit: challenge.list.length, offset: 0 })
+  async function getListUpdates (filter) {
+    const challengeListResponse = await api.challenge.getList({ ...filter, ...{ limit: challenge.list.length, offset: 0 } })
     if (!challengeListResponse.error) {
       challenge.list = challengeListResponse
     }

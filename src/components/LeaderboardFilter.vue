@@ -28,7 +28,7 @@ const form = ref(null)
 
 const props = defineProps({
   allowedFilters: Array,
-  byClassroom: Boolean,
+  classroomId: Boolean,
   timePeriod: String
 })
 const formData = reactive({
@@ -57,11 +57,11 @@ const formData = reactive({
   }
 })
 onMounted(() => {
-  if (props.byClassroom) formData.fields.by_classroom.value = props.byClassroom
+  if (props.classroomId) formData.fields.by_classroom.value = props.classroomId
   if (props.timePeriod) formData.fields.time_period.value = props.timePeriod
 })
 onActivated(() => {
-  if (props.byClassroom) formData.fields.by_classroom.value = props.byClassroom
+  if (props.classroomId) formData.fields.by_classroom.value = props.classroomId
   if (props.timePeriod) formData.fields.time_period.value = props.timePeriod
 })
 const composeFilter = () => {
@@ -72,8 +72,8 @@ const composeFilter = () => {
   return filter
 }
 watch(() => formData.fields.by_classroom.value, async (currentValue, oldValue) => {
-  if (props.byClassroom) {
-    formData.fields.by_classroom.value = props.byClassroom
+  if (props.classroomId) {
+    formData.fields.by_classroom.value = props.classroomId
     return
   }
   emits('update-filter', composeFilter())

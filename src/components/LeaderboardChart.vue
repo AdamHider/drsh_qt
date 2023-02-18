@@ -13,12 +13,12 @@
     <q-card-section v-if="filterExpanded" class="q-py-sm">
       <LeaderboardFilter
         :allowed-filters="props.allowedFilters"
-        :byClassroom="props.byClassroom"
+        :classroomId="props.classroomId"
         :timePeriod="props.timePeriod"
         @update-filter="updateFilter($event)"
       />
     </q-card-section>
-    <q-card-section v-if="leaderboardData.data.length > 0" class="q-py-sm relative-position">
+    <q-card-section v-if="leaderboardData.data?.length > 0" class="q-py-sm relative-position">
         <q-inner-loading :showing="isLoading"/>
         <apexchart
           v-if="leaderboardData.options"
@@ -40,7 +40,6 @@ const { getLeaderboard } = useExercise()
 
 const leaderboardData = reactive({
   filter: {
-    by_classroom: false,
     time_period: 'all'
   },
   data: {},
@@ -52,7 +51,7 @@ const filterExpanded = ref(false)
 
 const props = defineProps({
   allowedFilters: Array,
-  byClassroom: Boolean,
+  classroomId: Boolean,
   lessonId: String,
   challengeId: String,
   timePeriod: String
@@ -81,17 +80,19 @@ const loadChart = async () => {
   const filter = prepareFilter()
   isLoading.value = true
   const leaderboardResponse = await getLeaderboard('chart', filter)
-  leaderboardData.data = leaderboardResponse.data
-  chartOptionsDefault.xaxis.categories = leaderboardResponse.labels
-  if (window.innerWidth < 768) {
-    chartOptionsDefault.xaxis.labels.show = false
+  if (!leaderboardResponse.errors) {
+    leaderboardData.data = leaderboardResponse.data
+    chartOptionsDefault.xaxis.categories = leaderboardResponse.labels
+    if (window.innerWidth < 768) {
+      chartOptionsDefault.xaxis.labels.show = false
+    }
+    leaderboardData.options = { ...leaderboardData.options, ...chartOptionsDefault }
   }
-  leaderboardData.options = { ...leaderboardData.options, ...chartOptionsDefault }
   isLoading.value = false
 }
 
 const prepareFilter = () => {
-  if (props.byClassroom) leaderboardData.filter.by_classroom = props.byClassroom
+  if (props.classroomId) leaderboardData.filter.classroom_id = props.classroomId
   if (props.timePeriod) leaderboardData.filter.time_period = props.timePeriod
   if (props.lessonId) leaderboardData.filter.lesson_id = props.lessonId
   if (props.challengeId) leaderboardData.filter.challenge_id = props.challengeId

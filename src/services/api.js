@@ -150,7 +150,7 @@ export class Api extends ApiService{
         subscribe: (params) =>  {
             return this.post('classroom', 'subscribe', params)
         },
-        getActive: (params) =>  {
+        getItem: (params) =>  {
             return this.post('classroom', 'getItem', params)
         },
         getList: (params) =>  {

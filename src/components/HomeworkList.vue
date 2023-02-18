@@ -60,17 +60,18 @@
 <script setup>
 import { onActivated } from 'vue'
 import { useHomework } from '../composables/useHomework'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const { homework, getList, getListUpdates } = useHomework()
 
 const onLoad = async function (index, done) {
-  const isDone = await getList(index)
+  const isDone = await getList({ page: index, classroom_id: route.params.classroom_id })
   done(isDone)
 }
 onActivated(() => {
-  if (homework.list.length > 0) getListUpdates()
+  if (homework.list.length > 0) getListUpdates({ classroom_id: route.params.classroom_id })
 })
 
 </script>

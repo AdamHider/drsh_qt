@@ -1,18 +1,18 @@
 <template>
   <q-app-header class="transparent text-white rounded-b-md" reveal>
-    <ClassroomToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event"/>
+    <ClassroomToggle v-bind:dialogOpened="dialog" v-on:update:dialogOpened="dialog = $event"/>
     <q-toolbar-title></q-toolbar-title>
     <q-btn flat round dense class="q-mr-sm" icon="share"/>
     <q-btn flat round dense class="q-mr-sm"  icon="more_vert"/>
   </q-app-header>
-  <q-page :class="(user.active?.data.profile?.classroom_id) ? 'bg-white' : 'row items-end full-height full-width text-center'"
-      :style="(user.active?.data.profile?.classroom_id) ? `padding-top: ${backgroundImageHeight}px;` : ''">
+  <q-page :class="(classroom.active?.id) ? 'bg-white' : 'row items-end full-height full-width text-center'"
+      :style="(classroom.active?.id) ? `padding-top: ${backgroundImageHeight}px;` : ''">
     <q-img
-      v-if="classroom?.active?.background_image"
-      :src="classroom?.active?.background_image"
+      v-if="classroom.active?.background_image"
+      :src="classroom.active?.background_image"
       :style="`max-height: ${backgroundImageHeight}px; position: fixed; top: 0;`"
     />
-    <q-card v-if="user.active?.data.profile?.classroom_id" flat style="margin-top: -15px;">
+    <q-card v-if="classroom.active?.id" flat style="margin-top: -15px;">
       <q-card-section>
         <div class="row no-wrap items-center">
           <div class="col text-h6 ellipsis">
@@ -35,6 +35,10 @@
           {{ classroom.active?.institution }}
         </div>
       </q-card-section>
+      <q-card-section>
+        <q-btn v-if="!classroom.active?.is_subscribed" class="full-width" label="Subscribe" color="primary" icon="person_add"></q-btn>
+        <q-btn v-else flat class="full-width" label="Subscribed" color="grey" icon="check"></q-btn>
+      </q-card-section>
       <q-separator />
       <q-tabs
         v-model="tab"
@@ -48,10 +52,11 @@
           <q-card flat>
             <q-card-section class="q-py-none flex justify-between items-center">
                 <div class="text-h6">Homeworks</div>
-                <router-link to="homeworks">Show all</router-link>
+                <router-link :to="`classroom-${classroom.id}/homeworks`">Show all</router-link>
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <HomeworkSlider
+                  :classroom-id="classroom.active?.id"
                   :slidesPerView=2.3
                   :centerAligned="false"
                   :withButton="false"
@@ -62,10 +67,11 @@
             </q-card-section>
             <q-card-section class="q-py-none flex justify-between items-center">
                 <div class="text-h6">Challenges</div>
-                <router-link to="challenges">Show all</router-link>
+                <router-link :to="`classroom-${classroom.active?.id}/challenges`" >Show all</router-link>
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <ChallengeSlider
+                  :classroom-id="classroom.active?.id"
                   :slidesPerView=1.4
                   :centerAligned="false"
                   :withButton="false"
@@ -81,13 +87,13 @@
             <q-card-section class="q-pa-none">
                 <LeaderboardTable
                   :allowed-filters="['time_period']"
-                  by-classroom
+                  :classroom-id="classroom.active?.id"
                 />
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <LeaderboardChart
                   :allowed-filters="['time_period']"
-                  by-classroom
+                  :classroom-id="classroom.active?.id"
                 />
             </q-card-section>
           </q-card>
@@ -96,33 +102,36 @@
     </q-card>
     <q-card v-else flat class="full-width transparent">
       <q-card-section class="text-white" >
-        <div class="text-subtitle"><b>Choose classroom</b></div>
+        <div class="text-subtitle"><b>Choose classroom.active?</b></div>
         <div class="text-caption">And start your investigation</div>
-        <q-btn color="dark" @click="dialog.active=true">Choose</q-btn>
+        <q-btn color="dark" @click="dialog = true">Choose</q-btn>
       </q-card-section>
     </q-card>
   </q-page>
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 import HomeworkSlider from '../components/HomeworkSlider.vue'
 import ChallengeSlider from '../components/ChallengeSlider.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import LeaderboardChart from '../components/LeaderboardChart.vue'
 import { useClassroom } from '../composables/useClassroom'
+import { useRoute } from 'vue-router'
 
-import { useUserStore } from '../stores/user'
-const { user } = useUserStore()
+const route = useRoute()
 
-const dialog = reactive({ active: false })
+const dialog = ref(false)
+const tab = ref('main')
 
 const backgroundImageHeight = 200
-const tab = ref('main')
-const { classroom, getActive } = useClassroom()
-getActive()
-watch(() => user.active?.data.profile?.classroom_id, async (newData, oldData) => {
-  getActive()
+const { classroom, getItem } = useClassroom()
+
+onMounted(() => {
+  getItem(route.params.classroom_id)
+})
+watch(() => route.params.classroom_id, (newData, oldData) => {
+  getItem(route.params.classroom_id)
 })
 </script>

@@ -66,6 +66,7 @@
     </swiper>
 </template>
 <script setup>
+import { onMounted, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useHomework } from '../composables/useHomework'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -77,6 +78,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
 const props = defineProps({
+  classroomId: Number,
   slidesPerView: Number,
   centerAligned: Boolean,
   withButton: Boolean,
@@ -88,12 +90,10 @@ const router = useRouter()
 
 const { user } = useUserStore()
 const { homework, getList } = useHomework()
-
-if (user.active?.data.id) {
-  getList(1)
-}
-
-const onSwiper = (swiper) => {
-}
-
+onMounted(() => {
+  getList({ page: 1, classroom_id: props.classroomId })
+})
+watch(() => props.classroomId, async (newData, oldData) => {
+  getList({ page: 1, classroom_id: props.classroomId })
+})
 </script>

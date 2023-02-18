@@ -1,9 +1,4 @@
-import { reactive } from 'vue'
 import { api } from '../services/index'
-
-const exercise = reactive({
-  active: {}
-})
 
 export function useExercise () {
   async function addItem (lessonId) {
@@ -22,7 +17,6 @@ export function useExercise () {
   return {
     addItem,
     redoItem,
-    getLeaderboard,
-    exercise
+    getLeaderboard
   }
 }

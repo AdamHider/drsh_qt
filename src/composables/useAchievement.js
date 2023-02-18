@@ -15,7 +15,10 @@ export function useAchievement () {
   }
   async function getListByUser () {
     const achievementListResponse = await api.achievement.getList({ mode: 'user', limit: 5, offset: 0 })
-    return achievementListResponse
+    if (!achievementListResponse.errors) {
+      return achievementListResponse
+    }
+    return false
   }
 
   return {

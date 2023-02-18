@@ -13,7 +13,7 @@
     <q-card-section v-if="filterExpanded" class="q-py-sm text-left">
       <LeaderboardFilter
         :allowed-filters="props.allowedFilters"
-        :byClassroom="props.byClassroom"
+        :classroomId="props.classroomId"
         :timePeriod="props.timePeriod"
         @update-filter="updateFilter($event)"
       />
@@ -62,7 +62,6 @@ const { getLeaderboard } = useExercise()
 
 const leaderboardData = reactive({
   filter: {
-    by_classroom: false,
     time_period: 'all'
   },
   data: {}
@@ -73,7 +72,7 @@ const filterExpanded = ref(false)
 
 const props = defineProps({
   allowedFilters: Array,
-  byClassroom: Boolean,
+  classroomId: Boolean,
   lessonId: String,
   challengeId: String,
   timePeriod: String
@@ -88,7 +87,7 @@ const loadTable = async () => {
 }
 
 const prepareFilter = () => {
-  if (props.byClassroom) leaderboardData.filter.by_classroom = props.byClassroom
+  if (props.classroomId) leaderboardData.filter.classroom_id = props.classroomId
   if (props.lessonId) leaderboardData.filter.lesson_id = props.lessonId
   if (props.challengeId) leaderboardData.filter.challenge_id = props.challengeId
   if (props.timePeriod) leaderboardData.filter.time_period = props.timePeriod

@@ -47,6 +47,11 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'classroom-:classroom_id',
+        component: () => import('pages/ClassroomPage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: 'classroom/join',
         redirect: 'classroom/join/code=0'
       },
@@ -112,7 +117,15 @@ const routes = [
         }
       },
       {
-        path: 'challenges',
+        path: 'classroom/challenges',
+        component: () => import('pages/ChallengesPage.vue'),
+        meta: {
+          pageTitle: 'Challenges',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'classroom-:classroom_id/challenges',
         component: () => import('pages/ChallengesPage.vue'),
         meta: {
           pageTitle: 'Challenges',
@@ -128,7 +141,15 @@ const routes = [
         }
       },
       {
-        path: 'homeworks',
+        path: 'classroom/homeworks',
+        component: () => import('pages/HomeworksPage.vue'),
+        meta: {
+          pageTitle: 'Homeworks',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'classroom-:classroom_id/homeworks',
         component: () => import('pages/HomeworksPage.vue'),
         meta: {
           pageTitle: 'Homeworks',

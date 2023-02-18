@@ -84,17 +84,18 @@
 <script setup>
 import { onActivated } from 'vue'
 import { useChallenge } from '../composables/useChallenge'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const { challenge, getList, getListUpdates } = useChallenge()
 
 const onLoad = async function (index, done) {
-  const isDone = await getList(index)
+  const isDone = await getList({ page: index, classroom_id: route.params.classroom_id })
   done(isDone)
 }
 onActivated(() => {
-  if (challenge.list.length > 0) getListUpdates()
+  if (challenge.list.length > 0) getListUpdates({ classroom_id: route.params.classroom_id })
 })
 
 </script>
