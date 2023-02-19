@@ -6,7 +6,6 @@
       :centeredSlides="props.centerAligned"
       :initialSlide="challenge.list?.findIndex((challenge) => challenge.is_active)"
       :navigation="props.navigation"
-      @swiper="onSwiper"
     >
       <swiper-slide v-for="(challengeItem, index) in challenge.list" :key="index">
         <q-card
@@ -102,7 +101,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
 const props = defineProps({
-  classroomId: Number,
+  classroomId: String,
   slidesPerView: Number,
   centerAligned: Boolean,
   withButton: Boolean,

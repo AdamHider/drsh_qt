@@ -10,10 +10,11 @@ const homework = reactive({
 
 export function useHomework () {
   async function getItem (homeworkId) {
-    const homeworResponse = await api.homework.getItem({ homework_id: homeworkId })
-    if (!homeworResponse.error) {
-      homework.active = homeworResponse
+    const homeworkResponse = await api.homework.getItem({ homework_id: homeworkId })
+    if (homeworkResponse.error) {
+      return homeworkResponse
     }
+    homework.active = homeworkResponse
   }
   async function getList (filter) {
     if (filter.page <= homework.chunkIndex) return false

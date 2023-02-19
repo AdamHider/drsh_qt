@@ -148,7 +148,10 @@ const transitionTrigger = ref(false)
 const tab = ref('main')
 
 onMounted(async () => {
-  await getItem(route.params.homework_id)
+  const homeworkResponse = await getItem(route.params.homework_id)
+  if (homeworkResponse.error) {
+    return router.go(-1)
+  }
   transitionTrigger.value = true
 })
 </script>

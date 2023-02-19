@@ -6,7 +6,6 @@
       :centeredSlides="props.centerAligned"
       :initialSlide="homework.list?.findIndex((homework) => homework.is_active)"
       :navigation="props.navigation"
-      @swiper="onSwiper"
     >
       <swiper-slide v-for="(homeworkItem, index) in homework.list" :key="index" class="text-center">
         <q-card
@@ -78,7 +77,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
 const props = defineProps({
-  classroomId: Number,
+  classroomId: String,
   slidesPerView: Number,
   centerAligned: Boolean,
   withButton: Boolean,
