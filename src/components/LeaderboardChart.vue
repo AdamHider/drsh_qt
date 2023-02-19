@@ -51,7 +51,7 @@ const filterExpanded = ref(false)
 
 const props = defineProps({
   allowedFilters: Array,
-  classroomId: Boolean,
+  classroomId: String,
   lessonId: String,
   challengeId: String,
   timePeriod: String
