@@ -15,6 +15,7 @@ export function useHomework () {
       return homeworkResponse
     }
     homework.active = homeworkResponse
+    return homeworkResponse
   }
   async function getList (filter) {
     if (filter.page <= homework.chunkIndex) return false
@@ -32,6 +33,7 @@ export function useHomework () {
     if (!homeworkListResponse.error) {
       homework.list = homeworkListResponse
     }
+    return homeworkListResponse
   }
 
   return {
