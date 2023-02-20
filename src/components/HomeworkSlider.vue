@@ -10,7 +10,7 @@
       <swiper-slide v-for="(homeworkItem, index) in homework.list" :key="index" class="text-center">
         <q-card
             class="q-ma-sm cursor-pointer"
-            @click="router.push(`homework-${homeworkItem.id}`)"
+            @click="router.push(`/homework-${homeworkItem.id}`)"
             flat>
             <q-card-section class="q-ma-xs q-pa-none rounded-md-important"
               :style="`background: ${homeworkItem.course_section.background_gradient}; transform: none`">

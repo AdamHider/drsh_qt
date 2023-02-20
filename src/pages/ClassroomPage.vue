@@ -52,7 +52,7 @@
           <q-card flat>
             <q-card-section class="q-py-none flex justify-between items-center">
                 <div class="text-h6">Homeworks</div>
-                <router-link :to="`classroom-${classroom.id}/homeworks`">Show all</router-link>
+                <router-link :to="`/classroom-${classroom.active?.id}/homeworks`">Show all</router-link>
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <HomeworkSlider
@@ -67,7 +67,7 @@
             </q-card-section>
             <q-card-section class="q-py-none flex justify-between items-center">
                 <div class="text-h6">Challenges</div>
-                <router-link :to="`classroom-${classroom.active?.id}/challenges`" >Show all</router-link>
+                <router-link :to="`/classroom-${classroom.active?.id}/challenges`" >Show all</router-link>
             </q-card-section>
             <q-card-section class="q-pa-none">
                 <ChallengeSlider

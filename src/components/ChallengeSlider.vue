@@ -10,7 +10,7 @@
       <swiper-slide v-for="(challengeItem, index) in challenge.list" :key="index">
         <q-card
           :class="`q-ma-sm cursor-pointer ${(challengeItem.is_active) ? 'active' : ''}`"
-          @click="router.push(`challenge-${challengeItem.id}`)"
+          @click="router.push(`/challenge-${challengeItem.id}`)"
           flat
         >
             <q-card-section class="q-pa-xs" >
