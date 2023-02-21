@@ -52,6 +52,11 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'classroom-:classroom_id/edit',
+        component: () => import('pages/ClassroomEdit.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: 'classroom/join',
         redirect: 'classroom/join/code=0'
       },

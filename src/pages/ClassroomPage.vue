@@ -1,9 +1,9 @@
 <template>
   <q-app-header class="transparent text-white rounded-b-md" reveal>
-    <ClassroomToggle v-bind:dialogOpened="dialog" v-on:update:dialogOpened="dialog = $event"/>
+    <ClassroomToggle v-bind:dialogOpened="classroomListDialog" v-on:update:dialogOpened="classroomListDialog = $event"/>
     <q-toolbar-title></q-toolbar-title>
     <q-btn flat round dense class="q-mr-sm" icon="share"/>
-    <q-btn flat round dense class="q-mr-sm"  icon="more_vert"/>
+    <q-btn flat round dense class="q-mr-sm"  icon="more_vert" @click="preferencesDialog = true"/>
   </q-app-header>
   <q-page :class="(classroom.active?.id) ? 'bg-white' : 'row items-end full-height full-width text-center'"
       :style="(classroom.active?.id) ? `padding-top: ${backgroundImageHeight}px;` : ''">
@@ -117,10 +117,27 @@
       <q-card-section class="text-white" >
         <div class="text-subtitle"><b>Choose classroom.active?</b></div>
         <div class="text-caption">And start your investigation</div>
-        <q-btn color="dark" @click="dialog = true">Choose</q-btn>
+        <q-btn color="dark" @click="classroomListDialog = true">Choose</q-btn>
       </q-card-section>
     </q-card>
   </q-page>
+    <q-dialog v-model="preferencesDialog" position="bottom">
+      <q-card>
+        <q-card-section class="q-px-none">
+          <q-list  separator>
+            <q-item clickable v-ripple :to="`/classroom-${classroom.active?.id}/edit`">
+              <q-item-section >Edit classroom</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple>
+              <q-item-section>Invite friend</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple>
+              <q-item-section>Subscribers</q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
@@ -135,7 +152,8 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const dialog = ref(false)
+const classroomListDialog = ref(false)
+const preferencesDialog = ref(false)
 const tab = ref('main')
 
 const backgroundImageHeight = 200
