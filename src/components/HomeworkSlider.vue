@@ -1,6 +1,6 @@
 <template>
     <swiper
-      v-if="user.active.data?.id"
+      v-if="homework.list.length > 0"
       class="homeworkSlider"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
@@ -63,6 +63,11 @@
         </q-card>
       </swiper-slide>
     </swiper>
+    <BannerNotFound v-else
+      title="Ooops..."
+      description="There are no homeworks yet"
+      default-image
+    />
 </template>
 <script setup>
 import { onMounted, watch } from 'vue'
@@ -70,6 +75,7 @@ import { useUserStore } from '../stores/user'
 import { useHomework } from '../composables/useHomework'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { useRouter } from 'vue-router'
+import BannerNotFound from '../components/BannerNotFound.vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'

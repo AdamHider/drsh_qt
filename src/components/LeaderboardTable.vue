@@ -1,5 +1,5 @@
 <template>
-  <q-card  flat>
+  <q-card flat >
     <q-card-section class="q-py-none flex justify-between items-center text-left">
       <div class="text-h6">Leaderboard</div>
       <q-icon
@@ -50,12 +50,20 @@
         </q-item>
       </q-list>
     </q-card-section>
+    <q-card-section v-else class="q-pa-none">
+      <BannerNotFound
+        title="Ooops..."
+        description="There is no available statistics"
+        default-image
+      />
+    </q-card-section>
   </q-card>
 </template>
 
 <script setup>
 import { onActivated, onMounted, ref, reactive } from 'vue'
 import LeaderboardFilter from '../components/LeaderboardFilter.vue'
+import BannerNotFound from '../components/BannerNotFound.vue'
 import { useExercise } from '../composables/useExercise.js'
 
 const { getLeaderboard } = useExercise()

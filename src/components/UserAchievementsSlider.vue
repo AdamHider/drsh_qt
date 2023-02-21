@@ -1,6 +1,6 @@
 <template>
     <swiper
-      v-if="user.active.data.id"
+      v-if="achievements.length > 0"
       :modules="[Navigation]"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
@@ -26,6 +26,11 @@
         </q-card>
       </swiper-slide>
     </swiper>
+    <BannerNotFound v-else
+      title="Ooops..."
+      description="There are no achievements yet"
+      default-image
+    />
 </template>
 <script setup>
 import { ref } from 'vue'
@@ -35,6 +40,7 @@ import { useAchievement } from '../composables/useAchievement'
 import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { CONFIG } from '../config.js'
+import BannerNotFound from '../components/BannerNotFound.vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -54,7 +60,10 @@ const { getListByUser } = useAchievement()
 const achievements = ref([])
 
 const load = async function () {
-  achievements.value = await getListByUser()
+  const achievementListResponse = await getListByUser()
+  if (!achievementListResponse.error) {
+    achievements.value
+  }
 }
 load()
 

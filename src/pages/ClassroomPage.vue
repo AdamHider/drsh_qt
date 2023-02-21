@@ -40,65 +40,78 @@
         <q-btn v-else flat class="full-width" label="Subscribed" color="grey" icon="check"></q-btn>
       </q-card-section>
       <q-separator />
-      <q-tabs
-        v-model="tab"
-        inline-label
-      >
-        <q-tab name="main" icon="grid_view" label="Main" />
-        <q-tab name="leaderboard" icon="bar_chart" label="Score" />
-      </q-tabs>
-      <q-tab-panels v-model="tab" animated keep-alive>
-        <q-tab-panel name="main" class="q-px-none" >
-          <q-card flat>
-            <q-card-section class="q-py-none flex justify-between items-center">
-                <div class="text-h6">Homeworks</div>
-                <router-link :to="`/classroom-${classroom.active?.id}/homeworks`">Show all</router-link>
-            </q-card-section>
-            <q-card-section class="q-pa-none">
-                <HomeworkSlider
-                  :classroom-id="classroom.active?.id"
-                  :slidesPerView=2.3
-                  :centerAligned="false"
-                  :withButton="false"
-                  slideHeight="150"
-                  :navigation="false"
-                  captionMode="full"
-                />
-            </q-card-section>
-            <q-card-section class="q-py-none flex justify-between items-center">
-                <div class="text-h6">Challenges</div>
-                <router-link :to="`/classroom-${classroom.active?.id}/challenges`" >Show all</router-link>
-            </q-card-section>
-            <q-card-section class="q-pa-none">
-                <ChallengeSlider
-                  :classroom-id="classroom.active?.id"
-                  :slidesPerView=1.4
-                  :centerAligned="false"
-                  :withButton="false"
-                  slideHeight="140"
-                  :navigation="false"
-                  captionMode="full"
-                />
-            </q-card-section>
-          </q-card>
-        </q-tab-panel>
-        <q-tab-panel name="leaderboard" class="q-px-none" >
-          <q-card flat>
-            <q-card-section class="q-pa-none">
-                <LeaderboardTable
-                  :allowed-filters="['time_period']"
-                  :classroom-id="classroom.active?.id"
-                />
-            </q-card-section>
-            <q-card-section class="q-pa-none">
-                <LeaderboardChart
-                  :allowed-filters="['time_period']"
-                  :classroom-id="classroom.active?.id"
-                />
-            </q-card-section>
-          </q-card>
-        </q-tab-panel>
-      </q-tab-panels>
+      <q-card-section v-if="classroom.active?.is_subscribed" class="q-pa-none">
+        <q-tabs
+          v-model="tab"
+          inline-label
+        >
+          <q-tab name="main" icon="grid_view" label="Main" />
+          <q-tab name="leaderboard" icon="bar_chart" label="Score" />
+        </q-tabs>
+        <q-tab-panels v-model="tab" animated keep-alive>
+          <q-tab-panel name="main" class="q-px-none" >
+            <q-card flat>
+              <q-card-section class="q-py-none flex justify-between items-center">
+                  <div class="text-h6">Homeworks</div>
+                  <router-link :to="`/classroom-${classroom.active?.id}/homeworks`">Show all</router-link>
+              </q-card-section>
+              <q-card-section class="q-pa-none">
+                  <HomeworkSlider
+                    :classroom-id="classroom.active?.id"
+                    :slidesPerView=2.3
+                    :centerAligned="false"
+                    :withButton="false"
+                    slideHeight="150"
+                    :navigation="false"
+                    captionMode="full"
+                  />
+              </q-card-section>
+              <q-card-section class="q-py-none flex justify-between items-center">
+                  <div class="text-h6">Challenges</div>
+                  <router-link :to="`/classroom-${classroom.active?.id}/challenges`" >Show all</router-link>
+              </q-card-section>
+              <q-card-section class="q-pa-none">
+                  <ChallengeSlider
+                    :classroom-id="classroom.active?.id"
+                    :slidesPerView=1.4
+                    :centerAligned="false"
+                    :withButton="false"
+                    slideHeight="140"
+                    :navigation="false"
+                    captionMode="full"
+                  />
+              </q-card-section>
+            </q-card>
+          </q-tab-panel>
+          <q-tab-panel name="leaderboard" class="q-px-none" >
+            <q-card flat>
+              <q-card-section class="q-pa-none">
+                  <LeaderboardTable
+                    :allowed-filters="['time_period']"
+                    :classroom-id="classroom.active?.id"
+                  />
+              </q-card-section>
+              <q-card-section class="q-pa-none">
+                  <LeaderboardChart
+                    :allowed-filters="['time_period']"
+                    :classroom-id="classroom.active?.id"
+                  />
+              </q-card-section>
+            </q-card>
+          </q-tab-panel>
+        </q-tab-panels>
+      </q-card-section>
+      <q-card-section v-else-if="classroom.active?.is_private">
+        <q-card flat class="text-center q-pa-md">
+          <q-icon name="lock" size="lg"></q-icon>
+          <q-card-section class="q-pb-none">
+              <div class="text-h6">Content is unavailable</div>
+          </q-card-section>
+          <q-card-section class="q-py-none">
+              This is a private class. Subscribe to see the content
+          </q-card-section>
+        </q-card>
+      </q-card-section>
     </q-card>
     <q-card v-else flat class="full-width transparent">
       <q-card-section class="text-white" >
