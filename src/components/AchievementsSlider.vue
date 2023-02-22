@@ -5,8 +5,6 @@
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
       :navigation="props.navigation"
-      @swiper="onSwiper"
-      @slideChange="onSlideChange"
     >
       <swiper-slide v-for="(achievementItem, index) in achievements" :key="index" :class="'text-center'">
         <q-card flat class="q-ma-sm">
@@ -20,8 +18,8 @@
               </q-img>
             </q-card-section>
             <q-card-section  class="text-center q-pa-sm">
-                <div class="text-bold">{{achievementItem.description?.title}}</div>
-                <div class="text-caption text-grey">{{achievementItem.description?.description}}</div>
+                <div class="text-bold">{{achievementItem.title}}</div>
+                <div class="text-caption text-grey">{{achievementItem.description}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>
@@ -34,13 +32,10 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user'
 import { useAchievement } from '../composables/useAchievement'
 import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { CONFIG } from '../config.js'
-import BannerNotFound from '../components/BannerNotFound.vue'
+import BannerNotFound from './BannerNotFound.vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -55,20 +50,14 @@ const props = defineProps({
   captionMode: String
 })
 
-const { user } = useUserStore()
 const { getListByUser } = useAchievement()
 const achievements = ref([])
 
 const load = async function () {
   const achievementListResponse = await getListByUser()
   if (!achievementListResponse.error) {
-    achievements.value
+    achievements.value = achievementListResponse
   }
 }
 load()
-
-const onSwiper = (swiper) => {
-}
-const onSlideChange = (swiper) => {
-}
 </script>

@@ -26,8 +26,8 @@
     <q-card flat class="relative text-white text-left transparent full-width " style="z-index: 1;"
       v-if="transitionTrigger">
         <q-card-section>
-            <div class="text-h5"><b>{{lesson.active.description?.title}}</b></div>
-            <div class="text-caption">{{lesson.active.description?.description}}</div>
+            <div class="text-h5"><b>{{lesson.active.title}}</b></div>
+            <div class="text-caption">{{lesson.active.description}}</div>
         </q-card-section>
         <q-card-section v-if="lesson.active.parent_id">
             <div class="text-caption">
@@ -94,8 +94,8 @@
               no-spinner
           />
         <q-card-section class="text-left">
-            <div class="text-h5"><b>{{activeSattelite.description?.title}}</b></div>
-            <div class="text-caption">{{activeSattelite.description?.description}}</div>
+            <div class="text-h5"><b>{{activeSattelite.title}}</b></div>
+            <div class="text-caption">{{activeSattelite.description}}</div>
         </q-card-section>
         <q-card-actions class="text-right">
           <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" icon="replay" color="warning" @click="redo(activeSattelite.id)"></q-btn>

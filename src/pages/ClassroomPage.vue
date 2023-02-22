@@ -16,15 +16,15 @@
       <q-card-section>
         <div class="row no-wrap items-center">
           <div class="col text-h6 ellipsis">
-            {{ classroom.active?.description?.title }}
+            {{ classroom.active?.title }}
           </div>
           <div class="col-auto text-grey text-caption q-pt-md row no-wrap items-center">
             <q-icon name="place" />
             250 ft
           </div>
         </div>
-        <div v-if="classroom.active?.description?.description" class="text-grey">
-          {{ classroom.active?.description?.description }}
+        <div v-if="classroom.active?.description" class="text-grey">
+          {{ classroom.active?.description }}
         </div>
         <div v-if="classroom.active?.address" class="text-caption text-grey">
           <q-icon name="location_on" size="sm"></q-icon>

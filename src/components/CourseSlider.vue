@@ -42,8 +42,8 @@
               </q-img>
             </q-card-section>
             <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold">{{courseItem.description.title}}</div>
-                <div class="text-caption text-grey">{{courseItem.description.title_tag}}</div>
+                <div class="text-bold">{{courseItem.title}}</div>
+                <div class="text-caption text-grey">{{courseItem.title_tag}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>

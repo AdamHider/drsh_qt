@@ -25,8 +25,8 @@
     <q-card flat class="relative text-left transparent full-width " style="z-index: 1;"
       v-if="transitionTrigger">
         <q-card-section>
-            <div class="text-h5"><b>{{challenge.active?.description?.title}}</b></div>
-            <div class="text-caption">{{challenge.active?.description?.description}}</div>
+            <div class="text-h5"><b>{{challenge.active?.title}}</b></div>
+            <div class="text-caption">{{challenge.active?.description}}</div>
         </q-card-section>
 
     </q-card>

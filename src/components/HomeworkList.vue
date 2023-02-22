@@ -24,8 +24,8 @@
                     </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left text-white">
-                    <div class="text-bold">{{homeworkItem.description.title}}</div>
-                    <div class="text-caption">{{homeworkItem.description.description}}</div>
+                    <div class="text-bold">{{homeworkItem.title}}</div>
+                    <div class="text-caption">{{homeworkItem.description}}</div>
                     <div class="row q-my-sm" >
                         <div class="col-10 text-left">
 

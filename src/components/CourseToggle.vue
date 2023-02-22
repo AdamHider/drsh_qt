@@ -7,9 +7,9 @@
         <q-avatar size="30px">
           <img :src="course.active?.image"/>
         </q-avatar>
-        <div v-if="course.active?.description?.title" class="ellipsis" style="max-width: 100px;">
-            <b>{{course.active?.description.title}}</b>
-            <q-tooltip>{{course.active?.description.title}}</q-tooltip>
+        <div v-if="course.active?.id" class="ellipsis" style="max-width: 100px;">
+            <b>{{course.active?.title}}</b>
+            <q-tooltip>{{course.active?.title}}</q-tooltip>
         </div>
         <div v-else>
             <b>Choose course</b>

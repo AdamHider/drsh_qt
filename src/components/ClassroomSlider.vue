@@ -21,9 +21,9 @@
               >
               <div :class="`absolute-${captionMode} text-center text-white flex flex-center`">
                 <div>
-                  <div class="text-bold">{{classroomItem.description.title}}</div>
+                  <div class="text-bold">{{classroomItem.title}}</div>
                   <div class="subtitle">{{classroomItem.code}}</div>
-                  <div class="text-caption">{{classroomItem.description.description}}</div>
+                  <div class="text-caption">{{classroomItem.description}}</div>
                 </div>
               </div>
             </q-img>

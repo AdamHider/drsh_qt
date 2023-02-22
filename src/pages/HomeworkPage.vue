@@ -37,8 +37,8 @@
       v-if="transitionTrigger">
         <q-card-section>
             <div class="text-h6"><b>You need to complete:</b></div>
-            <div class="text-h5"><b>{{homework.active?.description?.title}}</b></div>
-            <div class="text-caption">{{homework.active?.description?.description}}</div>
+            <div class="text-h5"><b>{{homework.active?.title}}</b></div>
+            <div class="text-caption">{{homework.active?.description}}</div>
         </q-card-section>
 
     </q-card>

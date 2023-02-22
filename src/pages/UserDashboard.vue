@@ -8,7 +8,7 @@
     <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
         <q-card-section>
             <q-img
-                :src="user.active.data.profile?.character?.image"
+                :src="user.active.data.character?.image"
                 style="max-width: 250px; width: 170px;"
                 no-spinner
             />
@@ -18,16 +18,16 @@
         <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
         <q-linear-progress
             color="positive"
-            :model-value="(user.active.data.profile?.level.percentage / 100)"
+            :model-value="(user.active.data.dashboard?.level.percentage / 100)"
             size="12px"
             stripe rounded
         ></q-linear-progress>
         <div class="row q-ma-sm ">
             <div class="col text-left">
-                <b>Level {{user.active.data.profile?.level.id}}</b>
+                <b>Level {{user.active.data.dashboard?.level.id}}</b>
             </div>
             <div class="col text-right">
-                <b>{{user.active.data.profile?.total_points}}/{{user.active.data.profile?.level.points_to}}</b>
+                <b>{{user.active.data.dashboard?.total_points}}/{{user.active.data.dashboard?.level.points_to}}</b>
             </div>
         </div>
         </q-card-section>
@@ -51,7 +51,7 @@
         <q-card-section class="q-pa-none">
             <div class="q-mb-md q-mx-sm row text-center">
                 <div class="col">
-                    <div class="text-h5"><b>{{user.active.data.profile?.total_exercises}}</b></div>
+                    <div class="text-h5"><b>{{user.active.data.dashboard?.total_exercises}}</b></div>
                     <div class="text-caption text-grey">Exercises</div>
                     <q-tooltip activator="parent" location="top">
                         Total exercises that you have done
@@ -59,7 +59,7 @@
                 </div>
                 <q-separator vertical/>
                 <div class="col">
-                    <div class="text-h5"><b>{{user.active.data.profile?.total_points}}</b></div>
+                    <div class="text-h5"><b>{{user.active.data.dashboard?.total_points}}</b></div>
                     <div class="text-caption text-grey">Points</div>
                     <q-tooltip activator="parent" location="top">
                         Total points that you have scored
@@ -67,7 +67,7 @@
                 </div>
                 <q-separator vertical/>
                 <div class="col">
-                    <div class="text-h5"><b>{{user.active.data.profile?.total_classrooms}}</b></div>
+                    <div class="text-h5"><b>{{user.active.data.dashboard?.total_classrooms}}</b></div>
                     <div class="text-caption text-grey">Classrooms</div>
                     <q-tooltip activator="parent" location="top">
                         Total classrooms that you are member of
@@ -79,7 +79,7 @@
             <div class="text-h6">Achievements</div>
             <router-link to="user/achievements">Show all</router-link>
         </q-card-section>
-            <UserAchievementsSlider
+            <AchievementsSlider
                 :slidesPerView=2.4
                 :centerAligned="false"
                 :withButton="false"
@@ -103,12 +103,11 @@
 <script setup>
 import { useUserStore } from '../stores/user'
 import UserToggle from '../components/UserToggle.vue'
-import UserAchievementsSlider from '../components/UserAchievementsSlider.vue'
+import AchievementsSlider from '../components/AchievementsSlider.vue'
 import { useRouter } from 'vue-router'
 
 const { user, signOut } = useUserStore()
 const router = useRouter()
-console.log(user.active.data.profile?.character)
 const exitUser = async function () {
   await signOut()
   return router.push('/authorization')

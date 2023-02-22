@@ -33,30 +33,27 @@
             :error="formData.fields.description.errors !== ''"
             label="Description"
           ></q-input>
+          <ImageUploader :image="formData.fields.image.value" @update="formData.fields.image.value = $event"/>
           <div class="text-bold q-my-md">Privacy</div>
-          <q-input
-            outlined
-            v-model="formData.fields.phone.value"
-            :rules="formData.fields.phone.rules"
-            :error-message="formData.fields.phone.errors"
-            :error="formData.fields.phone.errors !== ''"
-            mask="+# (###) ### - ## - ##"
-            fill-mask
-            unmasked-value
-            label="Phone"
-          ></q-input>
-
+          <q-toggle
+            name="is_private"
+            v-model="formData.fields.is_private"
+            label="Is private classroom"
+          />
       </q-form>
   </q-page>
 </template>
 
 <script setup >
+import ImageUploader from '../components/ImageUploader.vue'
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
 import { reactive, ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const form = ref(null)
+const classroomBackgroundImage = ref([])
+
 const route = useRoute()
 const router = useRouter()
 const { user, checkUsername, checkdescription, saveItem } = useUserStore()
@@ -68,28 +65,30 @@ const formData = reactive({
   valid: true,
   fields: {
     username: {
-      value: user.active.data.username,
+      value: classroom.active.title,
       rules: [
         v => !!v || 'Username is required',
         v => v.length > 3 || 'Username must be at least 3 characters long'
       ],
-      errors: '',
-      suggestions: []
+      errors: ''
     },
     description: {
-      value: user.active.data.description,
+      value: classroom.active.description,
       rules: [
         v => v.length <= 300 || 'Description must be maximum 300 characters long'
       ],
       errors: ''
     },
-    phone: {
-      value: user.active.data.phone,
+    image: {
+      value: classroom.active.image,
       rules: [
-        v => v === '' || (v !== '' && (/\(?([0-9]{4})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(v))) || 'Phone must be valid'
+        v => !!v || 'Image is required'
       ],
-      errors: '',
-      suggestions: []
+      errors: ''
+    },
+    is_private: {
+      value: user.active.is_private,
+      errors: ''
     }
   }
 })

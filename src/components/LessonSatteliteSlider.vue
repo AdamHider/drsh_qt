@@ -42,7 +42,7 @@
                 </q-img>
             </q-card-section>
             <q-card-section class="text-center text-white q-pa-none">
-                <div class="text-bold">{{satelliteItem.description?.title}}</div>
+                <div class="text-bold">{{satelliteItem.title}}</div>
                 <div class="row q-ma-sm">
                     <div class="col text-left"></div>
                     <div class="col  text-right">

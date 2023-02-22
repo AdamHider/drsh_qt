@@ -15,8 +15,8 @@
         <LessonList v-if="course.active?.id" :disable="dialog.active"/>
         <q-card flat class="transparent">
           <q-card-section v-if="course.active?.id" class="text-white" >
-            <div class="text-subtitle"><b>{{course.active?.description.title}}</b></div>
-            <div class="text-caption">{{course.active?.description.description}}</div>
+            <div class="text-subtitle"><b>{{course.active?.title}}</b></div>
+            <div class="text-caption">{{course.active?.description}}</div>
           </q-card-section>
           <q-card-section v-else class="text-white" >
             <div class="text-subtitle"><b>Choose course</b></div>

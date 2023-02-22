@@ -10,10 +10,11 @@ export class ApiService {
     context = context.charAt(0).toUpperCase() + context.slice(1);
     return this.baseUrl+`${context}/${method}`;
   }
-  setHeaders = () =>  {
-    const headers = {
+  setHeaders = (context, method) =>  {
+    let headers = {
         "Content-Type": "application/json"
     };
+    if(method == 'uploadItem') headers = {}
     if(localStorage['x-sid']) headers['x-sid'] = localStorage['x-sid'];
     return headers;
   }
@@ -23,12 +24,13 @@ export class ApiService {
     let responseData = {};
     const resource = this.setResource(context, method);
     const headers = this.setHeaders(context, method);
-
+    let data = JSON.stringify(params);
+    if(method == 'uploadItem') data = params
     await fetch(resource, {
         method: 'POST', // or 'PUT'
         credentials: 'include',
         headers: headers,
-        body: JSON.stringify(params),
+        body: data,
         })
         .then((response) => {
             if(response.headers.get('x-sid')){
@@ -158,6 +160,11 @@ export class Api extends ApiService{
         },
         checkIfExists: (params) =>  {
             return this.post('classroom', 'checkIfExists', params)
+        }
+    }
+    image = {
+        upload: (params) =>  {
+          return this.post('image', 'uploadItem', params)
         }
     }
 }

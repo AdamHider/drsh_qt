@@ -80,8 +80,8 @@
               </q-img>
             </q-card-section>
             <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold max-two-lines">{{challengeItem.description.title}}</div>
-                <div class="text-caption text-grey max-two-lines">{{challengeItem.description.description}}</div>
+                <div class="text-bold max-two-lines">{{challengeItem.title}}</div>
+                <div class="text-caption text-grey max-two-lines">{{challengeItem.description}}</div>
                 <div class="text-caption text-grey max-one-lines" v-if="challengeItem.winner_left && challengeItem.winner_left > 0">Winners left: {{challengeItem.winner_left}}</div>
             </q-card-section>
         </q-card>

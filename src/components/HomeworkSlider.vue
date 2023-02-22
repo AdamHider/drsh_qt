@@ -57,8 +57,8 @@
                 </div>
             </q-card-section>
             <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold max-two-lines">{{homeworkItem.description.title}}</div>
-                <div class="text-caption text-grey max-two-lines">{{homeworkItem.course_section.description.title}}</div>
+                <div class="text-bold max-two-lines">{{homeworkItem.title}}</div>
+                <div class="text-caption text-grey max-two-lines">{{homeworkItem.course_section.title}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>

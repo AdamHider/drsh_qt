@@ -7,8 +7,8 @@
           <img :src="classroom.active?.image"/>
         </q-avatar>
         <div class="ellipsis">
-            <b>{{classroom.active?.description?.title}}</b>
-            <q-tooltip>{{classroom.active?.description?.title}}</q-tooltip>
+            <b>{{classroom.active?.title}}</b>
+            <q-tooltip>{{classroom.active?.title}}</q-tooltip>
             <q-icon name="expand_more" size="sm"></q-icon>
         </div>
     </q-chip>
