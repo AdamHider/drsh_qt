@@ -78,7 +78,7 @@ export class Api extends ApiService{
         getList: (params) => {
             return this.post('course', 'getList', params)
         },
-        getActive: (params) => {
+        getItem: (params) => {
             return this.post('course', 'getItem', params)
         }
     }
@@ -109,9 +109,7 @@ export class Api extends ApiService{
         getLeaderboard: (params) => {
             return this.post('exercise', 'getLeaderboard', params)
         }
-
     }
-
     notifications = {
         getList: (params) => {
             return this.post('notification', 'getList', params)
@@ -124,8 +122,8 @@ export class Api extends ApiService{
         saveItem: (params) => {
             return this.post('user', 'saveItem', params)
         },
-        saveProfile: (params) => {
-            return this.post('user', 'saveItemProfile', params)
+        saveItemSettings: (params) => {
+            return this.post('user', 'saveItemSettings', params)
         },
         savePassword: (params) => {
             return this.post('user', 'saveItemPassword', params)
@@ -152,6 +150,9 @@ export class Api extends ApiService{
         subscribe: (params) =>  {
             return this.post('classroom', 'subscribe', params)
         },
+        unsubscribe: (params) =>  {
+            return this.post('classroom', 'unsubscribe', params)
+        },
         getItem: (params) =>  {
             return this.post('classroom', 'getItem', params)
         },
@@ -167,6 +168,7 @@ export class Api extends ApiService{
         checkIfExists: (params) =>  {
             return this.post('classroom', 'checkIfExists', params)
         }
+
     }
     image = {
         upload: (params) =>  {

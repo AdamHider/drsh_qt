@@ -39,11 +39,16 @@ export function useChallenge () {
     }
     return false
   }
+  function resetList () {
+    challenge.chunkIndex = 0
+    challenge.list = []
+  }
 
   return {
     getItem,
     getList,
     getListUpdates,
+    resetList,
     addWinner,
     challenge
   }

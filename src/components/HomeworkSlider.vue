@@ -94,11 +94,12 @@ const props = defineProps({
 const router = useRouter()
 
 const { user } = useUserStore()
-const { homework, getList } = useHomework()
+const { homework, getList, resetList } = useHomework()
 onMounted(() => {
   getList({ page: 1, classroom_id: props.classroomId })
 })
 watch(() => props.classroomId, async (newData, oldData) => {
+  resetList()
   getList({ page: 1, classroom_id: props.classroomId })
 })
 </script>

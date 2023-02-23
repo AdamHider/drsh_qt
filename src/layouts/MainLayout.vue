@@ -3,7 +3,7 @@
     <q-layout view="hHh LpR fFf">
       <q-page-container>
           <router-view v-slot="{ Component }">
-            <keep-alive :exclude="['LessonStartup', 'LessonItem', 'HomeworkPage', 'ChallengePage']">
+            <keep-alive :exclude="['LessonStartup', 'LessonItem', 'HomeworkPage', 'ChallengePage', 'ClassroomEdit', 'HomeworkEdit', 'ChallengeEdit']">
               <component :is="Component"/>
             </keep-alive>
           </router-view>

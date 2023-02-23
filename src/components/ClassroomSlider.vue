@@ -77,8 +77,9 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const { user, saveProfile } = useUserStore()
-const { classroom, getList } = useClassroom()
+const { user, saveItemSettings } = useUserStore()
+const { classroom, getList, getItem } = useClassroom()
+
 getList()
 
 const activeItem = ref({})
@@ -100,15 +101,15 @@ const select = async (index) => {
     return false
   }
 
-  const activeIndex = classroom.list.findIndex((classroom) => (classroom.id === user.active.data.profile.classroom_id))
+  const activeIndex = classroom.list.findIndex((classroom) => (classroom.id === user.active.data.settings.classroom_id))
   if (activeIndex > -1) classroom.list[activeIndex].is_active = false
   classroom.list[index].is_active = true
 
   const data = {
-    classroom_id: activeItem.value.id,
-    course_id: 0
+    classroom_id: activeItem.value.id
   }
-  await saveProfile(data)
+  await saveItemSettings(data)
+  return router.push(`/classroom-${data.classroom_id}`)
 }
 
 const onSwiper = (swiper) => {

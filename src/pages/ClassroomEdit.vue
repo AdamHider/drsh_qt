@@ -61,7 +61,7 @@
 import ImageUploader from '../components/ImageUploader.vue'
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
-import { reactive, ref, watch, onMounted, onActivated } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const form = ref(null)
@@ -116,7 +116,7 @@ const saveChanges = async function () {
     }
     const saved = await saveItem(data)
     if (!saved.error) {
-
+      return router.go(-1)
     } else {
       formData.fields[saved.data].errors = saved.message
     }
@@ -124,16 +124,17 @@ const saveChanges = async function () {
 }
 const loadData = async () => {
   await getItem(route.params.classroom_id)
+  if (classroom.active.owner_id !== user.active.data.id) {
+    return router.go(-1)
+  }
   for (const k in formData.fields) {
     formData.fields[k].value = classroom.active[k]
   }
 }
-onMounted(async () => {
+onMounted(() => {
   loadData()
 })
-onActivated(async () => {
-  loadData()
-})
+
 watch(() => classroom.active.image, async (currentValue, oldValue) => {
   formData.fields.image.value = classroom.active.image
 })

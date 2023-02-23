@@ -35,20 +35,24 @@
 <script setup>
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
+import { useRoute } from 'vue-router'
 
 const { user } = useUserStore()
+const route = useRoute()
 
 const dialog = reactive({ active: false })
 const header = ref(null)
 const onScroll = function (event) { header.value.onScroll(event) }
 
-const { course, getActive } = useCourse()
+const { course, getItem } = useCourse()
 
-getActive()
-watch(() => user.active?.data.profile?.course_id, async (newData, oldData) => {
-  getActive()
+onMounted(async () => {
+  await getItem(route.params.course_id)
+})
+watch(() => route.params.course_id, (newData, oldData) => {
+  getItem(route.params.course_id)
 })
 </script>

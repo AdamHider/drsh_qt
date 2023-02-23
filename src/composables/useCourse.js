@@ -1,20 +1,19 @@
-import { reactive, watch } from 'vue'
+import { reactive } from 'vue'
 import { api } from '../services'
-import { useClassroom } from '../composables/useClassroom'
 
 const course = reactive({
   active: {},
   list: [],
   isLoading: false
 })
-const { classroom } = useClassroom()
 
 export function useCourse () {
-  async function getActive () {
-    const courseResponse = await api.course.getActive()
+  async function getItem (courseId) {
+    const courseResponse = await api.course.getItem({ course_id: courseId })
     if (!courseResponse.error) {
       course.active = courseResponse
     }
+    return courseResponse
   }
   async function getList () {
     course.isLoading = true
@@ -28,12 +27,7 @@ export function useCourse () {
   }
   return {
     getList,
-    getActive,
+    getItem,
     course
   }
 }
-
-watch(() => classroom.active?.id, async (newData, oldData) => {
-  useCourse().getList()
-  useCourse().getActive()
-})

@@ -35,9 +35,12 @@
           {{ classroom.active?.institution }}
         </div>
       </q-card-section>
-      <q-card-section>
-        <q-btn v-if="!classroom.active?.is_subscribed" class="full-width" label="Subscribe" color="primary" icon="person_add"></q-btn>
-        <q-btn v-else flat class="full-width" label="Subscribed" color="grey" icon="check"></q-btn>
+      <q-card-section v-if="!classroom.active?.is_owner">
+        <q-btn v-if="!classroom.active?.is_subscribed" class="full-width" label="Subscribe" color="primary" icon="person_add" @click="subscribeClassroom"></q-btn>
+        <q-btn v-else flat class="full-width" label="Subscribed" icon="check" @click="unsubscribeClassroom"></q-btn>
+      </q-card-section>
+      <q-card-section v-else>
+        <q-btn  class="full-width" label="Edit classroom" icon="edit" :to="`/classroom-${classroom.active?.id}/edit`"></q-btn>
       </q-card-section>
       <q-separator />
       <q-card-section v-if="classroom.active?.is_subscribed" class="q-pa-none">
@@ -125,7 +128,7 @@
       <q-card>
         <q-card-section class="q-px-none">
           <q-list  separator>
-            <q-item clickable v-ripple :to="`/classroom-${classroom.active?.id}/edit`">
+            <q-item clickable v-ripple v-if="classroom.active.is_owner" :to="`/classroom-${classroom.active?.id}/edit`">
               <q-item-section >Edit classroom</q-item-section>
             </q-item>
             <q-item clickable v-ripple>
@@ -157,10 +160,17 @@ const preferencesDialog = ref(false)
 const tab = ref('main')
 
 const backgroundImageHeight = 200
-const { classroom, getItem } = useClassroom()
-
-onMounted(() => {
+const { classroom, getItem, subscribe, unsubscribe } = useClassroom()
+const subscribeClassroom = async function () {
+  await subscribe({ classroom_code: classroom.active.code })
   getItem(route.params.classroom_id)
+}
+const unsubscribeClassroom = async function () {
+  await unsubscribe({ classroom_code: classroom.active.code })
+  getItem(route.params.classroom_id)
+}
+onMounted(async () => {
+  await getItem(route.params.classroom_id)
 })
 watch(() => route.params.classroom_id, (newData, oldData) => {
   getItem(route.params.classroom_id)

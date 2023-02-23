@@ -17,6 +17,11 @@ const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: 'course-:course_id',
+        component: () => import('pages/CoursePage.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: 'explore',
         component: () => import('pages/ExplorePage.vue'),
         meta: { requiresAuth: true }
@@ -166,7 +171,8 @@ const routes = [
         component: () => import('pages/HomeworkPage.vue'),
         meta: {
           pageTitle: 'Homework',
-          requiresAuth: true
+          requiresAuth: true,
+          userGroups: ['registered', 'admin']
         }
       },
       {

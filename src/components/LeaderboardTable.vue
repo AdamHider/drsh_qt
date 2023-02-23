@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { onActivated, onMounted, ref, reactive } from 'vue'
+import { onActivated, onMounted, ref, reactive, watch } from 'vue'
 import LeaderboardFilter from '../components/LeaderboardFilter.vue'
 import BannerNotFound from '../components/BannerNotFound.vue'
 import { useExercise } from '../composables/useExercise.js'
@@ -113,6 +113,9 @@ onActivated(async () => {
 })
 onMounted(async () => {
   if (isLoading.value === true) return
+  loadTable()
+})
+watch(() => props.classroomId, async (newData, oldData) => {
   loadTable()
 })
 

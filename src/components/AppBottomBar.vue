@@ -2,7 +2,7 @@
     <q-tabs>
         <q-route-tab
             icon="rocket_launch"
-            :to="routes.course"
+            :to="`${routes.course}-${(course.active.id) ? course.active.id : user.active.data.settings.course_id}`"
             exact
         />
         <q-route-tab
@@ -12,7 +12,7 @@
         />
         <q-route-tab
             icon="group"
-            :to="routes.classroom"
+            :to="`${routes.classroom}-${(classroom.active.id) ? classroom.active.id : user.active.data.settings.classroom_id}`"
             exact
         />
         <q-route-tab
@@ -30,7 +30,13 @@
 
 <script setup>
 
+import { useUserStore } from '../stores/user'
+import { useClassroom } from '../composables/useClassroom'
+import { useCourse } from '../composables/useCourse'
 import { useNavigationHistory } from '../composables/useNavigationHistory'
 
+const { classroom } = useClassroom()
+const { user } = useUserStore()
+const { course } = useCourse()
 const { routes } = useNavigationHistory()
 </script>

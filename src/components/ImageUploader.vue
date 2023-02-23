@@ -1,10 +1,10 @@
 <template>
   <div class="relative-position q-image-uploader">
     <q-field outlined
-      :class="(error !== false) ? 'q-pb-xl' : ''"
+      :class="(error !== '') ? 'q-pb-xl' : ''"
       :label="props.label"
       stack-label
-      :error="error !== false"
+      :error="error !== ''"
       :error-message="error">
       <q-img
         class="q-my-sm q-mx-auto rounded-borders"
@@ -68,7 +68,7 @@ import { onBeforeRouteLeave } from 'vue-router'
 
 const imagePriviewDialog = ref(false)
 const focused = ref(false)
-const error = ref(false)
+const error = ref('')
 const props = defineProps({
   image: String,
   label: String
@@ -84,11 +84,11 @@ const handleUpload = async (event) => {
   data.set('image_holder_id', 1)
   const imageUploaded = await uploadImage(data)
   if (!imageUploaded.error) {
-    error.value = false
+    error.value = ''
     emits('update', imageUploaded.image)
   } else {
     error.value = imageUploaded.messages.errors.image
-    // setTimeout(() => { error.value = false }, 3000)
+    setTimeout(() => { error.value = '' }, 3000)
   }
 }
 onBeforeRouteLeave((to, from) => {

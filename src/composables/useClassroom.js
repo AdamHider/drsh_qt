@@ -10,6 +10,9 @@ export function useClassroom () {
   async function subscribe (params) {
     return api.classroom.subscribe(params)
   }
+  async function unsubscribe (params) {
+    return api.classroom.unsubscribe(params)
+  }
   async function getItem (classroomId) {
     const classroomResponse = await api.classroom.getItem({ classroom_id: classroomId })
     if (!classroomResponse.error) {
@@ -55,6 +58,7 @@ export function useClassroom () {
     saveItem,
     checkIfExists,
     classroom,
-    subscribe
+    subscribe,
+    unsubscribe
   }
 }

@@ -35,11 +35,16 @@ export function useHomework () {
     }
     return homeworkListResponse
   }
+  function resetList () {
+    homework.chunkIndex = 0
+    homework.list = []
+  }
 
   return {
     getItem,
     getList,
     getListUpdates,
+    resetList,
     homework
   }
 }
