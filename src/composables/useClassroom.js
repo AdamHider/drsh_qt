@@ -12,7 +12,10 @@ export function useClassroom () {
   }
   async function getItem (classroomId) {
     const classroomResponse = await api.classroom.getItem({ classroom_id: classroomId })
-    classroom.active = classroomResponse
+    if (!classroomResponse.error) {
+      classroom.active = classroomResponse
+    }
+    return classroomResponse
   }
   async function getList () {
     try {
@@ -29,10 +32,27 @@ export function useClassroom () {
       throw new Error('classroom are null: ' + e)
     }
   }
+  async function saveItem (data) {
+    const classroomSaveResponse = await api.classroom.saveItem(data)
+    if (!classroomSaveResponse.error) {
+      const classroomResponse = await api.classroom.getItem({ classroom_id: data.id })
+      classroom.active = classroomResponse
+    }
+    return classroomSaveResponse
+  }
+  async function createItem () {
+    const classroomCreateResponse = await api.classroom.createItem()
+    if (!classroomCreateResponse.error) {
+      return classroomCreateResponse
+    }
+    return 0
+  }
 
   return {
     getItem,
     getList,
+    createItem,
+    saveItem,
     checkIfExists,
     classroom,
     subscribe

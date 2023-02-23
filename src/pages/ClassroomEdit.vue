@@ -15,10 +15,10 @@
           <div class="text-bold q-my-md">Description</div>
           <q-input
             outlined
-            v-model="formData.fields.username.value"
-            :rules="formData.fields.username.rules"
-            :error-message="formData.fields.username.errors"
-            :error="formData.fields.username.errors !== ''"
+            v-model="formData.fields.title.value"
+            :rules="formData.fields.title.rules"
+            :error-message="formData.fields.title.errors"
+            :error="formData.fields.title.errors !== ''"
             label="Name"
             required
           >
@@ -33,11 +33,24 @@
             :error="formData.fields.description.errors !== ''"
             label="Description"
           ></q-input>
-          <ImageUploader :image="formData.fields.image.value" @update="formData.fields.image.value = $event"/>
+          <div class="q-gutter-md row">
+            <ImageUploader
+              class="col"
+              :image="classroom.active.image"
+              @update="classroom.active.image = $event"
+              label="Image"
+            />
+            <ImageUploader
+              class="col"
+              :image="classroom.active.background_image"
+              @update="classroom.active.background_image = $event"
+              label="Background image"
+            />
+          </div>
           <div class="text-bold q-my-md">Privacy</div>
           <q-toggle
             name="is_private"
-            v-model="formData.fields.is_private"
+            v-model="formData.fields.is_private.value"
             label="Is private classroom"
           />
       </q-form>
@@ -48,43 +61,40 @@
 import ImageUploader from '../components/ImageUploader.vue'
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
-import { reactive, ref, watch, onMounted } from 'vue'
+import { reactive, ref, watch, onMounted, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const form = ref(null)
-const classroomBackgroundImage = ref([])
 
 const route = useRoute()
 const router = useRouter()
-const { user, checkUsername, checkdescription, saveItem } = useUserStore()
-const { classroom, getItem } = useClassroom()
+const { user } = useUserStore()
+const { classroom, saveItem, getItem } = useClassroom()
 
 const formData = reactive({
-  step: route.params.step,
-  passwordIsPin: true,
   valid: true,
   fields: {
-    username: {
+    title: {
       value: classroom.active.title,
       rules: [
-        v => !!v || 'Username is required',
-        v => v.length > 3 || 'Username must be at least 3 characters long'
+        v => !!v || 'Title is required',
+        v => v.length > 3 || 'title must be at least 3 characters long'
       ],
       errors: ''
     },
     description: {
       value: classroom.active.description,
       rules: [
-        v => v.length <= 300 || 'Description must be maximum 300 characters long'
+        v => !v || v === '' || (v !== '' && v.length >= 10) || 'Description must be minimum 10 characters long',
+        v => !v || v === '' || (v !== '' && v.length <= 300) || 'Description must be maximum 300 characters long'
       ],
       errors: ''
     },
     image: {
-      value: classroom.active.image,
-      rules: [
-        v => !!v || 'Image is required'
-      ],
-      errors: ''
+      value: classroom.active.image
+    },
+    background_image: {
+      value: classroom.active.background_image
     },
     is_private: {
       value: user.active.is_private,
@@ -97,40 +107,38 @@ const saveChanges = async function () {
   formData.valid = await form.value.validate()
   if (formData.valid) {
     const data = {
-      user_id: user.active.data.id,
-      username: formData.fields.username.value,
+      id: classroom.active.id,
+      title: formData.fields.title.value,
       description: formData.fields.description.value,
-      phone: formData.fields.phone.value
+      image: formData.fields.image.value.split(/[/]+/).pop(),
+      background_image: formData.fields.background_image.value.split(/[/]+/).pop(),
+      is_private: formData.fields.is_private.value
     }
     const saved = await saveItem(data)
     if (!saved.error) {
-      return router.go(-1)
+
     } else {
       formData.fields[saved.data].errors = saved.message
     }
   }
 }
-
-watch(() => formData.fields.username.value, async (currentValue, oldValue) => {
-  formData.fields.username.errors = ''
-  const result = await checkUsername({ username: currentValue })
-  if (result) {
-    formData.fields.username.suggestions = result
-    formData.fields.username.errors = 'Username is in use'
+const loadData = async () => {
+  await getItem(route.params.classroom_id)
+  for (const k in formData.fields) {
+    formData.fields[k].value = classroom.active[k]
   }
+}
+onMounted(async () => {
+  loadData()
 })
-watch(() => formData.fields.description.value, async (currentValue, oldValue) => {
-  formData.fields.description.errors = ''
-  if (!currentValue || /.+@.+\..+/.test(currentValue) === false) return
-  const result = await checkdescription({ description: currentValue })
-  console.log(result.messages)
-  if (result.error) {
-    formData.fields.description.errors = result.messages.error
-    formData.valid = false
-  }
+onActivated(async () => {
+  loadData()
 })
-onMounted(() => {
-  getItem(route.params.classroom_id)
+watch(() => classroom.active.image, async (currentValue, oldValue) => {
+  formData.fields.image.value = classroom.active.image
+})
+watch(() => classroom.active.background_image, async (currentValue, oldValue) => {
+  formData.fields.background_image.value = classroom.active.background_image
 })
 watch(() => route.params.classroom_id, (newData, oldData) => {
   getItem(route.params.classroom_id)

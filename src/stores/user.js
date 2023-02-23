@@ -41,7 +41,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     if (!auth) { return }
     const result = await api.user.signIn(auth)
     if (!result.error) {
-      const userResponse = await api.user.get()
+      const userResponse = await api.user.getItem()
       update({ authorization: auth, data: userResponse })
     }
     showMessage('You have signed successfully!')
@@ -49,7 +49,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   }
 
   async function autoSignIn () {
-    const userResponse = await api.user.get()
+    const userResponse = await api.user.getItem()
     if (user.active.data.id && user.active.data.id != userResponse.id) {
       const result = await signIn(user.active.authorization)
       if (result.error) {
@@ -77,9 +77,9 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     return authResponse
   }
   async function saveItem (data) {
-    const userSavedResponse = await api.user.save(data)
+    const userSavedResponse = await api.user.saveItem(data)
     if (!userSavedResponse.error) {
-      const userResponse = await api.user.get()
+      const userResponse = await api.user.getItem()
       const userAuth = user.active.authorization
       userAuth.username = userResponse.username
       update({ authorization: userAuth, data: userResponse })
@@ -90,7 +90,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   async function saveProfile (data) {
     const saveProfileResponse = await api.user.saveProfile(data)
     if (!saveProfileResponse.error) {
-      const userResponse = await api.user.get()
+      const userResponse = await api.user.getItem()
       update({ data: userResponse })
     }
     showMessage('User profile saved!')
@@ -100,7 +100,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   async function savePassword (data) {
     const saveResponse = await api.user.savePassword(data)
     if (!saveResponse.error) {
-      const userResponse = await api.user.get()
+      const userResponse = await api.user.getItem()
       const userAuth = user.active.authorization
       userAuth.password = data.password
       update({ authorization: userAuth, data: userResponse })

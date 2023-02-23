@@ -31,6 +31,12 @@
               v-on:keyup.enter="validate()"
               label="Join"
             />
+            <q-btn
+              flat
+              color="grey"
+              @click="createClassroom()"
+              label="Create classroom"
+            />
           </q-card-actions>
         </q-card>
       </q-form>
@@ -47,7 +53,7 @@ import { useUserStore } from '../stores/user'
 const form = ref(null)
 const loading = ref(false)
 const router = useRouter()
-const { checkIfExists, subscribe } = useClassroom()
+const { checkIfExists, createItem, subscribe } = useClassroom()
 const { user, signIn, signOut, saveProfile } = useUserStore()
 
 const formData = reactive({
@@ -77,6 +83,12 @@ const validate = async function () {
       return router.push('/classroom')
     }
     formData.fields.classroom_code.errors = 'Error'
+  }
+}
+const createClassroom = async function () {
+  const classroomId = await createItem()
+  if (classroomId !== 0) {
+    return router.push(`/classroom-${classroomId}/edit`)
   }
 }
 

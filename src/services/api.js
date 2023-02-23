@@ -118,10 +118,10 @@ export class Api extends ApiService{
         }
     }
     user = {
-        get: (params) =>  {
+        getItem: (params) =>  {
             return this.post('user', 'getItem', params)
         },
-        save: (params) => {
+        saveItem: (params) => {
             return this.post('user', 'saveItem', params)
         },
         saveProfile: (params) => {
@@ -157,6 +157,12 @@ export class Api extends ApiService{
         },
         getList: (params) =>  {
             return this.post('classroom', 'getList', params)
+        },
+        createItem: () =>  {
+            return this.post('classroom', 'createItem', {})
+        },
+        saveItem: (params) =>  {
+            return this.post('classroom', 'saveItem', params)
         },
         checkIfExists: (params) =>  {
             return this.post('classroom', 'checkIfExists', params)
