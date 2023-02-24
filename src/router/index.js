@@ -41,18 +41,30 @@ export default route(function (/* { store, ssrContext } */) {
     /*
     const IsItABackButton = window.popStateDetected
     window.popStateDetected = false
-    const isRoot = from.fullPath.split('/').length == 2;
 
-    if(isRoot && to.fullPath == routerHistory.stack[1] && !IsItABackButton){
-      routerHistory.stack.shift();
-      Router.go(-1);
+    const fromSplitted = from.fullPath.split('/')
+    const toSplitted = to.fullPath.split('/')
+
+    console.log(fromSplitted)
+    console.log(toSplitted)
+    const fromRoot = fromSplitted.length == 2
+    const toRoot = toSplitted.length == 2
+    if (!fromRoot && IsItABackButton && toSplitted[1] !== fromSplitted[1]) {
+      fromSplitted.pop()
+      const parentRoute = fromSplitted.join('/')
+      next({ path: parentRoute })
     }
 
-      if(!isRoot && IsItABackButton){
-        routerHistory.stack[0] = to.fullPath;
-        next({ path: '/'+from.fullPath.split('/')[1] });
-      }
-      */
+    if (fromRoot && toRoot) {
+      //next({ path: to.fullPath, replace: true })
+      next(false)
+    } */
+    /*
+    if (!fromRoot && IsItABackButton) {
+      routerHistory.stack[0] = to.fullPath
+      next({ path: '/' + from.fullPath.split('/')[1] })
+    } */
+
     if (to.matched.some(record => record.meta.requiresAuth)) {
       // this route requires auth, check if logged in
       // if not, redirect to login page.
@@ -70,6 +82,12 @@ export default route(function (/* { store, ssrContext } */) {
       if(routerHistory.stack.length > 10){
         routerHistory.stack.pop();
       } */
+  })
+  Router.afterEach((to, from) => {
+    const toDepth = to.path.split('/').length
+    const fromDepth = from.path.split('/').length
+    to.meta.transition = toDepth < fromDepth ? 'slideInRight' : 'slideInLeft'
+    console.log(to.meta)
   })
 
   return Router

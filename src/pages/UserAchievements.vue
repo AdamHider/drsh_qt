@@ -11,3 +11,22 @@
 <script setup >
 import AchievementList from '../components/AchievementList.vue'
 </script>
+<style>
+.scale-slide-enter-active,
+.scale-slide-leave-active {
+  transition: 0.1s ;
+  background-color: white;
+}
+.scale-slide-enter-from {
+  opacity: 0;
+}
+.scale-slide-enter-to {
+  opacity: 1;
+}
+.scale-slide-leave-from {
+  opacity: 1;
+}
+.scale-slide-leave-to {
+  opacity: 0;
+}
+</style>

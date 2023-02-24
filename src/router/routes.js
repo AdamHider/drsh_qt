@@ -14,25 +14,22 @@ const routes = [
       {
         path: 'course',
         component: () => import('pages/CoursePage.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'course-:course_id',
         component: () => import('pages/CoursePage.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'explore',
         component: () => import('pages/ExplorePage.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'user',
         component: () => import('pages/UserDashboard.vue'),
-        meta: {
-          pageTitle: 'Profile',
-          requiresAuth: true
-        }
+        meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'user/edit',
@@ -49,12 +46,12 @@ const routes = [
       {
         path: 'classroom',
         component: () => import('pages/ClassroomPage.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'classroom-:classroom_id',
         component: () => import('pages/ClassroomPage.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'classroom-:classroom_id/edit',
@@ -89,26 +86,22 @@ const routes = [
       {
         path: 'authorization/sign-up/step:step',
         component: () => import('pages/UserSignUp.vue'),
-        meta: { noBottomBar: true },
         beforeEnter: checkIfSigned
       },
       {
         path: '/authorization/user-activate-:activation_code',
         component: () => import('pages/UserActivate.vue'),
-        meta: { noBottomBar: true },
         beforeEnter: checkIfSigned
       },
       {
         path: 'lesson-startup-:lesson_id',
         name: 'lesson-startup',
-        component: () => import('pages/LessonStartup.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('pages/LessonStartup.vue')
       },
       {
         path: 'lesson-:lesson_id',
         name: 'lesson',
-        component: () => import('src/pages/LessonItem.vue'),
-        meta: { noBottomBar: true }
+        component: () => import('src/pages/LessonItem.vue')
       },
       {
         path: 'notifications',
@@ -178,10 +171,7 @@ const routes = [
       {
         path: 'leaderboard',
         component: () => import('pages/LeaderboardPage.vue'),
-        meta: {
-          pageTitle: 'Leaderboard',
-          requiresAuth: true
-        }
+        meta: { requiresAuth: true, bottomBarEnabled: true }
       }
     ]
   },

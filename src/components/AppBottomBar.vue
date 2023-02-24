@@ -34,9 +34,17 @@ import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
 import { useCourse } from '../composables/useCourse'
 import { useNavigationHistory } from '../composables/useNavigationHistory'
+import { useRoute } from 'vue-router'
+import { watch } from 'vue'
 
 const { classroom } = useClassroom()
 const { user } = useUserStore()
 const { course } = useCourse()
-const { routes } = useNavigationHistory()
+const { routes, watchRoute } = useNavigationHistory()
+const route = useRoute()
+/*
+watch(route, (newData, oldData) => {
+  console.log(route)
+  watchRoute(route)
+}) */
 </script>
