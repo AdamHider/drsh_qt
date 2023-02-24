@@ -29,34 +29,67 @@ const routes = [
       {
         path: 'user',
         component: () => import('pages/UserDashboard.vue'),
-        meta: { requiresAuth: true, bottomBarEnabled: true }
+        meta: {
+          requiresAuth: true,
+          bottomBarEnabled: true
+        }
       },
       {
         path: 'user/edit',
-        component: () => import('pages/UserEdit.vue')
+        component: () => import('pages/UserEdit.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
       },
       {
         path: 'user/edit/password',
-        component: () => import('pages/UserEditPassword.vue')
+        component: () => import('pages/UserEditPassword.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
       },
       {
         path: 'user/settings',
-        component: () => import('pages/UserSettings.vue')
+        component: () => import('pages/UserSettings.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
       },
+      {
+        path: 'user/achievements',
+        component: () => import('pages/UserAchievements.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+
       {
         path: 'classroom',
         component: () => import('pages/ClassroomPage.vue'),
-        meta: { requiresAuth: true, bottomBarEnabled: true }
+        meta: {
+          requiresAuth: true,
+          bottomBarEnabled: true
+        }
       },
       {
         path: 'classroom-:classroom_id',
         component: () => import('pages/ClassroomPage.vue'),
-        meta: { requiresAuth: true, bottomBarEnabled: true }
+        meta: {
+          requiresAuth: true,
+          bottomBarEnabled: true
+        }
       },
       {
         path: 'classroom-:classroom_id/edit',
         component: () => import('pages/ClassroomEdit.vue'),
-        meta: { requiresAuth: true }
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
       },
       {
         path: 'classroom/join',
@@ -67,6 +100,7 @@ const routes = [
         component: () => import('pages/ClassroomJoin.vue'),
         meta: { requiresAuth: true }
       },
+
       {
         path: 'authorization',
         component: () => import('pages/UserStartup.vue'),
@@ -111,20 +145,14 @@ const routes = [
           requiresAuth: true
         }
       },
-      {
-        path: 'user/achievements',
-        component: () => import('pages/UserAchievements.vue'),
-        meta: {
-          pageTitle: 'Achievements',
-          requiresAuth: true
-        }
-      },
+
       {
         path: 'classroom/challenges',
         component: () => import('pages/ChallengesPage.vue'),
         meta: {
           pageTitle: 'Challenges',
-          requiresAuth: true
+          requiresAuth: true,
+          transition: 'slide-in'
         }
       },
       {
@@ -132,7 +160,8 @@ const routes = [
         component: () => import('pages/ChallengesPage.vue'),
         meta: {
           pageTitle: 'Challenges',
-          requiresAuth: true
+          requiresAuth: true,
+          transition: 'slide-in'
         }
       },
       {
@@ -148,7 +177,8 @@ const routes = [
         component: () => import('pages/HomeworksPage.vue'),
         meta: {
           pageTitle: 'Homeworks',
-          requiresAuth: true
+          requiresAuth: true,
+          transition: 'slide-in'
         }
       },
       {
@@ -156,7 +186,8 @@ const routes = [
         component: () => import('pages/HomeworksPage.vue'),
         meta: {
           pageTitle: 'Homeworks',
-          requiresAuth: true
+          requiresAuth: true,
+          transition: 'slide-in'
         }
       },
       {
@@ -171,7 +202,10 @@ const routes = [
       {
         path: 'leaderboard',
         component: () => import('pages/LeaderboardPage.vue'),
-        meta: { requiresAuth: true, bottomBarEnabled: true }
+        meta: {
+          requiresAuth: true,
+          bottomBarEnabled: true
+        }
       }
     ]
   },

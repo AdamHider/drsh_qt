@@ -3,27 +3,27 @@
         <q-route-tab
             icon="rocket_launch"
             :to="`${routes.course}-${(course.active.id) ? course.active.id : user.active.data.settings.course_id}`"
-            exact
+            exact replace
         />
         <q-route-tab
             icon="search"
             :to="routes.explore"
-            exact
+            exact replace
         />
         <q-route-tab
             icon="group"
             :to="`${routes.classroom}-${(classroom.active.id) ? classroom.active.id : user.active.data.settings.classroom_id}`"
-            exact
+            exact replace
         />
         <q-route-tab
             icon="bar_chart"
             :to="routes.leaderboard"
-            exact
+            exact replace
         />
         <q-route-tab
             icon="person"
             :to="routes.user"
-            exact
+            exact replace
         />
     </q-tabs>
 </template>
