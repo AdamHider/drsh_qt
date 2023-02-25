@@ -1,5 +1,5 @@
 <template>
-    <q-infinite-scroll @load="onLoad">
+    <q-infinite-scroll ref="infiniteScroll" @load="onLoad">
         <template v-slot:loading>
             <div class="row justify-center q-my-md">
             <q-spinner color="primary" name="dots" size="40px" />
@@ -41,13 +41,22 @@
 <script setup>
 import { useAchievement } from '../composables/useAchievement'
 
+import { ref, onActivated, onDeactivated } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 const { achievement, getList } = useAchievement()
+
+const infiniteScroll = ref()
 
 const onLoad = async function (index, done) {
   const isDone = await getList(index)
   done(isDone)
 }
-
+onActivated(() => {
+  infiniteScroll.value.resume()
+})
+onDeactivated(() => {
+  infiniteScroll.value.stop()
+})
 // onActivated(() => {
 // console.log('empty');
 // getList();

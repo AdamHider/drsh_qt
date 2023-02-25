@@ -8,9 +8,11 @@
             </keep-alive>
         </transition>
       </router-view>
-      <q-footer v-if="bottomBarEnabled" bordered class="bg-white text-primary ">
-        <AppBottomBar/>
-      </q-footer>
+      <transition appear enter-active-class="animated slideInUp" leave-active-class="animated slideOutDown">
+        <q-footer v-if="bottomBarEnabled" bordered class="bg-white text-primary ">
+          <AppBottomBar/>
+        </q-footer>
+      </transition>
     </q-layout>
 </template>
 

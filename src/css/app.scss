@@ -60,7 +60,7 @@ a{
     color: $white-transparent1;
 }
 .animation-delay-symbolic{
-    
+
     animation-delay: 100ms
 }
 .animation-delay-1{
@@ -87,6 +87,10 @@ a{
    text-overflow: ellipsis;
    display: -webkit-box;
    -webkit-line-clamp: 2;
-           line-clamp: 2; 
+           line-clamp: 2;
    -webkit-box-orient: vertical;
+}
+
+.swiper {
+  max-width: 100vw;
 }

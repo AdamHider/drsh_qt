@@ -1,5 +1,5 @@
 <template>
-    <q-page-container>
+    <q-page-wrapper>
         <q-app-header class="transparent text-white rounded-b-md" reveal>
         <UserToggle/>
         <q-toolbar-title></q-toolbar-title>
@@ -28,7 +28,12 @@
                 </q-card-section>
             </q-card>
         </q-page>
-    </q-page-container>
+        <template v-slot:bottom-bar>
+          <q-footer  bordered class="bg-white text-primary">
+            <q-bottom-bar/>
+          </q-footer>
+        </template>
+    </q-page-wrapper>
 </template>
 
 <script setup >

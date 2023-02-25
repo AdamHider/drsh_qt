@@ -1,5 +1,5 @@
 <template>
-  <q-page-container>
+  <q-page-wrapper>
     <q-app-header class="transparent text-white rounded-b-md" reveal>
       <ClassroomToggle v-bind:dialogOpened="classroomListDialog" v-on:update:dialogOpened="classroomListDialog = $event"/>
       <q-toolbar-title></q-toolbar-title>
@@ -166,7 +166,8 @@
           </q-card-section>
         </q-card>
       </q-dialog>
-  </q-page-container>
+
+  </q-page-wrapper>
 </template>
 
 <script setup>

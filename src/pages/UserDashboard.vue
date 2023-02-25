@@ -1,11 +1,11 @@
 <template>
-    <q-page-container>
+    <q-page-wrapper>
         <q-app-header class="transparent text-white rounded-b-md" reveal>
             <UserToggle/>
             <q-toolbar-title></q-toolbar-title>
             <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
         </q-app-header>
-        <q-page class="flex justify-center content-end  text-center full-width" style="padding-top: 50px">
+        <q-page style="padding-top: 50px;">
             <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
                 <q-card-section>
                     <q-img
@@ -99,7 +99,7 @@
                 </q-card-section>
             </q-card>
         </q-page>
-    </q-page-container>
+    </q-page-wrapper>
 </template>
 
 <script setup>

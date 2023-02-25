@@ -2,7 +2,7 @@
 .page-slide-in-leave-active {
   transition: 0.3s ;
   width: 100%;
-  position: absolute;
+  position: fixed;
   z-index: 1000;
 }
 .page-slide-in-enter-from {
@@ -23,7 +23,7 @@
 .page-slide-out-enter-active,
 .page-slide-out-leave-active {
   transition: 0.3s ;
-  position: absolute;
+  position: fixed;
   width: 100%;
 }
 .page-slide-out-enter-active{

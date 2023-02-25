@@ -4,7 +4,7 @@ import { api } from '../services/index.js'
 const classroom = reactive({
   active: {},
   list: [],
-  limit: 5,
+  limit: 2,
   offset: 0,
   chunkIndex: 0,
   subscriber: {
