@@ -54,13 +54,12 @@
     </q-btn>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import { useClassroom } from '../composables/useClassroom'
 import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { CONFIG } from '../config.js'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -78,9 +77,15 @@ const props = defineProps({
 
 const router = useRouter()
 const { user, saveItemSettings } = useUserStore()
-const { classroom, getList, getItem } = useClassroom()
+const { classroom, getList, resetList } = useClassroom()
 
-getList()
+onMounted(() => {
+  getList({ page: 1, mode: 'by_user' })
+})
+onActivated(() => {
+  resetList()
+  getList({ page: 1, mode: 'by_user' })
+})
 
 const activeItem = ref({})
 const classroomSlider = ref(null)

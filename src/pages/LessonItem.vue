@@ -1,4 +1,5 @@
 <template>
+  <q-page-container>
     <q-app-header class="bg-white rounded-b-md" reveal>
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <q-linear-progress
@@ -36,6 +37,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+  </q-page-container>
 </template>
 
 <script setup>

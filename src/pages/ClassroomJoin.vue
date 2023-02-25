@@ -1,46 +1,48 @@
 <template>
-  <q-page class="flex justify-center items-end full-height full-width text-center">
-      <q-form
-        ref="form"
-        v-model="formData.valid"
-        @submit.prevent="validate()"
-        autocomplete="off"
-        class="full-width"
-      >
-        <q-card class="rounded-b-0">
-          <q-card-section>
-            <div class="text-h6">Join a new classroom</div>
-            <div class="text-gray">Just fill a code of a classroom and ride on!</div>
-          </q-card-section>
-          <q-card-section>
-            <q-input
-              v-model="formData.fields.classroom_code.value"
-              :rules="formData.fields.classroom_code.rules"
-              :error="!formData.valid"
-              :error-message="formData.fields.classroom_code.errors"
-              label="Classroom code"
-              required
-            ></q-input>
-          </q-card-section>
-          <q-card-actions vertical>
-            <q-btn
-              :disabled="!formData.valid"
-              :loading="loading"
-              color="primary"
-              @click="validate()"
-              v-on:keyup.enter="validate()"
-              label="Join"
-            />
-            <q-btn
-              flat
-              color="grey"
-              @click="createClassroom()"
-              label="Create classroom"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-form>
-    </q-page>
+  <q-page-container>
+    <q-page class="flex justify-center items-end full-height full-width text-center">
+        <q-form
+          ref="form"
+          v-model="formData.valid"
+          @submit.prevent="validate()"
+          autocomplete="off"
+          class="full-width"
+        >
+          <q-card class="rounded-b-0">
+            <q-card-section>
+              <div class="text-h6">Join a new classroom</div>
+              <div class="text-gray">Just fill a code of a classroom and ride on!</div>
+            </q-card-section>
+            <q-card-section>
+              <q-input
+                v-model="formData.fields.classroom_code.value"
+                :rules="formData.fields.classroom_code.rules"
+                :error="!formData.valid"
+                :error-message="formData.fields.classroom_code.errors"
+                label="Classroom code"
+                required
+              ></q-input>
+            </q-card-section>
+            <q-card-actions vertical>
+              <q-btn
+                :disabled="!formData.valid"
+                :loading="loading"
+                color="primary"
+                @click="validate()"
+                v-on:keyup.enter="validate()"
+                label="Join"
+              />
+              <q-btn
+                flat
+                color="grey"
+                @click="createClassroom()"
+                label="Create classroom"
+              />
+            </q-card-actions>
+          </q-card>
+        </q-form>
+      </q-page>
+    </q-page-container>
 </template>
 
 <script setup >

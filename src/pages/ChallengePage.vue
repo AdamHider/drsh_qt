@@ -1,4 +1,5 @@
 <template>
+  <q-page-container>
   <q-app-header class=" rounded-b-md" reveal>
       <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
     <q-toolbar-title>Task</q-toolbar-title>
@@ -167,6 +168,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+  </q-page-container>
 </template>
 
 <script setup>

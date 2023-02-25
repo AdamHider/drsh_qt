@@ -1,6 +1,8 @@
 <template>
-  <page-container no-bottom-bar="true">
-  </page-container>
+  <q-page-container>
+    <page-container no-bottom-bar="true">
+    </page-container>
+  </q-page-container>
 </template>
 
 <script setup >

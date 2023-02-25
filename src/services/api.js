@@ -167,7 +167,11 @@ export class Api extends ApiService{
         },
         checkIfExists: (params) =>  {
             return this.post('classroom', 'checkIfExists', params)
+        },
+        getSubscriberList: (params) =>  {
+            return this.post('classroom', 'getSubscribers', params)
         }
+        
 
     }
     image = {

@@ -1,17 +1,13 @@
 <template>
   <AppBackground/>
     <q-layout view="hHh LpR fFf">
-      <q-page-container>
-          <router-view v-slot="{ Component, route }">
-            <transition :name="`page-${route.meta.transition}`">
-              <div :key="route.path">
-                <keep-alive :exclude="['LessonStartup', 'LessonItem', 'HomeworkPage', 'ChallengePage', 'ClassroomEdit', 'HomeworkEdit', 'ChallengeEdit']">
-                    <component :is="Component"/>
-                </keep-alive>
-              </div>
-            </transition>
-          </router-view>
-      </q-page-container>
+      <router-view v-slot="{ Component, route }">
+        <transition :name="`page-${route.meta.transition}`">
+            <keep-alive :exclude="['LessonStartup', 'LessonItem', 'HomeworkPage', 'ChallengePage', 'ClassroomEdit', 'HomeworkEdit', 'ChallengeEdit']">
+                <component :is="Component"/>
+            </keep-alive>
+        </transition>
+      </router-view>
       <q-footer v-if="bottomBarEnabled" bordered class="bg-white text-primary ">
         <AppBottomBar/>
       </q-footer>
@@ -19,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, provide, watch, onActivated } from 'vue'
+import { ref, provide, watch } from 'vue'
 import AppBackground from 'components/AppBackground.vue'
 import AppBottomBar from 'components/AppBottomBar.vue'
 

@@ -68,6 +68,14 @@ const routes = [
       },
 
       {
+        path: '/classrooms',
+        component: () => import('pages/ClassroomsPage.vue'),
+        meta: {
+          requiresAuth: true,
+          bottomBarEnabled: true
+        }
+      },
+      {
         path: 'classroom',
         component: () => import('pages/ClassroomPage.vue'),
         meta: {
@@ -99,6 +107,59 @@ const routes = [
         path: 'classroom/join/code=:code',
         component: () => import('pages/ClassroomJoin.vue'),
         meta: { requiresAuth: true }
+      },
+      {
+        path: 'classroom-:classroom_id/subscribers',
+        component: () => import('pages/ClassroomSubscribers.vue'),
+        meta: {
+          requiresAuth: true,
+          bottomBarEnabled: true,
+          transition: 'slide-in'
+        }
+      },
+      {
+        path: 'classroom-:classroom_id/homeworks',
+        component: () => import('pages/HomeworksPage.vue'),
+        meta: {
+          pageTitle: 'Homeworks',
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+      {
+        path: 'classroom-:classroom_id/homework-:homework_id',
+        component: () => import('pages/HomeworkPage.vue'),
+        meta: {
+          pageTitle: 'Homework',
+          requiresAuth: true,
+          userGroups: ['registered', 'admin']
+        }
+      },
+      {
+        path: 'classroom/challenges',
+        component: () => import('pages/ChallengesPage.vue'),
+        meta: {
+          pageTitle: 'Challenges',
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+      {
+        path: 'classroom-:classroom_id/challenges',
+        component: () => import('pages/ChallengesPage.vue'),
+        meta: {
+          pageTitle: 'Challenges',
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+      {
+        path: 'classroom-:classroom_id/challenge-:challenge_id',
+        component: () => import('pages/ChallengePage.vue'),
+        meta: {
+          pageTitle: 'Challenge',
+          requiresAuth: true
+        }
       },
 
       {
@@ -147,56 +208,12 @@ const routes = [
       },
 
       {
-        path: 'classroom/challenges',
-        component: () => import('pages/ChallengesPage.vue'),
-        meta: {
-          pageTitle: 'Challenges',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'classroom-:classroom_id/challenges',
-        component: () => import('pages/ChallengesPage.vue'),
-        meta: {
-          pageTitle: 'Challenges',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'challenge-:challenge_id',
-        component: () => import('pages/ChallengePage.vue'),
-        meta: {
-          pageTitle: 'Challenge',
-          requiresAuth: true
-        }
-      },
-      {
         path: 'classroom/homeworks',
         component: () => import('pages/HomeworksPage.vue'),
         meta: {
           pageTitle: 'Homeworks',
           requiresAuth: true,
           transition: 'slide-in'
-        }
-      },
-      {
-        path: 'classroom-:classroom_id/homeworks',
-        component: () => import('pages/HomeworksPage.vue'),
-        meta: {
-          pageTitle: 'Homeworks',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'homework-:homework_id',
-        component: () => import('pages/HomeworkPage.vue'),
-        meta: {
-          pageTitle: 'Homework',
-          requiresAuth: true,
-          userGroups: ['registered', 'admin']
         }
       },
       {

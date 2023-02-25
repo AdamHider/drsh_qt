@@ -7,9 +7,11 @@
 }
 .page-slide-in-enter-from {
   transform: translateX(100%);
+  box-shadow: 0px 0px 10px 0px #0000004a;
 }
 .page-slide-in-enter-to {
   transform: translateX(0%);
+  box-shadow: 0px 0px 10px 0px #0000004a;
 }
 .page-slide-in-leave-from {
   transform: translateX(0%);
@@ -38,7 +40,9 @@
 }
 .page-slide-out-leave-from {
   transform: translateX(0%);
+  box-shadow: 0px 0px 10px 0px #0000004a;
 }
 .page-slide-out-leave-to {
   transform: translateX(100%);
+  box-shadow: 0px 0px 10px 0px #0000004a;
 }

@@ -3,7 +3,16 @@ import { api } from '../services/index.js'
 
 const classroom = reactive({
   active: {},
-  list: []
+  list: [],
+  limit: 5,
+  offset: 0,
+  chunkIndex: 0,
+  subscriber: {
+    list: [],
+    limit: 10,
+    offset: 0,
+    chunkIndex: 0
+  }
 })
 
 export function useClassroom () {
@@ -20,12 +29,21 @@ export function useClassroom () {
     }
     return classroomResponse
   }
-  async function getList () {
-    try {
-      const classroomListResponse = await api.classroom.getList({ mode: 'by_user' })
+  async function getList (filter) {
+    if (filter.page <= classroom.chunkIndex) return false
+    classroom.chunkIndex = filter.page
+    classroom.offset = classroom.limit * (classroom.chunkIndex - 1)
+    const classroomListResponse = await api.classroom.getList({ ...filter, ...{ limit: classroom.limit, offset: classroom.offset } })
+    if (!classroomListResponse.error) {
+      classroom.list = classroom.list.concat(classroomListResponse)
+      return classroomListResponse.length === 0
+    }
+    return true
+  }
+  async function getListUpdates (filter) {
+    const classroomListResponse = await api.classroom.getList({ ...filter, ...{ limit: classroom.list.length, offset: 0 } })
+    if (!classroomListResponse.error) {
       classroom.list = classroomListResponse
-    } catch (e) {
-      throw new Error('classroom are null: ' + e)
     }
   }
   async function checkIfExists (code) {
@@ -51,14 +69,40 @@ export function useClassroom () {
     return 0
   }
 
+  async function getSubscriberList (filter) {
+    if (filter.page <= classroom.subscriber.chunkIndex) return false
+    classroom.subscriber.chunkIndex = filter.page
+    classroom.subscriber.offset = classroom.subscriber.limit * (classroom.subscriber.chunkIndex - 1)
+    const subscriberListResponse = await api.classroom.getSubscriberList({ ...filter, ...{ limit: classroom.subscriber.limit, offset: classroom.subscriber.offset } })
+    if (!subscriberListResponse.error) {
+      classroom.subscriber.list = classroom.subscriber.list.concat(subscriberListResponse)
+      return subscriberListResponse.length === 0
+    }
+    return true
+  }
+  async function getSubscriberListUpdates (filter) {
+    const subscriberListResponse = await api.classroom.getSubscriberList({ ...filter, ...{ limit: classroom.subscriber.list.length, offset: 0 } })
+    if (!subscriberListResponse.error) {
+      classroom.subscriber.list = subscriberListResponse
+    }
+  }
+  function resetList () {
+    classroom.chunkIndex = 0
+    classroom.list = []
+  }
+
   return {
     getItem,
     getList,
+    getListUpdates,
     createItem,
     saveItem,
     checkIfExists,
     classroom,
     subscribe,
-    unsubscribe
+    unsubscribe,
+    getSubscriberList,
+    getSubscriberListUpdates,
+    resetList
   }
 }

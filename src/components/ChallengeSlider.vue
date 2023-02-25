@@ -118,7 +118,6 @@ const props = defineProps({
 
 const router = useRouter()
 
-const { user } = useUserStore()
 const { challenge, getList, resetList } = useChallenge()
 onMounted(() => {
   getList({ page: 1, classroom_id: props.classroomId })

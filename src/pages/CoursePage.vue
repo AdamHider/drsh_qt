@@ -1,4 +1,5 @@
 <template>
+  <q-page-container>
     <q-app-header class="transparent text-white rounded-b-md" reveal  ref="header">
       <CourseToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event"/>
       <q-toolbar-title></q-toolbar-title>
@@ -30,6 +31,7 @@
         <q-scroll-observer @scroll="onScroll" />
       </q-scroll-area>
     </q-page>
+  </q-page-container>
 </template>
 
 <script setup>

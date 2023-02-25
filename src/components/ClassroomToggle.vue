@@ -14,8 +14,9 @@
     </q-chip>
     <q-dialog v-model="dialog" position="top">
       <q-card>
-        <q-card-section class="q-pb-none">
-          <div class="text-h6">Choose your classroom</div>
+        <q-card-section class="q-pb-none flex justify-between items-center">
+            <div class="text-h6">Choose your classroom</div>
+            <router-link :to="`/classrooms`">Show all</router-link>
         </q-card-section>
         <q-card-section class="q-px-none">
           <ClassroomSlider

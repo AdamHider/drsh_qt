@@ -1,73 +1,75 @@
 <template>
-  <q-app-header class="bg-white rounded-b-md bordered" reveal>
-      <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-      <q-toolbar-title>User Edit</q-toolbar-title>
-      <q-btn flat icon="check" @click="saveChanges()"/>
-  </q-app-header>
-  <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
-      <q-form
-        ref="form"
-        v-model="formData.valid"
-        @submit.prevent="validate()"
-        autocomplete="off"
-        class="full-width"
-      >
-        <q-input
-          v-model="formData.fields.username.value"
-          :rules="formData.fields.username.rules"
-          :error-message="formData.fields.username.errors"
-          :error="formData.fields.username.errors !== ''"
-          label="Name"
-          required
+  <q-page-container>
+    <q-app-header class="bg-white rounded-b-md bordered" reveal>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+        <q-toolbar-title>User Edit</q-toolbar-title>
+        <q-btn flat icon="check" @click="saveChanges()"/>
+    </q-app-header>
+    <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
+        <q-form
+          ref="form"
+          v-model="formData.valid"
+          @submit.prevent="validate()"
+          autocomplete="off"
+          class="full-width"
         >
-          <template v-if="formData.fields.username.errors == ''" v-slot:append>
-              <q-icon color="success" name="check"></q-icon>
-          </template>
-        </q-input>
-        <q-card
-          v-if="(formData.fields.username.suggestions.length > 0)"
-          class="mx-auto pa-2"
-        >
-          <q-list bordered separator class="q-my-sm">
-            <q-item
-              v-for="(item, index) in formData.fields.username.suggestions"
-              :key="index"
-              clickable
-              :value="item"
-              @click="(formData.fields.username.value = item); formData.fields.username.suggestions = []"
-            >
-              <q-item-section class="text-left">{{ item }}</q-item-section>
-              <q-item-section side>
-                <q-icon name="check" color="positive" />
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-card>
-        <q-btn
-            class="full-width"
-            to="edit/password"
-            append-icon="mdi-pencil"
-            label="Change password"
-        />
-        <q-input
-          v-model="formData.fields.email.value"
-          :rules="formData.fields.email.rules"
-          :error-message="formData.fields.email.errors"
-          :error="formData.fields.email.errors !== ''"
-          label="E-mail"
-        ></q-input>
-        <q-input
-          v-model="formData.fields.phone.value"
-          :rules="formData.fields.phone.rules"
-          :error-message="formData.fields.phone.errors"
-          :error="formData.fields.phone.errors !== ''"
-          mask="+# (###) ### - ## - ##"
-          fill-mask
-          unmasked-value
-          label="Phone"
-        ></q-input>
-      </q-form>
-  </q-page>
+          <q-input
+            v-model="formData.fields.username.value"
+            :rules="formData.fields.username.rules"
+            :error-message="formData.fields.username.errors"
+            :error="formData.fields.username.errors !== ''"
+            label="Name"
+            required
+          >
+            <template v-if="formData.fields.username.errors == ''" v-slot:append>
+                <q-icon color="success" name="check"></q-icon>
+            </template>
+          </q-input>
+          <q-card
+            v-if="(formData.fields.username.suggestions.length > 0)"
+            class="mx-auto pa-2"
+          >
+            <q-list bordered separator class="q-my-sm">
+              <q-item
+                v-for="(item, index) in formData.fields.username.suggestions"
+                :key="index"
+                clickable
+                :value="item"
+                @click="(formData.fields.username.value = item); formData.fields.username.suggestions = []"
+              >
+                <q-item-section class="text-left">{{ item }}</q-item-section>
+                <q-item-section side>
+                  <q-icon name="check" color="positive" />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-card>
+          <q-btn
+              class="full-width"
+              to="edit/password"
+              append-icon="mdi-pencil"
+              label="Change password"
+          />
+          <q-input
+            v-model="formData.fields.email.value"
+            :rules="formData.fields.email.rules"
+            :error-message="formData.fields.email.errors"
+            :error="formData.fields.email.errors !== ''"
+            label="E-mail"
+          ></q-input>
+          <q-input
+            v-model="formData.fields.phone.value"
+            :rules="formData.fields.phone.rules"
+            :error-message="formData.fields.phone.errors"
+            :error="formData.fields.phone.errors !== ''"
+            mask="+# (###) ### - ## - ##"
+            fill-mask
+            unmasked-value
+            label="Phone"
+          ></q-input>
+        </q-form>
+    </q-page>
+  </q-page-container>
 </template>
 
 <script setup >

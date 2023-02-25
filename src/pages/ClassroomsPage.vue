@@ -2,14 +2,14 @@
     <q-page-container>
         <q-app-header class="bg-white rounded-b-md bordered" reveal>
             <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-            <q-toolbar-title>Challenges</q-toolbar-title>
+            <q-toolbar-title>Explore classrooms</q-toolbar-title>
         </q-app-header>
         <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
-            <ChallengeList/>
+            <ClassroomList/>
         </q-page>
     </q-page-container>
 </template>
 
 <script setup >
-import ChallengeList from '../components/ChallengeList.vue'
+import ClassroomList from '../components/ClassroomList.vue'
 </script>

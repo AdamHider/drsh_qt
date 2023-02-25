@@ -1,60 +1,62 @@
 <template>
-  <q-app-header class="bg-white rounded-b-md bordered" reveal>
-      <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-      <q-toolbar-title>Classroom Edit</q-toolbar-title>
-      <q-btn flat icon="check" @click="saveChanges()"/>
-  </q-app-header>
-  <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
-      <q-form
-        ref="form"
-        v-model="formData.valid"
-        @submit.prevent="validate()"
-        autocomplete="off"
-        class="full-width"
-      >
-          <div class="text-bold q-my-md">Description</div>
-          <q-input
-            outlined
-            v-model="formData.fields.title.value"
-            :rules="formData.fields.title.rules"
-            :error-message="formData.fields.title.errors"
-            :error="formData.fields.title.errors !== ''"
-            label="Name"
-            required
-          >
-          </q-input>
-          <q-input
-            outlined
-            v-model="formData.fields.description.value"
-            type="textarea"
-            counter
-            :rules="formData.fields.description.rules"
-            :error-message="formData.fields.description.errors"
-            :error="formData.fields.description.errors !== ''"
-            label="Description"
-          ></q-input>
-          <div class="q-gutter-md row">
-            <ImageUploader
-              class="col"
-              :image="classroom.active.image"
-              @update="classroom.active.image = $event"
-              label="Image"
+  <q-page-container>
+    <q-app-header class="bg-white rounded-b-md bordered" reveal>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+        <q-toolbar-title>Classroom Edit</q-toolbar-title>
+        <q-btn flat icon="check" @click="saveChanges()"/>
+    </q-app-header>
+    <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
+        <q-form
+          ref="form"
+          v-model="formData.valid"
+          @submit.prevent="validate()"
+          autocomplete="off"
+          class="full-width"
+        >
+            <div class="text-bold q-my-md">Description</div>
+            <q-input
+              outlined
+              v-model="formData.fields.title.value"
+              :rules="formData.fields.title.rules"
+              :error-message="formData.fields.title.errors"
+              :error="formData.fields.title.errors !== ''"
+              label="Name"
+              required
+            >
+            </q-input>
+            <q-input
+              outlined
+              v-model="formData.fields.description.value"
+              type="textarea"
+              counter
+              :rules="formData.fields.description.rules"
+              :error-message="formData.fields.description.errors"
+              :error="formData.fields.description.errors !== ''"
+              label="Description"
+            ></q-input>
+            <div class="q-gutter-md row">
+              <ImageUploader
+                class="col"
+                :image="classroom.active.image"
+                @update="classroom.active.image = $event"
+                label="Image"
+              />
+              <ImageUploader
+                class="col"
+                :image="classroom.active.background_image"
+                @update="classroom.active.background_image = $event"
+                label="Background image"
+              />
+            </div>
+            <div class="text-bold q-my-md">Privacy</div>
+            <q-toggle
+              name="is_private"
+              v-model="formData.fields.is_private.value"
+              label="Is private classroom"
             />
-            <ImageUploader
-              class="col"
-              :image="classroom.active.background_image"
-              @update="classroom.active.background_image = $event"
-              label="Background image"
-            />
-          </div>
-          <div class="text-bold q-my-md">Privacy</div>
-          <q-toggle
-            name="is_private"
-            v-model="formData.fields.is_private.value"
-            label="Is private classroom"
-          />
-      </q-form>
-  </q-page>
+        </q-form>
+    </q-page>
+  </q-page-container>
 </template>
 
 <script setup >
