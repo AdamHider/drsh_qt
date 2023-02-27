@@ -1,5 +1,8 @@
 <template>
-    <q-infinite-scroll ref="infiniteScroll" @load="onLoad">
+  <q-infinite-list
+    :loadMore="loadMore"
+    @onLoaded="onLoaded"
+  >
         <template v-slot:loading>
             <div class="row justify-center q-my-md">
             <q-spinner color="primary" name="dots" size="40px" />
@@ -35,38 +38,26 @@
             </q-item>
             </q-card-section >
         </q-card >
-    </q-infinite-scroll>
+    </q-infinite-list>
 </template>
 
 <script setup>
 import { api } from '../services/index'
-import { ref, onActivated, onDeactivated } from 'vue'
-import { onBeforeRouteLeave } from 'vue-router'
+import { ref } from 'vue'
 
-const infiniteScroll = ref()
 const achievements = ref([])
-const limit = 8
+const error = ref({})
 
-const onLoad = async function (index, done) {
-  let offset = 0
-  if (achievements.value.length > 0) offset = limit * index
-  const achievementListResponse = await api.achievement.getList({ mode: 'all', limit, offset })
-  if (!achievementListResponse.error) {
-    achievements.value = achievements.value.concat(achievementListResponse)
-    done(achievementListResponse.length === 0)
-  } else {
-    done(true)
+const loadMore = async function (filter) {
+  const achievementListResponse = await api.achievement.getList(filter)
+  if (achievementListResponse.error) {
+    error.value = achievementListResponse
+    return []
   }
+  return achievementListResponse
 }
-onActivated(() => {
-  infiniteScroll.value.resume()
-})
-onDeactivated(() => {
-  infiniteScroll.value.stop()
-})
-// onActivated(() => {
-// console.log('empty');
-// getList();
-// });
+const onLoaded = function (response) {
+  achievements.value = response
+}
 
 </script>

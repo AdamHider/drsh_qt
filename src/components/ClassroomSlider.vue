@@ -1,17 +1,12 @@
 <template>
     <swiper
-      v-if="user.active.data.id"
-      ref="classroomSlider"
-      :modules="[Navigation]"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="classroom.list?.findIndex((classroom) => classroom.is_active)"
+      :initialSlide="classrooms.findIndex((classroom) => classroom.is_active)"
       :navigation="props.navigation"
-      @swiper="onSwiper"
-      @slideChange="onSlideChange"
     >
-      <swiper-slide v-for="(classroomItem, index) in classroom.list" :key="index" :class="'text-center'" @click="select(index)">
-        <q-card flat :class="`q-ma-sm ${(classroomItem.is_active) ? 'active' : ''}`">
+      <swiper-slide v-for="(classroomItem, index) in classrooms" :key="index" :class="'text-center'" @click="select(index)">
+        <q-card flat :class="`q-ma-sm ${(classroomItem.is_active) ? 'active' : ''}`" >
           <q-card-section class="q-pa-xs">
             <q-img
               fit="cover"
@@ -54,11 +49,10 @@
     </q-btn>
 </template>
 <script setup>
+import { api } from '../services/index'
 import { ref, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import { useClassroom } from '../composables/useClassroom'
-import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 
 import 'swiper/css'
@@ -77,70 +71,36 @@ const props = defineProps({
 
 const router = useRouter()
 const { user, saveItemSettings } = useUserStore()
-const { classroom, getList, resetList } = useClassroom()
+
+const classrooms = ref([])
+
+const load = async function () {
+  const classroomListResponse = await api.classroom.getList({ mode: 'by_user', limit: 3 })
+  if (!classroomListResponse.error) {
+    classrooms.value = classroomListResponse
+  }
+}
 
 onMounted(() => {
-  getList({ page: 1, mode: 'by_user' })
+  load()
 })
 onActivated(() => {
-  resetList()
-  getList({ page: 1, mode: 'by_user' })
+  load()
 })
 
 const activeItem = ref({})
-const classroomSlider = ref(null)
-const joinSlide = {
-  id: 0,
-  code: '',
-  title: 'Join classroom'
-}
 
 const select = async (index) => {
-  if (index !== false) {
-    activeItem.value = classroom.list[index]
-    // classroomSlider.slideTo(index);
-  } else {
-    return router.push('/classroom/join')
-  }
+  activeItem.value = classrooms.value[index]
   if (activeItem.value.is_active) {
     return false
   }
-
-  const activeIndex = classroom.list.findIndex((classroom) => (classroom.id === user.active.data.settings.classroom_id))
-  if (activeIndex > -1) classroom.list[activeIndex].is_active = false
-  classroom.list[index].is_active = true
-
+  const activeIndex = classrooms.value.findIndex((classroom) => (classroom.id === user.active.data.settings.classroom_id))
+  if (activeIndex > -1) classrooms.value[activeIndex].is_active = false
+  classrooms.value[index].is_active = true
   const data = {
     classroom_id: activeItem.value.id
   }
   await saveItemSettings(data)
-  return router.push(`/classroom-${data.classroom_id}`)
-}
-
-const onSwiper = (swiper) => {
-  if (classroom.list.length == 0) return
-  if (classroom.list[swiper.activeIndex]) {
-    activeItem.value = classroom.list[swiper.activeIndex]
-  } else {
-    activeItem.value = joinSlide
-  }
-}
-const onSlideChange = (swiper) => {
-  if (classroom.list.length == 0) return
-  if (classroom.list[swiper.activeIndex]) {
-    activeItem.value = classroom.list[swiper.activeIndex]
-  } else {
-    activeItem.value = joinSlide
-  }
 }
 </script>
-
-<style scoped lang="scss">
-.q-card > .q-card__section:first-child{
-  border: 3px solid rgba(0, 0, 0, 0.12);
-  border-radius: $huge-border-radius;
-}
-.q-card.active > .q-card__section:first-child{
-  border-color: $positive;
-}
-</style>

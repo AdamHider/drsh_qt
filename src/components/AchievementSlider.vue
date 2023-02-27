@@ -31,8 +31,8 @@
     />
 </template>
 <script setup>
-import { ref } from 'vue'
 import { api } from '../services/index'
+import { ref, onActivated } from 'vue'
 import { Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import BannerNotFound from './BannerNotFound.vue'
@@ -53,10 +53,12 @@ const props = defineProps({
 const achievements = ref([])
 
 const load = async function () {
-  const achievementListResponse = await api.achievement.getList({ mode: 'user', limit: 3 })
+  const achievementListResponse = await api.achievement.getList({ mode: 'by_user', limit: 3 })
   if (!achievementListResponse.error) {
     achievements.value = achievementListResponse
   }
 }
-load()
+onActivated(() => {
+  load()
+})
 </script>

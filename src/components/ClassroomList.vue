@@ -1,11 +1,9 @@
 <template>
-    <q-infinite-scroll @load="onClassroomLoad" >
-        <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-            <q-spinner color="primary" name="dots" size="40px" />
-            </div>
-        </template>
-        <q-card  v-for="(classroomItem, index) in classroom.list" :key="index" class="q-ma-sm cursor-pointer"   @click="router.push(`classroom-${classroomItem.id}`)">
+    <q-infinite-list
+      :loadMore="loadMore"
+      @onLoaded="onLoaded"
+    >
+        <q-card  v-for="(classroomItem, index) in classrooms" :key="index" class="q-ma-sm cursor-pointer"   @click="router.push(`classroom-${classroomItem.id}`)">
             <q-card-section class="text-left q-pa-none relative-position">
                 <q-img
                     class="rounded-t"
@@ -65,25 +63,29 @@
                 <div class="text-caption text-grey max-one-lines" v-if="classroomItem.winner_left && classroomItem.winner_left > 0">Winners left: {{classroomItem.winner_left}}</div>
             </q-card-section>
         </q-card >
-    </q-infinite-scroll>
+    </q-infinite-list>
 </template>
 
 <script setup>
-import { onActivated } from 'vue'
+import { api } from '../services/index'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useClassroom } from '../composables/useClassroom'
 
 const router = useRouter()
-const { classroom, getList, getListUpdates } = useClassroom()
 
-const onClassroomLoad = async function (index, done) {
-  console.log(done)
-  const isDone = await getList({ page: index })
-  done(isDone)
+const classrooms = ref([])
+const error = ref({})
+
+const loadMore = async function (filter) {
+  const classroomListResponse = await api.classroom.getList(filter)
+  if (classroomListResponse.error) {
+    error.value = classroomListResponse
+    return []
+  }
+  return classroomListResponse
 }
-
-onActivated(() => {
-  if (classroom.list.length > 0) getListUpdates()
-})
+const onLoaded = function (response) {
+  classrooms.value = response
+}
 
 </script>

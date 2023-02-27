@@ -1,13 +1,12 @@
 <template>
     <swiper
-      v-if="challenge.list.length > 0"
+      v-if="challenges.length > 0"
       class="challengeSlider"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="challenge.list?.findIndex((challenge) => challenge.is_active)"
       :navigation="props.navigation"
     >
-      <swiper-slide v-for="(challengeItem, index) in challenge.list" :key="index">
+      <swiper-slide v-for="(challengeItem, index) in challenges" :key="index">
         <q-card
           :class="`q-ma-sm cursor-pointer ${(challengeItem.is_active) ? 'active' : ''}`"
           @click="router.push(`classroom-${props.classroomId}/challenge-${challengeItem.id}`)"
@@ -94,9 +93,8 @@
     />
 </template>
 <script setup>
-import { onMounted, watch } from 'vue'
-import { useUserStore } from '../stores/user'
-import { useChallenge } from '../composables/useChallenge'
+import { api } from '../services/index'
+import { onActivated, ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { useRouter } from 'vue-router'
 import BannerNotFound from '../components/BannerNotFound.vue'
@@ -117,14 +115,15 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const challenges = ref([])
 
-const { challenge, getList, resetList } = useChallenge()
-onMounted(() => {
-  getList({ page: 1, classroom_id: props.classroomId })
+const load = async function () {
+  const challengeListResponse = await api.challenge.getList({ limit: 3, classroom_id: props.classroomId })
+  if (!challengeListResponse.error) {
+    challenges.value = challengeListResponse
+  }
+}
+onActivated(() => {
+  load()
 })
-watch(() => props.classroomId, async (newData, oldData) => {
-  resetList()
-  getList({ page: 1, classroom_id: props.classroomId })
-})
-
 </script>

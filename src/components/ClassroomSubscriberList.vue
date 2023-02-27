@@ -1,12 +1,10 @@
 <template>
-    <q-infinite-scroll @load="onLoad">
-        <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-            <q-spinner color="primary" name="dots" size="40px" />
-            </div>
-        </template>
+  <q-infinite-list
+    :loadMore="loadMore"
+    @onLoaded="onLoaded"
+  >
         <q-list separator>
-        <q-item v-for="(subscriberItem, index) in classroom.subscriber.list" :key="index" class="q-ma-sm">
+        <q-item v-for="(subscriberItem, index) in subscribers" :key="index" class="q-ma-sm">
             <q-item-section avatar>
                 <q-avatar size="50px">
                     <q-img
@@ -20,24 +18,29 @@
             </q-item-section>
         </q-item>
     </q-list>
-    </q-infinite-scroll>
+  </q-infinite-list>
 </template>
 
 <script setup>
-import { onActivated, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useClassroom } from '../composables/useClassroom'
+import { api } from '../services/index'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const router = useRouter()
 const route = useRoute()
-const { classroom, getSubscriberList, getSubscriberListUpdates } = useClassroom()
 
-const onLoad = async function (index, done) {
-  const isDone = await getSubscriberList({ page: index, classroom_id: route.params.classroom_id })
-  done(isDone)
+const subscribers = ref([])
+const error = ref({})
+
+const loadMore = async function (filter) {
+  const subscriberListResponse = await api.classroom.getSubscriberList({ ...filter, ...{ subscriber_id: route.params.subscriber_id } })
+  if (subscriberListResponse.error) {
+    error.value = subscriberListResponse
+    return []
+  }
+  return subscriberListResponse
 }
-onActivated(() => {
-  if (classroom.subscriber.list.length > 0) getSubscriberListUpdates({ classroom_id: route.params.classroom_id })
-})
+const onLoaded = function (response) {
+  subscribers.value = response
+}
 
 </script>

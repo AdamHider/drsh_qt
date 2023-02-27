@@ -1,14 +1,11 @@
 <template>
     <swiper
-      v-if="user.active.data?.id"
-      class="courseSlider"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="course.list?.findIndex((course) => course.is_active)"
+      :initialSlide="courses?.findIndex((course) => course.is_active)"
       :navigation="props.navigation"
-      @swiper="onSwiper"
     >
-      <swiper-slide v-for="(courseItem, index) in course.list" :key="index" :class="'text-center'" @click="select(index)">
+      <swiper-slide v-for="(courseItem, index) in courses" :key="index" :class="'text-center'" @click="select(index)">
         <q-card :class="`q-ma-sm ${(courseItem.is_active) ? 'active' : ''}`" flat>
             <q-card-section class="q-pa-xs" >
               <q-img
@@ -50,11 +47,10 @@
     </swiper>
 </template>
 <script setup>
+import { api } from '../services/index'
+import { ref, onActivated, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
-import { useCourse } from '../composables/useCourse'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { defineEmits } from 'vue'
-import { CONFIG } from '../config.js'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -72,39 +68,35 @@ const props = defineProps({
 
 const emits = defineEmits(['select'])
 
-const { user, saveProfile } = useUserStore()
-const { course, getList, getActive } = useCourse()
+const { user, savesettings } = useUserStore()
 
-if (user.active?.data.id) {
-  getList()
+const courses = ref([])
+
+const load = async function () {
+  const courseListResponse = await api.course.getList({ limit: 3 })
+  if (!courseListResponse.error) {
+    courses.value = courseListResponse
+  }
 }
+onMounted(() => {
+  load()
+})
+onActivated(() => {
+  load()
+})
 
 const select = async (index) => {
-  if (course.list[index].id === user.active?.data.profile.course_id) {
+  if (courses.value[index].id === user.active?.data.settings.course_id) {
     return false
   }
   emits('select')
-  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.profile.course_id))
-  if (activeIndex > -1) course.list[activeIndex].is_active = false
-  course.list[index].is_active = true
+  const activeIndex = courses.value.findIndex((course) => (course.id === user.active?.data.settings.course_id))
+  if (activeIndex > -1) courses.value[activeIndex].is_active = false
+  courses.value[index].is_active = true
   const data = {
-    course_id: course.list[index].id
+    course_id: courses.value[index].id
   }
-  await saveProfile(data)
-  getActive()
-}
-
-const onSwiper = (swiper) => {
+  await savesettings(data)
 }
 
 </script>
-
-<style scoped lang="scss">
-.q-card > .q-card__section:first-child{
-  border: 3px solid rgba(0, 0, 0, 0.12);
-  border-radius: $huge-border-radius;
-}
-.q-card.active > .q-card__section:first-child{
-  border-color: $positive;
-}
-</style>

@@ -1,13 +1,12 @@
 <template>
     <swiper
-      v-if="homework.list.length > 0"
+      v-if="homeworks.length > 0"
       class="homeworkSlider"
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
-      :initialSlide="homework.list?.findIndex((homework) => homework.is_active)"
       :navigation="props.navigation"
     >
-      <swiper-slide v-for="(homeworkItem, index) in homework.list" :key="index" class="text-center">
+      <swiper-slide v-for="(homeworkItem, index) in homeworks" :key="index" class="text-center">
         <q-card
             class="q-ma-sm cursor-pointer"
             @click="router.push(`classroom-${props.classroomId}/homework-${homeworkItem.id}`)"
@@ -70,9 +69,8 @@
     />
 </template>
 <script setup>
-import { onMounted, watch } from 'vue'
-import { useUserStore } from '../stores/user'
-import { useHomework } from '../composables/useHomework'
+import { api } from '../services/index'
+import { onActivated, ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { useRouter } from 'vue-router'
 import BannerNotFound from '../components/BannerNotFound.vue'
@@ -93,13 +91,15 @@ const props = defineProps({
 })
 const router = useRouter()
 
-const { user } = useUserStore()
-const { homework, getList, resetList } = useHomework()
-onMounted(() => {
-  getList({ page: 1, classroom_id: props.classroomId })
-})
-watch(() => props.classroomId, async (newData, oldData) => {
-  resetList()
-  getList({ page: 1, classroom_id: props.classroomId })
+const homeworks = ref([])
+
+const load = async function () {
+  const homeworkListResponse = await api.homework.getList({ limit: 3, classroom_id: props.classroomId })
+  if (!homeworkListResponse.error) {
+    homeworks.value = homeworkListResponse
+  }
+}
+onActivated(() => {
+  load()
 })
 </script>

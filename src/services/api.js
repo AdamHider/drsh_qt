@@ -171,7 +171,7 @@ export class Api extends ApiService{
         getSubscriberList: (params) =>  {
             return this.post('classroom', 'getSubscribers', params)
         }
-        
+
 
     }
     image = {

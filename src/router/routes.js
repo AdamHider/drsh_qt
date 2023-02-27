@@ -13,25 +13,21 @@ const routes = [
     children: [
       {
         path: 'course',
-        name: 'course',
         component: () => import('pages/CoursePage.vue'),
         meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'course-:course_id',
-        name: 'course',
         component: () => import('pages/CoursePage.vue'),
         meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'explore',
-        name: 'explore',
         component: () => import('pages/ExplorePage.vue'),
         meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
         path: 'user',
-        name: 'user',
         component: () => import('pages/UserDashboard.vue'),
         meta: {
           requiresAuth: true,
@@ -81,7 +77,6 @@ const routes = [
       },
       {
         path: 'classroom',
-        name: 'classroom',
         component: () => import('pages/ClassroomPage.vue'),
         meta: {
           requiresAuth: true,
@@ -90,11 +85,9 @@ const routes = [
       },
       {
         path: 'classroom-:classroom_id',
-        name: 'classroom',
         component: () => import('pages/ClassroomPage.vue'),
         meta: {
-          requiresAuth: true,
-          bottomBarEnabled: true
+          requiresAuth: true
         }
       },
       {
@@ -196,12 +189,10 @@ const routes = [
       },
       {
         path: 'lesson-startup-:lesson_id',
-        name: 'lesson-startup',
         component: () => import('pages/LessonStartup.vue')
       },
       {
         path: 'lesson-:lesson_id',
-        name: 'lesson',
         component: () => import('src/pages/LessonItem.vue')
       },
       {

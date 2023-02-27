@@ -1,7 +1,8 @@
 <template>
   <q-page-wrapper>
     <q-app-header class="transparent text-white rounded-b-md" reveal>
-      <ClassroomToggle v-bind:dialogOpened="classroomListDialog" v-on:update:dialogOpened="classroomListDialog = $event"/>
+      <ClassroomToggle v-if="!route.params.classroom_id" v-bind:dialogOpened="classroomListDialog" v-on:update:dialogOpened="classroomListDialog = $event"/>
+      <q-btn v-else flat icon="arrow_back" @click="$router.go(-1);" v:slot="back-button"/>
       <q-toolbar-title></q-toolbar-title>
       <q-btn flat round dense class="q-mr-sm" icon="share"/>
       <q-btn flat round dense class="q-mr-sm"  icon="more_vert" @click="preferencesDialog = true"/>
@@ -178,8 +179,10 @@ import ChallengeSlider from '../components/ChallengeSlider.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import LeaderboardChart from '../components/LeaderboardChart.vue'
 import { useClassroom } from '../composables/useClassroom'
+import { useUserStore } from '../stores/user'
 import { useRoute } from 'vue-router'
 
+const { user } = useUserStore()
 const route = useRoute()
 
 const classroomListDialog = ref(false)
@@ -200,6 +203,9 @@ onMounted(async () => {
   await getItem(route.params.classroom_id)
 })
 watch(() => route.params.classroom_id, (newData, oldData) => {
+  getItem(route.params.classroom_id)
+})
+watch(() => user.active?.data.settings.classroom_id, (newData, oldData) => {
   getItem(route.params.classroom_id)
 })
 </script>

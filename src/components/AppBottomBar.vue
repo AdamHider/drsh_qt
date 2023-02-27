@@ -12,7 +12,7 @@
         />
         <q-route-tab
             icon="group"
-            :to="`${routes.classroom}-${(classroom.active.id) ? classroom.active.id : user.active.data.settings.classroom_id}`"
+            :to="routes.classroom"
             exact replace
         />
         <q-route-tab
