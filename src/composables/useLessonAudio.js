@@ -62,7 +62,7 @@ export function useLessonAudio () {
 
   function playAudio (link) {
     if (lessonAudio.list.length == 0) return
-    const activeIndex = lessonAudio.list.findIndex((audio) => audio?.element.src == `${CONFIG.API_HOST}/media/audio/lessons/${link}.mp3?1`)
+    const activeIndex = lessonAudio.list.findIndex((audio) => audio?.element.src == `${CONFIG.API_HOST}/audio/${link}.mp3?1`)
     if (activeIndex == -1) return false
     stopAudio(activeIndex)
     lessonAudio.activeIndex = activeIndex

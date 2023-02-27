@@ -19,7 +19,7 @@
                     lesson.active.page?.exercise?.current_page == 0
                     || lesson.active.page?.exercise?.back_attempts == 0
                     )"
-                    @click="backDialog = true">
+                    @click="backDialog = true;">
                     <q-item-section avatar>
                       <q-icon name="arrow_back" />
                     </q-item-section>
@@ -144,7 +144,7 @@
 
 <script setup>
 import { useLesson } from '../../composables/useLesson'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 const backDialog = ref(false)
@@ -153,7 +153,7 @@ const confirmDialog = ref(false)
 
 const extraActions = ref(false)
 
-const emits = defineEmits(['onPageChanged', 'onAnswerSaved'])
+const emits = defineEmits(['onPageChanged', 'onAnswerSaved', 'onDialogOpened'])
 const props = defineProps({
   pageAnswers: Object
 })
@@ -198,5 +198,15 @@ onBeforeRouteLeave((to, from) => {
     return false
   }
   return true
+})
+
+watch(() => backDialog.value, (newValue, oldValue) => {
+  emits('onDialogOpened', newValue)
+})
+watch(() => againDialog.value, (newValue, oldValue) => {
+  emits('onDialogOpened', newValue)
+})
+watch(() => confirmDialog.value, (newValue, oldValue) => {
+  emits('onDialogOpened', newValue)
 })
 </script>

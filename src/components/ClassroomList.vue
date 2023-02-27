@@ -81,9 +81,9 @@ const onClassroomLoad = async function (index, done) {
   const isDone = await getList({ page: index })
   done(isDone)
 }
-/*
+
 onActivated(() => {
   if (classroom.list.length > 0) getListUpdates()
 })
-*/
+
 </script>

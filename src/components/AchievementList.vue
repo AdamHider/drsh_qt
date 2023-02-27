@@ -5,7 +5,7 @@
             <q-spinner color="primary" name="dots" size="40px" />
             </div>
         </template>
-        <q-card  v-for="(achievementItem, index) in achievement.list" :key="index" class="q-ma-sm">
+        <q-card  v-for="(achievementItem, index) in achievements" :key="index" class="q-ma-sm">
             <q-card-section >
             <q-item class="q-pa-none bg-white">
                 <q-item-section avatar>
@@ -39,17 +39,24 @@
 </template>
 
 <script setup>
-import { useAchievement } from '../composables/useAchievement'
-
+import { api } from '../services/index'
 import { ref, onActivated, onDeactivated } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
-const { achievement, getList } = useAchievement()
 
 const infiniteScroll = ref()
+const achievements = ref([])
+const limit = 8
 
 const onLoad = async function (index, done) {
-  const isDone = await getList(index)
-  done(isDone)
+  let offset = 0
+  if (achievements.value.length > 0) offset = limit * index
+  const achievementListResponse = await api.achievement.getList({ mode: 'all', limit, offset })
+  if (!achievementListResponse.error) {
+    achievements.value = achievements.value.concat(achievementListResponse)
+    done(achievementListResponse.length === 0)
+  } else {
+    done(true)
+  }
 }
 onActivated(() => {
   infiniteScroll.value.resume()

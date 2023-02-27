@@ -113,7 +113,7 @@ const { course } = useCourse()
 const groupBackground = ref(null)
 const groupGradient = ref(null)
 const infiniteList = ref(null)
-const currentParentId = ref(0)
+const currentCourseSectionId = ref(0)
 
 const props = defineProps({
   disable: Boolean
@@ -123,6 +123,7 @@ const lessonList = ref([])
 
 const onLoad = async function (index, done) {
   if (disable.value) return false
+  currentCourseSectionId.value = 0
   const isDone = await getList(index)
   if (!isDone) composeList()
   done(isDone)
@@ -133,12 +134,13 @@ const composeList = () => {
     if (checkGroup(lesson.list[i] && lesson.list[i].course_section)) {
       lessonList.value.unshift({ ...{ course_section: lesson.list[i].course_section }, ...{ type: 'group' } })
     }
+    console.log(lessonList.value)
     lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'lesson' } })
   }
 }
-const checkGroup = (lesson) => {
-  if (lesson.course_section_id !== currentParentId.value) {
-    currentParentId.value = lesson.course_section_id
+const checkGroup = (courseSection) => {
+  if (courseSection.id != currentCourseSectionId.value) {
+    currentCourseSectionId.value = courseSection.id
     return true
   }
   return false
@@ -151,6 +153,7 @@ onDeactivated(() => {
 })
 onActivated(async () => {
   if (lesson.list.length > 0) {
+    currentCourseSectionId.value = 0
     await getListUpdates()
     composeList()
   }

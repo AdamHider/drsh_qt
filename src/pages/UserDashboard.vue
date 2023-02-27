@@ -5,7 +5,7 @@
             <q-toolbar-title></q-toolbar-title>
             <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
         </q-app-header>
-        <q-page style="padding-top: 50px;">
+        <q-page style="padding-top: 50px;" class="text-center">
             <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
                 <q-card-section>
                     <q-img
@@ -34,6 +34,11 @@
                 </q-card-section>
                 <q-card-section>
                     <q-item class="q-pa-none">
+                        <q-item-section avatar>
+                          <q-avatar>
+                            <img :src="user.active.data.character.avatar"/>
+                          </q-avatar>
+                        </q-item-section>
                         <q-item-section class="text-left">
                             <div class="text-h5"><b>{{user.active.data.username}}</b></div>
                             <div class="text-grey">Active student</div>

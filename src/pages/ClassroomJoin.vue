@@ -1,5 +1,5 @@
 <template>
-  <q-page-container>
+  <q-page-wrapper>
     <q-page class="flex justify-center items-end full-height full-width text-center">
         <q-form
           ref="form"
@@ -42,7 +42,7 @@
           </q-card>
         </q-form>
       </q-page>
-    </q-page-container>
+    </q-page-wrapper>
 </template>
 
 <script setup >

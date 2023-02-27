@@ -30,6 +30,19 @@
                 <b>{{ commonItem.place }}</b>
               </q-avatar>
             </q-item-section>
+
+            <q-item-section avatar>
+              <div class="q-gutter-sm">
+                <q-avatar
+                    v-for="(userData, userKey) in commonItem.data.slice(0, 2)" :key="userKey"
+                    size="40px"
+                    class="overlapping"
+                    :style="`left: -${userKey * 15}px`"
+                  >
+                    <img :src="userData.avatar">
+                </q-avatar>
+              </div>
+            </q-item-section>
             <q-item-section>
               <q-item-label>
                 <span v-for="(userData, userKey) in commonItem.data.slice(0, 2)" :key="userKey" class="q-pa-none text-dark">

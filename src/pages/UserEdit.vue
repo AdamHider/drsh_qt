@@ -1,5 +1,5 @@
 <template>
-  <q-page-container>
+  <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title>User Edit</q-toolbar-title>
@@ -69,7 +69,7 @@
           ></q-input>
         </q-form>
     </q-page>
-  </q-page-container>
+  </q-page-wrapper>
 </template>
 
 <script setup >

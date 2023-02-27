@@ -1,5 +1,5 @@
 <template>
-  <q-page-container>
+  <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md" reveal>
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <q-linear-progress
@@ -21,7 +21,7 @@
         <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
     </q-page>
     <q-footer expand position="bottom" class="bg-white lesson-bottombar ">
-        <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved" :pageAnswers="pageAnswers"/>
+        <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved" @onDialogOpened="onDialogOpened" :pageAnswers="pageAnswers"/>
     </q-footer>
     <q-dialog v-model="closeDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
@@ -37,7 +37,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </q-page-container>
+  </q-page-wrapper>
 </template>
 
 <script setup>
@@ -52,6 +52,7 @@ const { lesson, getItem, getPage, saveAnswer } = useLesson()
 
 const pageAnswers = ref({})
 const rendered = ref(false)
+const dialogOpened = ref(false)
 
 const pageTemplateTitle = ref(false)
 const formTemplateTitle = ref(false)
@@ -93,13 +94,16 @@ const onAnswerSaved = async () => {
   }
   await saveAnswer(answers)
 }
+const onDialogOpened = async (status) => {
+  dialogOpened.value = status
+}
 
 const closeLesson = () => {
   closeConfirmed.value = true
   router.go(-1)
 }
 onBeforeRouteLeave((to, from) => {
-  if (!closeConfirmed.value) {
+  if (!closeConfirmed.value && !dialogOpened.value) {
     closeDialog.value = true
     return false
   }

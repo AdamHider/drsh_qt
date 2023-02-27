@@ -1,8 +1,8 @@
 <template>
-  <q-page-container>
+  <q-page-wrapper>
     <page-container no-bottom-bar="true">
     </page-container>
-  </q-page-container>
+  </q-page-wrapper>
 </template>
 
 <script setup >

@@ -76,7 +76,7 @@
             <q-tab name="main" icon="grid_view" label="Main" />
             <q-tab name="leaderboard" icon="bar_chart" label="Score" />
           </q-tabs>
-          <q-tab-panels v-model="tab" animated keep-alive>
+          <q-tab-panels v-model="tab" animated keep-alive >
             <q-tab-panel name="main" class="q-px-none" >
               <q-card flat>
                 <q-card-section class="q-py-none flex justify-between items-center">
