@@ -76,8 +76,8 @@ const routes = [
         }
       },
       {
-        path: 'classroom',
-        component: () => import('pages/ClassroomPage.vue'),
+        path: 'classroom-dashboard',
+        component: () => import('pages/ClassroomDashboardPage.vue'),
         meta: {
           requiresAuth: true,
           bottomBarEnabled: true
@@ -126,7 +126,7 @@ const routes = [
         }
       },
       {
-        path: 'classroom-:classroom_id/homework-:homework_id',
+        path: 'homework-:homework_id',
         component: () => import('pages/HomeworkPage.vue'),
         meta: {
           pageTitle: 'Homework',
@@ -153,7 +153,7 @@ const routes = [
         }
       },
       {
-        path: 'classroom-:classroom_id/challenge-:challenge_id',
+        path: 'challenge-:challenge_id',
         component: () => import('pages/ChallengePage.vue'),
         meta: {
           pageTitle: 'Challenge',

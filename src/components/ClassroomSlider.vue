@@ -5,29 +5,27 @@
       :initialSlide="classrooms.findIndex((classroom) => classroom.is_active)"
       :navigation="props.navigation"
     >
-      <swiper-slide v-for="(classroomItem, index) in classrooms" :key="index" :class="'text-center'" @click="select(index)">
-        <q-card flat :class="`q-ma-sm ${(classroomItem.is_active) ? 'active' : ''}`" >
-          <q-card-section class="q-pa-xs">
+      <swiper-slide v-for="(classroomItem, index) in classrooms" :key="index" :class="'text-center'"
+        @click="router.push(`classroom-${classroomItem.id}`)">
+        <q-card flat class="q-ma-sm bg-transparent">
             <q-img
               fit="cover"
               class="rounded-borders"
               :src="classroomItem.background_image"
               :style="`height: ${props.slideHeight}px`"
               >
-              <div :class="`absolute-${captionMode} text-center text-white flex flex-center`">
+              <div :class="`absolute-${captionMode} text-left text-white`"
+                  style="background: linear-gradient(to top, #000c, #000000a8, #0000)">
                 <div>
                   <div class="text-bold">{{classroomItem.title}}</div>
-                  <div class="subtitle">{{classroomItem.code}}</div>
                   <div class="text-caption">{{classroomItem.description}}</div>
                 </div>
               </div>
             </q-img>
-          </q-card-section>
         </q-card>
       </swiper-slide>
       <swiper-slide :class="'text-center'" @click="select(false)">
         <q-card flat class="q-ma-sm">
-          <q-card-section class="q-pa-xs">
             <q-img
               class="rounded-borders"
               :style="`height: ${props.slideHeight}px;`">
@@ -35,7 +33,6 @@
                 <q-icon size="30px" name="add"></q-icon>
               </div>
             </q-img>
-          </q-card-section>
         </q-card>
       </swiper-slide>
     </swiper>
@@ -75,7 +72,7 @@ const { user, saveItemSettings } = useUserStore()
 const classrooms = ref([])
 
 const load = async function () {
-  const classroomListResponse = await api.classroom.getList({ mode: 'by_user', limit: 3 })
+  const classroomListResponse = await api.classroom.getList({ mode: 'by_user' })
   if (!classroomListResponse.error) {
     classrooms.value = classroomListResponse
   }

@@ -9,7 +9,7 @@
       <swiper-slide v-for="(challengeItem, index) in challenges" :key="index">
         <q-card
           :class="`q-ma-sm cursor-pointer ${(challengeItem.is_active) ? 'active' : ''}`"
-          @click="router.push(`classroom-${props.classroomId}/challenge-${challengeItem.id}`)"
+          @click="router.push(`challenge-${challengeItem.id}`)"
           flat
         >
             <q-card-section class="q-pa-xs" >
@@ -94,7 +94,7 @@
 </template>
 <script setup>
 import { api } from '../services/index'
-import { onActivated, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { useRouter } from 'vue-router'
 import BannerNotFound from '../components/BannerNotFound.vue'
@@ -119,11 +119,16 @@ const challenges = ref([])
 
 const load = async function () {
   const challengeListResponse = await api.challenge.getList({ limit: 3, classroom_id: props.classroomId })
-  if (!challengeListResponse.error) {
-    challenges.value = challengeListResponse
+  if (challengeListResponse.error) {
+    challenges.value = []
+    return
   }
+  challenges.value = challengeListResponse
 }
-onActivated(() => {
+onMounted(async () => {
+  load()
+})
+watch(() => props.classroomId, (newData, oldData) => {
   load()
 })
 </script>

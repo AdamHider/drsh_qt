@@ -89,8 +89,13 @@ const router = useRouter()
 const challenges = ref([])
 const error = ref({})
 
+const props = defineProps({
+  classroomId: String,
+  mode: String
+})
+
 const loadMore = async function (filter) {
-  const challengeListResponse = await api.challenge.getList({ ...filter, ...{ classroom_id: route.params.classroom_id } })
+  const challengeListResponse = await api.challenge.getList({ ...filter, ...{ classroom_id: props.classroomId, mode: props.mode } })
   if (challengeListResponse.error) {
     error.value = challengeListResponse
     return []

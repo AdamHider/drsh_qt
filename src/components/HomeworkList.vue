@@ -26,7 +26,6 @@
                 <div class="text-caption">{{homeworkItem.description}}</div>
                 <div class="row q-my-sm" >
                     <div class="col-10 text-left">
-
                         <q-chip
                             v-if="homeworkItem.time_left_humanized"
                             dense
@@ -38,11 +37,13 @@
                             <b>{{ homeworkItem.time_left_humanized }}</b>
                         </q-chip>
                     </div>
-                    <div class="col-2 self-end text-right">
+                    <div v-if="homeworkItem.time_left > 0"
+                        class="col-2 self-end text-right">
                         <b>{{homeworkItem.exercise?.data.progress_percentage || 0 }}%</b>
                     </div>
                 </div>
                 <q-linear-progress
+                    v-if="homeworkItem.time_left > 0"
                     :color="(homeworkItem.exercise?.data.progress_percentage/100) >= 1 ? 'positive' : 'white'"
                     :value="(homeworkItem.exercise?.data.progress_percentage / 100) || 0"
                     size="12px"
@@ -66,8 +67,13 @@ const router = useRouter()
 const homeworks = ref([])
 const error = ref({})
 
+const props = defineProps({
+  classroomId: String,
+  mode: String
+})
+
 const loadMore = async function (filter) {
-  const homeworkListResponse = await api.homework.getList({ ...filter, ...{ classroom_id: route.params.classroom_id } })
+  const homeworkListResponse = await api.homework.getList({ ...filter, ...{ classroom_id: props.classroomId, mode: props.mode } })
   if (homeworkListResponse.error) {
     error.value = homeworkListResponse
     return []

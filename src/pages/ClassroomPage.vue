@@ -172,7 +172,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onActivated } from 'vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 import HomeworkSlider from '../components/HomeworkSlider.vue'
 import ChallengeSlider from '../components/ChallengeSlider.vue'
@@ -202,8 +202,8 @@ const unsubscribeClassroom = async function () {
 onMounted(async () => {
   await getItem(route.params.classroom_id)
 })
-watch(() => route.params.classroom_id, (newData, oldData) => {
-  getItem(route.params.classroom_id)
+onActivated(async () => {
+  await getItem(route.params.classroom_id)
 })
 watch(() => user.active?.data.settings.classroom_id, (newData, oldData) => {
   getItem(route.params.classroom_id)

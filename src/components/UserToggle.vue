@@ -1,10 +1,13 @@
 <template  withBackground="true">
     <q-chip class="transparent no-shadow" style="color: inherit"
-        clickable
+        clickable dense
         @click="dialog = true"
     >
+        <q-avatar size="22">
+          <img :src="user.active.data?.character.avatar">
+        </q-avatar>
         <div class="ellipsis">
-            <b>{{user.active.data?.name}}</b>
+            <b>{{user.active.data?.username}}</b>
             <q-tooltip>{{user.active.data?.name}}</q-tooltip>
             <q-icon name="expand_more" size="sm"></q-icon>
         </div>

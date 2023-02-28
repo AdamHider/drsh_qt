@@ -9,7 +9,7 @@
       <swiper-slide v-for="(homeworkItem, index) in homeworks" :key="index" class="text-center">
         <q-card
             class="q-ma-sm cursor-pointer"
-            @click="router.push(`classroom-${props.classroomId}/homework-${homeworkItem.id}`)"
+            @click="router.push(`homework-${homeworkItem.id}`)"
             flat>
             <q-card-section class="q-ma-xs q-pa-none rounded-md-important"
               :style="`background: ${homeworkItem.course_section.background_gradient}; transform: none`">
@@ -70,7 +70,7 @@
 </template>
 <script setup>
 import { api } from '../services/index'
-import { onActivated, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { useRouter } from 'vue-router'
 import BannerNotFound from '../components/BannerNotFound.vue'
@@ -95,11 +95,16 @@ const homeworks = ref([])
 
 const load = async function () {
   const homeworkListResponse = await api.homework.getList({ limit: 3, classroom_id: props.classroomId })
-  if (!homeworkListResponse.error) {
-    homeworks.value = homeworkListResponse
+  if (homeworkListResponse.error) {
+    homeworks.value = []
+    return
   }
+  homeworks.value = homeworkListResponse
 }
-onActivated(() => {
+onMounted(async () => {
+  load()
+})
+watch(() => props.classroomId, (newData, oldData) => {
   load()
 })
 </script>
