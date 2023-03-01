@@ -5,7 +5,7 @@
             <q-toolbar-title></q-toolbar-title>
             <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
         </q-app-header>
-        <q-page style="padding-top: 50px;" class="text-center">
+        <q-page style="padding-top: 50px;" class="text-center flex column full-width">
             <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
                 <q-card-section>
                     <q-img
@@ -15,7 +15,7 @@
                     />
                 </q-card-section>
             </q-card>
-            <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="padding-top: 30px;">
+            <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 col full-width" style="padding-top: 30px;">
                 <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
                 <q-linear-progress
                     color="positive"

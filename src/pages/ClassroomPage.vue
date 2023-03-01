@@ -1,8 +1,7 @@
 <template>
   <q-page-wrapper>
     <q-app-header class="transparent text-white rounded-b-md" reveal>
-      <ClassroomToggle v-if="!route.params.classroom_id" v-bind:dialogOpened="classroomListDialog" v-on:update:dialogOpened="classroomListDialog = $event"/>
-      <q-btn v-else flat icon="arrow_back" @click="$router.go(-1);" v:slot="back-button"/>
+      <q-btn flat icon="arrow_back" @click="$router.go(-1);" v:slot="back-button"/>
       <q-toolbar-title></q-toolbar-title>
       <q-btn flat round dense class="q-mr-sm" icon="share"/>
       <q-btn flat round dense class="q-mr-sm"  icon="more_vert" @click="preferencesDialog = true"/>

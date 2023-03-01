@@ -1,12 +1,12 @@
 <template>
     <q-tabs>
         <q-route-tab
-            icon="rocket_launch"
+            icon="map"
             :to="`${routes.course}-${(course.active.id) ? course.active.id : user.active.data.settings.course_id}`"
             exact replace
         />
         <q-route-tab
-            icon="search"
+            icon="science"
             :to="routes.explore"
             exact replace
         />
