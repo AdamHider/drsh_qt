@@ -3,6 +3,7 @@
         <q-app-header class="transparent text-white rounded-b-md" reveal>
             <UserToggle/>
             <q-toolbar-title></q-toolbar-title>
+            <UserConsumables/>
             <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
         </q-app-header>
         <q-page style="padding-top: 50px;" class="text-center flex column full-width">
@@ -110,6 +111,7 @@
 <script setup>
 import { useUserStore } from '../stores/user'
 import UserToggle from '../components/UserToggle.vue'
+import UserConsumables from '../components/UserConsumables.vue'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
