@@ -47,6 +47,10 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     showMessage('You have signed successfully!')
     return result
   }
+  async function getItem () {
+    const userResponse = await api.user.getItem()
+    update({ data: userResponse })
+  }
 
   async function autoSignIn () {
     const userResponse = await api.user.getItem()
@@ -131,6 +135,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     isAuthorized,
     update,
     signIn,
+    getItem,
     autoSignIn,
     signOut,
     signUp,

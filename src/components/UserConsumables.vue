@@ -3,7 +3,6 @@
         clickable
         @click="dialog = true"
     >
-
         <q-circular-progress
           show-value
           font-size="10px"
@@ -18,7 +17,17 @@
           <q-avatar size="26px" style="margin: 0">
             <q-icon name="bolt" size="20px" ></q-icon>
           </q-avatar>
-          <q-chip dense size="11px" icon="schedule" color="grey-8" text-color="white" floating class="absolute q-ma-none" style="top: 100%; max-width: none;"><b>{{ timerCount }}</b></q-chip>
+          <q-chip
+            v-if="timerCount !== '0:00'"
+            dense
+            size="11px"
+            icon="schedule"
+            color="grey-8" text-color="white"
+            class="absolute q-ma-none"
+            style="top: 100%; max-width: none;"
+          >
+            <b>{{ timerCount }}</b>
+          </q-chip>
         </q-circular-progress>
 
         <b>{{ user.active?.data.consumables.energy.quantity }} / {{ user.active?.data.consumables.energy.total }}</b>
@@ -26,19 +35,20 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 
-const { user } = useUserStore()
+const { user, getItem } = useUserStore()
 
-const timerCount = ref('')
-const percentageCount = ref(0)
+const timerCount = ref('0:00')
+const percentageCount = ref(user.active?.data.consumables.energy.percentage)
 
 const countdown = () => {
-  if (user.active.data.consumables.energy.next_restoration > 0) {
-    setTimeout(() => {
+  if (user.active.data.consumables.energy.next_restoration >= 0) {
+    setTimeout(async () => {
       user.active.data.consumables.energy.next_restoration -= 1
       timerCount.value = secondsFormat(user.active.data.consumables.energy.next_restoration)
+      if (user.active.data.consumables.energy.next_restoration == 0) getItem()
       countdown()
     }, 1000)
   }
@@ -51,7 +61,9 @@ const secondsFormat = (timeLeft) => {
 }
 const dialog = ref(false)
 
-countdown()
+onMounted(() => {
+  countdown()
+})
 
 watch(() => user.active?.data.consumables.energy.next_restoration, () => {
   const data = user.active?.data.consumables.energy
