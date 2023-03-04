@@ -15,7 +15,7 @@
       </q-circular-progress>
       <b>{{ user.active?.data.consumables.credits.quantity }}</b>
     </q-chip>
-    <q-chip class="no-shadow text-right bg-blue-9 border-lg border-blue-7" outline color="white" >
+    <q-chip class="no-shadow text-right bg-blue-9 border-lg border-blue-7" outline color="white" style="min-width: 65px">
         <q-circular-progress
           show-value
           class="q-mr-sm"
