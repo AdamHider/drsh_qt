@@ -1,9 +1,8 @@
 <template>
     <q-page-wrapper>
-        <q-app-header class="transparent text-white rounded-b-md" reveal>
+        <q-app-header class="transparent text-white rounded-b-md " reveal>
             <UserToggle/>
-            <q-toolbar-title></q-toolbar-title>
-            <UserConsumables/>
+            <UserConsumablesBar/>
             <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
         </q-app-header>
         <q-page style="padding-top: 50px;" class="text-center flex column full-width">
@@ -20,16 +19,16 @@
                 <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
                 <q-linear-progress
                     color="positive"
-                    :model-value="(user.active.data.dashboard?.level.percentage / 100)"
+                    :value="(user.active.data.level?.percentage / 100)"
                     size="12px"
                     stripe rounded
                 ></q-linear-progress>
                 <div class="row q-ma-sm ">
                     <div class="col text-left">
-                        <b>Level {{user.active.data.dashboard?.level.id}}</b>
+                        <b>Level {{user.active.data.level?.level}}</b>
                     </div>
                     <div class="col text-right">
-                        <b>{{user.active.data.dashboard?.total_points}}/{{user.active.data.dashboard?.level.points_to}}</b>
+                        <b>{{user.active.data.level?.experience}}/{{user.active.data.level?.points_to}}</b>
                     </div>
                 </div>
                 </q-card-section>
@@ -111,7 +110,7 @@
 <script setup>
 import { useUserStore } from '../stores/user'
 import UserToggle from '../components/UserToggle.vue'
-import UserConsumables from '../components/UserConsumables.vue'
+import UserConsumablesBar from '../components/UserConsumablesBar.vue'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
