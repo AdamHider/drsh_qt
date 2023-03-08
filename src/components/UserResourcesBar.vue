@@ -13,9 +13,9 @@
             <q-icon name="payments" size="18px" color="white"></q-icon>
           </q-avatar>
       </q-circular-progress>
-      <b>{{ user.active?.data.consumables.credits.quantity }}</b>
+      <b>{{ user.active?.data?.resources.credits.quantity }}</b>
     </q-chip>
-    <q-chip class="no-shadow text-right bg-blue-9 border-lg border-blue-7" outline color="white" style="min-width: 65px">
+    <q-chip class="no-shadow text-right bg-blue-9 border-md border-blue-10" outline color="white" style="min-width: 65px">
         <q-circular-progress
           show-value
           class="q-mr-sm"
@@ -40,7 +40,7 @@
             <b>{{ timerCount }}</b>
           </q-chip>
         </q-circular-progress>
-        <b>{{ user.active?.data.consumables.energy.quantity }}<span style="font-size: 11px;">/{{ user.active?.data.consumables.energy.total }}</span></b>
+        <b>{{ user.active?.data?.resources.energy.quantity }}<span style="font-size: 11px;">/{{ user.active?.data?.resources.energy.total }}</span></b>
     </q-chip>
   </div>
 </template>
@@ -53,15 +53,15 @@ const { user, getItem } = useUserStore()
 
 const cancelCountdown = ref(false)
 const timerCount = ref('0:00')
-const percentageCount = ref(user.active?.data.consumables.energy.percentage)
+const percentageCount = ref(user.active?.data.resources.energy.percentage)
 
 const countdown = () => {
   if (cancelCountdown.value) return
-  if (user.active.data.consumables.energy.next_restoration >= 0) {
+  if (user.active.data.resources.energy.next_restoration >= 0) {
     setTimeout(async () => {
-      user.active.data.consumables.energy.next_restoration -= 1
-      timerCount.value = secondsFormat(user.active.data.consumables.energy.next_restoration)
-      if (user.active.data.consumables.energy.next_restoration == 0) getItem()
+      user.active.data.resources.energy.next_restoration -= 1
+      timerCount.value = secondsFormat(user.active.data.resources.energy.next_restoration)
+      if (user.active.data.resources.energy.next_restoration == 0) getItem()
       countdown()
     }, 1000)
   }
@@ -75,7 +75,7 @@ const secondsFormat = (timeLeft) => {
 const dialog = ref(false)
 
 onActivated(() => {
-  timerCount.value = secondsFormat(user.active.data.consumables.energy.next_restoration)
+  timerCount.value = secondsFormat(user.active.data.resources.energy.next_restoration)
   cancelCountdown.value = false
   countdown()
 })
@@ -84,8 +84,8 @@ onDeactivated(() => {
   countdown()
 })
 
-watch(() => user.active?.data.consumables.energy.next_restoration, () => {
-  const data = user.active?.data.consumables.energy
+watch(() => user.active?.data.resources.energy.next_restoration, () => {
+  const data = user.active?.data.resources.energy
   percentageCount.value = (data.total_time_cost - data.next_restoration) * 100 / data.total_time_cost
 })
 </script>

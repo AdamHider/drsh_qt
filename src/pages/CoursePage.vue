@@ -1,7 +1,9 @@
 <template>
   <q-page-wrapper>
-    <q-app-header class="transparent text-white rounded-b-md" reveal  ref="header">
-      <UserConsumablesBar/>
+    <q-app-header class="transparent text-white rounded-b-md" ref="header">
+      <CourseToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event"/>
+      <q-toolbar-title></q-toolbar-title>
+      <UserResourcesEnergyBar/>
     </q-app-header>
     <q-page  class=" items-end full-height full-width text-center" >
       <q-scroll-area class="absolute-top absolute-left full-width full-height"
@@ -34,7 +36,7 @@
 <script setup>
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
-import UserConsumablesBar from '../components/UserConsumablesBar.vue'
+import UserResourcesEnergyBar from '../components/UserResourcesEnergyBar.vue'
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'

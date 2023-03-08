@@ -2,7 +2,8 @@
   <q-page-wrapper>
     <q-app-header class="transparent text-white rounded-b-md" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-      <q-toolbar-title></q-toolbar-title>
+        <q-toolbar-title></q-toolbar-title>
+        <UserResourcesEnergyBar/>
     </q-app-header>
     <q-page class="text-center full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
       <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;">
@@ -51,10 +52,25 @@
                   rounded
               ></q-linear-progress>
           </q-card-section>
-          <q-card-actions class="text-right">
-            <q-btn v-if="lesson.active.exercise?.finished_at" class="full-width" label="Redo" icon="replay" color="warning" @click="redo(lesson.active.id)"></q-btn>
-            <q-btn v-else-if="lesson.active.exercise?.id" class="full-width" label="Continue"  icon="play_arrow" color="positive"  @click="open(lesson.active.id)"></q-btn>
-            <q-btn v-else class="full-width" label="Start" color="primary" icon="play_arrow" @click="start(lesson.active.id)"></q-btn>
+          <q-card-actions class="text-right justify-end">
+            <q-btn v-if="lesson.active.exercise?.finished_at"
+              push
+              label="Redo"
+              icon="replay"
+              color="warning"
+              @click="redo(lesson.active.id)"/>
+            <q-btn v-else-if="lesson.active.exercise?.id"
+              push
+              label="Continue"
+              icon-right="chevron_right"
+              color="positive"
+              @click="open(lesson.active.id)"/>
+            <q-spend-button v-else
+              push color="primary"
+              side-icon="bolt"
+              :side-label="lesson.active.cost_config?.energy"
+              :side-label-color="(lesson.active.cost_config?.energy > user.active?.data.resources.energy.quantity) ? 'negative' : 'white'"
+              @click="start(lesson.active.id)"></q-spend-button>
           </q-card-actions>
           <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
               <div class="text-h6">Sattelites</div>
@@ -98,10 +114,25 @@
               <div class="text-h5"><b>{{activeSattelite.title}}</b></div>
               <div class="text-caption">{{activeSattelite.description}}</div>
           </q-card-section>
-          <q-card-actions class="text-right">
-            <q-btn v-if="activeSattelite.exercise?.finished_at" class="full-width" label="Redo" icon="replay" color="warning" @click="redo(activeSattelite.id)"></q-btn>
-            <q-btn v-else-if="activeSattelite.exercise?.id" class="full-width" icon="play_arrow" label="Continue" color="positive" @click="open(activeSattelite.id)"></q-btn>
-            <q-btn v-else class="full-width" label="Start" color="primary" icon="play_arrow" @click="start(activeSattelite.id)"></q-btn>
+          <q-card-actions class="justify-end text-right">
+            <q-btn v-if="activeSattelite.exercise?.finished_at"
+              push
+              label="Redo"
+              icon-right="replay"
+              color="warning"
+              @click="redo(activeSattelite.id)"/>
+            <q-btn v-else-if="activeSattelite.exercise?.id"
+              push
+              label="Continue"
+              icon-right="chevron_right"
+              color="positive"
+              @click="open(activeSattelite.id)"/>
+            <q-spend-button v-else
+              push
+              color="primary"
+              side-icon="bolt"
+              :side-label="activeSattelite.cost_config?.energy"
+              @click="start(activeSattelite.id)"></q-spend-button>
           </q-card-actions>
         </q-card>
 
@@ -114,11 +145,14 @@
 import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
+import UserResourcesEnergyBar from '../components/UserResourcesEnergyBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, watch, onMounted } from 'vue'
+import { useUserStore } from '../stores/user'
 
 const router = useRouter()
 const route = useRoute()
+const { user } = useUserStore()
 const { lesson, getItem, getSatteliteList } = useLesson()
 const { addItem, redoItem } = useExercise()
 const dialog = ref(false)
@@ -130,9 +164,12 @@ const select = (index) => {
   dialog.value = true
 }
 const start = async (lessonId) => {
-  dialog.value = false
   const exerciseCreated = await addItem(lessonId)
-  if (!exerciseCreated.error) router.push(`/lesson-${lessonId}`)
+  if (!exerciseCreated.error) {
+    await useUserStore().getItem()
+    router.push(`/lesson-${lessonId}`)
+    dialog.value = false
+  }
 }
 const open = async (lessonId) => {
   dialog.value = false

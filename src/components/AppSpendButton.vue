@@ -1,11 +1,13 @@
 <template>
-    <q-page-sticky :class="`q-app-header ${props.class}`"  ref="header" style="z-index: 100" expand position="top">
-      <q-toolbar>
-        <slot name="back-button"></slot>
-        <slot/>
-      </q-toolbar>
-    </q-page-sticky>
-    <q-scroll-observer @scroll="onScroll" />
+    <q-btn :push="props.push" dense :class="`${props.class}`" :color="props.color" style="overflow: hidden; padding: 0" >
+      <div class="flex justify-between ">
+        <div class="col q-py-xs q-px-md">Start</div>
+        <q-chip v-if="props.sideLabel" square :text-color="props.sideLabelColor" style="background-color: #00000038; border-radius: 0"  class="col-3 q-ma-none q-pa-none q-py-xs q-px-sm" >
+          <q-icon :name="props.sideIcon" color="yellow"></q-icon>
+          {{ props.sideLabel }}
+        </q-chip>
+      </div>
+    </q-btn>
 </template>
 
 <script setup>
@@ -13,8 +15,12 @@ import { ref, onActivated, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const props = defineProps({
-  reveal: Boolean,
-  class: String
+  class: String,
+  color: String,
+  sideIcon: String,
+  sideLabel: String,
+  sideLabelColor: String,
+  push: Boolean
 })
 const header = ref(null)
 let revealOffset = 0
