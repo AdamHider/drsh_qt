@@ -2,11 +2,18 @@
     <q-page-wrapper>
         <q-app-header class="transparent text-white rounded-b-md " reveal>
             <UserToggle/>
-            <UserResourcesBar/>
+            <q-toolbar-title></q-toolbar-title>
             <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
         </q-app-header>
         <q-page style="padding-top: 50px;" class="text-center flex column full-width">
             <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
+                <q-card-section>
+                    <div class="flex col justify-end">
+                        <UserResourceBar :resource="user.active?.data.resources.energy" icon="bolt" icon-color="yellow"/>
+                        <UserResourceBar :resource="user.active?.data.resources.credits" icon="payments" icon-color="green"/>
+                        <UserResourceBar :resource="user.active?.data.resources.gems" icon="diamond" icon-color="purple"/>
+                    </div>
+                </q-card-section>
                 <q-card-section>
                     <q-img
                         :src="user.active.data.character?.image"
@@ -110,7 +117,7 @@
 <script setup>
 import { useUserStore } from '../stores/user'
 import UserToggle from '../components/UserToggle.vue'
-import UserResourcesBar from '../components/UserResourcesBar.vue'
+import UserResourceBar from '../components/UserResourceBar.vue'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'

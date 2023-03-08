@@ -3,7 +3,7 @@
     <q-app-header class="transparent text-white rounded-b-md" ref="header">
       <CourseToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event"/>
       <q-toolbar-title></q-toolbar-title>
-      <UserResourcesEnergyBar/>
+      <UserResourceBar :resource="user.active?.data.resources.energy" icon="bolt" icon-color="yellow"/>
     </q-app-header>
     <q-page  class=" items-end full-height full-width text-center" >
       <q-scroll-area class="absolute-top absolute-left full-width full-height"
@@ -36,7 +36,7 @@
 <script setup>
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
-import UserResourcesEnergyBar from '../components/UserResourcesEnergyBar.vue'
+import UserResourceBar from '../components/UserResourceBar.vue'
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'

@@ -13,25 +13,23 @@
               </q-card-section>
           </q-card>
             <q-card flat class="relative text-left col q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" >
-                <q-card-section class="q-pb-none flex justify-between items-center">
-                    <div class="text-h6">Your classrooms</div>
-                    <router-link :to="`/classrooms`">Show all</router-link>
+                <q-card-section class="q-py-none flex justify-between items-center">
+                  <div class="text-h6">Latest news</div>
                 </q-card-section>
                 <q-card-section class="q-px-none q-pt-none">
-                  <ClassroomSlider
-                    :slidesPerView=1.5
-                    :centerAligned="false"
-                    :withButton="false"
-                    slideHeight="130"
-                    :navigation="false"
-                    captionMode="bottom"
-                  />
+                    <ClassroomFeedSlider
+                      :slidesPerView=1.2
+                      :centerAligned="true"
+                      slideHeight="140"
+                      :navigation="true"
+                      captionMode="full"
+                    />
                 </q-card-section>
-                <q-card-section class="q-py-none flex justify-between items-center">
-                    <div class="text-h6">Latest news</div>
+                <q-card-section class="q-pb-none flex justify-between items-center">
+                    <div class="text-h6">Your classrooms</div>
                 </q-card-section>
                 <q-card-section class="q-pa-none">
-                    <ClassroomFeedList/>
+                  <ClassroomList/>
                 </q-card-section>
             </q-card>
         </q-page>
@@ -46,7 +44,8 @@
 <script setup >
 import { ref } from 'vue'
 import UserToggle from '../components/UserToggle.vue'
+import ClassroomList from '../components/ClassroomList.vue'
 import ClassroomSlider from '../components/ClassroomSlider.vue'
-import ClassroomFeedList from '../components/ClassroomFeedList.vue'
+import ClassroomFeedSlider from '../components/ClassroomFeedSlider.vue'
 
 </script>
