@@ -4,25 +4,20 @@
     :centeredSlides="props.centerAligned"
     :navigation="props.navigation"
   >
-    <swiper-slide v-for="(feedItem, index) in classroomFeed" :key="index" :class="'text-center'"
-      @click="router.push(`classroom-${classroomFeedItem.id}`)">
-
+    <swiper-slide v-for="(feedItem, index) in classroomFeed" :key="index" :class="'text-center'">
       <q-item
         :key="index" class="cursor-pointer text-left"
         clickable
         @click="router.push(`${feedItem.code}-${feedItem.item_id}`)">
         <q-item-section avatar>
-          <q-avatar>
+          <q-avatar rounded >
             <img :src="feedItem.classroom_image">
           </q-avatar>
         </q-item-section>
         <q-item-section>
           <q-item-label><b>{{ feedItem.classroom_title }}</b></q-item-label>
-          <q-item-label caption>{{ feedItem.title }}</q-item-label>
-        </q-item-section>
-
-        <q-item-section side top>
           <q-item-label caption>{{ feedItem.date_start_humanized }}</q-item-label>
+          <q-item-label>{{ feedItem.title }}</q-item-label>
         </q-item-section>
       </q-item>
     </swiper-slide>
@@ -84,3 +79,9 @@ const select = async (index) => {
   await saveItemSettings(data)
 }
 </script>
+<style>
+.swiper-button-next,
+.swiper-button-prev {
+    --swiper-navigation-size: 20px;
+}
+</style>

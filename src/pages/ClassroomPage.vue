@@ -60,12 +60,15 @@
               </div>
           </div>
         </q-card-section>
-        <q-card-section v-if="!classroom.active?.is_owner">
-          <q-btn v-if="!classroom.active?.is_subscribed" class="full-width" label="Subscribe" color="primary" icon="person_add" @click="subscribeClassroom"></q-btn>
-          <q-btn v-else flat class="full-width" label="Subscribed" icon="check" @click="unsubscribeClassroom"></q-btn>
-        </q-card-section>
-        <q-card-section v-else>
-          <q-btn  class="full-width" label="Edit classroom" icon="edit" :to="`/classroom-${classroom.active?.id}/edit`"></q-btn>
+        <q-card-section>
+          <div v-if="!classroom.active?.is_owner">
+            <q-btn v-if="!classroom.active?.is_subscribed && !classroom.active?.is_disabled_subscriber" push class="full-width" label="Subscribe" color="primary" icon="person_add" @click="subscribeClassroom(classroom.active.code)"></q-btn>
+            <q-btn v-else-if="classroom.active?.is_disabled_subscriber" push class="full-width" label="Request sent" icon="person_add" @click="unsubscribeClassroom(classroom.active.code)"></q-btn>
+            <q-btn v-else push flat class="full-width" icon="check" label="Subscribed" @click="unsubscribeClassroom(classroom.active.code, classroom.active.is_private)"></q-btn>
+          </div>
+          <div v-else>
+            <q-btn push class="full-width" icon="edit" label="Edit" :to="`/classroom-${classroom.active?.id}/edit`"></q-btn>
+          </div>
         </q-card-section>
         <q-separator />
         <q-card-section v-if="classroom.active?.is_subscribed" class="q-pa-none">
@@ -159,7 +162,7 @@
               <q-item clickable v-ripple>
                 <q-item-section>Invite friend</q-item-section>
               </q-item>
-              <q-item clickable v-ripple :to="`/classroom-${classroom.active?.id}/subscribers`">
+              <q-item clickable v-if="classroom.active.is_subscribed && !classroom.active.is_disabled_subscriber" v-ripple :to="`/classroom-${classroom.active?.id}/subscribers`">
                 <q-item-section>Subscribers</q-item-section>
               </q-item>
             </q-list>

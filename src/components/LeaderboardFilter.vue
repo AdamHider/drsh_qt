@@ -4,9 +4,6 @@
       v-model="formData.valid"
       autocomplete="off"
       class="full-width">
-          <div v-if="props.allowedFilters.includes('by_classroom')">
-            <q-checkbox v-model="formData.fields.by_classroom.value" label="Classroom only" />
-          </div>
           <div v-if="props.allowedFilters.includes('time_period')">
             <q-chip v-for="(option, optionKey) in formData.fields.time_period.options" :key="optionKey"
               clickable
@@ -34,9 +31,6 @@ const props = defineProps({
 const formData = reactive({
   valid: true,
   fields: {
-    by_classroom: {
-      value: false
-    },
     time_period: {
       value: 'all',
       options: [
@@ -57,11 +51,9 @@ const formData = reactive({
   }
 })
 onMounted(() => {
-  if (props.classroomId) formData.fields.by_classroom.value = props.classroomId
   if (props.timePeriod) formData.fields.time_period.value = props.timePeriod
 })
 onActivated(() => {
-  if (props.classroomId) formData.fields.by_classroom.value = props.classroomId
   if (props.timePeriod) formData.fields.time_period.value = props.timePeriod
 })
 const composeFilter = () => {
@@ -71,13 +63,6 @@ const composeFilter = () => {
   }
   return filter
 }
-watch(() => formData.fields.by_classroom.value, async (currentValue, oldValue) => {
-  if (props.classroomId) {
-    formData.fields.by_classroom.value = props.classroomId
-    return
-  }
-  emits('update-filter', composeFilter())
-})
 watch(() => formData.fields.time_period.value, async (currentValue, oldValue) => {
   if (props.timePeriod) {
     formData.fields.time_period.value = props.timePeriod

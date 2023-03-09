@@ -14,7 +14,8 @@ import { ref, onActivated, onDeactivated } from 'vue'
 
 const emits = defineEmits(['onLoaded'])
 const props = defineProps({
-  loadMore: Function
+  loadMore: Function,
+  reset: Boolean
 })
 const infiniteScroll = ref()
 const isLoaded = ref(false)
@@ -37,6 +38,7 @@ const onLoad = async function (index, done) {
 }
 
 onActivated(async () => {
+  if (props.reset) list.value = []; infiniteScroll.value.resume()
   if (list.value.length > 0) {
     list.value = await props.loadMore({ limit: list.value.length, offset: 0 })
     const currentIndex = Math.floor(list.value.length / limit)
@@ -49,6 +51,7 @@ onActivated(async () => {
   emits('onLoaded', list.value)
 })
 onDeactivated(() => {
+  if (props.reset) list.value = []
   infiniteScroll.value.stop()
 })
 

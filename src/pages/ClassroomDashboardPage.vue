@@ -1,8 +1,9 @@
 <template>
     <q-page-wrapper>
         <q-app-header class="transparent text-white rounded-b-md" reveal>
-        <q-toolbar-title></q-toolbar-title>
-        <q-btn flat round dense class="q-mr-sm" icon="share"/>
+          <UserToggle/>
+          <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense class="q-mr-sm" icon="share"/>
         </q-app-header>
         <q-page class="text-center flex column full-width" style="padding-top: 50px">
           <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;">
