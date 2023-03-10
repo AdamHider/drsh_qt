@@ -135,28 +135,28 @@ const routes = [
         }
       },
       {
-        path: 'classroom/challenges',
-        component: () => import('pages/ChallengesPage.vue'),
+        path: 'classroom/quests',
+        component: () => import('pages/QuestsPage.vue'),
         meta: {
-          pageTitle: 'Challenges',
+          pageTitle: 'Quests',
           requiresAuth: true,
           transition: 'slide-in'
         }
       },
       {
-        path: 'classroom-:classroom_id/challenges',
-        component: () => import('pages/ChallengesPage.vue'),
+        path: 'classroom-:classroom_id/quests',
+        component: () => import('pages/QuestsPage.vue'),
         meta: {
-          pageTitle: 'Challenges',
+          pageTitle: 'Quests',
           requiresAuth: true,
           transition: 'slide-in'
         }
       },
       {
-        path: 'challenge-:challenge_id',
-        component: () => import('pages/ChallengePage.vue'),
+        path: 'quest-:quest_id',
+        component: () => import('pages/QuestPage.vue'),
         meta: {
-          pageTitle: 'Challenge',
+          pageTitle: 'Quest',
           requiresAuth: true
         }
       },

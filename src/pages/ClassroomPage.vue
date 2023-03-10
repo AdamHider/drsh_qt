@@ -52,7 +52,7 @@
               </div>
               <q-separator vertical/>
               <div class="col">
-                  <div class="text-h5"><b>{{classroom.active?.dashboard?.total_challenges}}</b></div>
+                  <div class="text-h5"><b>{{classroom.active?.dashboard?.total_quests}}</b></div>
                   <div class="text-caption text-grey">Challenges</div>
                   <q-tooltip activator="parent" location="top">
                       Total challenges of the classroom
@@ -98,11 +98,11 @@
                     />
                 </q-card-section>
                 <q-card-section class="q-py-none flex justify-between items-center">
-                    <div class="text-h6">Challenges</div>
-                    <router-link :to="`/classroom-${classroom.active?.id}/challenges`" >Show all</router-link>
+                    <div class="text-h6">Quests</div>
+                    <router-link :to="`/classroom-${classroom.active?.id}/quests`" >Show all</router-link>
                 </q-card-section>
                 <q-card-section class="q-pa-none">
-                    <ChallengeSlider
+                    <QuestSlider
                       :classroom-id="classroom.active?.id"
                       :slidesPerView=1.4
                       :centerAligned="false"
@@ -177,7 +177,7 @@
 import { ref, watch, onMounted, onActivated } from 'vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
 import HomeworkSlider from '../components/HomeworkSlider.vue'
-import ChallengeSlider from '../components/ChallengeSlider.vue'
+import QuestSlider from '../components/QuestSlider.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import LeaderboardChart from '../components/LeaderboardChart.vue'
 import { useClassroom } from '../composables/useClassroom'

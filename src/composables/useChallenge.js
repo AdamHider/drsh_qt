@@ -10,7 +10,7 @@ const challenge = reactive({
 
 export function useChallenge () {
   async function getItem (challengeId) {
-    const challengeResponse = await api.challenge.getItem({ challenge_id: challengeId })
+    const challengeResponse = await api.challenge.getItem({ quest_id: challengeId })
     if (!challengeResponse.error) {
       challenge.active = challengeResponse
     }
@@ -33,7 +33,7 @@ export function useChallenge () {
     }
   }
   async function addWinner (challengeId) {
-    const challengeWinnerResponse = await api.challenge.addWinnerItem({ challenge_id: challengeId })
+    const challengeWinnerResponse = await api.challenge.addWinnerItem({ quest_id: challengeId })
     if (!challengeWinnerResponse.error) {
       return challengeWinnerResponse
     }

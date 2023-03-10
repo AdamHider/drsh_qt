@@ -5,11 +5,14 @@
             <q-toolbar-title>Challenges</q-toolbar-title>
         </q-app-header>
         <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
-            <ChallengeList/>
+            <QuestList :classroom-id="route.params.classroom_id"/>
         </q-page>
     </q-page-wrapper>
 </template>
 
 <script setup >
-import ChallengeList from '../components/ChallengeList.vue'
+import { useRoute } from 'vue-router'
+import QuestList from '../components/QuestList.vue'
+
+const route = useRoute()
 </script>

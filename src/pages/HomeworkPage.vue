@@ -52,7 +52,7 @@
           <q-tab name="leaderboard" icon="bar_chart" label="Score" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated keep-alive>
-          <q-tab-panel name="main" class="q-px-none" >
+          <q-tab-panel name="main" class="q-px-none">
             <q-card flat class="relative text-left transparent full-width " style="z-index: 1;"
               v-if="transitionTrigger">
               <q-card-section class="q-py-sm">
