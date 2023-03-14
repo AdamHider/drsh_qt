@@ -63,8 +63,8 @@
         <q-card-section>
           <div v-if="!classroom.active?.is_owner">
             <q-btn v-if="!classroom.active?.is_subscribed && !classroom.active?.is_disabled_subscriber" push class="full-width" label="Subscribe" color="primary" icon="person_add" @click="subscribeClassroom(classroom.active.code)"></q-btn>
-            <q-btn v-else-if="classroom.active?.is_disabled_subscriber" push class="full-width" label="Request sent" icon="person_add" @click="unsubscribeClassroom(classroom.active.code)"></q-btn>
-            <q-btn v-else push flat class="full-width" icon="check" label="Subscribed" @click="unsubscribeClassroom(classroom.active.code, classroom.active.is_private)"></q-btn>
+            <q-btn v-else-if="classroom.active?.is_disabled_subscriber" flat color="green-8" class="full-width" label="Request sent" icon="person_add" @click="unsubscribeClassroom(classroom.active.code)"></q-btn>
+            <q-btn v-else push flat color="positive" class="full-width" icon="check" label="Subscribed" @click="unsubscribeClassroom(classroom.active.code, classroom.active.is_private)"></q-btn>
           </div>
           <div v-else>
             <q-btn push class="full-width" icon="edit" label="Edit" :to="`/classroom-${classroom.active?.id}/edit`"></q-btn>
@@ -83,34 +83,10 @@
             <q-tab-panel name="main" class="q-px-none" >
               <q-card flat>
                 <q-card-section class="q-py-none flex justify-between items-center">
-                    <div class="text-h6">Homeworks</div>
-                    <router-link :to="`/classroom-${classroom.active?.id}/homeworks`">Show all</router-link>
-                </q-card-section>
-                <q-card-section class="q-pa-none">
-                    <HomeworkSlider
-                      :classroom-id="classroom.active?.id"
-                      :slidesPerView=2.3
-                      :centerAligned="false"
-                      :withButton="false"
-                      slideHeight="150"
-                      :navigation="false"
-                      captionMode="full"
-                    />
-                </q-card-section>
-                <q-card-section class="q-py-none flex justify-between items-center">
                     <div class="text-h6">Quests</div>
-                    <router-link :to="`/classroom-${classroom.active?.id}/quests`" >Show all</router-link>
                 </q-card-section>
                 <q-card-section class="q-pa-none">
-                    <QuestSlider
-                      :classroom-id="classroom.active?.id"
-                      :slidesPerView=1.4
-                      :centerAligned="false"
-                      :withButton="false"
-                      slideHeight="140"
-                      :navigation="false"
-                      captionMode="full"
-                    />
+                  <QuestList :classroom-id="route.params.classroom_id"/>
                 </q-card-section>
               </q-card>
             </q-tab-panel>
@@ -176,8 +152,7 @@
 <script setup>
 import { ref, watch, onMounted, onActivated } from 'vue'
 import ClassroomToggle from '../components/ClassroomToggle.vue'
-import HomeworkSlider from '../components/HomeworkSlider.vue'
-import QuestSlider from '../components/QuestSlider.vue'
+import QuestList from '../components/QuestList.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import LeaderboardChart from '../components/LeaderboardChart.vue'
 import { useClassroom } from '../composables/useClassroom'

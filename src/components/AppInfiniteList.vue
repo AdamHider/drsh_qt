@@ -52,7 +52,7 @@ onActivated(async () => {
 })
 onDeactivated(() => {
   if (props.reset) list.value = []
-  infiniteScroll.value.stop()
+  if (infiniteScroll.value) { infiniteScroll.value.stop() }
 })
 
 </script>

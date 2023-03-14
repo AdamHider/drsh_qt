@@ -2,7 +2,7 @@
   <q-page-wrapper>
   <q-app-header class=" rounded-b-md" reveal>
       <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-    <q-toolbar-title>Task</q-toolbar-title>
+    <q-toolbar-title>Quest</q-toolbar-title>
   </q-app-header>
   <q-page class="text-center bg-white full-width" style="padding-top: 50px" >
     <transition
