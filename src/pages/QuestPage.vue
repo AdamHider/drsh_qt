@@ -36,7 +36,7 @@
         v-if="transitionTrigger">
         <q-card-section class="q-py-sm">
           <q-list separator>
-            <q-item class="q-px-none">
+            <q-item class="q-px-none items-center">
               <q-item-section top avatar>
                 <q-avatar color="primary" text-color="white" icon="ads_click" />
               </q-item-section>
@@ -47,12 +47,29 @@
               <q-item-section side class="text-dark" v-if="quest?.goal.value">
                 <b style="font-size: 16px">{{ quest?.goal.value }}</b>
               </q-item-section>
-              <q-item-section v-if="quest?.lesson_id" class="text-left">
+              <q-item-section v-if="quest?.lesson_id && !quest.is_completed && !quest.is_outdated" class="text-left">
                 <q-btn class="full-width" label="Start" color="primary" icon="rocket" @click="router.push(`lesson-startup-${quest?.lesson_id}`)"></q-btn>
               </q-item-section>
             </q-item>
 
-            <q-item class="q-px-none">
+            <q-item class="q-px-none items-center">
+              <q-item-section top avatar>
+                <q-avatar color="primary" text-color="white" icon="timeline" />
+              </q-item-section>
+                <q-item-section >
+                  <q-item-label>Reward</q-item-label>
+                <q-item-label caption lines="2">What you will get.</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <div>
+                  <q-chip  v-if="quest?.reward.gems"  color="transparent" class="q-mt-none" text-color="purple" icon="diamond"><b>{{ quest?.reward.gems }}</b></q-chip>
+                  <q-chip  v-if="quest?.reward.credits" color="transparent" text-color="positive" icon="payment"><b>{{ quest?.reward.credits }}</b></q-chip>
+                  <q-chip  v-if="quest?.reward.experience" color="transparent" text-color="blue" icon="expand_less"><b>{{ quest?.reward.experience }}</b></q-chip>
+                </div>
+                <q-btn push color="primary" v-if="quest?.is_completed && !quest?.is_rewarded">Claim</q-btn>
+              </q-item-section>
+            </q-item>
+            <q-item class="q-px-none items-center">
               <q-item-section top avatar>
                 <q-avatar color="primary" text-color="white" icon="timeline" />
               </q-item-section>
@@ -61,10 +78,11 @@
                 <q-item-label caption lines="2">How close to the edge you are.</q-item-label>
               </q-item-section>
               <q-item-section side class="text-dark">
-                <b style="font-size: 16px">{{quest?.progress.percentage_text}}</b>
+                <b v-if="quest?.progress.percentage < 100" style="font-size: 16px">{{quest?.progress.percentage_text}}</b>
+                <q-icon v-else name="task_alt" color="positive"></q-icon>
               </q-item-section>
             </q-item>
-            <q-item class="q-px-none" v-if="quest?.winner_left > 0">
+            <q-item class="q-px-none items-center" v-if="quest?.winner_left > 0">
               <q-item-section top avatar>
                 <q-avatar color="primary" text-color="white" icon="people" />
               </q-item-section>
@@ -76,7 +94,7 @@
                 <b style="font-size: 16px">{{quest?.winner_left }}</b>
               </q-item-section>
             </q-item>
-            <q-item  v-if="quest?.date_start_humanized"  class="q-px-none">
+            <q-item  v-if="quest?.date_start_humanized"  class="q-px-none items-center">
               <q-item-section top avatar>
                 <q-avatar color="primary" text-color="white" icon="outlined_flag" />
               </q-item-section>
@@ -88,7 +106,7 @@
                 <b style="font-size: 16px">{{quest?.date_start_humanized}}</b>
               </q-item-section>
             </q-item>
-            <q-item  v-if="quest?.date_end_humanized && !quest?.is_finished"  class="q-px-none">
+            <q-item  v-if="quest?.date_end_humanized && !quest?.is_completed"  class="q-px-none items-center">
               <q-item-section top avatar>
                 <q-avatar color="primary" text-color="white" icon="flag" />
               </q-item-section>
@@ -98,29 +116,6 @@
               </q-item-section>
               <q-item-section side class="text-dark">
                 <b style="font-size: 16px">{{quest?.date_end_humanized}}</b>
-              </q-item-section>
-            </q-item>
-            <q-item  v-if="quest?.is_finished"  class="q-px-none">
-              <q-item-section top avatar>
-                <q-avatar color="primary" text-color="white" icon="flag" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>This quest is finished</q-item-label>
-              </q-item-section>
-              <q-item-section side class="text-dark">
-                <b style="font-size: 16px">{{quest?.date_end_humanized}}</b>
-              </q-item-section>
-            </q-item>
-            <q-item  v-if="quest?.is_finished && quest?.is_winner"  class="q-px-none">
-              <q-item-section top avatar>
-                <q-avatar color="positive" text-color="white" icon="emoji_events" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>You are the winner!</q-item-label>
-              </q-item-section>
-              <q-item-section side class="text-dark" >
-                <q-btn v-if="!quest?.winner_confirmed" icon="check" color="positive" label="Confirm" @click="confirmWinner"/>
-                <q-btn v-else icon="check" disabled color="positive" label="Confirmed"/>
               </q-item-section>
             </q-item>
           </q-list>

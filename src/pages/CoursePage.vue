@@ -37,7 +37,7 @@
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, watch, onActivated } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
 import { useRoute } from 'vue-router'
@@ -51,7 +51,7 @@ const onScroll = function (event) { header.value.onScroll(event) }
 
 const { course, getItem } = useCourse()
 
-onMounted(async () => {
+onActivated(async () => {
   await getItem(route.params.course_id)
 })
 watch(() => route.params.course_id, (newData, oldData) => {

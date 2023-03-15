@@ -44,18 +44,18 @@
               </div>
               <q-separator vertical/>
               <div class="col">
-                  <div class="text-h5"><b>{{classroom.active?.dashboard?.total_homeworks}}</b></div>
-                  <div class="text-caption text-grey">Homeworks</div>
+                  <div class="text-h5"><b>{{classroom.active?.dashboard?.total_quests}}</b></div>
+                  <div class="text-caption text-grey">Quests</div>
                   <q-tooltip activator="parent" location="top">
-                      Total task assigned
+                      Total quests assigned
                   </q-tooltip>
               </div>
               <q-separator vertical/>
               <div class="col">
-                  <div class="text-h5"><b>{{classroom.active?.dashboard?.total_quests}}</b></div>
-                  <div class="text-caption text-grey">Challenges</div>
+                  <div class="text-h5"><b>{{classroom.active?.dashboard?.total_rank}}</b></div>
+                  <div class="text-caption text-grey">Rank</div>
                   <q-tooltip activator="parent" location="top">
-                      Total challenges of the classroom
+                      The summary of participants' experience
                   </q-tooltip>
               </div>
           </div>
@@ -86,7 +86,7 @@
                     <div class="text-h6">Quests</div>
                 </q-card-section>
                 <q-card-section class="q-pa-none">
-                  <QuestList :classroom-id="route.params.classroom_id"/>
+                  <QuestList :classroom-id="route.params.classroom_id" :active-only="true"/>
                 </q-card-section>
               </q-card>
             </q-tab-panel>
@@ -176,9 +176,6 @@ const unsubscribeClassroom = async function () {
   await unsubscribe({ classroom_code: classroom.active.code })
   getItem(route.params.classroom_id)
 }
-onMounted(async () => {
-  await getItem(route.params.classroom_id)
-})
 onActivated(async () => {
   await getItem(route.params.classroom_id)
 })

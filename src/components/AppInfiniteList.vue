@@ -10,11 +10,12 @@
 </template>
 
 <script setup>
-import { ref, onActivated, onDeactivated } from 'vue'
+import { ref, onActivated, onDeactivated, watch } from 'vue'
 
 const emits = defineEmits(['onLoaded'])
 const props = defineProps({
   loadMore: Function,
+  reloadTrigger: Boolean,
   reset: Boolean
 })
 const infiniteScroll = ref()
@@ -26,33 +27,46 @@ const onLoad = async function (index, done) {
   let offset = 0
   if (list.value.length > 0) offset = limit * (index - 1)
   const listResponse = await props.loadMore({ limit, offset })
-  if (listResponse.length > 0) {
+  if (listResponse.length == limit) {
     isLoaded.value = false
-    list.value = list.value.concat(listResponse)
-    done(listResponse.length === 0)
+    done(false)
   } else {
     isLoaded.value = true
     done(true)
+  }
+  if (offset > 0) {
+    list.value = list.value.concat(listResponse)
+  } else {
+    list.value = listResponse
   }
   emits('onLoaded', list.value)
 }
 
 onActivated(async () => {
-  if (props.reset) list.value = []; infiniteScroll.value.resume()
+  if (props.reset) {
+    list.value = []
+    infiniteScroll.value.resume()
+    return
+  }
   if (list.value.length > 0) {
     list.value = await props.loadMore({ limit: list.value.length, offset: 0 })
     const currentIndex = Math.floor(list.value.length / limit)
-    if (currentIndex > 1) {
+    infiniteScroll.value.setIndex(currentIndex)
+    if (currentIndex > 0) {
       list.value = list.value.slice(0, currentIndex * limit)
-      infiniteScroll.value.setIndex(currentIndex)
     }
-    infiniteScroll.value.resume()
   }
+  infiniteScroll.value.resume()
   emits('onLoaded', list.value)
 })
+
 onDeactivated(() => {
   if (props.reset) list.value = []
   if (infiniteScroll.value) { infiniteScroll.value.stop() }
+})
+watch(() => props.reloadTrigger, async (currentValue, oldValue) => {
+  list.value = await props.loadMore({ limit: list.value.length, offset: 0 })
+  emits('onLoaded', list.value)
 })
 
 </script>
