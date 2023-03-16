@@ -29,6 +29,14 @@
         </q-page-sticky>
         <q-scroll-observer @scroll="onScroll" />
       </q-scroll-area>
+        <q-page-sticky position="right" :offset="[12, 12]" style="z-index: 100">
+          <div class="q-my-sm">
+            <QuestListToggle/>
+          </div>
+          <div class="q-my-sm">
+            <q-btn padding="10px" size="md"  icon="emoji_events" color="primary" />
+          </div>
+        </q-page-sticky>
     </q-page>
   </q-page-wrapper>
 </template>
@@ -36,6 +44,7 @@
 <script setup>
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
+import QuestListToggle from '../components/QuestListToggle.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { ref, reactive, watch, onActivated } from 'vue'
 import { useUserStore } from '../stores/user'

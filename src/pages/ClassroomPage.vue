@@ -151,7 +151,6 @@
 
 <script setup>
 import { ref, watch, onMounted, onActivated } from 'vue'
-import ClassroomToggle from '../components/ClassroomToggle.vue'
 import QuestList from '../components/QuestList.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import LeaderboardChart from '../components/LeaderboardChart.vue'

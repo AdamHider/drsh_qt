@@ -15,14 +15,13 @@
           </q-card>
             <q-card flat class="relative text-left col q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" >
                 <q-card-section class="q-py-none flex justify-between items-center">
-                  <div class="text-h6">Latest news</div>
+                  <div class="text-h6">Latest quests</div>
                 </q-card-section>
-                <q-card-section class="q-px-none q-pt-none">
-                    <ClassroomFeedSlider
+                <q-card-section class="q-pa-none">
+                    <QuestSlider
                       :slidesPerView=1.2
-                      :centerAligned="true"
+                      :centerAligned="false"
                       slideHeight="140"
-                      :navigation="true"
                       captionMode="full"
                     />
                 </q-card-section>
@@ -46,7 +45,6 @@
 import { ref } from 'vue'
 import UserToggle from '../components/UserToggle.vue'
 import ClassroomList from '../components/ClassroomList.vue'
-import ClassroomSlider from '../components/ClassroomSlider.vue'
-import ClassroomFeedSlider from '../components/ClassroomFeedSlider.vue'
+import QuestSlider from '../components/QuestSlider.vue'
 
 </script>

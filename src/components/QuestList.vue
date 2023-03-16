@@ -7,18 +7,15 @@
     <q-card  v-for="(questItem, index) in quests" :key="index" class="q-ma-sm cursor-pointer">
       <q-card-section >
         <q-item class="q-pa-none">
-            <q-item-section avatar   @click="router.push(`/quest-${questItem.id}`)">
-                <q-avatar size="60px">
-                    <q-img
-                      :src="questItem.image"
-                      loading="lazy"
-                      spinner-color="white"/>
-                </q-avatar>
-            </q-item-section>
             <q-item-section class="text-left"   @click="router.push(`/quest-${questItem.id}`)">
-                <q-item-section class="text-left">
-                    <q-item-label><b>{{ questItem.goal.title }}</b></q-item-label>
-                    <q-item-label caption lines="2">{{ questItem.title }}</q-item-label>
+                <q-item-section class=" text-left">
+                    <div class="flex items-center">
+                      <q-avatar color="primary" text-color="white" size="40px" icon="task"></q-avatar>
+                      <div class="col q-ml-md">
+                        <q-item-label><b>{{ questItem.goal.title }}</b></q-item-label>
+                        <q-item-label caption lines="2">{{ questItem.title }}</q-item-label>
+                      </div>
+                    </div>
                     <div class="row q-my-sm justify-between" >
                         <div class="coltext-left">
                           <q-chip
@@ -47,14 +44,13 @@
             </q-item-section>
             <q-item-section side v-if="questItem.reward && !questItem.is_rewarded && !questItem.is_outdated">
               <div class="full-width text-center">
-                Reward:
-                <div>
-                  <q-chip  v-if="questItem.reward.gems"  color="transparent" class="q-mt-none" text-color="purple" icon="diamond"><b>{{ questItem.reward.gems }}</b></q-chip>
-                  <q-chip  v-if="questItem.reward.credits" color="transparent" text-color="positive" icon="payment"><b>{{ questItem.reward.credits }}</b></q-chip>
-                  <q-chip  v-if="questItem.reward.experience" color="transparent" text-color="blue" icon="expand_less"><b>{{ questItem.reward.experience }}</b></q-chip>
-                </div>
+                <b>Rewards</b>
               </div>
-              <q-btn push color="primary" v-if="questItem.is_completed && !questItem.is_rewarded"  @click="claimReward(questItem.id)">Claim</q-btn>
+              <q-btn color="primary" :disable="!questItem.is_completed || questItem.is_rewarded"  @click="claimReward(questItem.id)">
+                <q-chip  v-if="questItem.reward.gems"  color="transparent" class="q-pa-none" text-color="white" icon="diamond"><b>{{ questItem.reward.gems }}</b></q-chip>
+                <q-chip  v-if="questItem.reward.credits" color="transparent" class="q-pa-none" text-color="white" icon="payment"><b>{{ questItem.reward.credits }}</b></q-chip>
+                <q-chip  v-if="questItem.reward.experience" color="transparent" class="q-pa-none" text-color="white" icon="expand_less"><b>{{ questItem.reward.experience }}</b></q-chip>
+              </q-btn>
             </q-item-section>
         </q-item>
         </q-card-section >

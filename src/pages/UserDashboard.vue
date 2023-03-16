@@ -8,13 +8,6 @@
         <q-page style="padding-top: 50px;" class="text-center flex column full-width">
             <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
                 <q-card-section>
-                    <div class="flex col justify-end">
-                        <UserResourceBar :resource="user.active?.data.resources.energy" icon="bolt" icon-color="yellow"/>
-                        <UserResourceBar :resource="user.active?.data.resources.credits" icon="payments" icon-color="green"/>
-                        <UserResourceBar :resource="user.active?.data.resources.gems" icon="diamond" icon-color="purple"/>
-                    </div>
-                </q-card-section>
-                <q-card-section>
                     <q-img
                         :src="user.active.data.character?.image"
                         style="max-width: 250px; width: 170px;"
@@ -62,29 +55,62 @@
                     </q-item>
                 </q-card-section>
                 <q-card-section class="q-pa-none">
-                    <div class="q-mb-md q-mx-sm row text-center">
-                        <div class="col">
-                            <div class="text-h5"><b>{{user.active.data.dashboard?.total_exercises}}</b></div>
-                            <div class="text-caption text-grey">Exercises</div>
-                            <q-tooltip activator="parent" location="top">
-                                Total exercises that you have done
-                            </q-tooltip>
+                    <div class="q-pa-sm row items-start">
+                        <div class="col-6 q-pa-sm">
+                            <q-item  class="bg-grey-2 rounded-borders">
+                                <q-item-section  avatar>
+                                    <q-icon size="32px" color="primary" name="payments"></q-icon>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.credits.quantity}}</b></q-item-label>
+                                    <q-item-label caption lines="2">Credits</q-item-label>
+                                </q-item-section>
+                                <q-tooltip activator="parent" location="top">
+                                    Total exercises that you have done
+                                </q-tooltip>
+                            </q-item>
                         </div>
-                        <q-separator vertical/>
-                        <div class="col">
-                            <div class="text-h5"><b>{{user.active.data.dashboard?.total_points}}</b></div>
-                            <div class="text-caption text-grey">Points</div>
-                            <q-tooltip activator="parent" location="top">
-                                Total points that you have scored
-                            </q-tooltip>
+                        <div class="col-6 q-pa-sm">
+                            <q-item  class="bg-grey-2 rounded-borders">
+                                <q-item-section avatar>
+                                    <q-icon size="32px" color="primary" name="diamond"></q-icon>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.gems.quantity}}</b></q-item-label>
+                                    <q-item-label caption lines="2">Gems</q-item-label>
+                                </q-item-section>
+                                <q-tooltip activator="parent" location="top">
+                                    Total exercises that you have done
+                                </q-tooltip>
+                            </q-item>
                         </div>
-                        <q-separator vertical/>
-                        <div class="col">
-                            <div class="text-h5"><b>{{user.active.data.dashboard?.total_classrooms}}</b></div>
-                            <div class="text-caption text-grey">Classrooms</div>
-                            <q-tooltip activator="parent" location="top">
-                                Total classrooms that you are member of
-                            </q-tooltip>
+                        <div class="col-6 q-pa-sm">
+                            <q-item  class="bg-grey-2 rounded-borders">
+                                <q-item-section  avatar>
+                                    <q-icon size="32px" color="primary" name="public"></q-icon>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="text-h5 text-primary"><b>{{user.active.data.dashboard?.total_exercises}}</b></q-item-label>
+                                    <q-item-label caption lines="2">Lessons</q-item-label>
+                                </q-item-section>
+                                <q-tooltip activator="parent" location="top">
+                                    Total lessons that you have done
+                                </q-tooltip>
+                            </q-item>
+                        </div>
+                        <div class="col-6 q-pa-sm">
+                            <q-item  class="bg-grey-2 rounded-borders">
+                                <q-item-section avatar>
+                                    <q-icon size="32px" color="primary" name="people_alt"></q-icon>
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label class="text-h5 text-primary"><b>{{user.active.data.dashboard?.total_classrooms}}</b></q-item-label>
+                                    <q-item-label caption lines="2">Classrooms</q-item-label>
+                                </q-item-section>
+                                <q-tooltip activator="parent" location="top">
+                                    Total classrooms that you are member of
+                                </q-tooltip>
+                            </q-item>
                         </div>
                     </div>
                 </q-card-section>

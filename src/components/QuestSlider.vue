@@ -10,79 +10,51 @@
         <q-card
           :class="`q-ma-sm cursor-pointer ${(questItem.is_active) ? 'active' : ''}`"
           @click="router.push(`quest-${questItem.id}`)"
-          flat
         >
-            <q-card-section class="q-pa-xs" >
-              <q-img
-                fit="cover"
-                class="rounded-borders"
-                :src="questItem.image"
-                :style="`height: ${props.slideHeight}px;`"
-                >
-                <div :class="`absolute-${captionMode} text-left text-white flex flex-center`" v-if="questItem.progress.value > 0">
-                  <q-circular-progress
-                    show-value
-                    class="text-white text-bold q-ma-md"
-                    :value="questItem.progress.percentage"
-                    track-color="grey-5"
-                    size="60px"
-                    color="white"
-                  >
-                  {{ questItem.progress.percentage }}%
-                  </q-circular-progress>
-                </div>
-                <div class="absolute-bottom transparent q-pa-none-important text-left">
-                  <q-chip
-                      v-if="questItem.time_left_humanized && !questItem.is_finished"
-                      dense
-                      class="q-ma-sm"
-                      style="font-size: 13px"
-                      :color="((questItem.time_left <= 3) ? 'red' : 'orange')"
-                      icon="sports_score"
-                      text-color="white">
-                      <b>{{ questItem.time_left_humanized }}</b>
-                  </q-chip>
-                  <q-chip
-                      v-else-if="!questItem.is_finished"
-                      dense
-                      class="q-ma-sm"
-                      style="font-size: 13px"
-                      :color="'red'"
-                      icon="sports_score"
-                      text-color="white">
-                      <b>Hurry up!</b>
-                  </q-chip>
-                  <q-chip
-                      v-if="questItem.is_finished"
-                      dense
-                      class="q-ma-sm"
-                      style="font-size: 13px"
-                      icon="check"
-                      color="positive"
-                      text-color="white">
-                      <b>Done</b>
-                  </q-chip>
-                </div>
-                <div class="absolute-bottom transparent q-pa-none-important text-right">
-                  <q-chip
-                      v-if="questItem.value"
-                      dense
-                      class="q-ma-sm"
-                      style="font-size: 13px"
-                      icon="ads_click"
-                      icon-right="star"
-                      color="primary"
-                      text-color="white">
-                      <b>{{ questItem.value }}</b>
-                  </q-chip>
-                </div>
-              </q-img>
-            </q-card-section>
-            <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold max-two-lines">{{questItem.title}}</div>
-                <div class="text-caption text-grey max-two-lines">{{questItem.description}}</div>
-                <div class="text-caption text-grey max-one-lines" v-if="questItem.winner_left && questItem.winner_left > 0">Winners left: {{questItem.winner_left}}</div>
-            </q-card-section>
+          <q-card-section >
+            <q-item class="q-pa-none">
+                <q-item-section class="text-left"   @click="router.push(`/quest-${questItem.id}`)">
+                    <q-item-section class="text-left">
+                        <q-item-label><b>{{ questItem.goal.title }}</b></q-item-label>
+                        <q-item-label caption lines="2" style="min-height: 29px">{{ questItem.title }}</q-item-label>
+                        <div class="row q-my-sm justify-between" >
+                            <div class="coltext-left">
+                              <q-chip
+                                    v-if="questItem.time_left_humanized"
+                                    dense
+                                    class="q-px-sm q-ma-none"
+                                    style="font-size: 13px"
+                                    :color="((questItem.time_left <= 3) ? 'red' : 'orange')"
+                                    icon="sports_score"
+                                    text-color="white">
+                                    <b>{{ questItem.time_left_humanized }}</b>
+                                </q-chip>
+                            </div>
+                            <div class="col text-right" v-if="!questItem.date_end || questItem.time_left > 0">
+                                <b>{{questItem.progress.percentage_text}}</b>
+                            </div>
+                        </div>
+                        <q-linear-progress
+                            v-if="!questItem.date_end || questItem.time_left > 0"
+                            :color="(questItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
+                            :value="(questItem.progress.percentage/100)"
+                            size="12px"
+                            rounded
+                        ></q-linear-progress>
+                    </q-item-section>
+                </q-item-section>
+                <q-item-section side v-if="questItem.reward && !questItem.is_rewarded && !questItem.is_outdated">
+                  <q-item-label caption lines="2" class="text-center">
+                    Reward
+                    <div>
+                      <q-chip  v-if="questItem.reward.gems"  color="transparent" class="q-mt-none" text-color="purple" icon="diamond"><b>{{ questItem.reward.gems }}</b></q-chip>
+                      <q-chip  v-if="questItem.reward.credits" color="transparent" text-color="positive" icon="payment"><b>{{ questItem.reward.credits }}</b></q-chip>
+                      <q-chip  v-if="questItem.reward.experience" color="transparent" text-color="blue" icon="expand_less"><b>{{ questItem.reward.experience }}</b></q-chip>
+                    </div>
+                  </q-item-label>
+                </q-item-section>
+            </q-item>
+          </q-card-section >
         </q-card>
       </swiper-slide>
     </swiper>
