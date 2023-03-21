@@ -8,7 +8,14 @@ const achievement = reactive({
 
 export function useAchievement () {
   async function getList (filter) {
-    return await api.achievement.getList(filter)
+    const achievementListResponse = await api.achievement.getList(filter)
+    if (!achievementListResponse.error) {
+      if (filter.offset > 0) {
+        achievement.list = achievement.list.concat(achievementListResponse)
+      } else {
+        achievement.list = achievementListResponse
+      }
+    }
   }
   async function getListByUser () {
     const achievementListResponse = await api.achievement.getList({ mode: 'user', limit: 5, offset: 0 })

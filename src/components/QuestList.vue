@@ -1,4 +1,5 @@
 <template>
+  <div>
   <q-infinite-list
     :reloadTrigger="reloadTrigger"
     :loadMore="loadMore"
@@ -86,11 +87,12 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+  </div>
 </template>
 
 <script setup>
 import { api } from '../services/index'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 
 const route = useRoute()
@@ -137,6 +139,9 @@ onBeforeRouteLeave((to, from) => {
     return false
   }
   return true
+})
+onMounted(() => {
+  console.log('MOUNTED LIST')
 })
 
 </script>

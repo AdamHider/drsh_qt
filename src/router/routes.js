@@ -87,7 +87,8 @@ const routes = [
         path: 'classroom-:classroom_id',
         component: () => import('pages/ClassroomPage.vue'),
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          transition: 'slide-in'
         }
       },
       {
@@ -117,47 +118,12 @@ const routes = [
         }
       },
       {
-        path: 'classroom-:classroom_id/homeworks',
-        component: () => import('pages/HomeworksPage.vue'),
-        meta: {
-          pageTitle: 'Homeworks',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'homework-:homework_id',
-        component: () => import('pages/HomeworkPage.vue'),
-        meta: {
-          pageTitle: 'Homework',
-          requiresAuth: true,
-          userGroups: ['registered', 'admin']
-        }
-      },
-      {
-        path: 'classroom/quests',
-        component: () => import('pages/QuestsPage.vue'),
-        meta: {
-          pageTitle: 'Quests',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'classroom-:classroom_id/quests',
-        component: () => import('pages/QuestsPage.vue'),
-        meta: {
-          pageTitle: 'Quests',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
         path: 'quest-:quest_id',
         component: () => import('pages/QuestPage.vue'),
         meta: {
           pageTitle: 'Quest',
-          requiresAuth: true
+          requiresAuth: true,
+          transition: 'slide-in'
         }
       },
 

@@ -34,7 +34,7 @@
             <QuestListToggle/>
           </div>
           <div class="q-my-sm">
-            <q-btn padding="10px" size="md"  icon="emoji_events" color="primary" />
+            <AchievementListToggle/>
           </div>
         </q-page-sticky>
     </q-page>
@@ -45,6 +45,7 @@
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
 import QuestListToggle from '../components/QuestListToggle.vue'
+import AchievementListToggle from '../components/AchievementListToggle.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { ref, reactive, watch, onActivated } from 'vue'
 import { useUserStore } from '../stores/user'

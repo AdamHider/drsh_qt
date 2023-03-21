@@ -2,24 +2,26 @@
     <q-btn
       padding="10px"
       size="md"
-      icon="task_alt"
+      icon="emoji_events"
       color="primary"
       @click="dialog = true"/>
+            <keep-alive>
       <q-dialog v-model="dialog">
-        <q-card  style="max-height: 50vh">
+        <q-card  style="max-height: 50vh" v-show="dialog">
           <q-card-section class="q-pb-none flex justify-between items-center">
-              <div class="text-h6">Active quests</div>
+              <div class="text-h6">Achievements</div>
           </q-card-section>
           <q-card-section class="q-px-none">
-            <QuestList :active-only="true"/>
+                <AchievementList/>
           </q-card-section>
         </q-card>
       </q-dialog>
+            </keep-alive>
 </template>
 
 <script setup>
 import { watch, ref } from 'vue'
-import QuestList from '../components/QuestList.vue'
+import AchievementList from '../components/AchievementList.vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 const dialog = ref(false)

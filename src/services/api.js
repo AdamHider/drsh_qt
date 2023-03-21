@@ -1,4 +1,5 @@
 import jQuery from "jquery";
+import { useRemoteDataStore } from '../stores/remoteData'
 
 export class ApiService {
   baseUrl = "/";
@@ -19,18 +20,25 @@ export class ApiService {
     return headers;
   }
 
-  post = async(context, method, params = {}) =>  {
+  post = async (context, method, params = {}) =>  {
+    const { cachedData, getCacheItem, saveCacheItem } = useRemoteDataStore()
     var self = this;
     let responseData = {};
     const resource = this.setResource(context, method);
     const headers = this.setHeaders(context, method);
     let data = JSON.stringify(params);
     if(method == 'uploadItem') data = params
-    await fetch(resource, {
-        method: 'POST', // or 'PUT'
-        credentials: 'include',
-        headers: headers,
-        body: data,
+    
+    return new Promise(function(resolve, reject) {
+        const cachedResponse = getCacheItem(context, method, params);
+        if(cachedResponse){
+            resolve(cachedResponse);
+        }
+        fetch(resource, {
+            method: 'POST',
+            credentials: 'include',
+            headers: headers,
+            body: data,
         })
         .then((response) => {
             if(response.headers.get('x-sid')){
@@ -39,12 +47,14 @@ export class ApiService {
             return response.json()
         })
         .then((data) => {
-            responseData = data;
+            saveCacheItem(context, method, params, data)
+            resolve(data);
         })
         .catch((error) => {
-            responseData = error;
+            saveCacheItem(context, method, params, error)
+            resolve(error);
         });
-    return responseData;
+    });
   }
 }
 
@@ -174,8 +184,6 @@ export class Api extends ApiService{
         getFeed: (params) =>  {
             return this.post('classroom', 'getFeed', params)
         }
-
-
     }
     image = {
         upload: (params) =>  {
