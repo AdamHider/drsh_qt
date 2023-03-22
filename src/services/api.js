@@ -30,10 +30,11 @@ export class ApiService {
     if(method == 'uploadItem') data = params
     
     return new Promise(function(resolve, reject) {
+        /*
         const cachedResponse = getCacheItem(context, method, params);
         if(cachedResponse){
             resolve(cachedResponse);
-        }
+        }*/
         fetch(resource, {
             method: 'POST',
             credentials: 'include',
