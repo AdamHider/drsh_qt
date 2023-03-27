@@ -59,14 +59,13 @@ const routes = [
         }
       },
       {
-        path: 'user/achievements',
-        component: () => import('pages/UserAchievements.vue'),
+        path: '/achievements',
+        component: () => import('pages/AchievementsPage.vue'),
         meta: {
           requiresAuth: true,
           transition: 'slide-in'
         }
       },
-
       {
         path: '/classrooms',
         component: () => import('pages/ClassroomsPage.vue'),
@@ -126,6 +125,14 @@ const routes = [
           transition: 'slide-in'
         }
       },
+      {
+        path: '/quests',
+        component: () => import('pages/QuestsPage.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
 
       {
         path: 'authorization',
@@ -149,11 +156,6 @@ const routes = [
         beforeEnter: checkIfSigned
       },
       {
-        path: '/authorization/user-activate-:activation_code',
-        component: () => import('pages/UserActivate.vue'),
-        beforeEnter: checkIfSigned
-      },
-      {
         path: 'lesson-startup-:lesson_id',
         component: () => import('pages/LessonStartup.vue')
       },
@@ -167,16 +169,6 @@ const routes = [
         meta: {
           pageTitle: 'Notifications',
           requiresAuth: true
-        }
-      },
-
-      {
-        path: 'classroom/homeworks',
-        component: () => import('pages/HomeworksPage.vue'),
-        meta: {
-          pageTitle: 'Homeworks',
-          requiresAuth: true,
-          transition: 'slide-in'
         }
       },
       {

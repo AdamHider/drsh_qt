@@ -7,7 +7,6 @@
         </q-app-header>
         <q-page class="text-center flex column full-width" style="padding-top: 50px">
           <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;">
-
             <q-card-section class="q-pa-lg q-pb-xl text-white">
                 <div class="text-h6"><b>Classrooms</b></div>
                 <div class="text-caption">See your rating among others</div>
@@ -42,7 +41,6 @@
 </template>
 
 <script setup >
-import { ref } from 'vue'
 import UserToggle from '../components/UserToggle.vue'
 import ClassroomList from '../components/ClassroomList.vue'
 import QuestSlider from '../components/QuestSlider.vue'

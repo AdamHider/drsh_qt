@@ -6,7 +6,7 @@
 import { useUserStore } from './stores/user'
 async function init () {
   const { autoSignIn } = useUserStore()
-  const auto = await autoSignIn()
+  await autoSignIn()
 }
 init()
 

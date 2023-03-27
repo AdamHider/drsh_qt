@@ -116,7 +116,7 @@
                 </q-card-section>
                 <q-card-section class="q-py-none flex justify-between items-center">
                     <div class="text-h6">Achievements</div>
-                    <router-link to="user/achievements">Show all</router-link>
+                    <router-link to="/achievements">Show all</router-link>
                 </q-card-section>
                     <AchievementSlider
                         :slidesPerView=2.4

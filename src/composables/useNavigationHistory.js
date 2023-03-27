@@ -2,7 +2,6 @@ import { reactive } from 'vue'
 
 const routes = reactive({
   course: '/course',
-  explore: '/explore',
   classroom: '/classroom-dashboard',
   leaderboard: '/leaderboard',
   user: '/user'
