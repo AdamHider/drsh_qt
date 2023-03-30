@@ -3,7 +3,7 @@
     <q-layout view="hHh LpR fFf">
       <router-view v-slot="{ Component, route }">
         <transition :name="`page-${route.meta.transition}`">
-            <keep-alive :exclude="['LessonStartup', 'LessonItem', 'HomeworkPage', 'ChallengePage', 'ClassroomEdit', 'HomeworkEdit', 'ChallengeEdit']">
+            <keep-alive :exclude="['LessonStartup', 'LessonItem', 'HomeworkPage', 'ChallengePage', 'ClassroomEdit', 'QuestEdit', 'ChallengeEdit']">
                 <component :is="Component"/>
             </keep-alive>
         </transition>

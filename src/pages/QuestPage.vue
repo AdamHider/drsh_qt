@@ -1,8 +1,9 @@
 <template>
   <q-page-wrapper>
   <q-app-header class=" rounded-b-md" reveal>
-      <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+    <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
     <q-toolbar-title>Quest</q-toolbar-title>
+    <q-btn v-if="quest.is_owner" flat icon="edit" :to="`quest-${quest.id}/edit`"/>
   </q-app-header>
   <q-page class="text-center bg-white full-width" style="padding-top: 50px" >
     <transition
@@ -52,7 +53,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item class="q-px-none items-center">
+            <q-item class="q-px-none items-center" v-if="quest?.reward">
               <q-item-section top avatar>
                 <q-avatar color="primary" text-color="white" icon="timeline" />
               </q-item-section>
@@ -62,9 +63,9 @@
               </q-item-section>
               <q-item-section side>
                 <div>
-                  <q-chip  v-if="quest?.reward.gems"  color="transparent" class="q-mt-none" text-color="purple" icon="diamond"><b>{{ quest?.reward.gems }}</b></q-chip>
-                  <q-chip  v-if="quest?.reward.credits" color="transparent" text-color="positive" icon="payment"><b>{{ quest?.reward.credits }}</b></q-chip>
-                  <q-chip  v-if="quest?.reward.experience" color="transparent" text-color="blue" icon="expand_less"><b>{{ quest?.reward.experience }}</b></q-chip>
+                  <q-chip  v-if="quest?.reward?.gems"  color="transparent" class="q-mt-none" text-color="purple" icon="diamond"><b>{{ quest?.reward.gems }}</b></q-chip>
+                  <q-chip  v-if="quest?.reward?.credits" color="transparent" text-color="positive" icon="payment"><b>{{ quest?.reward.credits }}</b></q-chip>
+                  <q-chip  v-if="quest?.reward?.experience" color="transparent" text-color="blue" icon="expand_less"><b>{{ quest?.reward.experience }}</b></q-chip>
                 </div>
                 <q-btn push color="primary" v-if="quest?.is_completed && !quest?.is_rewarded">Claim</q-btn>
               </q-item-section>

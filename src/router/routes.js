@@ -117,6 +117,14 @@ const routes = [
         }
       },
       {
+        path: '/quests',
+        component: () => import('pages/QuestsPage.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+      {
         path: 'quest-:quest_id',
         component: () => import('pages/QuestPage.vue'),
         meta: {
@@ -126,9 +134,10 @@ const routes = [
         }
       },
       {
-        path: '/quests',
-        component: () => import('pages/QuestsPage.vue'),
+        path: 'quest-:quest_id/edit',
+        component: () => import('pages/QuestEdit.vue'),
         meta: {
+          pageTitle: 'Edit quest',
           requiresAuth: true,
           transition: 'slide-in'
         }

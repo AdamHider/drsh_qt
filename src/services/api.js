@@ -62,6 +62,15 @@ export class Api extends ApiService{
         },
         claimReward: (params) => {
             return this.post('quest', 'claimReward', params)
+        },
+        createItem: (params) =>  {
+            return this.post('quest', 'createItem', params)
+        },
+        saveItem: (params) =>  {
+            return this.post('quest', 'saveItem', params)
+        },
+        getAvailableLessons: (params) => {
+          return this.post('quest', 'getAvailableLessons', params)
         }
     }
     homework = {

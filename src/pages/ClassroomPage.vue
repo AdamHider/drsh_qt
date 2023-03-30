@@ -84,6 +84,13 @@
               <q-card flat>
                 <q-card-section class="q-py-none flex justify-between items-center">
                     <div class="text-h6">Quests</div>
+
+                    <q-btn
+                      v-if="classroom.active?.is_owner"
+                      color="primary"
+                      @click="createQuest()"
+                      label="Join"
+                    />
                 </q-card-section>
                 <q-card-section class="q-pa-none">
                   <QuestList :classroom-id="route.params.classroom_id" :active-only="true"/>
@@ -150,16 +157,18 @@
 </template>
 
 <script setup>
+import { api } from '../services/index'
 import { ref, watch, onMounted, onActivated } from 'vue'
 import QuestList from '../components/QuestList.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import LeaderboardChart from '../components/LeaderboardChart.vue'
 import { useClassroom } from '../composables/useClassroom'
 import { useUserStore } from '../stores/user'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const { user } = useUserStore()
 const route = useRoute()
+const router = useRouter()
 
 const classroomListDialog = ref(false)
 const preferencesDialog = ref(false)
@@ -174,6 +183,13 @@ const subscribeClassroom = async function () {
 const unsubscribeClassroom = async function () {
   await unsubscribe({ classroom_code: classroom.active.code })
   getItem(route.params.classroom_id)
+}
+
+const createQuest = async function () {
+  const createItemResponse = await api.quest.createItem({ classroom_id: route.params.classroom_id })
+  if (!createItemResponse.error) {
+    return router.push(`/quest-${createItemResponse}/edit`)
+  }
 }
 onActivated(async () => {
   await getItem(route.params.classroom_id)
