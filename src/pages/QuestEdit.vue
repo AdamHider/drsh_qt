@@ -111,7 +111,8 @@ const formData = reactive({
   fields: {
     lesson_id: {
       value: 0,
-      options: []
+      options: [],
+      errors: ''
     },
     code: {
       value: '',
@@ -198,12 +199,19 @@ const loadData = async () => {
   for (const k in formData.fields) {
     formData.fields[k].value = quest.value[k]
   }
+  if (quest.value.lesson_id) {
+    formData.fields.lesson_id.options.push({
+      id: quest.value.lesson_id,
+      title: quest.value.lesson_title,
+      image: quest.value.lesson_image
+    })
+  }
+  console.log(formData.fields.lesson_id.options)
   if (quest.value.date_start && quest.value.date_end) {
     dateRangeStatus.value = true
+    dateRange.value.from = quest.value.date_start.replaceAll('-', '/').substr(0, 10)
+    dateRange.value.to = quest.value.date_end.replaceAll('-', '/').substr(0, 10)
   }
-  dateRange.value.from = quest.value.date_start.replaceAll('-', '/').substr(0, 10)
-  dateRange.value.to = quest.value.date_end.replaceAll('-', '/').substr(0, 10)
-  console.log(dateRange.value)
 }
 const loadLessonList = async (val, update, abort) => {
   const questLessonsResponse = await api.quest.getAvailableLessons({ title: val })
