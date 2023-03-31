@@ -43,7 +43,7 @@
                     ></q-linear-progress>
                 </q-item-section>
             </q-item-section>
-            <q-item-section side v-if="questItem.reward && !questItem.is_rewarded && !questItem.is_outdated">
+            <q-item-section side v-if="(questItem.reward) && !questItem.is_rewarded && !questItem.is_outdated">
               <div class="full-width text-center">
                 <b>Rewards</b>
               </div>

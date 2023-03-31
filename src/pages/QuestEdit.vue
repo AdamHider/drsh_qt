@@ -2,7 +2,7 @@
   <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-        <q-toolbar-title>Classroom Edit</q-toolbar-title>
+        <q-toolbar-title>Quest Edit</q-toolbar-title>
         <q-btn flat icon="check" @click="saveChanges()"/>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
@@ -25,6 +25,7 @@
               :options="formData.fields.code.options"
               label="Code"
               class="q-pt-sm q-pb-md"
+              @change="loadReward"
             />
             <q-select
               v-if="formData.fields.code.value == 'lesson'"
@@ -62,6 +63,7 @@
               </template>
             </q-select>
             <q-input
+              v-if="formData.fields.code.value !== 'lesson'"
               outlined
               type="number"
               v-model="formData.fields.value.value"
@@ -71,6 +73,7 @@
               label="Goal value"
               required
               class="q-pt-sm q-pb-md"
+              @change="loadReward"
             />
             <q-toggle
               v-model="dateRangeStatus"
@@ -83,6 +86,35 @@
               bordered
               flat
               range />
+            <div  v-if="formData.fields.value.value > 0" class="text-bold q-my-md">Reward</div>
+            <q-list v-if="formData.fields.value.value > 0">
+              <q-item tag="label" v-ripple>
+                <q-item-section avatar>
+                  <q-radio v-model="formData.fields.reward.value" val="no_reward" color="grey" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>No reward</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item tag="label" v-ripple>
+                <q-item-section avatar>
+                  <q-radio v-model="formData.fields.reward.value" val="experience" color="primary" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label><b>{{rewardItem.experience}} XP</b></q-item-label>
+                  <q-item-label caption>Experience points</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item tag="label" v-ripple>
+                <q-item-section avatar top>
+                  <q-radio v-model="formData.fields.reward.value" val="credits" color="positive" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label><b>{{rewardItem.credits}} Credits</b></q-item-label>
+                  <q-item-label caption>Credit points</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
             <div class="text-bold q-my-md">Status</div>
             <q-toggle
               name="is_disabled"
@@ -106,6 +138,11 @@ const dateRange = ref({})
 const route = useRoute()
 const router = useRouter()
 
+const rewardItem = ref({
+  experience: 0,
+  credits: 0
+})
+
 const formData = reactive({
   valid: true,
   fields: {
@@ -120,24 +157,7 @@ const formData = reactive({
         v => !!v || 'Code is required'
       ],
       errors: '',
-      options: [
-        {
-          label: 'Total points',
-          value: 'total_points'
-        },
-        {
-          label: 'Total points first',
-          value: 'total_points_first'
-        },
-        {
-          label: 'Total lessons',
-          value: 'total_lessons'
-        },
-        {
-          label: 'Lesson',
-          value: 'lesson'
-        }
-      ]
+      options: []
     },
     value: {
       value: 0,
@@ -161,6 +181,10 @@ const formData = reactive({
       ],
       errors: ''
     },
+    reward: {
+      value: '',
+      errors: ''
+    },
     is_disabled: {
       value: false,
       errors: ''
@@ -178,7 +202,11 @@ const saveChanges = async function () {
       value: formData.fields.value.value,
       date_start: formData.fields.date_start.value,
       date_end: formData.fields.date_end.value,
+      reward: null,
       is_disabled: formData.fields.is_disabled.value
+    }
+    if (formData.fields.reward.value !== 'no_reward') {
+      data.reward = { [formData.fields.reward.value]: rewardItem.value[formData.fields.reward.value] }
     }
     const saveQuestResponse = await api.quest.saveItem(data)
     if (!saveQuestResponse.error) {
@@ -191,6 +219,7 @@ const saveChanges = async function () {
   }
 }
 const loadData = async () => {
+  if (!route.params.quest_id) return
   const questItemResponse = await api.quest.getItem({ quest_id: route.params.quest_id })
   if (questItemResponse.error) {
     return router.go(-1)
@@ -206,13 +235,36 @@ const loadData = async () => {
       image: quest.value.lesson_image
     })
   }
-  console.log(formData.fields.lesson_id.options)
+  if (quest.value.reward) {
+    if (quest.value.reward.experience) formData.fields.reward.value = 'experience'
+    if (quest.value.reward.credits) formData.fields.reward.value = 'credits'
+  } else {
+    formData.fields.reward.value = 'no_reward'
+  }
+
   if (quest.value.date_start && quest.value.date_end) {
     dateRangeStatus.value = true
     dateRange.value.from = quest.value.date_start.replaceAll('-', '/').substr(0, 10)
     dateRange.value.to = quest.value.date_end.replaceAll('-', '/').substr(0, 10)
   }
 }
+const loadReward = async () => {
+  if (!route.params.quest_id) return
+  const questItemRewardResponse = await api.quest.calculateReward({ quest_id: route.params.quest_id, code: formData.fields.code.value, value: formData.fields.value.value })
+  if (questItemRewardResponse.error) {
+    return
+  }
+  rewardItem.value = questItemRewardResponse
+}
+const loadCodes = async () => {
+  if (!route.params.quest_id) return
+  const questItemCodesResponse = await api.quest.getAvailableCodes({ classroom_id: quest.value.classroom_id })
+  if (questItemCodesResponse.error) {
+    return
+  }
+  formData.fields.code.options = questItemCodesResponse
+}
+
 const loadLessonList = async (val, update, abort) => {
   const questLessonsResponse = await api.quest.getAvailableLessons({ title: val })
   if (questLessonsResponse.error) {
@@ -222,13 +274,17 @@ const loadLessonList = async (val, update, abort) => {
   update()
 }
 
-onMounted(() => {
-  loadData()
+onMounted(async () => {
+  await loadData()
+  await loadCodes()
+  await loadReward()
 })
 
 watch(() => formData.fields.code.value, async (currentValue, oldValue) => {
   if (currentValue !== 'lesson') {
     formData.fields.lesson_id.value = null
+  } else {
+    formData.fields.value.value = 1
   }
 })
 watch(() => dateRange.value, async (currentValue, oldValue) => {
@@ -240,8 +296,8 @@ watch(() => dateRange.value, async (currentValue, oldValue) => {
     formData.fields.date_end.value = null
   }
 })
-
-watch(() => route.params.quest_id, (newData, oldData) => {
-  loadData()
+watch(() => route.params.quest_id, async (currentValue, oldData) => {
+  await loadData()
+  await loadReward()
 })
 </script>

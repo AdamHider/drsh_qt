@@ -47,9 +47,6 @@
 import { api } from '../services/index'
 import { ref, onMounted, onActivated, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useClassroom } from '../composables/useClassroom'
-
-const { subscribe, unsubscribe } = useClassroom()
 
 const route = useRoute()
 
@@ -73,7 +70,7 @@ const onLoaded = function (response) {
   reset.value = false
 }
 const subscribeClassroom = async function (classroom_code, user_id) {
-  await subscribe({ classroom_code, user_id })
+  await api.classroom.subscribe({ classroom_code, user_id })
   const subscriberListResponse = await api.classroom.getSubscriberList({ limit: subscribers.value.length, classroom_id: route.params.classroom_id })
   if (subscriberListResponse.error) {
     error.value = subscriberListResponse
@@ -89,7 +86,7 @@ const unsubscribeClassroom = async function (classroom_code, user_id, confirm) {
     return
   }
   warningDialog.value = false
-  await unsubscribe({ classroom_code, user_id })
+  await api.classroom.unsubscribe({ classroom_code, user_id })
   const subscriberListResponse = await api.classroom.getSubscriberList({ limit: subscribers.value.length, classroom_id: route.params.classroom_id })
   if (subscriberListResponse.error) {
     error.value = subscriberListResponse

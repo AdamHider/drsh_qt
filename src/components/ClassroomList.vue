@@ -59,11 +59,8 @@
 import { api } from '../services/index'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useClassroom } from '../composables/useClassroom'
 
 const router = useRouter()
-
-const { subscribe, unsubscribe } = useClassroom()
 
 const classrooms = ref([])
 const error = ref({})
@@ -80,7 +77,7 @@ const loadMore = async function (filter) {
 }
 
 const subscribeClassroom = async function (classroom_code, is_private) {
-  await subscribe({ classroom_code })
+  await api.classroom.subscribe({ classroom_code })
   const classroomListResponse = await api.classroom.getList({ limit: classrooms.value.length })
   if (classroomListResponse.error) {
     error.value = classroomListResponse
@@ -95,7 +92,7 @@ const unsubscribeClassroom = async function (classroom_code, is_private) {
     return
   }
   warningDialog.value = false
-  await unsubscribe({ classroom_code })
+  await api.classroom.unsubscribe({ classroom_code })
   const classroomListResponse = await api.classroom.getList({ limit: classrooms.value.length })
   if (classroomListResponse.error) {
     error.value = classroomListResponse

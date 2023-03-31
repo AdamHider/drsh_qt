@@ -71,7 +71,14 @@ export class Api extends ApiService{
         },
         getAvailableLessons: (params) => {
           return this.post('quest', 'getAvailableLessons', params)
+        },
+        calculateReward: (params) => {
+          return this.post('quest', 'calculateReward', params)
+        },
+        getAvailableCodes: (params) => {
+          return this.post('quest', 'getAvailableCodes', params)
         }
+
     }
     homework = {
         getItem: (params) => {

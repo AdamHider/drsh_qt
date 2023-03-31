@@ -56,7 +56,7 @@ const form = ref(null)
 const loading = ref(false)
 const router = useRouter()
 const { checkIfExists, createItem, subscribe } = useClassroom()
-const { user, signIn, signOut, saveProfile } = useUserStore()
+const { saveProfile } = useUserStore()
 
 const formData = reactive({
   valid: true,
