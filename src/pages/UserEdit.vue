@@ -1,10 +1,5 @@
 <template>
   <q-page-wrapper>
-    <q-app-header class="bg-white rounded-b-md bordered" reveal>
-        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-        <q-toolbar-title>User Edit</q-toolbar-title>
-        <q-btn flat icon="check" @click="saveChanges()"/>
-    </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
         <q-form
           ref="form"
@@ -44,12 +39,7 @@
               </q-item>
             </q-list>
           </q-card>
-          <q-btn
-              class="full-width"
-              to="edit/password"
-              append-icon="mdi-pencil"
-              label="Change password"
-          />
+          <q-router-link page="UserEditPassword" dialog>Change password</q-router-link>
           <q-input
             v-model="formData.fields.email.value"
             :rules="formData.fields.email.rules"

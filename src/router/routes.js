@@ -30,8 +30,10 @@ const routes = [
         path: 'user',
         component: () => import('pages/UserDashboard.vue'),
         meta: {
+          level: 1,
           requiresAuth: true,
-          bottomBarEnabled: true
+          bottomBarEnabled: true,
+          transition: 'slide-out'
         }
       },
       {
@@ -54,6 +56,7 @@ const routes = [
         path: 'user/settings',
         component: () => import('pages/UserSettings.vue'),
         meta: {
+          level: 2,
           requiresAuth: true,
           transition: 'slide-in'
         }
@@ -62,6 +65,7 @@ const routes = [
         path: '/achievements',
         component: () => import('pages/AchievementsPage.vue'),
         meta: {
+          level: 2,
           requiresAuth: true,
           transition: 'slide-in'
         }
@@ -185,7 +189,8 @@ const routes = [
         component: () => import('pages/LeaderboardPage.vue'),
         meta: {
           requiresAuth: true,
-          bottomBarEnabled: true
+          bottomBarEnabled: true,
+          transition: 'slide-in'
         }
       }
     ]

@@ -33,7 +33,7 @@
 <script setup>
 import { api } from '../services/index'
 import { ref, onActivated } from 'vue'
-import { Navigation } from 'swiper'
+import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import BannerNotFound from './BannerNotFound.vue'
 

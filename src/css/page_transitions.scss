@@ -1,52 +1,81 @@
+$transition-time   : 0.3s;
+$transition-time-bonus   : 0.31s;
+
 .page-slide-in-enter-active,
 .page-slide-in-leave-active {
-  transition: 0.3s ;
+  transition: $transition-time ;
   width: 100%;
   position: fixed;
-  z-index: 1000;
+  z-index: 1001;
 }
 .page-slide-in-enter-active{
-  transition: 0.31s;
+  transition: $transition-time-bonus;
 }
 .page-slide-in-enter-from {
-  transform: translateX(100%);
+  transform: translateY(100vh);
   box-shadow: 0px 0px 10px 0px #0000004a;
 }
 .page-slide-in-enter-to {
-  transform: translateX(0%);
+  transform: translateY(0vh);
   box-shadow: 0px 0px 10px 0px #0000004a;
 }
 .page-slide-in-leave-from {
-  transform: translateX(0%);
+  transform: translateY(0vh);
+  z-index: 1000;
 }
 .page-slide-in-leave-to {
-  transform: translateX(-20%);
+  transform: translateY(20vh);
 }
 
 .page-slide-out-enter-active,
 .page-slide-out-leave-active {
-  transition: 0.3s ;
+  transition: $transition-time ;
   position: fixed;
   width: 100%;
-  z-index: 1000;
 }
 .page-slide-out-enter-active{
-  transition: 0.31s;
+  transition: $transition-time-bonus;
 }
 .page-slide-out-leave-active{
-  z-index: 1001
+  z-index: 2501
 }
 .page-slide-out-enter-from {
-  transform: translateX(-20%);
+  transform: translateY(20vh);
 }
 .page-slide-out-enter-to {
-  transform: translateX(0%);
+  transform: translateY(0vh);
 }
 .page-slide-out-leave-from {
-  transform: translateX(0%);
+  transform: translateY(0vh);
   box-shadow: 0px 0px 10px 0px #0000004a;
 }
 .page-slide-out-leave-to {
-  transform: translateX(100%);
+  transform: translateY(100vh);
   box-shadow: 0px 0px 10px 0px #0000004a;
+}
+
+
+.page-slide-in-bottombar-enter-active,
+.page-slide-in-bottombar-leave-active {
+  transition: $transition-time ;
+  transition-delay: 100ms;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+}
+.page-slide-in-bottombar-enter-active{
+  transition: $transition-time-bonus ;
+}
+.page-slide-in-bottombar-enter-from {
+  transform: translateY(0vh) !important;
+  box-shadow: 0px 0px 10px 0px #0000004a;
+}
+.page-slide-in-bottombar-enter-to {
+  transform: translateY(20vh) !important;
+}
+.page-slide-in-bottombar-leave-from {
+  transform: translateY(0vh) !important;
+}
+.page-slide-in-bottombar-leave-to {
+  transform: translateY(20vh) !important;
 }

@@ -1,9 +1,5 @@
 <template>
-  <q-infinite-list
-    :loadMore="loadMore"
-    @onLoaded="onLoaded"
-  >
-      <q-card  v-for="(classroomItem, index) in classrooms" :key="index" class="q-ma-sm  cursor-pointer"
+    <q-card v-for="(classroomItem, index) in classrooms" :key="index" class="q-ma-sm  cursor-pointer"
        >
         <q-card-section  class="q-pt-sm items-center" horizontal>
           <q-item class="full-width q-px-md" :to="`classroom-${classroomItem.id}`">
@@ -38,7 +34,6 @@
             </div>
         </q-card-actions>
       </q-card>
-  </q-infinite-list>
   <q-dialog v-model="warningDialog"  transition-show="scale" transition-hide="scale">
     <q-card class="bg-white" style="width: 300px">
       <q-card-section>
@@ -57,24 +52,14 @@
 
 <script setup>
 import { api } from '../services/index'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onActivated } from 'vue'
 
-const router = useRouter()
+
 
 const classrooms = ref([])
 const error = ref({})
 const warningDialog = ref(false)
 const warningDialogCode = ref(false)
-
-const loadMore = async function (filter) {
-  const classroomListResponse = await api.classroom.getList(filter)
-  if (classroomListResponse.error) {
-    error.value = classroomListResponse
-    return []
-  }
-  return classroomListResponse
-}
 
 const subscribeClassroom = async function (classroom_code, is_private) {
   await api.classroom.subscribe({ classroom_code })
@@ -100,8 +85,14 @@ const unsubscribeClassroom = async function (classroom_code, is_private) {
   }
   classrooms.value = classroomListResponse
 }
-const onLoaded = function (response) {
-  classrooms.value = response
-}
+
+onActivated(async () => {
+  const classroomListResponse = await api.classroom.getList({limit: 10000, offset: 0})
+  if (classroomListResponse.error) {
+    error.value = classroomListResponse
+    return []
+  }
+  classrooms.value = classroomListResponse
+})
 
 </script>

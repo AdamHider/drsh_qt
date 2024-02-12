@@ -3,6 +3,7 @@ import AppPageWrapper from '../components/AppPageWrapper.vue'
 import AppBottomBar from '../components/AppBottomBar.vue'
 import AppInfiniteList from '../components/AppInfiniteList.vue'
 import AppSpendButton from '../components/AppSpendButton.vue'
+import AppRouterLink from '../components/AppRouterLink.vue'
 import VueApexCharts from 'vue3-apexcharts'
 
 // we globally register our component with Vue
@@ -12,5 +13,6 @@ export default ({ app }) => {
   app.component('q-bottom-bar', AppBottomBar)
   app.component('q-infinite-list', AppInfiniteList)
   app.component('q-spend-button', AppSpendButton)
+  app.component('q-router-link', AppRouterLink)
   app.use(VueApexCharts)
 }

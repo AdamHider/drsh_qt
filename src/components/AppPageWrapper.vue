@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <q-scroll-area
       style="width: 100vw; height: 100vh;"
       :thumb-style="{opacity: 0}">

@@ -38,20 +38,6 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    const IsItABackButton = window.popStateDetected
-    window.popStateDetected = false
-
-    // Check transitions
-    if (from.meta.transition === 'slide-in' && to.meta.transition === 'slide-in' && IsItABackButton) {
-      to.meta.transition = 'slide-out'
-    } else
-    if (from.meta.transition === 'slide-out' && to.meta.transition !== 'slide-in' && IsItABackButton) {
-      to.meta.transition = 'slide-out'
-    } else
-    if (from.meta.transition === 'slide-in' && to.meta.transition !== 'slide-in') {
-      to.meta.transition = 'slide-out'
-    }
-
     /*
     const IsItABackButton = window.popStateDetected
     window.popStateDetected = false
@@ -96,6 +82,11 @@ export default route(function (/* { store, ssrContext } */) {
       if(routerHistory.stack.length > 10){
         routerHistory.stack.pop();
       } */
+  })
+  Router.afterEach((to, from) => {
+    if(to.meta.level == from.meta.level) return to.meta.transition = '';
+    to.meta.transition = to.meta.level < from.meta.level ? 'slide-out' : 'slide-in'
+    console.log(to.meta)
   })
 
   return Router

@@ -48,7 +48,9 @@ onActivated(async () => {
     infiniteScroll.value.resume()
     return
   }
+  console.log('activated')
   if (list.value.length > 0) {
+    console.log('list is more')
     list.value = await props.loadMore({ limit: list.value.length, offset: 0 })
     const currentIndex = Math.floor(list.value.length / limit)
     infiniteScroll.value.setIndex(currentIndex)

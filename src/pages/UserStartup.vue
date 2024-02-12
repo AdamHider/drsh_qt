@@ -7,15 +7,15 @@
                 <q-btn flat  @click="signOut()" color="white">Sign out</q-btn>
             </q-card-section>
             <q-card-section v-else>
-            <div class="text-h6">You are not logged in</div>
-            <div class="text-grey">But it's easy to become! Just make a choice</div>
-            <q-btn flat  color="primary" to="/authorization/sign-in">sign in</q-btn>
-            <b>or</b>
-            <q-btn flat  color="primary" to="/authorization/sign-up">sign up</q-btn>
+              <div class="text-h6">You are not logged in</div>
+              <div class="text-grey">But it's easy to become! Just make a choice</div>
+              <q-btn flat  color="primary" to="/authorization/sign-in">sign in</q-btn>
+              <b>or</b>
+              <q-btn flat  color="primary" to="/authorization/sign-up">sign up</q-btn>
             </q-card-section>
             <q-separator v-if="(Object.keys(user.list).length > 0)" class="q-mx-md"></q-separator>
             <q-card-section  v-if="(Object.keys(user.list).length > 0)">
-            <q-btn color="dark" flat @click="dialog=true">Choose existing accounts</q-btn>
+              <q-btn color="dark" flat @click="dialog=true">Choose existing accounts</q-btn>
             </q-card-section>
         </q-card>
             <q-dialog v-model="dialog">
@@ -28,8 +28,8 @@
                                 v-for="(userItem, index) in user.list" :key="index">
 
                                 <q-item-section>
-                                    <q-item-label lines="1">{{userItem.data?.name}}</q-item-label>
-                                    <q-item-label caption>Description</q-item-label>
+                                    <q-item-label lines="1">{{userItem.data?.username}}</q-item-label>
+                                    <q-item-label caption><b>Level:</b> {{userItem.data?.level.level}}</q-item-label>
                                 </q-item-section>
 
                                 <q-item-section side>
@@ -73,5 +73,4 @@ const switchUser = async (userItem, key) => {
 }
 
 const { signIn, user } = useUserStore()
-
 </script>

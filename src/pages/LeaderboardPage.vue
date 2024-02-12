@@ -1,10 +1,5 @@
 <template>
-    <q-page-wrapper>
-        <q-app-header class="transparent text-white rounded-b-md" reveal>
-            <UserToggle/>
-            <q-toolbar-title></q-toolbar-title>
-            <q-btn flat round dense class="q-mr-sm" icon="share"/>
-        </q-app-header>
+  <q-page-wrapper>
         <q-page class="flex justify-center content-end  text-center full-width" style="padding-top: 50px">
           <q-card class="text-center transparent no-shadow full-width" style="position: relative; z-index: 1;">
               <q-card-section class="q-pa-lg q-pb-xl text-white">
@@ -26,12 +21,7 @@
                 </q-card-section>
             </q-card>
         </q-page>
-        <template v-slot:bottom-bar>
-          <q-footer  bordered class="bg-white text-primary">
-            <q-bottom-bar/>
-          </q-footer>
-        </template>
-    </q-page-wrapper>
+  </q-page-wrapper>
 </template>
 
 <script setup >
