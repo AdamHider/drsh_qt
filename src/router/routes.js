@@ -10,16 +10,37 @@ const routes = [
   {
     path: '/',
     component: MainLayout,
+    redirect: '/user',
     children: [
       {
         path: 'course',
+        name: 'course',
         component: () => import('pages/CoursePage.vue'),
-        meta: { requiresAuth: true, bottomBarEnabled: true }
+        meta: {
+          level: 1,
+          requiresAuth: true,
+          bottomBarEnabled: true,
+          transitionConfig: {
+            classroom_dashboard: 'slide-left',
+            leaderboard: 'slide-left',
+            user: 'slide-left'
+          }
+        }
       },
       {
         path: 'course-:course_id',
+        name: 'course',
         component: () => import('pages/CoursePage.vue'),
-        meta: { requiresAuth: true, bottomBarEnabled: true }
+        meta: {
+          level: 1,
+          requiresAuth: true,
+          bottomBarEnabled: true,
+          transitionConfig: {
+            classroom_dashboard: 'slide-left',
+            leaderboard: 'slide-left',
+            user: 'slide-left'
+          }
+        }
       },
       {
         path: 'explore',
@@ -27,13 +48,35 @@ const routes = [
         meta: { requiresAuth: true, bottomBarEnabled: true }
       },
       {
+        path: 'leaderboard',
+        name: 'leaderboard',
+        component: () => import('pages/LeaderboardPage.vue'),
+        meta: {
+          level: 1,
+          requiresAuth: true,
+          bottomBarEnabled: true,
+          transition: 'slide-in',
+          transitionConfig: {
+            course: 'slide-right',
+            classroom_dashboard: 'slide-right',
+            user: 'slide-left'
+          }
+        }
+      },
+      {
         path: 'user',
+        name: 'user',
         component: () => import('pages/UserDashboard.vue'),
         meta: {
           level: 1,
           requiresAuth: true,
           bottomBarEnabled: true,
-          transition: 'slide-out'
+          transition: 'slide-out',
+          transitionConfig: {
+            course: 'slide-right',
+            classroom_dashboard: 'slide-right',
+            leaderboard: 'slide-right'
+          }
         }
       },
       {
@@ -80,10 +123,16 @@ const routes = [
       },
       {
         path: 'classroom-dashboard',
+        name: 'classroom_dashboard',
         component: () => import('pages/ClassroomDashboardPage.vue'),
         meta: {
           requiresAuth: true,
-          bottomBarEnabled: true
+          bottomBarEnabled: true,
+          transitionConfig: {
+            course: 'slide-right',
+            leaderboard: 'slide-left',
+            user: 'slide-left'
+          }
         }
       },
       {
@@ -182,15 +231,6 @@ const routes = [
         meta: {
           pageTitle: 'Notifications',
           requiresAuth: true
-        }
-      },
-      {
-        path: 'leaderboard',
-        component: () => import('pages/LeaderboardPage.vue'),
-        meta: {
-          requiresAuth: true,
-          bottomBarEnabled: true,
-          transition: 'slide-in'
         }
       }
     ]

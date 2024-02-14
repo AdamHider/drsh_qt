@@ -1,5 +1,5 @@
 <template>
-  <q-page-wrapper>
+  <q-page-container>
         <q-page class="flex justify-center content-end  text-center full-width" style="padding-top: 50px">
           <q-card class="text-center transparent no-shadow full-width" style="position: relative; z-index: 1;">
               <q-card-section class="q-pa-lg q-pb-xl text-white">
@@ -21,7 +21,7 @@
                 </q-card-section>
             </q-card>
         </q-page>
-  </q-page-wrapper>
+  </q-page-container>
 </template>
 
 <script setup >

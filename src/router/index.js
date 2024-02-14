@@ -84,9 +84,9 @@ export default route(function (/* { store, ssrContext } */) {
       } */
   })
   Router.afterEach((to, from) => {
-    if(to.meta.level == from.meta.level) return to.meta.transition = '';
+    if (to.meta.transitionConfig && to.meta.transitionConfig[from.name]) return to.meta.transition = to.meta.transitionConfig[from.name]
+    if (to.meta.level == from.meta.level) return to.meta.transition = ''
     to.meta.transition = to.meta.level < from.meta.level ? 'slide-out' : 'slide-in'
-    console.log(to.meta)
   })
 
   return Router

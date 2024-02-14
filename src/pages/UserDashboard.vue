@@ -1,5 +1,5 @@
 <template>
-  <q-page-wrapper style="">
+  <q-page-container>
       <q-app-header class="transparent text-white rounded-b-md " reveal>
           <UserToggle v-if="user.active.data"/>
           <q-toolbar-title></q-toolbar-title>
@@ -44,7 +44,7 @@
                           <div class="text-grey">Active student</div>
                       </q-item-section>
                       <q-item-section side>
-                          <q-router-link page="UserEdit" dialog><q-icon name="edit"></q-icon></q-router-link>
+                          <q-btn flat to="user/edit" icon="edit"/>
                       </q-item-section>
                   </q-item>
               </q-card-section>
@@ -56,7 +56,7 @@
                                   <q-icon size="32px" color="primary" name="payments"></q-icon>
                               </q-item-section>
                               <q-item-section>
-                                  <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.credits.quantity}}</b></q-item-label>
+                                  <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.credits?.quantity}}</b></q-item-label>
                                   <q-item-label caption lines="2">Credits</q-item-label>
                               </q-item-section>
                               <q-tooltip activator="parent" location="top">
@@ -70,7 +70,7 @@
                                   <q-icon size="32px" color="primary" name="diamond"></q-icon>
                               </q-item-section>
                               <q-item-section>
-                                  <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.gems.quantity}}</b></q-item-label>
+                                  <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.gems?.quantity}}</b></q-item-label>
                                   <q-item-label caption lines="2">Gems</q-item-label>
                               </q-item-section>
                               <q-tooltip activator="parent" location="top">
@@ -131,14 +131,14 @@
               </q-card-section>
           </q-card>
       </q-page>
-  </q-page-wrapper>
+  </q-page-container>
 
 </template>
 
 <script setup>
 import { useUserStore } from '../stores/user'
 import UserToggle from '../components/UserToggle.vue'
-import UserResourceBar from '../components/UserResourceBar.vue'
+import AchievementSlider from '../components/AchievementSlider.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted, onBeforeMount, onActivated, ref, watch } from 'vue'
 
@@ -149,33 +149,32 @@ const exitUser = async function () {
   return router.push('/authorization')
 }
 const route = useRoute()
-const startTime = ref();
-const endTime = ref();
+const startTime = ref()
+const endTime = ref()
 const AchievementDialog = ref(false)
-
 
 onBeforeMount(async () => {
   startTime.value = new Date()
 })
 
 onMounted(async () => {
-  endTime.value = new Date();
-  var timeDiff = endTime.value - startTime.value; //in ms
+  endTime.value = new Date()
+  let timeDiff = endTime.value - startTime.value // in ms
   // strip the ms
-  timeDiff /= 1000;
+  timeDiff /= 1000
 
   // get seconds
-  console.log("UserDashboard: " + timeDiff + " mseconds");
+  console.log('UserDashboard: ' + timeDiff + ' mseconds')
 })
 
 onActivated(async () => {
-  endTime.value = new Date();
-  var timeDiff = endTime.value - startTime.value; //in ms
+  endTime.value = new Date()
+  let timeDiff = endTime.value - startTime.value // in ms
   // strip the ms
-  timeDiff /= 1000;
+  timeDiff /= 1000
 
   // get seconds
-  console.log("UserDashboard: " + timeDiff + " mseconds");
+  console.log('UserDashboard: ' + timeDiff + ' mseconds')
 })
 
 watch(route, (to) => {

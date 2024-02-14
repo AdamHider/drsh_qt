@@ -1,9 +1,12 @@
-$transition-time   : 0.3s;
-$transition-time-bonus   : 0.31s;
+$transition-time   : 0.2s;
+$transition-time-bonus   : 0.21s;
+$transition-delay-to: 50ms;
+$transition-timing-function: 'linear';
 
 .page-slide-in-enter-active,
 .page-slide-in-leave-active {
   transition: $transition-time ;
+  transition-timing-function: $transition-timing-function;
   width: 100%;
   position: fixed;
   z-index: 1001;
@@ -30,6 +33,7 @@ $transition-time-bonus   : 0.31s;
 .page-slide-out-enter-active,
 .page-slide-out-leave-active {
   transition: $transition-time ;
+  transition-timing-function: $transition-timing-function;
   position: fixed;
   width: 100%;
 }
@@ -55,9 +59,66 @@ $transition-time-bonus   : 0.31s;
 }
 
 
+.page-slide-left-enter-active,
+.page-slide-left-leave-active {
+  transition: $transition-time ;
+  transition-timing-function: $transition-timing-function;
+  position: fixed;
+  width: 100%;
+}
+.page-slide-left-enter-active{
+  transition: $transition-time-bonus;
+  transition-delay: $transition-delay-to;
+}
+.page-slide-left-leave-active{
+  z-index: 2501
+}
+.page-slide-left-enter-from {
+  transform: translateX(-100vw);
+}
+.page-slide-left-enter-to {
+  transform: translateX(0vw);
+}
+.page-slide-left-leave-from {
+  transform: translateX(0vw);
+}
+.page-slide-left-leave-to {
+  transform: translateX(100vw);
+}
+
+
+.page-slide-right-enter-active,
+.page-slide-right-leave-active {
+  transition: $transition-time ;
+  transition-timing-function: $transition-timing-function;
+  position: fixed;
+  width: 100%;
+}
+.page-slide-right-enter-active{
+  transition: $transition-time-bonus;
+  transition-delay: $transition-delay-to;
+}
+.page-slide-right-leave-active{
+  z-index: 2501
+}
+.page-slide-right-enter-from {
+  transform: translateX(100vw);
+}
+.page-slide-right-enter-to {
+  transform: translateX(0vw);
+}
+.page-slide-right-leave-from {
+  transform: translateX(0vw);
+}
+.page-slide-right-leave-to {
+  transform: translateX(-100vw);
+}
+
+
 .page-slide-in-bottombar-enter-active,
 .page-slide-in-bottombar-leave-active {
   transition: $transition-time ;
+  transition-timing-function: $transition-timing-function;
   transition-delay: 100ms;
   position: fixed;
   z-index: 1000;

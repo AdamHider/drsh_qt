@@ -16,6 +16,4 @@
 
 <script setup>
 import AppBackground from 'components/AppBackground.vue'
-import AppBottomBar from 'components/AppBottomBar.vue'
-
 </script>
