@@ -28,7 +28,7 @@ const routes = [
         }
       },
       {
-        path: 'course-:course_id',
+        path: 'courses',
         name: 'course',
         component: () => import('pages/CoursePage.vue'),
         meta: {

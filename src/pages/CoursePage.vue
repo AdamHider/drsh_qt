@@ -5,12 +5,12 @@
       <q-toolbar-title></q-toolbar-title>
       <UserResourceBar :resource="user.active?.data.resources.energy" icon="bolt" icon-color="yellow"/>
     </q-app-header>
-    <q-page  class=" items-end full-height full-width text-center" >
+    <q-page style="padding-top: 50px; padding-bottom: 48px;"  class=" items-end full-height full-width text-center" >
       <q-scroll-area class="absolute-top absolute-left full-width full-height"
         :content-style="{
           display: 'flex',
           justifyContent: 'end',
-          flexDirection: 'column'}"
+          flexDirection: 'column', paddingBottom: '48px'}"
         style="z-index: 10;" >
         <LessonList v-if="course.active?.id" :disable="dialog.active"/>
         <q-card flat class="transparent">

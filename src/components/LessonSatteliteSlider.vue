@@ -57,7 +57,7 @@
 <script setup>
 import { defineEmits } from 'vue'
 import { useLesson } from '../composables/useLesson'
-import { Navigation } from 'swiper'
+import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { CONFIG } from '../config.js'
 

@@ -20,17 +20,20 @@
             <q-list lines="two">
                 <q-item clickable v-ripple v-for="(userItem, index) in user.list" :key="index">
                     <q-item-section>
-                        <q-item-label lines="1">{{userItem.data?.name}}</q-item-label>
-                        <q-item-label caption>Description</q-item-label>
+                        <q-item-label lines="1"><b>{{userItem.data?.username}}</b></q-item-label>
+                        <q-item-label caption><b>Level: {{userItem.data?.level.level}}</b></q-item-label>
                     </q-item-section>
 
-                    <q-item-section side>
-                        <q-btn
-                            :disabled="(userItem.data?.id == user.active.data.id)"
+                    <q-item-section side >
+                        <q-btn v-if="userItem.data?.id != user.active.data.id"
                             flat
                             :loading="btnLoading[index]"
                             @click="switchUser(userItem, index)"
-                        >Sign In</q-btn>
+                            label="Sign In"/>
+                        <q-btn v-else
+                            flat
+                            label="Active"
+                            color="positive"/>
                     </q-item-section>
                 </q-item>
             </q-list>

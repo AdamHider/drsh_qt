@@ -6,15 +6,25 @@
           <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
       </q-app-header>
       <q-page style="padding-top: 50px; padding-bottom: 48px;" class="text-center flex column full-width">
-          <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
-              <q-card-section>
-                  <q-img
-                      :src="user.active.data.character?.image"
-                      style="max-width: 250px; width: 170px;"
-                      no-spinner
-                  />
-              </q-card-section>
-          </q-card>
+          <transition
+            appear
+            enter-active-class="animated zoomIn animation-delay-1"
+            leave-active-class="animated zoomOut">
+            <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
+                <q-card-section>
+                    <q-img
+                        :src="user.active.data.character?.image"
+                        style="max-width: 250px; width: 170px;"
+                        no-spinner
+                    />
+                </q-card-section>
+            </q-card>
+          </transition>
+
+          <transition
+            appear
+            enter-active-class="animated fadeInUpBig"
+            leave-active-class="animated fadeOutDownBig">
           <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 col full-width" style="padding-top: 30px;">
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
               <q-linear-progress
@@ -130,9 +140,9 @@
                   />
               </q-card-section>
           </q-card>
+          </transition>
       </q-page>
   </q-page-container>
-
 </template>
 
 <script setup>
