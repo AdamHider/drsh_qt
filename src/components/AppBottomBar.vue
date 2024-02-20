@@ -14,25 +14,20 @@
 </template>
 
 <script setup>
-import { useUserStore } from "../stores/user";
-import { useCourse } from "../composables/useCourse";
-import { useNavigationHistory } from "../composables/useNavigationHistory";
-import { useRoute } from "vue-router";
-import { watch, provide, ref } from "vue";
+import { useNavigationHistory } from '../composables/useNavigationHistory'
+import { useRoute } from 'vue-router'
+import { watch, ref } from 'vue'
 
-const { user } = useUserStore();
-const { course } = useCourse();
-const { routes, watchRoute } = useNavigationHistory();
+const { routes } = useNavigationHistory();
 const route = useRoute();
 const isRootPage = ref(false);
 const bottomBarEnabled = ref(false);
 
-provide("redirectedFrom", route.redirectedFrom);
-isRootPage.value = route.fullPath.split("/").length === 2;
-bottomBarEnabled.value = route.meta.bottomBarEnabled === true;
+isRootPage.value = route.fullPath.split('/').length === 2
+bottomBarEnabled.value = route.meta.bottomBarEnabled === true
 
 watch(route, (currentValue, oldValue) => {
-  isRootPage.value = currentValue.fullPath.split("/").length === 2;
-  bottomBarEnabled.value = currentValue.meta.bottomBarEnabled === true;
+  isRootPage.value = currentValue.fullPath.split('/').length === 2
+  bottomBarEnabled.value = currentValue.meta.bottomBarEnabled === true
 });
 </script>

@@ -30,43 +30,12 @@
             <div class="text-grey">It may be a pin or a standart password</div>
           </q-card-section>
           <q-card-section>
-              <q-input v-if="formData.passwordIsPin"
-                :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
-                v-model="formData.fields.password.value"
-                :rules="formData.fields.password.rules"
-                :error-messages="formData.fields.password.errors"
-                :type="formData.fields.password.reveal ? 'text' : 'text'"
-                no-error-icon
-                label="Pin password"
-                autocomplete="off"
-                mask="####"
-              />
-              <q-input v-else
-                v-model="formData.fields.password.value"
-                :rules="formData.fields.password.rules"
-                :error-messages="formData.fields.password.errors"
-                :type="formData.fields.password.reveal ? 'text' : 'password'"
-                label="Password"
-              >
-                <template v-slot:append>
-                  <q-icon
-                    :name="formData.fields.password.reveal ? 'visibility_off' : 'visibility'"
-                    class="cursor-pointer"
-                    @click="formData.fields.password.reveal = !formData.fields.password.reveal"
-                  />
-                </template>
-              </q-input>
-              <q-btn-toggle
-                  v-model="formData.passwordIsPin"
-                  spread
-                  no-caps
-                  :options="[
-                    {label: 'Use pin', value: true},
-                    {label: 'Use password', value: false}
-                  ]"
-                />
+            <q-pin-field
+              :modelValue="formData.fields.password.value"
+              :rules="formData.fields.password.rules"
+              v-on:update:onUpdate="formData.fields.password.value = $event"/>
           </q-card-section>
-          <q-separator />
+          <q-separator/>
           <q-card-actions vertical>
             <q-btn
                 :disabled="!formData.valid"
@@ -82,39 +51,11 @@
             <div class="text-grey">It may be a pin or a standart password</div>
           </q-card-section>
           <q-card-section>
-            <q-input v-if="formData.passwordIsPin"
-              :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
-              v-model="formData.fields.passwordConfirm.value"
+            <q-pin-field
+              modelValue="formData.fields.passwordConfirm.value"
               :rules="formData.fields.passwordConfirm.rules"
-              :error-messages="formData.fields.passwordConfirm.errors"
-              :type="formData.fields.passwordConfirm.reveal ? 'text' : 'text'"
-              no-error-icon
-              label="Pin password"
-              mask="####"
+              v-on:update:onUpdate="formData.fields.passwordConfirm.value = $event"
             />
-            <q-input  v-else
-              v-model="formData.fields.passwordConfirm.value"
-              :rules="formData.fields.passwordConfirm.rules"
-              :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
-              label="Confirm password"
-            >
-              <template v-slot:append>
-                <q-icon
-                  :name="formData.fields.passwordConfirm.reveal ? 'visibility_off' : 'visibility'"
-                  class="cursor-pointer"
-                  @click="formData.fields.passwordConfirm.reveal = !formData.fields.passwordConfirm.reveal"
-                />
-              </template>
-            </q-input>
-            <q-btn-toggle
-                v-model="formData.passwordIsPin"
-                spread
-                no-caps
-                :options="[
-                  {label: 'Use pin', value: true},
-                  {label: 'Use password', value: false}
-                ]"
-              />
           </q-card-section>
           <q-separator />
           <q-card-actions vertical>
@@ -196,14 +137,14 @@
 
 <script setup >
 import { useUserStore } from '../stores/user'
-import { reactive, ref, watch, inject } from 'vue'
+import PinField from 'components/PinField.vue'
+import { reactive, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const { user, signUp, signIn } = useUserStore()
 const route = useRoute()
 const router = useRouter()
 
-const redirectedFrom = inject('redirectedFrom')
 const buttonLoading = ref(false)
 const termsDialog = ref(false)
 const form = ref(null)
@@ -215,20 +156,18 @@ const formData = reactive({
     password: {
       value: '',
       rules: [
-        v => !!v || 'Required.',
-        v => (/^[0-9a-zA-Z]{4,}$/.test(v)) || 'Password must contain at least one digit, be of latin and min 8 characters'
+        v => !!v || '',
+        v => (/^[0-9]{4,}$/.test(v)) || ''
       ],
-      errors: '',
       reveal: false,
       required: true
     },
     passwordConfirm: {
       value: '',
       rules: [
-        v => !!v || 'Required.',
+        v => !!v || '',
         v => (v === formData.fields.password.value) || 'Your passwords are different'
       ],
-      errors: '',
       reveal: false,
       required: true
     },
@@ -248,17 +187,15 @@ const validate = async function () {
   formData.valid = await form.value.validate()
   if (formData.step === 4) {
     buttonLoading.value = true
-    const userAuth = {
+    const credentials = {
       password: formData.fields.password.value,
       passwordConfirm: formData.fields.passwordConfirm.value
     }
-    const authResponse = await signUp(userAuth)
+    const authResponse = await signUp(credentials)
     if (!authResponse.error) {
-      const logged = await signIn(user.active.authorization)
+      const logged = await signIn(authResponse.auth_key)
       buttonLoading.value = false
-
       if (!logged.error) {
-        if (redirectedFrom) return router.push(redirectedFrom.fullPath)
         return router.push('/user')
       }
     } else {
@@ -274,14 +211,10 @@ watch(formData.fields, async (currentValue, oldValue) => {
   formData.valid = await form.value.validate()
 })
 watch(() => formData.fields.password.value, async (currentValue, oldValue) => {
-  if (formData.passwordIsPin && currentValue.length === 4) {
-    validate()
-  }
+  if (currentValue.length === 4) validate()
 })
 watch(() => formData.fields.passwordConfirm.value, async (currentValue, oldValue) => {
-  if (formData.passwordIsPin && currentValue.length === 4) {
-    validate()
-  }
+  if (currentValue.length === 4) validate()
 })
 watch(() => route.params.step, async (currentValue, oldValue) => {
   if (!formData.valid && route.params.step > formData.step) {
@@ -289,6 +222,9 @@ watch(() => route.params.step, async (currentValue, oldValue) => {
     return false
   }
   formData.step = route.params.step * 1
+  if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]]?.reveal === false) {
+    formData.fields[steps[formData.step]].value = ''
+  }
   if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]].value === '') formData.valid = false
 })
 

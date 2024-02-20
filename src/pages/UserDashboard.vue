@@ -13,7 +13,7 @@
             <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
                 <q-card-section>
                     <q-img
-                        :src="user.active.data.character?.image"
+                        :src="user.active.data?.character?.image"
                         style="max-width: 250px; width: 170px;"
                         no-spinner
                     />
@@ -46,7 +46,7 @@
                   <q-item class="q-pa-none">
                       <q-item-section avatar>
                         <q-avatar>
-                          <img :src="user.active.data.character.avatar"/>
+                          <img :src="user.active.data?.character.avatar"/>
                         </q-avatar>
                       </q-item-section>
                       <q-item-section class="text-left">

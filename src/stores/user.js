@@ -8,10 +8,7 @@ const { showMessage } = useAppMessage()
 
 const userDefault = {
   active: {
-    authorization: {
-      username: '',
-      password: ''
-    },
+    authorization: '',
     data: {}
   },
   list: {}
@@ -37,14 +34,23 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     return true
   }
 
-  async function signIn (auth) {
-    if (!auth) { return }
-    const result = await api.user.signIn(auth)
+  async function getAuth (credentials) {
+    if (!credentials) { return }
+    const authResponse = await api.user.getAuth(credentials)
+    if (!authResponse.error) {
+      update({ authorization: authResponse })
+    }
+    return authResponse
+  }
+
+  async function signIn (authKey) {
+    if (!authKey) { return }
+    const result = await api.user.signIn({ auth_key: authKey })
     if (!result.error) {
       const userResponse = await api.user.getItem()
-      update({ authorization: auth, data: userResponse })
+      update({ authorization: authKey, data: userResponse })
+      showMessage('You have signed successfully!')
     }
-    showMessage('You have signed successfully!')
     return result
   }
   async function getItem () {
@@ -53,6 +59,10 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   }
 
   async function autoSignIn () {
+    if (!user.active.authorization) {
+      signOut()
+      return false
+    }
     const userResponse = await api.user.getItem()
     if (user.active.data.id && user.active.data.id != userResponse.id) {
       const result = await signIn(user.active.authorization)
@@ -60,11 +70,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
         signOut()
       }
     }
-    if (userResponse.id != 0) {
-      const userAuth = user.active.authorization
-      userAuth.username = userResponse.username
-      update({ authorization: userAuth, data: userResponse })
-    }
+    update({ data: userResponse })
   }
 
   async function signOut () {
@@ -73,20 +79,19 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     return true
   }
 
-  async function signUp (auth) {
-    const authResponse = await api.user.signUp(auth)
+  async function signUp (credentials) {
+    const authResponse = await api.user.signUp(credentials)
     if (!authResponse.error) {
-      update({ authorization: { username: authResponse.username, password: auth.password } })
+      update({ authorization: authResponse })
     }
     return authResponse
   }
+
   async function saveItem (data) {
     const userSavedResponse = await api.user.saveItem(data)
     if (!userSavedResponse.error) {
       const userResponse = await api.user.getItem()
-      const userAuth = user.active.authorization
-      userAuth.username = userResponse.username
-      update({ authorization: userAuth, data: userResponse })
+      update({ data: userResponse })
     }
     showMessage('User data saved!')
     return userSavedResponse
@@ -105,9 +110,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     const saveResponse = await api.user.savePassword(data)
     if (!saveResponse.error) {
       const userResponse = await api.user.getItem()
-      const userAuth = user.active.authorization
-      userAuth.password = data.password
-      update({ authorization: userAuth, data: userResponse })
+      update({ authorization: saveResponse, data: userResponse })
     }
     showMessage('User data saved!')
     return saveResponse
@@ -136,6 +139,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     update,
     signIn,
     getItem,
+    getAuth,
     autoSignIn,
     signOut,
     signUp,

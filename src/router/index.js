@@ -83,11 +83,5 @@ export default route(function (/* { store, ssrContext } */) {
         routerHistory.stack.pop();
       } */
   })
-  Router.afterEach((to, from) => {
-    if (to.meta.transitionConfig && to.meta.transitionConfig[from.name]) return to.meta.transition = to.meta.transitionConfig[from.name]
-    if (to.meta.level == from.meta.level) return to.meta.transition = ''
-    to.meta.transition = to.meta.level < from.meta.level ? 'slide-out' : 'slide-in'
-  })
-
   return Router
 })

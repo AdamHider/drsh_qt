@@ -150,6 +150,9 @@ export class Api extends ApiService{
             localStorage.removeItem('x-sid')
             return result
         },
+        getAuth: (params) => {
+            return this.post('user', 'getAuth', params);
+        },
         signIn: (params) => {
             return this.post('user', 'signIn', params);
         },

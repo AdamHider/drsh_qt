@@ -77,14 +77,13 @@
 
 <script setup >
 import { useUserStore } from '../stores/user'
-import { reactive, ref, inject } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const form = ref(null)
 const buttonLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
-const redirectedFrom = inject('redirectedFrom')
 
 const formData = reactive({
   step: route.params.step * 1,
@@ -109,20 +108,22 @@ const formData = reactive({
   }
 })
 
-const { signIn } = useUserStore()
+const { signIn, getAuth } = useUserStore()
 
 const validate = async function () {
   formData.valid = await form.value.validate()
   buttonLoading.value = true
-  const userAuth = {
+  const credentials = {
     username: formData.fields.username.value,
     password: formData.fields.password.value
   }
-  const logged = await signIn(userAuth)
-  buttonLoading.value = false
-  if (!logged.error) {
-    if (redirectedFrom) return router.push(redirectedFrom.fullPath)
-    return router.push('/user')
+  const authResponse = await getAuth(credentials)
+  if (!authResponse.error) {
+    const logged = await signIn(authResponse.auth_key)
+    buttonLoading.value = false
+    if (!logged.error) {
+      return router.push('/user')
+    }
   }
 }
 </script>

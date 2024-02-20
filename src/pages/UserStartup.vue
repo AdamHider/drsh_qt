@@ -29,7 +29,7 @@
 
                                 <q-item-section>
                                     <q-item-label lines="1">{{userItem.data?.username}}</q-item-label>
-                                    <q-item-label caption><b>Level:</b> {{userItem.data?.level.level}}</q-item-label>
+                                    <q-item-label caption><b>Level:</b> {{userItem.data?.level?.level}}</q-item-label>
                                 </q-item-section>
 
                                 <q-item-section side>
@@ -52,23 +52,20 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const route = useRoute()
-const redirectedFrom = inject('redirectedFrom')
 
 const dialog = ref(false)
 const btnLoading = ref([])
 
 const switchUser = async (userItem, key) => {
   btnLoading.value[key] = true
-  await signIn(userItem.authorization, userItem.activeClassroom)
+  await signIn(userItem.authorization)
   btnLoading.value[key] = false
   dialog.value = false
-  if (redirectedFrom) return router.push(redirectedFrom.fullPath)
   return router.push('/user')
 }
 

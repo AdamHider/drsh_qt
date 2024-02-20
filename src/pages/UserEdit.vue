@@ -44,7 +44,7 @@
               </q-item>
             </q-list>
           </q-card>
-          <q-router-link page="UserEditPassword" dialog>Change password</q-router-link>
+          <router-link to="edit/password" >Change password</router-link>
           <q-input
             v-model="formData.fields.email.value"
             :rules="formData.fields.email.rules"
@@ -94,14 +94,14 @@ const formData = reactive({
     email: {
       value: user.active.data.email,
       rules: [
-        v => v === '' || (v !== '' && ((/.+@.+\..+/.test(v)))) || 'E-mail must be valid'
+        v => v === null || (v !== null && ((/.+@.+\..+/.test(v)))) || 'E-mail must be valid'
       ],
       errors: ''
     },
     phone: {
       value: user.active.data.phone,
       rules: [
-        v => v === '' || (v !== '' && (/\(?([0-9]{4})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(v))) || 'Phone must be valid'
+        v => v === null || (v !== null && (/\(?([0-9]{4})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(v))) || 'Phone must be valid'
       ],
       errors: '',
       suggestions: []
