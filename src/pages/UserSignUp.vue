@@ -1,5 +1,5 @@
 <template>
-  <q-page-wrapper>
+  <q-page-container>
     <q-app-header class="transparent text-white">
         <q-btn flat round dense icon="arrow_back" v-on:click="$router.go(-1);" v:slot="back-button"></q-btn>
         <q-toolbar-title></q-toolbar-title>
@@ -132,7 +132,7 @@
       </q-card>
     </q-dialog>
   </q-page>
-</q-page-wrapper>
+</q-page-container>
 </template>
 
 <script setup >
@@ -211,7 +211,8 @@ watch(formData.fields, async (currentValue, oldValue) => {
   formData.valid = await form.value.validate()
 })
 watch(() => formData.fields.password.value, async (currentValue, oldValue) => {
-  if (currentValue.length === 4) validate()
+  if (currentValue.length === 4) setTimeout(() => { validate()}, 100)
+
 })
 watch(() => formData.fields.passwordConfirm.value, async (currentValue, oldValue) => {
   if (currentValue.length === 4) validate()

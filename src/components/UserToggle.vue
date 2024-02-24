@@ -4,7 +4,7 @@
         @click="dialog = true"
     >
         <q-avatar size="22">
-          <img :src="user.active.data?.character.avatar">
+          <img :src="user.active.data?.character?.avatar">
         </q-avatar>
         <div class="ellipsis">
             <b>{{user.active.data?.username}}</b>

@@ -1,5 +1,5 @@
 <template>
-    <q-page-wrapper>
+    <q-page-container>
         <q-page class="flex justify-center items-end full-height full-width text-center">
         <q-card class="rounded-b-0 full-width">
             <q-card-section v-if="user.active?.data.id" class="d-flex flex-no-wrap justify-space-between align-center">
@@ -48,7 +48,7 @@
                 </q-card>
             </q-dialog>
         </q-page>
-    </q-page-wrapper>
+    </q-page-container>
 </template>
 
 <script setup>

@@ -10,7 +10,7 @@
             appear
             enter-active-class="animated zoomIn animation-delay-1"
             leave-active-class="animated zoomOut">
-            <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;">
+            <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;" >
                 <q-card-section>
                     <q-img
                         :src="user.active.data?.character?.image"
@@ -27,26 +27,13 @@
             leave-active-class="animated fadeOutDownBig">
           <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 col full-width" style="padding-top: 30px;">
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
-              <q-linear-progress
-                  color="positive"
-                  :value="(user.active.data.level?.percentage / 100)"
-                  size="12px"
-                  stripe rounded
-              ></q-linear-progress>
-              <div class="row q-ma-sm ">
-                  <div class="col text-left">
-                      <b>Level {{user.active.data.level?.level}}</b>
-                  </div>
-                  <div class="col text-right">
-                      <b>{{user.active.data.level?.experience}}/{{user.active.data.level?.points_to}}</b>
-                  </div>
-              </div>
+
               </q-card-section>
               <q-card-section>
                   <q-item class="q-pa-none">
                       <q-item-section avatar>
                         <q-avatar>
-                          <img :src="user.active.data?.character.avatar"/>
+                          <img :src="user.active.data?.character?.avatar"/>
                         </q-avatar>
                       </q-item-section>
                       <q-item-section class="text-left">
@@ -59,64 +46,18 @@
                   </q-item>
               </q-card-section>
               <q-card-section class="q-pa-none">
-                  <div class="q-pa-sm row items-start">
-                      <div class="col-6 q-pa-sm">
-                          <q-item  class="bg-grey-2 rounded-borders">
-                              <q-item-section  avatar>
-                                  <q-icon size="32px" color="primary" name="payments"></q-icon>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.credits?.quantity}}</b></q-item-label>
-                                  <q-item-label caption lines="2">Credits</q-item-label>
-                              </q-item-section>
-                              <q-tooltip activator="parent" location="top">
-                                  Total exercises that you have done
-                              </q-tooltip>
-                          </q-item>
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                          <q-item  class="bg-grey-2 rounded-borders">
-                              <q-item-section avatar>
-                                  <q-icon size="32px" color="primary" name="diamond"></q-icon>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h5 text-primary"><b>{{user.active?.data.resources.gems?.quantity}}</b></q-item-label>
-                                  <q-item-label caption lines="2">Gems</q-item-label>
-                              </q-item-section>
-                              <q-tooltip activator="parent" location="top">
-                                  Total exercises that you have done
-                              </q-tooltip>
-                          </q-item>
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                          <q-item  class="bg-grey-2 rounded-borders">
-                              <q-item-section  avatar>
-                                  <q-icon size="32px" color="primary" name="public"></q-icon>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h5 text-primary"><b>{{user.active.data.dashboard?.total_exercises}}</b></q-item-label>
-                                  <q-item-label caption lines="2">Lessons</q-item-label>
-                              </q-item-section>
-                              <q-tooltip activator="parent" location="top">
-                                  Total lessons that you have done
-                              </q-tooltip>
-                          </q-item>
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                          <q-item  class="bg-grey-2 rounded-borders">
-                              <q-item-section avatar>
-                                  <q-icon size="32px" color="primary" name="people_alt"></q-icon>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h5 text-primary"><b>{{user.active.data.dashboard?.total_classrooms}}</b></q-item-label>
-                                  <q-item-label caption lines="2">Classrooms</q-item-label>
-                              </q-item-section>
-                              <q-tooltip activator="parent" location="top">
-                                  Total classrooms that you are member of
-                              </q-tooltip>
-                          </q-item>
-                      </div>
-                  </div>
+                <q-chip color="primary" text-color="white">
+                  <q-avatar color="teal" text-color="white">{{ user.active.data.resources.cobalt.quantity }}</q-avatar>
+                  Cobalt
+                </q-chip>
+                <q-chip color="primary" text-color="white">
+                  <q-avatar color="teal" text-color="white">{{ user.active.data.resources.titanium.quantity }}</q-avatar>
+                  Titanium
+                </q-chip>
+                <q-chip color="primary" text-color="white">
+                  <q-avatar color="teal" text-color="white">{{ user.active.data.resources.iridium.quantity }}</q-avatar>
+                  Platine
+                </q-chip>
               </q-card-section>
               <q-card-section class="q-py-none flex justify-between items-center">
                   <div class="text-h6">Achievements</div>
