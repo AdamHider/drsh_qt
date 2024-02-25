@@ -45,18 +45,18 @@
                       </q-item-section>
                   </q-item>
               </q-card-section>
-              <q-card-section class="q-pa-none">
-                <q-chip color="primary" text-color="white">
-                  <q-avatar color="teal" text-color="white">{{ user.active.data.resources.cobalt.quantity }}</q-avatar>
-                  Cobalt
+              <q-card-section class="flex justify-between items-center">
+                <q-chip outline color="primary">
+                  <q-avatar color="primary" text-color="white">{{ user.active.data.resources.cobalt.quantity }}</q-avatar>
+                  <b>Cobalt</b>
                 </q-chip>
-                <q-chip color="primary" text-color="white">
+                <q-chip>
                   <q-avatar color="teal" text-color="white">{{ user.active.data.resources.titanium.quantity }}</q-avatar>
-                  Titanium
+                  <b>Titanium</b>
                 </q-chip>
-                <q-chip color="primary" text-color="white">
+                <q-chip>
                   <q-avatar color="teal" text-color="white">{{ user.active.data.resources.iridium.quantity }}</q-avatar>
-                  Platine
+                  <b>Platine</b>
                 </q-chip>
               </q-card-section>
               <q-card-section class="q-py-none flex justify-between items-center">

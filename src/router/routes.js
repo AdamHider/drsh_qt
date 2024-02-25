@@ -195,6 +195,14 @@ const routes = [
           transition: 'slide-in'
         }
       },
+      {
+        path: '/skills',
+        component: () => import('pages/SkillsPage.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
 
       {
         path: 'authorization',
