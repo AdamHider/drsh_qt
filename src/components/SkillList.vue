@@ -13,13 +13,14 @@
       <q-card class="bg-white text-center" style="width: 300px">
         <q-card-section>
           <div class="text-h6">{{ currentSkill.title }}</div>
+          <div class="text-caption">{{ currentSkill.description }}</div>
         </q-card-section>
         <q-card-section v-if="!claimError">
           <div class="flex justify-start q-gutter-md">
-            <div class="text-center" v-for="(skill, skillIndex) in currentSkill.list" :key="skillIndex">
+            <div class="text-center" v-for="(availableSkill, availableSkillIndex) in currentSkill.available_skills" :key="availableSkillIndex">
               <q-avatar size="60px" font-size="42px" rounded  color="teal" text-color="white" icon="biotech" />
-              <div class="text-h6">{{ skill.title }}</div>
-              <div class="text-caption">{{ skill.description }}</div>
+              <div class="text-h6">{{ availableSkill.title }}</div>
+              <div class="text-caption">{{ availableSkill.description }}</div>
             </div>
           </div>
         </q-card-section>
