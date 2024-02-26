@@ -200,6 +200,7 @@ const routes = [
         component: () => import('pages/SkillsPage.vue'),
         meta: {
           requiresAuth: true,
+          bottomBarEnabled: true,
           transition: 'slide-in'
         }
       },
