@@ -93,6 +93,9 @@ export class Api extends ApiService{
         },
         getList: (params) => {
             return this.post('skill', 'getList', params)
+        },
+        claimSkill: () => {
+            return this.post('skill', 'claimItem', params)
         }
     }
     course = {

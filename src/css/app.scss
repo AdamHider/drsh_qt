@@ -1,7 +1,7 @@
 // app global css in SCSS form
 .rounded-b-0{
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 }
 .rounded-b-md{
   border-bottom-left-radius: 15px;
