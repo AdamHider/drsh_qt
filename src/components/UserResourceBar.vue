@@ -74,7 +74,7 @@ onDeactivated(() => {
   //countdown()
 })
 
-watch(() => resource.value.restoration, () => {
+watch(() => resource.value?.restoration, () => {
   if(!resource.value.restoration) return
   percentageCount.value = (resource.value.restoration.restorationTime - resource.value.restoration.nextRestoration) * 100 / resource.value.restoration.restorationTime
 })

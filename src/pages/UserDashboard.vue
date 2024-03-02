@@ -49,9 +49,9 @@
                 <div class="text-h6">Resources</div>
               </q-card-section>
               <q-card-section class="flex justify-start items-center q-gutter-md">
-                  <UserResourceBar :resource="user.active?.data.resources.cobalt"/>
-                  <UserResourceBar :resource="user.active?.data.resources.rubidium"/>
-                  <UserResourceBar :resource="user.active?.data.resources.science"/>
+                  <UserResourceBar :resource="user.active?.data.resources?.cobalt"/>
+                  <UserResourceBar :resource="user.active?.data.resources?.rubidium"/>
+                  <UserResourceBar :resource="user.active?.data.resources?.science"/>
               </q-card-section>
               <q-card-section class="q-py-none flex justify-between items-center">
                   <div class="text-h6">Achievements</div>

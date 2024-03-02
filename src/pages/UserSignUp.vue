@@ -212,12 +212,12 @@ watch(formData.fields, async (currentValue, oldValue) => {
 })
 watch(() => formData.fields.password.value, async (currentValue, oldValue) => {
   if (currentValue.length === 4) setTimeout(() => { validate()}, 100)
-
 })
 watch(() => formData.fields.passwordConfirm.value, async (currentValue, oldValue) => {
   if (currentValue.length === 4) validate()
 })
 watch(() => route.params.step, async (currentValue, oldValue) => {
+  if(route.name !== 'sign-up') return
   if (!formData.valid && route.params.step > formData.step) {
     router.go(-1)
     return false
