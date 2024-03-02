@@ -22,7 +22,8 @@
         <q-inner-loading :showing="isLoading"/>
         <apexchart
           v-if="leaderboardData.options"
-          id="vuechart-example"
+          style="overflow: hidden;"
+          id="vuechart"
           type="line"
           :options="leaderboardData.options"
           :series="leaderboardData.data"
@@ -67,14 +68,22 @@ const props = defineProps({
 
 const chartOptionsDefault = {
   chart: {
-    id: 'vuechart-example',
-    height: 250,
+    id: 'vuechart',
+    height: 350,
     toolbar: {
       show: false
     }
   },
+  dataLabels: {
+    enabled: true,
+  },
   stroke: {
     curve: 'smooth'
+  },
+  yaxis: {
+    labels: {
+      show: false
+    }
   },
   xaxis: {
     labels: {

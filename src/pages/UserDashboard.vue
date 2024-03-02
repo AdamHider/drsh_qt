@@ -45,19 +45,13 @@
                       </q-item-section>
                   </q-item>
               </q-card-section>
-              <q-card-section class="flex justify-between items-center">
-                <q-chip outline color="primary">
-                  <q-avatar color="primary" text-color="white">{{ user.active.data.resources.cobalt.quantity }}</q-avatar>
-                  <b>Cobalt</b>
-                </q-chip>
-                <q-chip>
-                  <q-avatar color="teal" text-color="white">{{ user.active.data.resources.titanium.quantity }}</q-avatar>
-                  <b>Titanium</b>
-                </q-chip>
-                <q-chip>
-                  <q-avatar color="teal" text-color="white">{{ user.active.data.resources.iridium.quantity }}</q-avatar>
-                  <b>Platine</b>
-                </q-chip>
+              <q-card-section class="q-py-none flex justify-start items-center q-gutter-md">
+                <div class="text-h6">Resources</div>
+              </q-card-section>
+              <q-card-section class="flex justify-start items-center q-gutter-md">
+                  <UserResourceBar :resource="user.active?.data.resources.cobalt"/>
+                  <UserResourceBar :resource="user.active?.data.resources.rubidium"/>
+                  <UserResourceBar :resource="user.active?.data.resources.science"/>
               </q-card-section>
               <q-card-section class="q-py-none flex justify-between items-center">
                   <div class="text-h6">Achievements</div>
@@ -90,6 +84,7 @@
 import { useUserStore } from '../stores/user'
 import UserToggle from '../components/UserToggle.vue'
 import AchievementSlider from '../components/AchievementSlider.vue'
+import UserResourceBar from '../components/UserResourceBar.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { onMounted, onBeforeMount, onActivated, ref, watch } from 'vue'
 

@@ -96,7 +96,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     showMessage('User data saved!')
     return userSavedResponse
   }
-  async function saveItemSettings (data) {
+  async function saveItemSetting (data) {
     const userSettingsResponse = await api.user.saveItemSettings(data)
     if (!userSettingsResponse.error) {
       const userResponse = await api.user.getItem()
@@ -144,7 +144,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     signOut,
     signUp,
     saveItem,
-    saveItemSettings,
+    saveItemSetting,
     savePassword,
     activate,
     checkUsername,

@@ -3,7 +3,7 @@
     <q-app-header class="transparent text-white rounded-b-md" ref="header">
       <CourseToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event"/>
       <q-toolbar-title></q-toolbar-title>
-      <UserResourceBar :resource="user.active?.data.resources.energy" icon="bolt" icon-color="yellow"/>
+      <UserResourceBar :resource="user.active?.data.resources.energy"/>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 48px;"  class=" items-end full-height full-width text-center" >
       <q-scroll-area class="absolute-top absolute-left full-width full-height"

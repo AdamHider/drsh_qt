@@ -3,6 +3,10 @@
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
+.rounded-l-0{
+  border-bottom-left-radius: 0 !important;
+  border-top-left-radius: 0 !important;
+}
 .rounded-b-md{
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
@@ -21,7 +25,9 @@ a{
     text-decoration: none;
     color: $primary;
 }
-
+.rounded-xs{
+  border-radius: $extra-small-border-radius;
+}
 .rounded-sm{
     border-radius: $small-border-radius;
 }
@@ -53,6 +59,9 @@ a{
 }
 .border-blue-10{
     border-color: $blue-10;
+}
+.border-primary{
+    border-color: $primary;
 }
 .border-positive{
     border-color: $positive;

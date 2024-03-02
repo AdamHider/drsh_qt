@@ -72,7 +72,7 @@ const props = defineProps({
 
 const emits = defineEmits(['select'])
 
-const { user, saveItemSettings } = useUserStore()
+const { user, saveItemSetting } = useUserStore()
 const { course, getList, getActive } = useCourse()
 
 if (user.active?.data.id) {
@@ -80,16 +80,13 @@ if (user.active?.data.id) {
 }
 
 const select = async (index) => {
-  if (course.list[index].id === user.active?.data.settings.course_id) {
+  if (course.list[index].id === user.active?.data.settings.courseId) {
     return false
   }
-  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.settings.course_id))
+  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.settings.courseId))
   if (activeIndex > -1) course.list[activeIndex].is_active = false
   course.list[index].is_active = true
-  const data = {
-    course_id: course.list[index].id
-  }
-  await saveItemSettings(user.active?.data.settings)
+  await saveItemSetting({code: 'courseId', value: course.list[index].id})
   emits('select')
 }
 
