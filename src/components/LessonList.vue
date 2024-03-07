@@ -132,7 +132,6 @@ const composeList = () => {
     if (checkGroup(lesson.list[i] && lesson.list[i].course_section)) {
       lessonList.value.unshift({ ...{ course_section: lesson.list[i].course_section }, ...{ type: 'group' } })
     }
-    console.log(lessonList.value)
     lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'lesson' } })
   }
 }

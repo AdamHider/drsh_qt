@@ -1,5 +1,6 @@
 <template>
   <div>
+
   <div class="flex justify-evenly">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block q-py-sm column">
           <div class="chain-block q-mb-md" v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
@@ -8,7 +9,7 @@
                 :skill="skill"
                 @click="openModal(skill)"
                 :style="`position: relative; z-index: ${100 - skillIndex}`"
-                size="50px"
+                size="60px"
                 icon-size="60px"
                 :color="props.color"
               />
@@ -16,7 +17,7 @@
       </div>
     </div>
     <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" position="bottom">
-      <q-card class="bg-white text-center q-pb-sm rounded-b-0" >
+      <q-card dark class="text-center q-pb-sm rounded-b-0" >
         <q-card-section class="q-mt-lg flex justify-center" >
           <SkillAvatar :skill="currentSkill" size="70px" icon-size="45px" :color="props.color"/>
         </q-card-section>
