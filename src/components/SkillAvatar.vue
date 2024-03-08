@@ -43,11 +43,19 @@ const skill = toRefs(props).skill
 .skill-block:not(:first-child):before{
   content: "";
   position: absolute;
-  bottom: 100%;
+  bottom: 80%;
   border-left: 2px solid $grey-4;
   margin-right: 1px;
-  height: 100%;
-  left: 47%;
+}
+.skill-block:nth-child(even):not(:first-child):before{
+  transform: rotate(35deg);
+  height: 150%;
+  left: 100%;
+}
+.skill-block:nth-child(odd):not(:first-child):before{
+  transform: rotate(-35deg);
+  height: 150%;
+  left: 0%;
 }
 .skill-block.is_blocked{
   opacity: .6;

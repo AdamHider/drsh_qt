@@ -126,7 +126,13 @@ onBeforeRouteLeave((to, from) => {
   position: relative;
 }
 .subcategory-block.column:nth-child(odd){
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
+.subcategory-block .skill-block:nth-child(odd){
+  transform: translateX(50%);
+}
+.subcategory-block .skill-block:nth-child(even){
+  transform: translateX(-50%);
+}
 </style>
