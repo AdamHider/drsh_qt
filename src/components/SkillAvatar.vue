@@ -47,10 +47,18 @@ $glow: 0px 0px 5px -1px  $info;
   content: "";
   position: absolute;
   bottom: 100%;
-  border-left: 4px solid $grey-4;
+  border-left: 2px solid $grey-4;
   margin-right: 1px;
-  height: 100%;
-  left: 47%;
+}
+.skill-block:nth-child(even):not(:first-child):before{
+  transform: rotate(35deg);
+  height: 150%;
+  left: 100%;
+}
+.skill-block:nth-child(odd):not(:first-child):before{
+  transform: rotate(-35deg);
+  height: 150%;
+  left: 0%;
 }
 .skill-block:not(:first-child):after{
   content: "";
