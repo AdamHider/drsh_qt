@@ -5,12 +5,11 @@
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block q-py-sm column">
           <div class="chain-block q-mb-md" v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
               <SkillAvatar v-for="(skill, skillIndex) in chain" :key="skillIndex"
-                class="q-mb-xl "
                 :skill="skill"
                 @click="openModal(skill)"
-                :style="`position: relative; z-index: ${100 - skillIndex}`"
-                size="60px"
-                icon-size="60px"
+                :style="`position: relative; z-index: ${100 - skillIndex}; margin-bottom: 65px;`"
+                size="65px"
+                iconSize="40px"
                 :color="props.color"
               />
           </div>
@@ -126,7 +125,7 @@ onBeforeRouteLeave((to, from) => {
   position: relative;
 }
 .subcategory-block.column:nth-child(odd){
-  margin-top: 50px;
+  margin-top: 55px;
 }
 
 </style>
