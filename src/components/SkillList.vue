@@ -3,12 +3,12 @@
 
   <div class="flex justify-evenly">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block q-py-sm column">
-          <div class="chain-block q-mb-md" v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
+          <div class="chain-block " v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
               <SkillAvatar v-for="(skill, skillIndex) in chain" :key="skillIndex"
                 :skill="skill"
                 @click="openModal(skill)"
-                :style="`position: relative; z-index: ${100 - skillIndex}; margin-bottom: 65px;`"
-                size="65px"
+                :style="`position: relative; z-index: ${100 - skillIndex}; margin-bottom: 60px;`"
+                size="60px"
                 iconSize="40px"
                 :color="props.color"
               />
@@ -125,7 +125,7 @@ onBeforeRouteLeave((to, from) => {
   position: relative;
 }
 .subcategory-block.column:nth-child(odd){
-  margin-top: 55px;
+  margin-top: 60px;
 }
 
 </style>

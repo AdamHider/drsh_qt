@@ -1,14 +1,14 @@
 <template>
   <q-page-container :style="`background-color: #0000008f;`">
     <q-app-header class="transparent text-white rounded-b-md " reveal>
-        <q-toolbar-title></q-toolbar-title>
         <UserResourceBar :resource="user.active?.data.resources.cobalt"/>
+        <UserResourceBar :resource="user.active?.data.resources.rubidium"/>
         <UserResourceBar :resource="user.active?.data.resources.science"/>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 48px;" class="flex column justify-center content-end  text-center full-width">
       <q-card flat class="relative text-left transparent q-pb-md rounded-borders rounded-b-0 col full-width">
           <q-card-section class="q-pa-none">
-            <q-tabs v-model="tab" inline-label>
+            <q-tabs v-model="tab"  inline-label align="center">
               <q-tab :name="categorIndex" v-for="(category, categorIndex) in skills" :key="categorIndex" :class="`text-${category.color}`" >
                 <b>{{ category.title }}</b>
                 <q-badge v-if="category.available_total > 0" class="q-ml-sm" :color="category.color" >{{ category.available_total }}</q-badge>
@@ -16,7 +16,6 @@
             </q-tabs>
             <q-tab-panels class="bg-transparent" v-model="tab">
               <q-tab-panel :name="categorIndex" v-for="(category, categorIndex) in skills" :key="categorIndex">
-
                 <SkillList :list="category.list" :color="category.color" @onClaim="reload()"/>
                 </q-tab-panel>
               </q-tab-panels>
