@@ -1,6 +1,6 @@
 <template>
   <q-page-container>
-        <q-page class="flex justify-center content-end  text-center full-width" style="padding-top: 50px; padding-bottom: 48px;">
+        <q-page class="flex justify-center content-end  text-center full-width" style="padding-top: 50px; padding-bottom: 35px;">
           <q-card class="text-center transparent no-shadow full-width" style="position: relative; z-index: 1;">
               <q-card-section class="q-pa-lg q-pb-xl text-white">
                 <div class="text-h6"><b>Leaderboard</b></div>

@@ -1,8 +1,8 @@
 <template>
   <div>
 
-  <div class="flex justify-evenly">
-      <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block q-py-sm column">
+  <div class="flex justify-center">
+      <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block q-px-sm column">
           <div class="chain-block " v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
               <SkillAvatar v-for="(skill, skillIndex) in chain" :key="skillIndex"
                 :skill="skill"
@@ -15,13 +15,13 @@
           </div>
       </div>
     </div>
-    <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" position="bottom">
-      <q-card dark class="text-center q-pb-sm rounded-b-0" >
+    <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale" full-width>
+      <q-card  class="text-center q-pb-sm" >
         <q-card-section class="q-mt-lg flex justify-center" >
-          <SkillAvatar :skill="currentSkill" size="70px" icon-size="45px" :color="props.color"/>
+          <SkillAvatar :skill="currentSkill" size="90px" icon-size="45px" :color="props.color"/>
         </q-card-section>
         <q-card-section>
-          <div class="text-h6">{{ currentSkill.title }}</div>
+          <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
           <div class="text-caption">{{ currentSkill.description }}</div>
         </q-card-section>
         <q-separator/>
@@ -49,7 +49,7 @@
             <q-list class="text-left">
               <q-item  clickable @click="openModal(currentSkill.required_skill)">
                 <q-item-section avatar>
-                  <SkillAvatar :skill="currentSkill.required_skill" size="40px" icon-size="25px" :color="props.color"/>
+                  <SkillAvatar :skill="currentSkill.required_skill" size="50px" :color="props.color"/>
                 </q-item-section>
                 <q-item-section class="q-pl-sm">
                   <q-item-label lines="1"><b>{{ currentSkill.required_skill.title }}</b></q-item-label>
@@ -124,8 +124,14 @@ onBeforeRouteLeave((to, from) => {
 .skill-block{
   position: relative;
 }
+.subcategory-block{
+  /*
+  border-left: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  margin-right: -1px;*/
+}
 .subcategory-block.column:nth-child(odd){
-  margin-top: 60px;
+  padding-top: 60px !important;
 }
 
 </style>

@@ -77,7 +77,7 @@ $glow: 0px 0px 5px -1px $blue;
   bottom: 100%;
   height: 100%;
   left: calc(-2px + 50%);
-  width: 2px;
+  width: 4px;
   background: $grey-4;
   display: block;
 }
@@ -106,7 +106,7 @@ $glow: 0px 0px 5px -1px $blue;
   content: "";
   position: absolute;
   top: -60%;
-  left: calc(-5px + 50%);
+  left: calc(-4px + 50%);
   border-radius: 10px;
   width: 8px;
   height: 8px;
@@ -119,7 +119,7 @@ $glow: 0px 0px 5px -1px $blue;
 }
 
 .is_blocked .avatar .q-avatar {
-  background: transparent;
+  background: #00000091;
   box-shadow: inset 0px 0px 0px 2px $grey-4;
 }
 
@@ -131,26 +131,21 @@ $glow: 0px 0px 5px -1px $blue;
   background: white;
 }
 
-.color-blue.is_gained       .avatar:before,
-.color-blue.is_available    .avatar:before,
-.color-blue.is_purchasable  .avatar:before {
-  box-shadow: 0px 0px 3px 0px  $blue;
-}
 .color-blue.is_purchasable  .avatar:after {
   border: 1px solid $blue;
   animation: blink 2s linear infinite ;
 }
-.color-blue.is_gained       .avatar .q-avatar { background: $blue; box-shadow: inset 0px 0px 0px 3px $blue;}
-.color-blue.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 3px $blue;}
-.color-blue.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 3px $blue;}
+.color-blue.is_gained       .avatar .q-avatar { background: $info; box-shadow: inset 0px 0px 0px 3px $info;}
+.color-blue.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 3px $info;}
+.color-blue.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 3px $info;}
 .color-blue.is_available    .avatar .q-icon { color: $blue-3 !important;}
-.color-blue.is_purchasable  .avatar .q-icon { color: $blue !important;}
+.color-blue.is_purchasable  .avatar .q-icon { color: $info !important;}
 .color-blue.is_purchasable.skill-block .relation,
 .color-blue.is_available.skill-block .relation ,
-.color-blue.is_gained.skill-block .relation { box-shadow: 0px 0px 3px 0px $blue; background: $blue; }
+.color-blue.is_gained.skill-block .relation { background: $info; }
 .color-blue.is_purchasable.skill-block .relation-dot,
 .color-blue.is_available.skill-block .relation-dot,
-.color-blue.is_gained.skill-block .relation-dot{ box-shadow: 0px 0px 3px 0px $blue; background: $blue; }
+.color-blue.is_gained.skill-block .relation-dot{ background: $info; }
 .color-blue.is_purchasable.skill-block .relation:after{
   animation: relationBlink 2s linear infinite ;
 }

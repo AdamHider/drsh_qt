@@ -2,9 +2,9 @@
   <q-page-sticky
     position="bottom"
     v-show="bottomBarEnabled"
-    class="bg-dark text-white"
+    class="bg-white rounded-t-md text-primary"
   >
-    <q-tabs class="bg-dark">
+    <q-tabs>
       <q-route-tab icon="map" :to="`${routes.course}`" exact replace/>
       <q-route-tab icon="group" :to="routes.classroom" exact replace />
       <q-route-tab icon="science" :to="routes.skills" exact replace />

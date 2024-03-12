@@ -5,7 +5,7 @@
       <q-toolbar-title></q-toolbar-title>
       <UserResourceBar :resource="user.active?.data.resources.energy"/>
     </q-app-header>
-    <q-page style="padding-top: 50px; padding-bottom: 48px;"  class="items-end full-height full-width text-center" >
+    <q-page style="padding-top: 50px; padding-bottom: 35px;"  class="items-end full-height full-width text-center" >
       <q-scroll-area class="absolute-top absolute-left full-width full-height"
         :content-style="{
           display: 'flex',

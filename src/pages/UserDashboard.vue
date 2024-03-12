@@ -5,7 +5,7 @@
           <q-toolbar-title></q-toolbar-title>
           <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
       </q-app-header>
-      <q-page style="padding-top: 50px; padding-bottom: 48px;" class="text-center flex column full-width">
+      <q-page style="padding-top: 50px; padding-bottom: 35px;" class="flex justify-center content-end  text-center full-width">
           <transition
             appear
             enter-active-class="animated zoomIn animation-delay-1"
@@ -25,7 +25,7 @@
             appear
             enter-active-class="animated fadeInUpBig"
             leave-active-class="animated fadeOutDownBig">
-          <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 col full-width" style="padding-top: 30px;">
+          <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="padding-top: 30px;">
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
 
               </q-card-section>
@@ -53,18 +53,6 @@
                   <UserResourceBar :resource="user.active?.data.resources?.rubidium"/>
                   <UserResourceBar :resource="user.active?.data.resources?.science"/>
               </q-card-section>
-              <q-card-section class="q-py-none flex justify-between items-center">
-                  <div class="text-h6">Achievements</div>
-                  <router-link to="/achievements">Show all</router-link>
-              </q-card-section>
-                  <AchievementSlider
-                      :slidesPerView=2.4
-                      :centerAligned="false"
-                      :withButton="false"
-                      slideHeight="100"
-                      :navigation="false"
-                      captionMode="full"
-                  />
               <q-card-section>
                   <q-btn
                       class="full-width"
