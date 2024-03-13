@@ -81,15 +81,10 @@ $glow: 0px 0px 5px -1px $blue;
   background: $grey-4;
   display: block;
 }
-.skill-block:not(:first-child) .relation::before {
-  content: "";
-  position: absolute;
-}
 .skill-block:not(:first-child) .relation:after {
   content: "";
   position: absolute;
-  top: -10;
-  left: 0px;
+  left: 1px;
   background: white;
   width: 2px;
   height: 2px;
@@ -98,7 +93,6 @@ $glow: 0px 0px 5px -1px $blue;
   opacity: 0;
   box-shadow: 0px 0px 5px 1px  $blue;
 }
-
 .skill-block .relation-dot {
   display: none;
 }
@@ -113,66 +107,45 @@ $glow: 0px 0px 5px -1px $blue;
   background: white;
   display: block;
 }
-
 .skill-block.is_blocked {
   opacity: .6;
 }
-
 .is_blocked .avatar .q-avatar {
   background: #00000091;
   box-shadow: inset 0px 0px 0px 2px $grey-4;
 }
-
 .is_available .avatar .q-avatar {
   background: white;
 }
-
 .is_purchasable .avatar .q-avatar {
   background: white;
 }
 
-.color-blue.is_purchasable  .avatar:after {
-  border: 1px solid $blue;
-  animation: blink 2s linear infinite ;
-}
-.color-blue.is_gained       .avatar .q-avatar { background: $info; box-shadow: inset 0px 0px 0px 3px $info;}
-.color-blue.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 3px $info;}
-.color-blue.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 3px $info;}
+.color-blue.is_purchasable  .avatar:after { border: 1px solid $blue; animation: blink 2s linear infinite ; }
+.color-blue.is_gained       .avatar .q-avatar { background: $info; box-shadow: inset 0px 0px 0px 2px $info;}
+.color-blue.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 2px $info;}
+.color-blue.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 2px $info;}
 .color-blue.is_available    .avatar .q-icon { color: $blue-3 !important;}
 .color-blue.is_purchasable  .avatar .q-icon { color: $info !important;}
-.color-blue.is_purchasable.skill-block .relation,
-.color-blue.is_available.skill-block .relation ,
-.color-blue.is_gained.skill-block .relation { background: $info; }
-.color-blue.is_purchasable.skill-block .relation-dot,
-.color-blue.is_available.skill-block .relation-dot,
-.color-blue.is_gained.skill-block .relation-dot{ background: $info; }
-.color-blue.is_purchasable.skill-block .relation:after{
-  animation: relationBlink 2s linear infinite ;
-}
+.color-blue.is_purchasable.skill-block  .relation,
+.color-blue.is_available.skill-block    .relation ,
+.color-blue.is_gained.skill-block       .relation { background: $info; }
+.color-blue.is_purchasable.skill-block  .relation-dot,
+.color-blue.is_available.skill-block    .relation-dot,
+.color-blue.is_gained.skill-block       .relation-dot{ background: $info; }
+.color-blue.is_purchasable.skill-block  .relation:after{ animation: relationBlink 2s linear infinite ; }
 
-.color-orange.is_gained       .avatar:before,
-.color-orange.is_available    .avatar:before,
-.color-orange.is_purchasable  .avatar:before {
-  box-shadow: 0px 0px 5px -1px  $orange-2;
-}
-.color-orange.is_purchasable  .avatar:after {
-  border: 1px solid $orange;
-  animation: blink 2s linear infinite ;
-}
-.color-orange.is_gained       .avatar .q-avatar { background: $orange;  box-shadow: inset 0px 0px 0px 3px $orange;}
-.color-orange.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 3px $orange-3;}
-.color-orange.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 3px $orange;}
+.color-orange.is_purchasable  .avatar:after { border: 1px solid $orange; animation: blink 2s linear infinite ; }
+.color-orange.is_gained       .avatar .q-avatar { background: $orange; box-shadow: inset 0px 0px 0px 2px $orange;}
+.color-orange.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 2px $orange;}
+.color-orange.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 2px $orange;}
 .color-orange.is_available    .avatar .q-icon { color: $orange-3 !important;}
 .color-orange.is_purchasable  .avatar .q-icon { color: $orange !important;}
-.color-orange.is_purchasable.skill-block .relation,
-.color-orange.is_available.skill-block .relation ,
-.color-orange.is_gained.skill-block .relation { border-color: $orange; border-width: 3px; box-shadow: 0px 0px 5px -1px  $orange-2;}
-.color-orange.is_purchasable.skill-block .relation-dot,
-.color-orange.is_available.skill-block .relation-dot,
-.color-orange.is_gained.skill-block .relation-dot{ border-color: $orange; border-width: 6px;  box-shadow: 0px 0px 5px -1px  $orange-2; }
-.color-orange.is_purchasable.skill-block .relation:after{
-  animation: relationBlink 2s linear infinite ;
-}
-
+.color-orange.is_purchasable.skill-block  .relation,
+.color-orange.is_available.skill-block    .relation ,
+.color-orange.is_gained.skill-block       .relation { background: $orange; }
+.color-orange.is_purchasable.skill-block  .relation-dot,
+.color-orange.is_available.skill-block    .relation-dot,
+.color-orange.is_gained.skill-block       .relation-dot{ background: $orange; }
+.color-orange.is_purchasable.skill-block  .relation:after{ animation: relationBlink 2s linear infinite ; }
 </style>
-

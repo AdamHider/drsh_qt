@@ -63,6 +63,13 @@
             label="Phone"
           ></q-input>
         </q-form>
+        <q-btn
+            class="full-width"
+            color="primary"
+            @click="exitUser(); "
+            append-icon="mdi-logout-variant"
+            label="Sign out"
+        />
     </q-page>
   </q-page-container>
 </template>
