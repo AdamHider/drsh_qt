@@ -1,14 +1,12 @@
 <template>
-  <div
-    :class="`skill-block color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
+  <q-card flat clickable
+    :class="`rounded-sm skill-item bg-grey-3 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
     <div class="relation"></div>
     <div class="relation-dot"></div>
-    <div class="avatar">
-      <q-avatar :size="props.size" text-color="white">
-        <img class="absolute" :width="props.iconSize" :src="skill.image" />
-      </q-avatar>
-    </div>
-  </div>
+        <q-avatar :size="props.size" text-color="white">
+          <img class="absolute" :width="props.iconSize" :src="skill.image" />
+        </q-avatar>
+  </q-card>
 </template>
 
 <script setup>
@@ -69,16 +67,16 @@ $glow: 0px 0px 5px -1px $blue;
   color: white;
 }
 
-.skill-block .relation {
+.skill-item .relation {
   display: none;
 }
-.skill-block:not(:first-child) .relation {
+.skill-item:not(:first-child) .relation {
   position: absolute;
-  bottom: 100%;
-  height: 100%;
   left: calc(-2px + 50%);
+  height: 100%;
+  bottom: 100%;
   width: 4px;
-  background: $grey-4;
+  background: $grey-3;
   display: block;
 }
 .skill-block:not(:first-child) .relation:after {
@@ -107,33 +105,39 @@ $glow: 0px 0px 5px -1px $blue;
   background: white;
   display: block;
 }
-.skill-block.is_blocked {
+.skill-item.is_blocked {
   opacity: .6;
+  filter: grayscale(1);
 }
 .is_blocked .avatar .q-avatar {
-  background: #00000091;
-  box-shadow: inset 0px 0px 0px 2px $grey-4;
+  filter: grayscale(1);
 }
 .is_available .avatar .q-avatar {
-  background: white;
+  //background: white;
 }
 .is_purchasable .avatar .q-avatar {
-  background: white;
+  //background: white;
 }
 
-.color-blue.is_purchasable  .avatar:after { border: 1px solid $blue; animation: blink 2s linear infinite ; }
-.color-blue.is_gained       .avatar .q-avatar { background: $info; box-shadow: inset 0px 0px 0px 2px $info;}
-.color-blue.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 2px $info;}
-.color-blue.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 2px $info;}
-.color-blue.is_available    .avatar .q-icon { color: $blue-3 !important;}
-.color-blue.is_purchasable  .avatar .q-icon { color: $info !important;}
-.color-blue.is_purchasable.skill-block  .relation,
-.color-blue.is_available.skill-block    .relation ,
-.color-blue.is_gained.skill-block       .relation { background: $info; }
-.color-blue.is_purchasable.skill-block  .relation-dot,
-.color-blue.is_available.skill-block    .relation-dot,
-.color-blue.is_gained.skill-block       .relation-dot{ background: $info; }
-.color-blue.is_purchasable.skill-block  .relation:after{ animation: relationBlink 2s linear infinite ; }
+.color-blue.skill-item.is_gained { background: $gradient-positive !important; color: white; }
+.color-blue.skill-item.is_available { border: 3px solid $positive }
+.color-blue.skill-item.is_purchasable  .relation,
+.color-blue.skill-item.is_available    .relation ,
+.color-blue.skill-item.is_gained       .relation { background: $positive; }
+
+.color-blue.skill-block.is_purchasable  .avatar:after { border: 1px solid $blue; animation: blink 2s linear infinite ; }
+.color-blue.skill-block.is_gained       .avatar .q-avatar { background: $info; box-shadow: inset 0px 0px 0px 2px $info;}
+.color-blue.skill-block.is_available    .avatar .q-avatar { background: $grey-10; box-shadow: inset 0px 0px 0px 2px $info;}
+.color-blue.skill-block.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 2px $info;}
+.color-blue.skill-block.is_available    .avatar .q-icon { color: $blue-3 !important;}
+.color-blue.skill-block.is_purchasable  .avatar .q-icon { color: $info !important;}
+.color-blue.skill-block.is_purchasable.skill-block  .relation,
+.color-blue.skill-block.is_available.skill-block    .relation ,
+.color-blue.skill-block.is_gained.skill-block       .relation { background: $info; }
+.color-blue.skill-block.is_purchasable.skill-block  .relation-dot,
+.color-blue.skill-block.is_available.skill-block    .relation-dot,
+.color-blue.skill-block.is_gained.skill-block       .relation-dot{ background: $info; }
+.color-blue.skill-block.is_purchasable.skill-block  .relation:after{ animation: relationBlink 2s linear infinite ; }
 
 .color-orange.is_purchasable  .avatar:after { border: 1px solid $orange; animation: blink 2s linear infinite ; }
 .color-orange.is_gained       .avatar .q-avatar { background: $orange; box-shadow: inset 0px 0px 0px 2px $orange;}

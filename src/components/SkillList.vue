@@ -1,13 +1,13 @@
 <template>
   <div>
 
-  <div class="flex justify-center">
+  <div class="justify-center flex overflow-auto">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block q-px-sm column">
-          <div class="chain-block " v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
+          <div class="chain-block column" v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
               <SkillAvatar v-for="(skill, skillIndex) in chain" :key="skillIndex"
                 :skill="skill"
                 @click="openModal(skill)"
-                :style="`position: relative; z-index: ${100 - skillIndex}; margin-bottom: 60px;`"
+                :style="`position: relative; z-index: ${100 - skillIndex}; margin-bottom: 60px`"
                 size="60px"
                 iconSize="40px"
                 :color="props.color"
@@ -16,9 +16,11 @@
       </div>
     </div>
     <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale" full-width>
-      <q-card  class="text-center q-pb-sm" >
+      <q-card  class="text-center q-pb-sm">
         <q-card-section class="q-mt-lg flex justify-center" >
-          <SkillAvatar :skill="currentSkill" size="90px" icon-size="45px" :color="props.color"/>
+          <q-avatar size="90px" text-color="white">
+            <img class="absolute" :src="currentSkill.image" />
+          </q-avatar>
         </q-card-section>
         <q-card-section>
           <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
@@ -49,7 +51,9 @@
             <q-list class="text-left">
               <q-item  clickable @click="openModal(currentSkill.required_skill)">
                 <q-item-section avatar>
-                  <SkillAvatar :skill="currentSkill.required_skill" size="50px" :color="props.color"/>
+                  <q-avatar size="50px" text-color="white">
+                    <img class="absolute" :src="currentSkill.required_skill.image" />
+                  </q-avatar>
                 </q-item-section>
                 <q-item-section class="q-pl-sm">
                   <q-item-label lines="1"><b>{{ currentSkill.required_skill.title }}</b></q-item-label>
