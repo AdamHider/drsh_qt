@@ -4,26 +4,32 @@
   <div class="justify-center   ">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block">
           <div class="q-pa-sm q-mt-sm">
-            <div>
-              <b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b>
+            <div class="row justify-between ">
+              <div><b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
+              <div><q-badge color="white" text-color="blue"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(2)}}%</b></q-badge></div>
             </div>
-            <q-linear-progress rounded size="25px" :value="subcategory.gained_total/subcategory.total" color="blue" class="q-mt-sm">
-              <div class="absolute-full flex flex-center">
-                <q-badge color="white" text-color="blue"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(2)}}%</b></q-badge>
-              </div>
-            </q-linear-progress>
+            <q-linear-progress rounded size="15px" :value="subcategory.gained_total/subcategory.total" color="blue" class="q-mt-sm"/>
           </div>
           <div class="overflow-auto">
-            <div class="chain-block flex no-wrap" v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
-                <SkillAvatar v-for="(skill, skillIndex) in chain" :key="skillIndex"
-                  :skill="skill"
-                  @click="openModal(skill)"
-                  :style="`position: relative; z-index: ${100 - skillIndex}; `"
-                  size="60px"
-                  iconSize="40px"
-                  :color="props.color"
-                />
-            </div>
+              <swiper
+                :slides-per-view="'auto'"
+                spaceBetween="20"
+              >
+                <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center" style="width: fit-content; height: auto !important;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;">
+                  <SkillAvatar v-for="(skill, skillIndex) in skillCol" :key="skillIndex"
+                    :skill="skill"
+                    @click="openModal(skill)"
+                    :style="`position: relative; z-index: ${100 - skillIndex}; `"
+                    size="60px"
+                    iconSize="40px"
+                    :color="props.color"
+                  />
+            </swiper-slide>
+          </swiper>
           </div>
       </div>
     </div>
@@ -85,7 +91,14 @@
 import { api } from '../services/index'
 import { ref, onMounted } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation } from 'swiper/modules'
 import SkillAvatar from '../components/SkillAvatar.vue'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/scrollbar'
 
 const claimDialog = ref(false)
 const claimError = ref(false)

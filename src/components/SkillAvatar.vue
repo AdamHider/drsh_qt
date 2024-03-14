@@ -122,7 +122,6 @@ $glow: 0px 0px 5px -1px $blue;
   //background: white;
 }
 
-.skill-item:not(:first-child){margin-left: 30px;}
 .color-blue.skill-item.is_gained { background: $gradient-positive !important; color: white; }
 .color-blue.skill-item.is_available { border: 3px solid $positive }
 .color-blue.skill-item.is_purchasable  .relation,
