@@ -1,12 +1,15 @@
 <template>
-  <q-card flat clickable
-    :class="`rounded-sm skill-item bg-grey-3 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
+  <q-item flat clickable
+    :class="`q-ma-sm rounded-sm skill-item bg-grey-3 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
     <div class="relation"></div>
     <div class="relation-dot"></div>
+      <q-item-section avatar>
         <q-avatar :size="props.size" text-color="white">
           <img class="absolute" :width="props.iconSize" :src="skill.image" />
         </q-avatar>
-  </q-card>
+        </q-item-section>
+      <q-item-section class="q-pt-none"><div  class="text-subtitle2" style=""><b>{{ skill.title }}</b></div></q-item-section>
+  </q-item>
 </template>
 
 <script setup>
@@ -72,10 +75,10 @@ $glow: 0px 0px 5px -1px $blue;
 }
 .skill-item:not(:first-child) .relation {
   position: absolute;
-  left: calc(-2px + 50%);
-  height: 100%;
-  bottom: 100%;
-  width: 4px;
+  top: calc(-2px + 50%);
+  width: 100%;
+  right: 100%;
+  height: 4px;
   background: $grey-3;
   display: block;
 }
@@ -119,6 +122,7 @@ $glow: 0px 0px 5px -1px $blue;
   //background: white;
 }
 
+.skill-item:not(:first-child){margin-left: 30px;}
 .color-blue.skill-item.is_gained { background: $gradient-positive !important; color: white; }
 .color-blue.skill-item.is_available { border: 3px solid $positive }
 .color-blue.skill-item.is_purchasable  .relation,

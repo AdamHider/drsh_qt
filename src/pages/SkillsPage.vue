@@ -15,7 +15,7 @@
               </q-tab>
             </q-tabs>
             <q-tab-panels v-model="tab">
-              <q-tab-panel :name="categorIndex" v-for="(category, categorIndex) in skills" :key="categorIndex">
+              <q-tab-panel class="q-px-none"  :name="categorIndex" v-for="(category, categorIndex) in skills" :key="categorIndex">
                 <SkillList :list="category.list" :color="category.color" @onClaim="reload()"/>
                 </q-tab-panel>
               </q-tab-panels>

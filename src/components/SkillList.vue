@@ -1,17 +1,29 @@
 <template>
   <div>
 
-  <div class="justify-center flex overflow-auto">
-      <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block q-px-sm column">
-          <div class="chain-block column" v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
-              <SkillAvatar v-for="(skill, skillIndex) in chain" :key="skillIndex"
-                :skill="skill"
-                @click="openModal(skill)"
-                :style="`position: relative; z-index: ${100 - skillIndex}; margin-bottom: 60px`"
-                size="60px"
-                iconSize="40px"
-                :color="props.color"
-              />
+  <div class="justify-center   ">
+      <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block">
+          <div class="q-pa-sm q-mt-sm">
+            <div>
+              <b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b>
+            </div>
+            <q-linear-progress rounded size="25px" :value="subcategory.gained_total/subcategory.total" color="blue" class="q-mt-sm">
+              <div class="absolute-full flex flex-center">
+                <q-badge color="white" text-color="blue"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(2)}}%</b></q-badge>
+              </div>
+            </q-linear-progress>
+          </div>
+          <div class="overflow-auto">
+            <div class="chain-block flex no-wrap" v-for="(chain, chainIndex) in subcategory.list" :key="chainIndex" >
+                <SkillAvatar v-for="(skill, skillIndex) in chain" :key="skillIndex"
+                  :skill="skill"
+                  @click="openModal(skill)"
+                  :style="`position: relative; z-index: ${100 - skillIndex}; `"
+                  size="60px"
+                  iconSize="40px"
+                  :color="props.color"
+                />
+            </div>
           </div>
       </div>
     </div>
@@ -133,9 +145,6 @@ onBeforeRouteLeave((to, from) => {
   border-left: 1px solid lightgray;
   border-right: 1px solid lightgray;
   margin-right: -1px;*/
-}
-.subcategory-block.column:nth-child(odd){
-  padding-top: 60px !important;
 }
 
 </style>
