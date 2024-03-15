@@ -1,6 +1,6 @@
 <template>
   <q-item flat clickable
-    :class="`q-ma-sm rounded-sm skill-item bg-grey-3 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
+    :class="`q-my-sm rounded-sm skill-item bg-grey-3 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
     <div class="relation"></div>
     <div class="relation-dot"></div>
       <q-item-section avatar>
@@ -45,10 +45,8 @@ $glow: 0px 0px 5px -1px $blue;
   width: 100%;
   height: 100%;
   border-radius: 100%;
-  z-index: 9;
 }
 .avatar .q-avatar{
-  z-index: 10;
 }
 @keyframes relationBlink {
   0% {top: -10px; opacity: 0.6; transform: scale(5);}
@@ -72,15 +70,6 @@ $glow: 0px 0px 5px -1px $blue;
 
 .skill-item .relation {
   display: none;
-}
-.skill-item:not(:first-child) .relation {
-  position: absolute;
-  top: calc(-2px + 50%);
-  width: 100%;
-  right: 100%;
-  height: 4px;
-  background: $grey-3;
-  display: block;
 }
 .skill-block:not(:first-child) .relation:after {
   content: "";
@@ -134,9 +123,6 @@ $glow: 0px 0px 5px -1px $blue;
 .color-blue.skill-block.is_purchasable  .avatar .q-avatar { box-shadow: inset 0px 0px 0px 2px $info;}
 .color-blue.skill-block.is_available    .avatar .q-icon { color: $blue-3 !important;}
 .color-blue.skill-block.is_purchasable  .avatar .q-icon { color: $info !important;}
-.color-blue.skill-block.is_purchasable.skill-block  .relation,
-.color-blue.skill-block.is_available.skill-block    .relation ,
-.color-blue.skill-block.is_gained.skill-block       .relation { background: $info; }
 .color-blue.skill-block.is_purchasable.skill-block  .relation-dot,
 .color-blue.skill-block.is_available.skill-block    .relation-dot,
 .color-blue.skill-block.is_gained.skill-block       .relation-dot{ background: $info; }
