@@ -3,6 +3,7 @@
     position="bottom"
     v-show="bottomBarEnabled"
     class="bg-white rounded-t-md text-primary"
+    style="z-index: 10"
   >
     <q-tabs>
       <q-route-tab icon="map" :to="`${routes.course}`" exact replace/>

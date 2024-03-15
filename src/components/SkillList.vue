@@ -1,7 +1,7 @@
 <template>
   <div>
 
-  <div class="justify-center   ">
+  <div class="justify-center">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block">
           <div class="q-pa-sm q-mt-sm">
             <div class="row justify-between ">
@@ -10,31 +10,27 @@
             </div>
             <q-linear-progress rounded size="15px" :value="subcategory.gained_total/subcategory.total" color="blue" class="q-mt-sm"/>
           </div>
-          <div class="overflow-auto">
-              <swiper :slides-per-view="'auto'" spaceBetween="40">
-                <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center" style="width: fit-content; height: auto !important;
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  justify-content: center;">
+          <div >
+              <swiper :class="`q-pa-sm`"  slides-per-view="auto" spaceBetween="50" >
+                <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center q-pa-sm">
                   <SkillAvatar v-for="(skill, skillIndex) in skillCol.slots" :key="skillIndex"
                     :skill="skill"
                     @click="openModal(skill)"
-                    :style="`position: relative; `"
                     size="60px"
+                    style="z-index: 10; width: 165px;"
                     iconSize="40px"
                     :color="props.color"
                   />
-                  <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} relation-${relation.is_gained}`"></div>
+                  <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
             </swiper-slide>
           </swiper>
           </div>
       </div>
     </div>
-    <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale" full-width>
+    <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" full-width position="bottom">
       <q-card :class="`skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
         <q-card-section class="q-mt-lg flex justify-center" >
-          <q-avatar size="90px" text-color="white">
+          <q-avatar size="90px" text-color="white" class="avatar">
             <img class="absolute" :src="currentSkill.image" />
           </q-avatar>
         </q-card-section>
@@ -46,7 +42,7 @@
         <q-card-actions >
           <div v-if="currentSkill.is_available" class="full-width">
             <div v-if="currentSkill.cost" class="q-pa-sm text-center">
-              <div class="text-h6">Необходимо: </div>
+              <div><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
                   <q-chip class="bg-transparent" :text-color="`${resource.color}-9`" v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex">
                     <q-avatar class="bg-transparent">
@@ -63,7 +59,7 @@
             <q-btn color="white" icon="check" flat class="full-width" label="Upgraded"/>
           </div>
           <div v-if="!currentSkill.is_gained && !currentSkill.is_available" class="full-width">
-            <div class="text-h6">Необходимо: </div>
+            <div><b>Сначала изучите: </b></div>
             <q-list class="text-left">
               <q-item  clickable  v-for="(requiredSkill, requiredSkillIndex) in currentSkill.required_skills" :key="requiredSkillIndex"  @click="openModal(requiredSkill)">
                 <q-item-section avatar>
@@ -134,31 +130,16 @@ onBeforeRouteLeave((to, from) => {
 })
 </script>
 <style lang="scss" scoped>
-
-.skill-swiper .swiper-wrapper .swiper-slide{
-  align-self: stretch;
-  height: auto;
-  display: grid;
-}
-.skill-swiper .swiper-wrapper .swiper-slide:first-child{
-  border-left: none;
-}
-.skill-swiper .swiper-wrapper .swiper-slide .q-card{
-  background: none;
-  align-items: center;
-  display: grid;
-}
-.skill-block{
-  position: relative;
+.swiper-slide{
+  width: fit-content;
+  height: auto !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .skill-card.is_gained { background: $gradient-positive !important; color: white; }
-.skill-card.is_available { border: 3px solid $positive }
-.subcategory-block{
-  /*
-  border-left: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  margin-right: -1px;*/
-}
+.skill-card.is_blocked .avatar { filter: grayscale(1); }
+
 @mixin line               { height: 0; border-bottom-width: 4px; }
 @mixin angle_top_left     { border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 10px; }
 @mixin angle_top_right    { border-top-width: 4px; border-right-width: 4px; border-top-right-radius: 10px; }
@@ -170,10 +151,10 @@ onBeforeRouteLeave((to, from) => {
   border-color: $grey-3;
   border-style: solid;
   border-width: 0px;
-  left: 100%;
-  width: 20px;
+  left: calc(-10px + 100%);
+  width: 30px;
 }
-.relation:after{
+.relation:before{
   content: "";
   position: absolute;
   border-color: $grey-3;
@@ -181,88 +162,80 @@ onBeforeRouteLeave((to, from) => {
   border-width: 0px;
   left: 100%;
   height: 100%;
-  width: 20px;
+  width: 30px;
+}
+.relation:after{
+  content: "";
+  position: absolute;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid $grey-3;
+  left: 60px;
 }
 .relation-is_gained{
-  background: $positive;
+  border-color: $positive;
+  &:before{ border-color: $positive; }
+  &:after{ border-left-color: $positive; }
 }
 .relation-1-0-0-1{
+  @include line;
   bottom: calc(-2px + 50%);
-  width: 40px;
-  border-bottom-width: 4px;
+  &:before{ @include line; top: 100%; }
+  &:after{ top: calc(-6px + 50%); }
 }
 .relation-1-0-0-2{
   @include angle_bottom_right;
   bottom: calc(-2px + 50%);
   height: 11%;
-  &:after{
-    @include angle_top_left;
-    bottom: 100%;
-  }
+  &:before{ @include angle_top_left; bottom: 100%; }
+  &:after{ bottom: calc(-6px + 200%); }
 }
 .relation-1-0-1-2{
+  @include angle_top_right;
   top: calc(-2px + 50%);
   height: 11%;
-  @include angle_top_right;
-  &:after{
-    @include angle_bottom_left;
-    top: 100%;
-  }
+  &:before{ @include angle_bottom_left; top: 100%; }
+  &:after{ top: calc(-6px + 200%); }
 }
 .relation-2-0-0-1{
   @include angle_top_right;
   top: calc(-2px + 25%);
   height: 11%;
-  &:after{
-    @include angle_bottom_left;
-    top: 100%;
-  }
+  &:before{ @include angle_bottom_left; top: 100%; }
+  &:after{ top: calc(-6px + 200%); }
 }
 .relation-2-1-0-1{
+  @include angle_bottom_right;
   bottom: calc(-2px + 25%);
   height: 11%;
-  @include angle_bottom_right;
-  &:after{
-    @include angle_top_left;
-    bottom: 100%;
-  }
+  &:before{ @include angle_top_left; bottom: 100%; }
+  &:after{ bottom: calc(-6px + 200%); }
 }
 
 .relation-2-0-0-2{
   @include line;
   top: calc(-2px + 25%);
-  &:after{
-  @include line;
-    top: 100%;
-  }
+  &:before{ @include line; top: 100%; }
+  &:after{ top: calc(-6px + 50%); }
 }
 .relation-2-1-1-2{
   @include line;
   bottom: calc(-2px + 25%);
-  &:after{
-    @include line;
-    top: 100%;
-  }
+  &:before{ @include line; top: 100%; }
+  &:after{ top: calc(-6px + 50%); }
 }
 .relation-2-1-0-2{
-  @include angle_top_right;
-  top: calc(-2px + 25%);
-  height: 11%;
-  &:after{
-    @include angle_bottom_left;
-    top: 100%;
-  }
+  @include angle_bottom_right;
+  bottom: calc(-2px + 25%);
+  height: 24%;
+  &:before{ @include angle_top_left; bottom: 100%; }
+  &:after{ bottom: calc(-6px + 200%); }
 }
 .relation-2-0-1-2{
   @include angle_top_right;
   top: calc(-2px + 25%);
   height: 24%;
-  &:after{
-    @include angle_bottom_left;
-    top: 100%;
-  }
+  &:before{ @include angle_bottom_left; top: 100%; }
+  &:after{ top: calc(-6px + 200%); }
 }
-
-
-
 </style>
