@@ -6,6 +6,7 @@
         <UserResourceBar :resource="user.active?.data.resources.science"/>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 35px;" class="bg-white flex column justify-center content-end  text-center full-width">
+    <div class="text-h6 text-left ">Исследования</div>
       <q-card flat class="relative  text-left q-pb-md rounded-borders rounded-b-0 col full-width">
           <q-card-section class="q-pa-none">
               <SkillList :list="skills" @onClaim="reload()"/>
