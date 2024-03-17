@@ -18,7 +18,6 @@
                     @click="openModal(skill)"
                     size="60px"
                     style="z-index: 10; width: 165px;"
-                    iconSize="40px"
                     :color="props.color"
                   />
                   <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
@@ -28,12 +27,8 @@
       </div>
     </div>
     <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" full-width position="bottom">
-      <q-card :class="`skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
-        <q-card-section class="q-mt-lg flex justify-center" >
-          <q-avatar size="90px" text-color="white" class="avatar">
-            <img class="absolute" :src="currentSkill.image" />
-          </q-avatar>
-        </q-card-section>
+      <q-card :class="`q-pt-sm skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
+        <q-img width="90px" :src="currentSkill.image" />
         <q-card-section>
           <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
           <div class="text-caption">{{ currentSkill.description }}</div>
@@ -44,7 +39,7 @@
             <div v-if="currentSkill.cost" class="q-pa-sm text-center">
               <div><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
-                  <q-chip class="bg-transparent" :text-color="`${resource.color}-9`" v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex">
+                  <q-chip class="bg-grey-2" :text-color="`${resource.color}-9`" v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex">
                     <q-avatar class="bg-transparent">
                       <q-icon :color="`${resource.color}-9`" :name="resource.icon" size="25px"></q-icon>
                     </q-avatar>

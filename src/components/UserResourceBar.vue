@@ -1,11 +1,11 @@
 <template>
 
   <q-chip class="rounded-sm" :color="`grey-3`" :text-color="`${(resource.is_restorable) ? 'white' : resource.color+'-9'}`" style="padding-right: 5px;">
-    <q-avatar :color="`${resource.color}-9`" size="32px" class="relative-position rounded-md" :style="`z-index: 100; `">
+    <q-avatar :color="`${resource.color}-9`" size="32px" class="relative-position rounded-md">
       <q-icon :name="resource.icon" size="22px" color="white"></q-icon>
     </q-avatar>
     <div class="relative-position text-center" style="min-width: 50px; margin-left: -12px; ">
-      <label class="relative-position " style="z-index: 100; ">
+      <label class="relative-position">
         <b>{{ resource.quantity }}<span style="font-size: 11px;">{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</span></b>
       </label>
       <q-linear-progress v-if="resource.is_restorable" track-color="grey-8"  size="24px" :value="percentageCount/100" :color="`${resource.color}`" class="rounded-xs absolute-top full-width full-height " />

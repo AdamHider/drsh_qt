@@ -1,12 +1,9 @@
 <template>
   <q-page-container>
-    <q-app-header class="transparent text-white rounded-b-md " reveal>
-        <UserResourceBar :resource="user.active?.data.resources.cobalt"/>
-        <UserResourceBar :resource="user.active?.data.resources.rubidium"/>
-        <UserResourceBar :resource="user.active?.data.resources.science"/>
+    <q-app-header class=" rounded-b-md " reveal>
+        <q-toolbar-title>Исследования</q-toolbar-title>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 35px;" class="bg-white flex column justify-center content-end  text-center full-width">
-    <div class="text-h6 text-left ">Исследования</div>
       <q-card flat class="relative  text-left q-pb-md rounded-borders rounded-b-0 col full-width">
           <q-card-section class="q-pa-none">
               <SkillList :list="skills" @onClaim="reload()"/>

@@ -1,16 +1,21 @@
 <template>
   <q-page-container>
-      <q-app-header class="transparent text-white rounded-b-md " reveal>
-          <UserToggle v-if="user.active.data"/>
+      <q-app-header class="transparent text-white rounded-b-md " >
           <q-toolbar-title></q-toolbar-title>
           <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
       </q-app-header>
       <q-page style="padding-top: 50px; padding-bottom: 35px;" class="text-center flex column full-width">
+
+
           <transition
             appear
             enter-active-class="animated zoomIn animation-delay-1"
             leave-active-class="animated zoomOut">
             <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1;" >
+            <q-card-section class="text-left text-white">
+              <div class="text-h6"><b>Hello, {{ user.active?.data.username }}</b></div>
+              <div class="text-caption">How are you doing?</div>
+            </q-card-section>
                 <q-card-section>
                     <q-img
                         :src="user.active.data?.character?.image"
@@ -27,31 +32,68 @@
             leave-active-class="animated fadeOutDownBig">
           <q-card class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 col full-width" style="padding-top: 30px;">
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
-
+                <q-linear-progress
+                    color="positive"
+                    :value="(user.active.data.level?.percentage / 100)"
+                    size="12px"
+                    stripe rounded
+                ></q-linear-progress>
+                <div class="row q-ma-sm ">
+                    <div class="col text-left">
+                        <b>Level {{user.active.data.level?.level}}</b>
+                    </div>
+                    <div class="col text-right">
+                        <b>{{user.active.data.level?.experience}}/{{user.active.data.level?.points_to}}</b>
+                    </div>
+                </div>
               </q-card-section>
-              <q-card-section>
-                  <q-item class="q-pa-none">
-                      <q-item-section avatar>
-                        <q-avatar>
-                          <img :src="user.active.data?.character?.avatar"/>
-                        </q-avatar>
-                      </q-item-section>
-                      <q-item-section class="text-left">
-                          <div class="text-h5"><b>{{user.active.data.username}}</b></div>
-                          <div class="text-grey">Active student</div>
-                      </q-item-section>
-                      <q-item-section side>
-                          <q-btn flat to="user/edit" icon="edit"/>
-                      </q-item-section>
-                  </q-item>
-              </q-card-section>
-              <q-card-section class="q-py-none flex justify-start items-center q-gutter-md">
-                <div class="text-h6">Resources</div>
-              </q-card-section>
-              <q-card-section class="flex justify-start items-center q-gutter-md">
-                  <UserResourceBar :resource="user.active?.data.resources?.cobalt"/>
-                  <UserResourceBar :resource="user.active?.data.resources?.rubidium"/>
-                  <UserResourceBar :resource="user.active?.data.resources?.science"/>
+              <q-card-section class="q-pa-none">
+                  <div class="q-pa-sm row items-start">
+                      <div class="col-6 q-pa-sm">
+                          <q-item  :class="`bg-gradient-${user.active?.data.resources.energy?.color} text-white rounded-borders`" >
+                              <q-item-section avatar>
+                                  <q-img width="30px" src="https://cdn-icons-png.flaticon.com/128/2731/2731636.png" style="filter: hue-rotate(0deg) drop-shadow(1px 1px 5px #00000075 );;"/>
+                              </q-item-section>
+                              <q-item-section>
+                                  <q-item-label class="text-h7"><b>{{user.active?.data.resources.energy?.quantity}}</b></q-item-label>
+                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.energy?.title}}</b></q-item-label>
+                              </q-item-section>
+                          </q-item>
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                          <q-item  :class="`bg-gradient-${user.active?.data.resources.cobalt?.color} text-white rounded-borders`" >
+                              <q-item-section avatar>
+                                  <q-img width="30px" src="https://cdn-icons-png.flaticon.com/128/4858/4858971.png" style="filter: hue-rotate(61deg) drop-shadow(1px 1px 5px #00000075 );;"/>
+                              </q-item-section>
+                              <q-item-section>
+                                  <q-item-label class="text-h7 "><b>{{user.active?.data.resources.cobalt?.quantity}}</b></q-item-label>
+                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.cobalt?.title}}</b></q-item-label>
+                              </q-item-section>
+                          </q-item>
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                          <q-item  :class="`bg-gradient-${user.active?.data.resources.rubidium?.color} text-white rounded-borders`" >
+                              <q-item-section  avatar>
+                                  <q-img width="30px" src="https://cdn-icons-png.flaticon.com/128/4858/4858971.png" style="filter: hue-rotate(178deg) drop-shadow(1px 1px 5px #00000075 );;"/>
+                              </q-item-section>
+                              <q-item-section>
+                                  <q-item-label class="text-h7 "><b>{{user.active.data.resources.rubidium?.quantity}}</b></q-item-label>
+                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.rubidium?.title}}</b></q-item-label>
+                              </q-item-section>
+                          </q-item>
+                      </div>
+                      <div class="col-6 q-pa-sm">
+                          <q-item  :class="`bg-gradient-${user.active?.data.resources.science?.color} text-white rounded-borders`" >
+                              <q-item-section avatar>
+                                  <q-img width="30px" src="https://cdn-icons-png.flaticon.com/128/765/765306.png" style="filter: hue-rotate(60deg) drop-shadow(1px 1px 5px #00000075 );"/>
+                              </q-item-section>
+                              <q-item-section>
+                                  <q-item-label class="text-h7 "><b>{{user.active.data.resources.science?.quantity}}</b></q-item-label>
+                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.science?.title}}</b></q-item-label>
+                              </q-item-section>
+                          </q-item>
+                      </div>
+                  </div>
               </q-card-section>
               <q-card-section class="q-py-none flex justify-between items-center">
                   <div class="text-h6">Achievements</div>
@@ -65,15 +107,6 @@
                       :navigation="false"
                       captionMode="full"
                   />
-              <q-card-section>
-                  <q-btn
-                      class="full-width"
-                      color="primary"
-                      @click="exitUser(); "
-                      append-icon="mdi-logout-variant"
-                      label="Sign out"
-                  />
-              </q-card-section>
           </q-card>
           </transition>
       </q-page>
