@@ -7,7 +7,6 @@
   >
     <q-tabs>
       <q-route-tab icon="map" :to="`${routes.course}`" exact replace/>
-      <q-route-tab icon="group" :to="routes.classroom" exact replace />
       <q-route-tab icon="science" :to="routes.skills" exact replace />
       <q-route-tab icon="bar_chart" :to="routes.leaderboard" exact replace />
       <q-route-tab icon="person" :to="routes.user" exact replace />

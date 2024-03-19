@@ -82,7 +82,7 @@ import { useRoute, useRouter } from 'vue-router'
 const form = ref(null)
 const route = useRoute()
 const router = useRouter()
-const { user, checkUsername, checkEmail, saveItem } = useUserStore()
+const { user, checkUsername, checkEmail, saveItem  } = useUserStore()
 
 const formData = reactive({
   step: route.params.step,

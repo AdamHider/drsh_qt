@@ -38,9 +38,16 @@
 
 <script setup >
 import { useUserStore } from '../stores/user'
+import { useRouter } from 'vue-router'
+
 const { user, signOut } = useUserStore()
+const router = useRouter()
 
 const saveChanges = async function () {
 
+}
+const exitUser = async function () {
+  await signOut()
+  return router.push('/authorization')
 }
 </script>

@@ -36,15 +36,19 @@
         <q-separator/>
         <q-card-actions >
           <div v-if="currentSkill.is_available" class="full-width">
-            <div v-if="currentSkill.cost" class="q-pa-sm text-center">
-              <div><b>Необходимо: </b></div>
+            <div v-if="currentSkill.cost" class="q-pa-sm">
+              <div class="text-center"><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
-                  <q-chip class="bg-grey-2" :text-color="`${resource.color}-9`" v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex">
-                    <q-avatar class="bg-transparent">
-                      <q-icon :color="`${resource.color}-9`" :name="resource.icon" size="25px"></q-icon>
-                    </q-avatar>
-                    <b>{{ resource.quantity }}</b>
-                  </q-chip>
+                <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
+                  <q-item :class="`bg-grey-3 text-${(resource.quantity > resource.quantity_cost) ? resource.color : 'red'} text-left rounded-borders`" >
+                      <q-item-section avatar>
+                          <q-img width="28px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
+                      </q-item-section>
+                      <q-item-section>
+                          <q-item-label><b>{{resource.quantity}}/{{ resource.quantity_cost }}</b></q-item-label>
+                      </q-item-section>
+                  </q-item>
+                </div>
               </div>
             </div>
             <q-btn v-if="currentSkill.is_purchasable" color="primary" class="full-width" icon="file_upload" label="Upgrade" @click="claimSkill(currentSkill.id)"/>

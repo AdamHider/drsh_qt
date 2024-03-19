@@ -2,7 +2,7 @@
     <q-card flat class="text-center q-pa-md">
         <q-img v-if="props.image || props.defaultImage"
             :src="(props.image) ? props.image : defaultImage"
-            width="120px"
+            width="80px"
         />
         <q-card-section class="q-pb-none">
             <div class="text-h6">{{ props.title }}</div>
