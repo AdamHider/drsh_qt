@@ -15,7 +15,7 @@
             appear
             enter-active-class="animated zoomIn animation-delay-1"
             leave-active-class="animated zoomOut">
-            <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1; padding-top: 35%;" >
+            <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1; padding-top: 20vh;" >
                 <q-card-section class="text-left text-white">
                 <div class="text-h6"><b>Hello, {{ user.active?.data.username }}</b></div>
                 <div class="text-caption">How are you doing?</div>
@@ -169,10 +169,10 @@ watch(route, (to) => {
 }
 .page-background .planet-container{
     position: absolute;
-    background-image: url("https://mektepium-app.local/image/planets/planet_lifeless_big_2.png");
+    background-image: url("https://mektepium-app.local/image/planets/home/planet1.png");
     width: 100%;
     height: 100%;
-    background-size: 350px;
+    background-size: 450px;
     background-repeat: no-repeat;
     background-position: center;
     z-index: 2;
