@@ -15,18 +15,17 @@
             appear
             enter-active-class="animated zoomIn animation-delay-1"
             leave-active-class="animated zoomOut">
-            <q-card class="transparent no-shadow full-width" style="margin-bottom: -60px; position: relative; z-index: 1; padding-top: 20vh;" >
+            <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1; height: 50vh;" >
                 <q-card-section class="text-left text-white">
-                <div class="text-h6"><b>Hello, {{ user.active?.data.username }}</b></div>
-                <div class="text-caption">How are you doing?</div>
+                  <div class="text-h6"><b>Hello, {{ user.active?.data.username }}</b></div>
+                  <div class="text-caption">How are you doing?</div>
                 </q-card-section>
-                <q-card-section>
-                    <q-img
-                        :src="user.active.data?.character?.image"
-                        style="max-width: 250px; width: 170px;"
-                        no-spinner
-                    />
-                </q-card-section>
+                <q-img
+                    :src="user.active.data?.character?.image"
+                    class="absolute-bottom "
+                    style="max-width: 250px; width: 170px; margin: 0px auto -40px;"
+                    no-spinner
+                />
             </q-card>
           </transition>
 
@@ -54,48 +53,16 @@
               <q-card-section class="q-pa-none">
                   <div class="q-pa-sm row items-start">
                       <div class="col-6 q-pa-sm">
-                          <q-item  :class="`bg-light-gradient-${user.active?.data.resources.energy?.color} text-white rounded-borders`" >
-                              <q-item-section avatar>
-                                  <q-img width="38px" src="https://cdn-icons-png.flaticon.com/128/2626/2626096.png" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h7"><b>{{user.active?.data.resources.energy?.quantity}}</b></q-item-label>
-                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.energy?.title}}</b></q-item-label>
-                              </q-item-section>
-                          </q-item>
+                          <UserResourceBar :resource="user.active?.data.resources.energy" size="38px"/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <q-item  :class="`bg-light-gradient-${user.active?.data.resources.cobalt?.color} text-white rounded-borders`" >
-                              <q-item-section avatar>
-                                  <q-img width="30px" src="https://cdn-icons-png.flaticon.com/128/4858/4858971.png" style="filter: hue-rotate(61deg) drop-shadow(1px 3px 3px #00000075 );;"/>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h7 "><b>{{user.active?.data.resources.cobalt?.quantity}}</b></q-item-label>
-                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.cobalt?.title}}</b></q-item-label>
-                              </q-item-section>
-                          </q-item>
+                          <UserResourceBar :resource="user.active?.data.resources.cobalt" size="38px"/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <q-item  :class="`bg-light-gradient-${user.active?.data.resources.rubidium?.color} text-white rounded-borders`" >
-                              <q-item-section  avatar>
-                                  <q-img width="30px" src="https://cdn-icons-png.flaticon.com/128/4858/4858971.png" style="filter: hue-rotate(178deg) drop-shadow(1px 3px 3px #00000075 );;"/>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h7 "><b>{{user.active.data.resources.rubidium?.quantity}}</b></q-item-label>
-                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.rubidium?.title}}</b></q-item-label>
-                              </q-item-section>
-                          </q-item>
+                          <UserResourceBar :resource="user.active?.data.resources.rubidium" size="38px"/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <q-item  :class="`bg-light-gradient-${user.active?.data.resources.science?.color} text-white rounded-borders`" >
-                              <q-item-section avatar>
-                                  <q-img width="35px" src="https://cdn-icons-png.flaticon.com/128/3655/3655592.png" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );"/>
-                              </q-item-section>
-                              <q-item-section>
-                                  <q-item-label class="text-h7 "><b>{{user.active.data.resources.science?.quantity}}</b></q-item-label>
-                                  <q-item-label caption lines="1" class="text-white text-sm"><b>{{user.active.data.resources.science?.title}}</b></q-item-label>
-                              </q-item-section>
-                          </q-item>
+                          <UserResourceBar :resource="user.active?.data.resources.science" size="38px"/>
                       </div>
                   </div>
               </q-card-section>
@@ -165,7 +132,7 @@ watch(route, (to) => {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, #7af3ff, #307ed0, #080042);
+    background: url("https://mektepium-app.local/image/backgrounds/space1.png");
 }
 .page-background .planet-container{
     position: absolute;
@@ -176,6 +143,15 @@ watch(route, (to) => {
     background-repeat: no-repeat;
     background-position: center;
     z-index: 2;
+}
+
+.page-background .clouds-container{
+  background: linear-gradient(to top, #250346, #0000) !important;
+  height: 25%;
+  z-index: 3;
+  position: absolute;
+  width: 100%;
+  top: 32%;
 }
 .user-card::before{
     content: "";

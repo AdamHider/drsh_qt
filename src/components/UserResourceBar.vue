@@ -1,30 +1,35 @@
 <template>
-
-  <q-chip class="rounded-sm" :color="`grey-3`" :text-color="`${(resource.is_restorable) ? 'white' : resource.color+'-9'}`" style="padding-right: 5px;">
-    <q-avatar :color="`${resource.color}-9`" size="32px" class="relative-position rounded-md">
-      <q-icon :name="resource.icon" size="22px" color="white"></q-icon>
-    </q-avatar>
-    <div class="relative-position text-center" style="min-width: 50px; margin-left: -12px; ">
-      <label class="relative-position">
-        <b>{{ resource.quantity }}<span style="font-size: 11px;">{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</span></b>
-      </label>
-      <q-linear-progress v-if="resource.is_restorable" track-color="grey-8"  size="24px" :value="percentageCount/100" :color="`${resource.color}`" class="rounded-xs absolute-top full-width full-height " />
-      <div v-if="resource.is_restorable && resource.restoration?.nextRestoration > 0" class="absolute q-ma-none full-width" style="left: 0; bottom: -18px;">
-        <q-chip
-          dense
-          size="10px"
-          text-color="white"
-          class="q-ma-none"
-          style="max-width: none; background-color: #00000082"
-        >
-          <b>{{ timerCount }}</b>
-        </q-chip>
-      </div>
-    </div>
-    <q-tooltip>
-      {{ resource.title }}
-    </q-tooltip>
-  </q-chip>
+      <q-item :dense="props.dense" :class="`relative bg-light-gradient-${resource?.color} text-white rounded-borders ${(props.dense) ? 'q-py-xs q-pl-sm': ''}`" >
+          <q-item-section avatar  style="z-index: 1">
+              <q-img :width="props.size" :src="resource?.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
+          </q-item-section>
+          <q-item-section style="z-index: 1">
+              <q-item-label :class="`${(props.dense) ? '' : 'text-h7'}`">
+                <b>
+                  {{resource?.quantity}}
+                  <span  v-if="resource.is_restorable">{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</span>
+                </b>
+              </q-item-label>
+              <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{resource?.title}}</b></q-item-label>
+          </q-item-section>
+          <q-linear-progress v-if="resource.is_restorable"
+            track-color="grey-8"
+            size="24px"
+            :color="resource?.color"
+            :value="percentageCount/100"
+            class="rounded-borders absolute-top full-width full-height" />
+          <div v-if="resource.is_restorable && resource.restoration?.nextRestoration > 0" class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
+            <q-chip
+              dense
+              size="10px"
+              text-color="white"
+              class="q-ma-none"
+              style="max-width: none; background-color: #00000082"
+            >
+              <b>{{ timerCount }}</b>
+            </q-chip>
+          </div>
+      </q-item>
 </template>
 
 <script setup>
@@ -35,6 +40,9 @@ const { getItem } = useUserStore()
 
 const props = defineProps({
   resource: Object,
+  size: String,
+  noCaption: Boolean,
+  dense: Boolean
 })
 const resource = toRefs(props).resource
 
