@@ -87,6 +87,12 @@ export class Api extends ApiService{
             return this.post('homework', 'getList', params)
         }
     }
+    character = {
+        getList: (params) => {
+            return this.post('character', 'getList', params)
+        }
+    }
+
     skill = {
         getItem: (params) => {
             return this.post('skill', 'getItem', params)
@@ -201,8 +207,6 @@ export class Api extends ApiService{
         getFeed: (params) =>  {
             return this.post('classroom', 'getFeed', params)
         }
-
-
     }
     image = {
         upload: (params) =>  {

@@ -6,6 +6,12 @@ const checkIfSigned = function (to, from) {
     return { path: '/user' }
   }
 }
+const checkIfCharacterSelected = function (to, from) {
+  const { user } = useUserStore()
+  if (user.active.data.id && user.active.data.settings.characterId != 0) {
+    return { path: '/user' }
+  }
+}
 const routes = [
   {
     path: '/',
@@ -241,11 +247,11 @@ const routes = [
         component: () => import('src/pages/LessonItem.vue')
       },
       {
-        path: 'notifications',
-        component: () => import('pages/Notifications.vue'),
+        path: 'character-select',
+        component: () => import('pages/CharacterSelect.vue'),
+        beforeEnter: checkIfCharacterSelected,
         meta: {
-          pageTitle: 'Notifications',
-          requiresAuth: true
+          pageTitle: 'CharacterSelect'
         }
       }
     ]

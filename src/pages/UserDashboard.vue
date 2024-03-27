@@ -21,7 +21,7 @@
                   <div class="text-caption">How are you doing?</div>
                 </q-card-section>
                 <q-img
-                    :src="user.active.data?.character?.image"
+                    :src="user.active.data?.character?.character_image"
                     class="absolute-bottom "
                     style="max-width: 250px; width: 170px; margin: 0px auto -40px;"
                     no-spinner
