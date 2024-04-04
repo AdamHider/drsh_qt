@@ -73,12 +73,13 @@ import { onMounted, ref } from 'vue'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '../stores/user'
+
 
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
-import 'swiper/css/effect-coverflow'
 
 // install Swiper modules
 
@@ -89,6 +90,7 @@ const props = defineProps({
 
 const router = useRouter()
 const characters = ref([])
+const { getItem } = useUserStore()
 
 const buttonLoading = ref(false)
 const activeCharacter = ref({})
@@ -105,8 +107,9 @@ const load = async function () {
 
 const select = async function () {
   buttonLoading.value = true
-  const selectItemResponse = await api.character.selectItem({ id: activeCharacter.value.id })
-  if (!selectItemResponse.error) {
+  const linkItemResponse = await api.character.linkItem({ id: activeCharacter.value.id })
+  if (!linkItemResponse.error) {
+    await getItem()
     buttonLoading.value = false
     return router.push('/user')
   }

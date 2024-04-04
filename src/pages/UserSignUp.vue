@@ -165,7 +165,8 @@ const formData = reactive({
     passwordConfirm: {
       value: '',
       rules: [
-        v => !!v || '',
+        v => !!v || '',,
+        v => (/^[0-9]{4,}$/.test(v)) || '',
         v => (v === formData.fields.password.value) || 'Your passwords are different'
       ],
       reveal: false,

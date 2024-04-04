@@ -88,8 +88,8 @@ export class Api extends ApiService{
         }
     }
     character = {
-        selectItem: (params) => {
-            return this.post('character', 'selectItem', params)
+      linkItem: (params) => {
+            return this.post('character', 'linkItem', params)
         },
         getList: (params) => {
             return this.post('character', 'getList', params)

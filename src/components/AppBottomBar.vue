@@ -16,11 +16,12 @@
 
 <script setup>
 import { useNavigationHistory } from '../composables/useNavigationHistory'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { watch, ref } from 'vue'
 
 const { routes } = useNavigationHistory();
 const route = useRoute();
+const router = useRouter();
 const isRootPage = ref(false);
 const bottomBarEnabled = ref(false);
 
@@ -30,5 +31,8 @@ bottomBarEnabled.value = route.meta.bottomBarEnabled === true
 watch(route, (currentValue, oldValue) => {
   isRootPage.value = currentValue.fullPath.split('/').length === 2
   bottomBarEnabled.value = currentValue.meta.bottomBarEnabled === true
+
 });
+
+
 </script>
