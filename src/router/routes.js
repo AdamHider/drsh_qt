@@ -8,7 +8,7 @@ const checkIfSigned = function (to, from) {
 }
 const checkIfCharacterSelected = function (to, from) {
   const { user } = useUserStore()
-  if (user.active.data.id && user.active.data.settings.characterId != 0) {
+  if (user.active.data.id && user.active.data.settings.characterId.value != 0) {
     return { path: '/user' }
   }
 }

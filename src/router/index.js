@@ -73,7 +73,7 @@ export default route(function (/* { store, ssrContext } */) {
       if (!user.active.data.id) {
         next({ path: '/authorization' })
       } else {
-        if (user.active.data.settings.characterId == 0) {
+        if (user.active.data.settings.characterId.value == 0) {
           next({ path: '/character-select' })
         } else {
           next() // go to wherever I'm going
