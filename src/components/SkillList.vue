@@ -34,6 +34,18 @@
           <div class="text-caption">{{ currentSkill.description }}</div>
         </q-card-section>
         <q-separator/>
+        <q-card-section v-if="currentSkill.modifiers">
+          <div class="text-center"><b>Эффекты: </b></div>
+          <q-list>
+            <q-item v-for="(modifier, modifierIndex) in currentSkill.modifiers" :key="modifierIndex" class="text-left rounded-borders" >
+                <q-item-section>
+                    <q-item-label caption><b>{{modifier.title}}</b></q-item-label>
+                    <q-item-label ><b>{{modifier.description}}</b></q-item-label>
+                </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+        <q-separator/>
         <q-card-actions >
           <div v-if="currentSkill.is_available" class="full-width">
             <div v-if="currentSkill.cost" class="q-pa-sm">
