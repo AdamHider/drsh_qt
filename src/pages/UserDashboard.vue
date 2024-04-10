@@ -50,6 +50,38 @@
                     </div>
                 </div>
               </q-card-section>
+
+              <q-card-section class="q-pa-none">
+                  <div class="q-pa-sm row items-start border-between">
+                      <div class="col-4">
+                        <q-item  class="rounded-borders" >
+                          <q-item-section>
+                              <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_points?.label}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_points?.value}}</b></q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </div>
+                      <div class="col-4">
+                        <q-item  class="rounded-borders" >
+                          <q-item-section>
+                              <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_exercises?.label}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_exercises?.value}}</b></q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </div>
+                      <div class="col-4">
+                        <q-item  class="rounded-borders" >
+                          <q-item-section>
+                              <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_classrooms?.label}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_classrooms?.value}}</b></q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </div>
+                  </div>
+              </q-card-section>
+              <q-card-section class="q-py-none ">
+                  <div class="text-h6">Resources</div>
+              </q-card-section>
               <q-card-section class="q-pa-none">
                   <div class="q-pa-sm row items-start">
                       <div class="col-6 q-pa-sm">

@@ -1,7 +1,7 @@
 <template>
       <q-item :dense="props.dense" :class="`relative bg-light-gradient-${resource?.color} text-white rounded-borders ${(props.dense) ? 'q-py-xs q-pl-sm': ''}`" >
           <q-item-section avatar  style="z-index: 1">
-              <q-img :width="props.size" :src="resource?.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
+              <q-img :width="props.size" :src="resource?.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 )"/>
           </q-item-section>
           <q-item-section style="z-index: 1">
               <q-item-label :class="`${(props.dense) ? '' : 'text-h7'}`">

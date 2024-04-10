@@ -118,7 +118,9 @@ a{
 .swiper {
   max-width: 100vw;
 }
-
+.border-between > div:not(:last-child){
+  border-right: 1px solid lightgray;
+}
 
 .q-card.dark{
   background: rgba(6, 20, 38, 0.77);
