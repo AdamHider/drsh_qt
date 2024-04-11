@@ -121,7 +121,9 @@ a{
 .border-between > div:not(:last-child){
   border-right: 1px solid lightgray;
 }
-
+.q-item{
+  min-height: 40px;
+}
 .q-card.dark{
   background: rgba(6, 20, 38, 0.77);
   color: white;
@@ -132,6 +134,7 @@ a{
 
 .bg-gradient-red    { background: $gradient-red; }
 .bg-gradient-blue   { background: $gradient-blue; }
+.bg-gradient-green  { background: $gradient-green; }
 .bg-gradient-purple { background: $gradient-purple; }
 .bg-gradient-orange { background: $gradient-orange; }
 .bg-gradient-indigo { background: $gradient-indigo; }

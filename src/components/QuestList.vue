@@ -5,57 +5,76 @@
     :loadMore="loadMore"
     @onLoaded="onLoaded"
   >
-    <q-card  v-for="(questItem, index) in quests" :key="index" class="q-ma-sm cursor-pointer">
-      <q-card-section >
+    <q-card  v-for="(questItem, index) in quests" :key="index" class="q-ma-sm cursor-pointer q-mt-md">
+      <q-item :class="`bg-gradient-${questItem.group.color} text-white`">
+        <q-item-section avatar>
+            <img :src="questItem.group.image" width="50px" class="absolute-bottom q-mx-sm">
+        </q-item-section>
+
+        <q-item-section>
+            <q-item-label><b>{{ questItem.group.title }}</b></q-item-label>
+            <q-item-label class="text-white" caption lines="2">{{ questItem.group.description }}</q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-separator />
+      <q-card-section class="q-pa-sm q-pb-md">
         <q-item class="q-pa-none">
-            <q-item-section class="text-left"   @click="router.push(`/quest-${questItem.id}`)">
-                <q-item-section class=" text-left">
-                    <div class="flex items-center">
-                      <q-avatar color="primary" text-color="white" size="40px" icon="task"></q-avatar>
-                      <div class="col q-ml-md">
-                        <q-item-label><b>{{ questItem.goal.title }}</b></q-item-label>
-                        <q-item-label caption lines="2">{{ questItem.title }}</q-item-label>
-                      </div>
-                    </div>
-                    <div class="row q-my-sm justify-between" >
-                        <div class="coltext-left">
-                          <q-chip
-                                v-if="questItem.time_left_humanized"
-                                dense
-                                class="q-px-sm q-ma-none"
-                                style="font-size: 13px"
-                                :color="((questItem.time_left <= 3) ? 'red' : 'orange')"
-                                icon="sports_score"
-                                text-color="white">
-                                <b>{{ questItem.time_left_humanized }}</b>
-                            </q-chip>
-                        </div>
-                        <div class="col text-right" v-if="!questItem.date_end || questItem.time_left > 0">
-                            <b>{{questItem.progress.percentage_text}}</b>
-                        </div>
-                    </div>
-                    <q-linear-progress
-                        v-if="!questItem.date_end || questItem.time_left > 0"
-                        :color="(questItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
-                        :value="(questItem.progress.percentage/100)"
-                        size="12px"
-                        rounded
-                    ></q-linear-progress>
-                </q-item-section>
-            </q-item-section>
-            <q-item-section side v-if="(questItem.reward) && !questItem.is_rewarded && !questItem.is_outdated">
-              <div class="full-width text-center">
-                <b>Rewards</b>
+          <q-item-section class="text-left" @click="router.push(`/${questItem.href}`)">
+            <div class="row q-my-sm justify-between items-end" >
+              <div>
+                <q-item-label><b>{{ questItem.title }}</b></q-item-label>
+                <q-chip
+                    v-if="questItem.time_left_humanized"
+                    dense
+                    class="q-px-sm q-ma-none"
+                    style="font-size: 13px"
+                    :color="((questItem.time_left <= 3) ? 'red' : 'orange')"
+                    icon="sports_score"
+                    text-color="white">
+                    <b>{{ questItem.time_left_humanized }}</b>
+                </q-chip>
               </div>
-              <q-btn color="primary" :disable="!questItem.is_completed || questItem.is_rewarded"  @click="claimReward(questItem.id)">
-                <q-chip  v-if="questItem.reward.gems"  color="transparent" class="q-pa-none" text-color="white" icon="diamond"><b>{{ questItem.reward.gems }}</b></q-chip>
-                <q-chip  v-if="questItem.reward.credits" color="transparent" class="q-pa-none" text-color="white" icon="payment"><b>{{ questItem.reward.credits }}</b></q-chip>
-                <q-chip  v-if="questItem.reward.experience" color="transparent" class="q-pa-none" text-color="white" icon="expand_less"><b>{{ questItem.reward.experience }}</b></q-chip>
-              </q-btn>
-            </q-item-section>
+              <div class="col text-right">
+                  <b>{{questItem.progress.percentage_text}}</b>
+              </div>
+            </div>
+            <q-linear-progress
+
+                :color="(questItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
+                :value="(questItem.progress.percentage/100)"
+                size="12px"
+                rounded
+            ></q-linear-progress>
+          </q-item-section>
         </q-item>
-        </q-card-section >
-    </q-card >
+      </q-card-section>
+      <q-separator/>
+      <q-card-section class="q-pa-sm">
+        <div class=" text-left q-px-sm">
+          <b>Rewards</b>
+        </div>
+        <div class="row justify-between items-center q-gutter-sm">
+          <div>
+            <div class="flex justify-center q-gutter-sm ">
+              <div v-for="(resource, resourceIndex) in questItem.reward" :key="resourceIndex" >
+                <q-item class="bg-grey-3 text-left rounded-borders" >
+                    <q-item-section avatar>
+                        <q-img width="28px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075)"/>
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                    </q-item-section>
+                </q-item>
+              </div>
+            </div>
+          </div>
+          <div>
+            <q-btn color="primary" icon="chevron_right" :disable="!questItem.is_completed || questItem.is_rewarded"  @click="claimReward(questItem.id)"/>
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
   </q-infinite-list>
     <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white text-center" style="width: 300px">
