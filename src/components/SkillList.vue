@@ -105,6 +105,7 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
+
 const claimDialog = ref(false)
 const claimError = ref(false)
 const currentSkill = ref(false)

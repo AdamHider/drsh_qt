@@ -1,5 +1,6 @@
 export class ApiService {
   baseUrl = "/";
+  lastRequestDataHash = "";
 
   constructor(config){
     Object.assign(this, config);
@@ -33,6 +34,9 @@ export class ApiService {
         .then((response) => {
             if(response.headers.get('x-sid')){
                 localStorage.setItem('x-sid', response.headers.get('x-sid'))
+            }
+            if(response.headers.get('Data-Hash')){
+              this.lastRequestDataHash = response.headers.get('Data-Hash')
             }
             return response.json()
         })

@@ -20,7 +20,7 @@
       <q-separator />
       <q-card-section class="q-pa-sm q-pb-md">
         <q-item class="q-pa-none">
-          <q-item-section class="text-left" @click="router.push(`/${questItem.href}`)">
+          <q-item-section class="text-left">
             <div class="row q-my-sm justify-between items-end" >
               <div>
                 <q-item-label><b>{{ questItem.title }}</b></q-item-label>
@@ -70,7 +70,9 @@
             </div>
           </div>
           <div>
-            <q-btn color="primary" icon="chevron_right" :disable="!questItem.is_completed || questItem.is_rewarded"  @click="claimReward(questItem.id)"/>
+
+            <q-btn v-if="questItem.is_completed" color="positive" label="Claim" @click="claimReward(questItem.id)"/>
+            <q-btn v-else-if="questItem.href" color="primary" icon="chevron_right" :to="`${questItem.href}`"/>
           </div>
         </div>
       </q-card-section>
@@ -83,20 +85,18 @@
           <div v-else class="text-h6">Ooops...</div>
         </q-card-section>
         <q-card-section v-if="!claimError">
-          <div>
-            <div v-if="claimRewards.gems">
-              <q-avatar font-size="40px" color="transparent" text-color="purple" icon="diamond" />
-              <div class="text-subtitle1 text-purple"><b>{{ claimRewards.gems }} gems</b></div>
+            <div class="row justify-center q-gutter-sm q-py-sm">
+              <div v-for="(resource, resourceIndex) in claimRewards" :key="resourceIndex" >
+                <q-item :class="`bg-grey-3 text-left rounded-borders`" >
+                    <q-item-section avatar>
+                        <q-img width="28px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
+                    </q-item-section>
+                    <q-item-section>
+                        <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                    </q-item-section>
+                </q-item>
+              </div>
             </div>
-            <div v-if="claimRewards.credits">
-              <q-avatar font-size="40px" color="transparent" text-color="positive" icon="payment" />
-              <div class="text-subtitle1 text-positive"><b>{{ claimRewards.credits }} credits</b></div>
-            </div>
-            <div v-if="claimRewards.experience">
-              <q-avatar font-size="40px" color="transparent" text-color="blue" icon="expand_less" />
-              <div class="text-subtitle1 text-blue"><b>{{ claimRewards.experience }} extra XP</b></div>
-            </div>
-          </div>
         </q-card-section>
         <q-card-section v-else>
           Something went wrong.
@@ -113,6 +113,9 @@
 import { api } from '../services/index'
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useNavigationHistory } from '../composables/useNavigationHistory'
+
+const { routes } = useNavigationHistory()
 
 const route = useRoute()
 const router = useRouter()
@@ -135,6 +138,13 @@ const loadMore = async function (filter) {
     error.value = questListResponse
     return []
   }
+  const dataHash = api.lastRequestDataHash
+  if(dataHash !== routes.quests.hash && routes.quests.hash !== ''){
+    routes.quests.hash = dataHash
+    routes.quests.is_updated = true
+  } else {
+    routes.quests.is_updated = false
+  }
   return questListResponse
 }
 const onLoaded = function (response) {
@@ -149,7 +159,7 @@ const claimReward = async function (questId) {
     claimError.value = true
     claimRewards.value = false
   } else {
-    claimRewards.value = questRewardResponse.reward
+    claimRewards.value = questRewardResponse
   }
 }
 onBeforeRouteLeave((to, from) => {
