@@ -8,16 +8,15 @@
       :navigation="props.navigation"
       @swiper="onSwiper"
     >
-      <swiper-slide v-for="(courseItem, index) in course.list" :key="index" :class="'text-center'" @click="select(index)">
-        <q-card :class="`q-ma-sm ${(courseItem.is_active) ? 'active' : ''}`" flat>
-            <q-card-section class="q-pa-xs" >
+      <swiper-slide v-for="(courseItem, index) in course.list" :key="index" :class="'text-center'" @click="select(courseItem.id)">
+        <q-card :class="`q-ma-sm overflow-hidden ${(courseItem.is_active) ? 'active' : ''}`" flat>
+            <q-card-section class="q-pa-none" >
               <q-img
                 fit="cover"
-                class="rounded-borders"
                 :src="courseItem.background_image"
                 :style="`height: ${props.slideHeight}px;`"
                 >
-                <div :class="`absolute-${captionMode} text-left text-white flex flex-center  `">
+                <div class="absolute-full column justify-center items-center">
                   <q-circular-progress
                     show-value
                     class="text-white text-bold q-ma-md"
@@ -26,30 +25,18 @@
                     size="60px"
                     color="white"
                   >
-                  {{ courseItem.progress.percentage }}%
+                    {{ courseItem.progress.percentage }}%
                   </q-circular-progress>
-                </div>
-                <div class="absolute-bottom transparent">
-                  <q-chip
-                    dense
-                    class="absolute-bottom-left q-ma-sm"
-                    :color="((courseItem.is_active) ? 'orange' : 'grey')"
-                    text-color="white"
-                    icon-right="star" >
-                    <b>{{ courseItem.progress.total_points }}</b>
-                  </q-chip>
+                  <div class="text-bold text-left">{{courseItem.title}}</div>
                 </div>
               </q-img>
-            </q-card-section>
-            <q-card-section  class="text-left q-pa-sm">
-                <div class="text-bold">{{courseItem.description.title}}</div>
-                <div class="text-caption text-grey">{{courseItem.description.title_tag}}</div>
             </q-card-section>
         </q-card>
       </swiper-slide>
     </swiper>
 </template>
 <script setup>
+import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -72,35 +59,22 @@ const props = defineProps({
 
 const emits = defineEmits(['select'])
 
-const { user, saveItemSetting } = useUserStore()
+const { user, getItem } = useUserStore()
 const { course, getList, getActive } = useCourse()
 
 if (user.active?.data.id) {
   getList()
 }
 
-const select = async (index) => {
-  if (course.list[index].id === user.active?.data.settings.courseId) {
-    return false
+const select = async function (courseId) {
+  const linkItemResponse = await api.course.linkItem({ id: courseId })
+  if (!linkItemResponse.error) {
+    await getItem()
+    emits('select')
   }
-  const activeIndex = course.list.findIndex((course) => (course.id === user.active?.data.settings.courseId))
-  if (activeIndex > -1) course.list[activeIndex].is_active = false
-  course.list[index].is_active = true
-  await saveItemSetting({code: 'courseId', value: course.list[index].id})
-  emits('select')
 }
 
 const onSwiper = (swiper) => {
 }
 
 </script>
-
-<style scoped lang="scss">
-.q-card > .q-card__section:first-child{
-  border: 3px solid rgba(0, 0, 0, 0.12);
-  border-radius: $huge-border-radius;
-}
-.q-card.active > .q-card__section:first-child{
-  border-color: $positive;
-}
-</style>

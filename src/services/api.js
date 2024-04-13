@@ -92,7 +92,7 @@ export class Api extends ApiService{
         }
     }
     character = {
-      linkItem: (params) => {
+        linkItem: (params) => {
             return this.post('character', 'linkItem', params)
         },
         getList: (params) => {
@@ -117,6 +117,9 @@ export class Api extends ApiService{
         },
         getItem: (params) => {
             return this.post('course', 'getItem', params)
+        },
+        linkItem: (params) => {
+            return this.post('course', 'linkItem', params)
         }
     }
     lesson = {

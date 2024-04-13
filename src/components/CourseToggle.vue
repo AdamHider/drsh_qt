@@ -4,7 +4,7 @@
       clickable
       @click="dialog = true"
     >
-        <q-avatar size="30px">
+        <q-avatar v-if="course.active?.image" size="30px">
           <img :src="course.active?.image"/>
         </q-avatar>
         <div v-if="course.active?.id" class="ellipsis" style="max-width: 100px;">
@@ -30,12 +30,11 @@
               label-style="font-size: 1.1em"
             />
           <CourseSlider
-            :slidesPerView=1.8
+            :slidesPerView=1.4
             :centerAligned="false"
             :withButton="false"
-            slideHeight="140"
+            slideHeight="180"
             :navigation="false"
-            captionMode="full"
             @select="select"
           />
         </q-card-section>

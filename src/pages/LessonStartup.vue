@@ -3,10 +3,10 @@
     <q-app-header class="transparent text-white rounded-b-md" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title></q-toolbar-title>
-        <UserResourceBar :resource="user.active?.data.resources.energy" />
+        <UserResourceBar :resource="user.active?.data.resources.energy" dense no-caption size="28px"/>
     </q-app-header>
     <q-page class="text-center full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
-      <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;">
+      <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1; height: 300px">
           <q-card-section>
               <transition
                   appear
@@ -15,7 +15,8 @@
                 <q-img
                     v-if="transitionTrigger"
                     :src="lesson.active.image"
-                    style="max-width: 250px; width: 230px;"
+                    style="position: absolute; width: 500px; top: -25px; left: -150px;"
+
                     no-spinner
                 />
               </transition>
@@ -27,11 +28,11 @@
         leave-active-class="animated zoomOut">
       <q-card flat class="relative text-white text-left transparent full-width " style="z-index: 1;"
         v-if="transitionTrigger">
-          <q-card-section>
+          <q-card-section class="q-pb-sm">
               <div class="text-h5"><b>{{lesson.active.title}}</b></div>
               <div class="text-caption">{{lesson.active.description}}</div>
           </q-card-section>
-          <q-card-section v-if="lesson.active.parent_id">
+          <q-card-section v-if="lesson.active.parent_id" class="q-pb-sm">
               <div class="text-caption">
                 This lesson is sattelite of
                 <router-link :to="`/lesson-startup-${lesson.active.parent_id}`">
@@ -40,13 +41,13 @@
               </div>
           </q-card-section>
           <q-card-section class="q-py-sm text-left"  v-if="!lesson.active?.is_blocked" >
-              <div class="row q-my-sm" >
+              <div class="row " >
                   <div class="col-12 self-end text-right">
                       <b>{{lesson.active?.exercise?.data.progress_percentage || 0 }}%</b>
                   </div>
               </div>
               <q-linear-progress
-                  :color="(lesson.active?.exercise?.data.progress_percentage/100) >= 1 ? 'positive' : 'primary'"
+                  :color="(lesson.active?.exercise?.data.progress_percentage/100) >= 1 ? 'positive' : 'white'"
                   :value="(lesson.active?.exercise?.data.progress_percentage / 100) || 0"
                   size="12px"
                   rounded

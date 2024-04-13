@@ -8,8 +8,10 @@
         <div v-for="(lesson, index) in lessonList" :key="index"
             :class="`row q-px-lg ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
             v-intersection="onIntersection"
+            :groupBackground="lesson.course_section.background_image"
+            :groupGradient="lesson.course_section.background_gradient"
         >
-            <q-card v-if="lesson.type == 'group'" class="transparent text-white full-width" flat >
+            <q-card v-if="lesson.type == 'group'" class="transparent text-white full-width" flat>
                 <q-card-section>
                     <div class="text-h6"><b>{{ lesson.course_section.title }}</b></div>
                     <div class="text-caption">{{ lesson.course_section.description }}</div>
