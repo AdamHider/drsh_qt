@@ -1,5 +1,6 @@
 <template>
-      <q-item :dense="props.dense" :class="`relative bg-light-gradient-${resource?.color} text-white rounded-borders ${(props.dense) ? 'q-py-xs q-pl-sm': ''}`" >
+      <q-item :dense="props.dense"
+        :class="`relative bg-light-gradient-${resource?.color} text-white rounded-borders ${(props.dense) ? 'q-py-xs q-pl-sm': ''} ${(transparent) ? 'bg-dark-transparent' : ''}`" >
           <q-item-section avatar  style="z-index: 1">
               <q-img :width="props.size" :src="resource?.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 )"/>
           </q-item-section>
@@ -13,11 +14,10 @@
               <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{resource?.title}}</b></q-item-label>
           </q-item-section>
           <q-linear-progress v-if="resource.is_restorable"
-            track-color="grey-8"
             size="24px"
             :color="resource?.color"
             :value="percentageCount/100"
-            class="rounded-borders absolute-top full-width full-height" />
+            :class="`rounded-borders absolute-top full-width full-height ${(transparent) ? 'bg-dark-transparent' : ''}`" />
           <div v-if="resource.is_restorable && resource.restoration?.nextRestoration > 0" class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
             <q-chip
               dense
@@ -42,7 +42,8 @@ const props = defineProps({
   resource: Object,
   size: String,
   noCaption: Boolean,
-  dense: Boolean
+  dense: Boolean,
+  transparent: Boolean
 })
 const resource = toRefs(props).resource
 

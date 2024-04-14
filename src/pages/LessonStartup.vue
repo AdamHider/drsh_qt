@@ -3,14 +3,14 @@
     <q-app-header class="transparent text-white rounded-b-md" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title></q-toolbar-title>
-        <UserResourceBar :resource="user.active?.data.resources.energy" dense no-caption size="28px"/>
+        <UserResourceBar :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
     <q-page class="text-center full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
       <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1; height: 300px">
           <q-card-section>
               <transition
                   appear
-                  enter-active-class="animated zoomIn animation-slow"
+                  enter-active-class="animated fadeInLeft animation-slow"
                   leave-active-class="animated rubberBand  animation-delay-1" >
                 <q-img
                     v-if="transitionTrigger"
@@ -64,7 +64,7 @@
               push
               label="Continue"
               icon-right="chevron_right"
-              color="positive"
+              color="gradient-green"
               @click="open(lesson.active.id)"/>
             <q-spend-button v-else
               push color="primary"
