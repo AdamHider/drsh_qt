@@ -1,11 +1,16 @@
 <template>
-    <q-btn :push="props.push" dense :class="`${props.class}`" :color="props.color" style="overflow: hidden; padding: 0" >
-      <div class="flex justify-between ">
+    <q-btn :push="props.push" dense :class="`${props.class}`" :color="props.color" style="padding-right: 4px;">
+      <div class="flex justify-between items-center">
         <div class="col q-py-xs q-px-md">Start</div>
-        <q-chip v-if="props.sideLabel" square :text-color="props.sideLabelColor" style="background-color: #00000038; border-radius: 0"  class="col-3 q-ma-none q-pa-none q-py-xs q-px-sm" >
-          <q-icon :name="props.sideIcon" color="yellow"></q-icon>
-          {{ props.sideLabel }}
-        </q-chip>
+        <div class="q-ma-xs q-pa-xs" style="background-color: #00000038; border-radius: 8px">
+          <q-chip  v-for="(resource, index) in props.resources" :key="index"
+            square :text-color="(resource.quantity > resource.quantity_cost) ? 'white' : 'red'"
+            color="transparent"
+            class="q-ma-none q-px-xs" >
+            <q-img width="18px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
+            <b>{{resource.quantity}}/{{ resource.quantity_cost }}</b>
+          </q-chip>
+        </div>
       </div>
     </q-btn>
 </template>
@@ -17,9 +22,7 @@ const route = useRoute()
 const props = defineProps({
   class: String,
   color: String,
-  sideIcon: String,
-  sideLabel: String,
-  sideLabelColor: String,
+  resources: Array,
   push: Boolean
 })
 const header = ref(null)
@@ -55,19 +58,3 @@ onActivated(() => {
 })
 
 </script>
-<style scoped>
-.q-app-header{
-  transition: 0.2s ease;
-}
-.q-app-header.bordered{
-  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.12);
-}
-.q-app-header.header-sticky{
-  background: #fff !important;
-  color: var(--q-dark) !important;
-  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.12);
-}
-.q-app-header.header-sticky.header-reveal{
-  transform: translateY(-52px) !important;
-}
-</style>

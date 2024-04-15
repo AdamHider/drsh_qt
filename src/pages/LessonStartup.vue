@@ -67,10 +67,9 @@
               color="gradient-green"
               @click="open(lesson.active.id)"/>
             <q-spend-button v-else
-              push color="primary"
-              side-icon="bolt"
-              :side-label="lesson.active.cost_config?.energy"
-              :side-label-color="(lesson.active.cost_config?.energy > user.active?.data.resources.energy.quantity) ? 'negative' : 'white'"
+              push
+              color="primary"
+              :resources="lesson.active.cost"
               @click="start(lesson.active.id)"></q-spend-button>
           </q-card-actions>
           <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
@@ -131,8 +130,7 @@
             <q-spend-button v-else
               push
               color="primary"
-              side-icon="bolt"
-              :side-label="activeSattelite.cost_config?.energy"
+              :resources="lesson.active.cost"
               @click="start(activeSattelite.id)"></q-spend-button>
           </q-card-actions>
         </q-card>
