@@ -58,17 +58,19 @@
               push
               label="Redo"
               icon="replay"
-              color="warning"
+              color="gradient-orange"
               @click="redo(lesson.active.id)"/>
             <q-btn v-else-if="lesson.active.exercise?.id"
               push
               label="Continue"
-              icon-right="chevron_right"
+              icon-right="play_arrow"
               color="gradient-green"
+              class="q-px-md"
               @click="open(lesson.active.id)"/>
             <q-spend-button v-else
               push
-              color="primary"
+              color="gradient-blue"
+              icon-right="play_arrow"
               :resources="lesson.active.cost"
               @click="start(lesson.active.id)"></q-spend-button>
           </q-card-actions>
@@ -119,18 +121,19 @@
               push
               label="Redo"
               icon-right="replay"
-              color="warning"
+              color="gradient-orange"
               @click="redo(activeSattelite.id)"/>
             <q-btn v-else-if="activeSattelite.exercise?.id"
               push
               label="Continue"
-              icon-right="chevron_right"
-              color="positive"
+              icon-right="play_arrow"
+              color="gradient-green"
               @click="open(activeSattelite.id)"/>
             <q-spend-button v-else
               push
-              color="primary"
-              :resources="lesson.active.cost"
+              color="gradient-blue"
+              icon-right="play_arrow"
+              :resources="activeSattelite.cost"
               @click="start(activeSattelite.id)"></q-spend-button>
           </q-card-actions>
         </q-card>

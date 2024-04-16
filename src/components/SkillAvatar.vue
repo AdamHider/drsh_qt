@@ -1,6 +1,6 @@
 <template>
   <q-item flat clickable
-    :class="`q-my-sm rounded-borders skill-item bg-grey-3 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
+    :class="`q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
     <q-item-section avatar>
       <q-avatar :size="props.size" text-color="white">
         <img class="absolute" :src="skill.image" />

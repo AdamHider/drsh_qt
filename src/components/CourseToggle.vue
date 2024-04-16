@@ -30,10 +30,10 @@
               label-style="font-size: 1.1em"
             />
           <CourseSlider
-            :slidesPerView=1.4
+            :slidesPerView=2.1
             :centerAligned="false"
             :withButton="false"
-            slideHeight="180"
+            slideHeight="280"
             :navigation="false"
             @select="select"
           />
