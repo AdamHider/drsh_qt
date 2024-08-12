@@ -96,6 +96,7 @@ const chartOptionsDefault = {
 const loadChart = async () => {
   const filter = prepareFilter()
   isLoading.value = true
+  filter.user_only = true
   const leaderboardResponse = await getLeaderboard('chart', filter)
   if (!leaderboardResponse.errors) {
     leaderboardData.data = leaderboardResponse.data

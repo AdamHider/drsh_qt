@@ -21,7 +21,7 @@
     <q-card-section v-if="leaderboardData.data.length > 0" class="q-py-sm relative-position">
       <q-inner-loading :showing="isLoading"/>
       <q-list separator >
-        <q-item v-for="(commonItem, commonKey) in leaderboardData.data" :key="commonKey" :active="commonItem.is_active" class="q-my-sm q-px-none text-left"  >
+        <q-item v-for="(commonItem, commonKey) in leaderboardData.data" :key="commonKey" :active="commonItem.is_active" class="q-my-sm q-px-none text-left">
             <q-item-section avatar class="text-center">
               <q-avatar size="40px"
                 :color="(commonItem.is_winner) ? 'orange' : 'white'"
@@ -52,9 +52,6 @@
                 <span v-if="commonItem.data.length > 2" class="text-dark">
                   <b> and {{commonItem.data.length - 2}} more</b>
                 </span>
-                <div v-if="commonItem.finished_at_humanized" class="text-caption text-gray">
-                  {{commonItem.finished_at_humanized}}
-                </div>
               </q-item-label>
             </q-item-section>
             <q-item-section side>

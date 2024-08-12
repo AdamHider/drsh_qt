@@ -25,7 +25,7 @@
                         color="white"
                         text-color="dark"
                         class="absolute-top"
-                        style="top: 10px; left: 10px; z-index: 5"
+                        style="top: 10px; left: 10px; z-index: 5; width: 10px;"
                         round
                         icon="lock"
                     ></q-btn>
