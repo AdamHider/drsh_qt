@@ -9,8 +9,12 @@
 <script setup ></script>
 
 <style>
+.app-background{
+  position: fixed;
+}
 .app-background.app-background-visible{
     display: block !important;
+
 }
 .app-background .app-background-color{
     position: fixed;

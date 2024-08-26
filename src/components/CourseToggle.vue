@@ -16,8 +16,9 @@
         </div>
           <q-icon name="expand_more" size="sm"></q-icon>
     </q-chip>
-    <q-dialog v-model="dialog" position="bottom" allow-focus-outside >
-      <q-card>
+    <q-dialog v-model="dialog" :maximized="dialog"  transition-show="jump-up" transition-hide="jump-down">
+      <AppBackground/>
+      <q-card class="bg-transparent" dark>
         <q-card-section>
           <div class="text-h6">Choose course</div>
         </q-card-section>
@@ -29,15 +30,11 @@
               label-class="text-teal"
               label-style="font-size: 1.1em"
             />
-          <CourseSlider
-            :slidesPerView=2.1
-            :centerAligned="false"
-            :withButton="false"
-            slideHeight="280"
-            :navigation="false"
-            @select="select"
-          />
+          <CourseList @select="select"/>
         </q-card-section>
+        <q-page-sticky v-if="course.active" position="bottom" :offset="[0, 18]">
+          <q-btn fab push color="negative" icon="close" v-close-popup/>
+        </q-page-sticky>
       </q-card>
     </q-dialog>
 </template>
@@ -45,7 +42,8 @@
 <script setup>
 import { watch, ref } from 'vue'
 import { useCourse } from '../composables/useCourse'
-import CourseSlider from '../components/CourseSlider.vue'
+import CourseList from '../components/CourseList.vue'
+import AppBackground from 'components/AppBackground.vue'
 
 const emit = defineEmits(['update:dialogOpened'])
 

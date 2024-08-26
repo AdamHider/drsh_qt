@@ -40,7 +40,6 @@
               </div>
             </div>
             <q-linear-progress
-
                 :color="(questItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
                 :value="(questItem.progress.percentage/100)"
                 size="12px"
