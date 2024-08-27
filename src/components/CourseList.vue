@@ -1,26 +1,23 @@
 <template>
-    <q-list v-if="user.active.data?.id" bordered >
+    <q-list v-if="user.active.data?.id"  >
       <q-item clickable v-ripple v-for="(courseItem, index) in course.list" :key="index"  @click="select(courseItem.id)"
-        :class="`${(courseItem.is_active) ? 'active' : ''}`">
+        :class="`${(courseItem.is_active) ? 'active' : ''} q-ma-sm rounded-sm`"
+        :style="`background-image: url(${courseItem.background_image}); background-size: cover;`">
         <q-item-section avatar>
-          <q-avatar>
-            <img :src="courseItem.image">
-          </q-avatar>
+            <q-circular-progress
+              show-value
+              class="text-white text-bold q-ma-md"
+              :value="courseItem.progress.percentage"
+              track-color="grey-5"
+              size="60px"
+              color="white"
+            >
+              {{ courseItem.progress.percentage }}%
+            </q-circular-progress>
         </q-item-section>
         <q-item-section>
-          <q-item-label lines="1"><b>{{ courseItem.title }}</b></q-item-label>
-          <q-item-label caption lines="2" color="white">{{ courseItem.description }}</q-item-label>
-          <div class="row q-my-sm justify-between items-end" >
-            <div class="col text-right">
-                <b>{{ courseItem.progress.percentage }}%</b>
-            </div>
-          </div>
-          <q-linear-progress
-              :color="(courseItem.progress.percentage/100) >= 1 ? 'positive' : 'white'"
-              :value="(courseItem.progress.percentage/100)"
-              size="12px"
-              rounded
-          ></q-linear-progress>
+          <q-item-label lines="1" class="text-white"><b>{{ courseItem.title }}</b></q-item-label>
+          <q-item-label caption lines="2" class="text-white">{{ courseItem.description }}</q-item-label>
         </q-item-section>
       </q-item>
 

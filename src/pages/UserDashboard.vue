@@ -15,17 +15,14 @@
             appear
             enter-active-class="animated zoomIn animation-delay-1"
             leave-active-class="animated zoomOut">
-            <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1; height: 50vh;" >
-                <q-card-section class="text-left text-white">
-                  <div class="text-h6"><b>Hello, {{ user.active?.data.username }}</b></div>
-                  <div class="text-caption">How are you doing?</div>
+            <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;" >
+                <q-card-section class="text-white">
+                  <q-avatar
+                    size="150px"
+                    style="margin-bottom: -30px; box-shadow: 0px 0px 0px 4px white;">
+                    <img :src="user.active.data?.settings.avatarImage?.value">
+                  </q-avatar>
                 </q-card-section>
-                <q-img
-                    :src="user.active.data?.character?.character_image"
-                    class="absolute-bottom "
-                    style="max-width: 250px; width: 170px; margin: 0px auto -40px;"
-                    no-spinner
-                />
             </q-card>
           </transition>
 
@@ -33,7 +30,13 @@
             appear
             enter-active-class="animated fadeInUpBig"
             leave-active-class="animated fadeOutDownBig">
-          <q-card flat square class="relative text-left q-pt-md q-pb-md col full-width no-shadow user-card" style="padding-top: 30px;">
+          <q-card flat square class="relative text-left q-pt-md q-pb-md col full-width no-shadow user-card">
+              <q-card-section class="text-center q-pa-none">
+                <div class="text-h6"><b>{{ user.active?.data.username }}</b></div>
+                <div class="text-caption">
+                  {{ user.active?.data.character.title }}
+                </div>
+              </q-card-section>
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
                 <q-linear-progress
                     color="positive"
@@ -54,7 +57,7 @@
               <q-card-section class="q-pa-none">
                   <div class="q-pa-sm row items-start border-between">
                       <div class="col-4">
-                        <q-item  class="rounded-borders" >
+                        <q-item class="rounded-borders text-center">
                           <q-item-section>
                               <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_points?.label}}</b></q-item-label>
                               <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_points?.value}}</b></q-item-label>
@@ -62,7 +65,7 @@
                         </q-item>
                       </div>
                       <div class="col-4">
-                        <q-item  class="rounded-borders" >
+                        <q-item class="rounded-borders text-center">
                           <q-item-section>
                               <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_exercises?.label}}</b></q-item-label>
                               <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_exercises?.value}}</b></q-item-label>
@@ -70,10 +73,10 @@
                         </q-item>
                       </div>
                       <div class="col-4">
-                        <q-item  class="rounded-borders" >
+                        <q-item class="rounded-borders text-center">
                           <q-item-section>
-                              <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_classrooms?.label}}</b></q-item-label>
-                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_classrooms?.value}}</b></q-item-label>
+                              <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_skills?.label}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_skills?.value}}</b></q-item-label>
                           </q-item-section>
                         </q-item>
                       </div>

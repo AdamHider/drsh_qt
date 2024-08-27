@@ -21,7 +21,7 @@
           <q-card-section v-else class="text-white" >
             <div class="text-subtitle"><b>Choose course</b></div>
             <div class="text-caption">And start your investigation</div>
-            <q-btn color="dark" @click="dialog.active=true">Choose</q-btn>
+            <q-btn color="primary" push @click="dialog.active=true" class="q-ma-md">Choose</q-btn>
           </q-card-section>
         </q-card>
         <q-page-sticky position="bottom" style="margin-bottom: 20px;">

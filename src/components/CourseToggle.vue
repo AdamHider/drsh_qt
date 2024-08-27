@@ -16,13 +16,13 @@
         </div>
           <q-icon name="expand_more" size="sm"></q-icon>
     </q-chip>
-    <q-dialog v-model="dialog" :maximized="dialog"  transition-show="jump-up" transition-hide="jump-down">
-      <AppBackground/>
-      <q-card class="bg-transparent" dark>
+    <q-dialog v-model="dialog" position="bottom"
+      transition-show="slide-up" transition-hide="slide-down">
+      <q-card>
         <q-card-section>
           <div class="text-h6">Choose course</div>
         </q-card-section>
-        <q-card-section class="q-pt-none q-px-none relative-position ">
+        <q-card-section class="q-pt-none q-px-none relative-position scroll" style="height: 50vh">
           <q-inner-loading
               style="z-index: 300"
               :showing="course.isLoading"

@@ -8,7 +8,7 @@
               <q-item-label :class="`${(props.dense) ? '' : 'text-h7'}`">
                 <b>
                   {{resource?.quantity}}
-                  <span  v-if="resource.is_restorable">{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</span>
+                  <span v-if="resource.is_restorable">{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</span>
                 </b>
               </q-item-label>
               <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{resource?.title}}</b></q-item-label>
