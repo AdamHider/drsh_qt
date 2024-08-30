@@ -4,9 +4,10 @@
             <Teleport :to="`\#input_${input.index}`">
                 <div class="row justify-between  full-width">
                   <div class="col-6 q-pa-sm " v-for="(image, imageIndex) in formData.fields[index].options" :key="imageIndex">
-                    <q-card v-if="!formData.fields[index].answer"
-                      :class="`${(formData.fields[index].value == image.text) ?  'bg-positive text-white' : ''} `"
+                    <q-btn v-if="!formData.fields[index].answer" push
+                      :class="`full-width full-height ${(formData.fields[index].value == image.text) ?  'bg-positive text-white' : ''} `"
                       @click="formData.fields[index].value = image.text; playAudio(image.audio_link)">
+                      <q-card class="bg-transparent full-width full-height" flat>
                         <q-card-section class="q-pa-sm ">
                           <q-img
                             v-if="image.image"
@@ -18,7 +19,8 @@
                         <q-card-section vertical class="flex flex-center text-center">
                           <b>{{ image.text }}</b>
                         </q-card-section>
-                    </q-card>
+                      </q-card>
+                    </q-btn>
                     <q-card v-else
                       :class="`${(formData.fields[index].answer.answer == image.text || (formData.fields[index].answer.value == image.text && formData.fields[index].answer.is_correct))  ?  'bg-positive text-white' : ((formData.fields[index].answer.value == image.text ) ?  'bg-negative text-white' : '')  }`">
                         <q-card-section class="q-pa-sm ">

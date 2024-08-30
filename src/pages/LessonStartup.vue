@@ -40,7 +40,7 @@
                 </router-link>
               </div>
           </q-card-section>
-          <q-card-section class="q-py-sm text-left"  v-if="!lesson.active?.is_blocked" >
+          <q-card-section class="q-py-sm text-left"  v-if="!lesson.active?.is_blocked && lesson.active.exercise?.id" >
               <div class="row " >
                   <div class="col-12 self-end text-right">
                       <b>{{lesson.active?.exercise?.data.progress_percentage || 0 }}%</b>
@@ -54,6 +54,14 @@
               ></q-linear-progress>
           </q-card-section>
           <q-card-actions class="text-right justify-end">
+            <q-btn
+                v-if="user.active.data.previleges.is_admin || user.active.data.previleges.is_editor"
+                push
+                label="Edit"
+                icon-right="edit"
+                color="dark"
+                class="q-px-md"
+                @click="edit(lesson.active.id)"/>
             <q-btn v-if="lesson.active.exercise?.finished_at"
               push
               label="Redo"
@@ -181,6 +189,9 @@ const redo = async (lessonId) => {
   dialog.value = false
   const exerciseRedoCreated = await redoItem(lessonId)
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
+}
+const edit = async (lessonId) => {
+  router.push(`/admin/lesson-edit-${lessonId}`)
 }
 
 onMounted(async () => {

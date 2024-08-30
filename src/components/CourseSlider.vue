@@ -69,8 +69,7 @@ if (user.active?.data.id) {
 const select = async function (courseId) {
   const linkItemResponse = await api.course.linkItem({ id: courseId })
   if (!linkItemResponse.error) {
-    await getItem()
-    emits('select')
+    emits('select', courseId)
   }
 }
 

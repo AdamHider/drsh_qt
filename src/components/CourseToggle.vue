@@ -45,7 +45,7 @@ import { useCourse } from '../composables/useCourse'
 import CourseList from '../components/CourseList.vue'
 import AppBackground from 'components/AppBackground.vue'
 
-const emit = defineEmits(['update:dialogOpened'])
+const emit = defineEmits(['update:dialogOpened', 'onSelect'])
 
 const { course } = useCourse()
 const props = defineProps({
@@ -55,8 +55,9 @@ const props = defineProps({
 const dialog = ref(false)
 if (props.dialogOpened) dialog.value = true
 
-const select = () => {
+const select = (courseId) => {
   dialog.value = false
+  emit('onSelect', courseId)
 }
 watch(props, () => {
   if (props.dialogOpened) dialog.value = true

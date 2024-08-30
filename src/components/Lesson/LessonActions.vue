@@ -12,60 +12,52 @@
     </q-card>
     <q-toolbar
         v-if="lesson.active.page && (lesson.active.page?.header?.page_template !== 'chat' || lesson.active.page?.answers?.is_finished)">
-        <q-btn-dropdown v-model="extraActions" class="q-mr-md" color="grey"  dropdown-icon="more_vert">
-            <q-list>
-                <q-item clickable
-                    :disable="(
-                    lesson.active.page?.exercise?.current_page == 0
-                    || lesson.active.page?.exercise?.back_attempts == 0
-                    )"
-                    @click="backDialog = true;">
-                    <q-item-section avatar>
-                      <q-icon name="arrow_back" />
-                    </q-item-section>
-                    <q-item-section>
-                        <q-item-label>Previous exercise</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                        <q-avatar
-                            size="sm"
-                            :color="(lesson.active.page?.exercise?.back_attempts > 1) ? 'positive' : 'negative' "
-                            text-color="white"
-                        >
-                            {{ lesson.active.page?.exercise?.back_attempts }}
-                        </q-avatar>
-                    </q-item-section>
-                </q-item>
-                <q-item clickable
-                    :disable="(
-                        !lesson.active.page?.answers?.is_finished
-                        || lesson.active.page?.exercise?.again_attempts == 0
-                    )"
-                    @click="againDialog=true">
-                    <q-item-section avatar>
-                      <q-icon name="replay" />
-                    </q-item-section>
-                    <q-item-section>
-                        <q-item-label>Again</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                        <q-avatar
-                            size="sm"
-                            :color="(lesson.active.page?.exercise?.again_attempts > 1) ? 'positive' : 'negative' "
-                            text-color="white"
-                        >
-                            {{ lesson.active.page?.exercise?.again_attempts }}
-                        </q-avatar>
-                    </q-item-section>
-                </q-item>
-            </q-list>
-        </q-btn-dropdown>
+        <q-fab
+          v-model="extraActions"
+          class="q-mr-sm"
+          vertical-actions-align="left"
+          color="grey"
+          push
+          icon="more_vert"
+          direction="up"
+        >
+          <q-fab-action
+                :disable="(
+                    !lesson.active.page?.answers?.is_finished
+                    || lesson.active.page?.exercise?.again_attempts == 0
+                )"
+                push color="secondary" @click="againDialog=true" icon="replay" label="Start again" label-position="right">
+
+              <q-avatar
+                  size="sm"
+                  :color="(lesson.active.page?.exercise?.again_attempts > 1) ? 'positive' : 'negative' "
+                  text-color="white"
+              >
+                  {{ lesson.active.page?.exercise?.again_attempts }}
+              </q-avatar>
+          </q-fab-action>
+          <q-fab-action
+            :disable="(
+            lesson.active.page?.exercise?.current_page == 0
+            || lesson.active.page?.exercise?.back_attempts == 0
+            )"
+            push color="primary" @click="backDialog = true;" icon="arrow_back" label="Previous exercise" label-position="right">
+              <q-avatar
+                  size="sm"
+                  :color="(lesson.active.page?.exercise?.back_attempts > 1) ? 'positive' : 'negative' "
+                  text-color="white"
+              >
+              {{ lesson.active.page?.exercise?.back_attempts }}
+          </q-avatar></q-fab-action>
+
+        </q-fab>
         <q-btn
             v-if="(
                 (!lesson.active.page?.fields
                 || lesson.active.page?.answers?.is_finished)
                 && lesson.active.page?.exercise?.current_page !== lesson.active.page?.exercise?.total_pages - 1
             )"
+            push
             style="flex: 2"
             color="positive"
             label="Next"
@@ -76,6 +68,7 @@
                 lesson.active.page?.fields
                 && !lesson.active.page?.answers?.is_finished
             )"
+            push
             style="flex: 2"
             color="primary"
             label="Confirm"
@@ -87,6 +80,7 @@
                 || lesson.active.page?.answers?.is_finished)
                 && lesson.active.page?.exercise?.current_page == lesson.active.page?.exercise?.total_pages - 1
             )"
+            push
             style="flex: 2"
             color="positive"
             icon="done_all"
@@ -104,8 +98,8 @@
           You are going to the previous page. You realy want to?
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn class="col" flat label="Cancel" v-close-popup />
-          <q-btn class="col" color="primary" label="Continue" @click="back" v-close-popup />
+          <q-btn push class="col" flat label="Cancel" v-close-popup />
+          <q-btn push class="col" color="primary" label="Continue" @click="back" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -119,8 +113,8 @@
           Your current answer will be refreshed. Are you sure?
         </q-card-section>
         <q-card-actions align="center">
-          <q-btn class="col" flat label="Cancel" v-close-popup />
-          <q-btn class="col" color="primary" label="Refresh" @click="again" v-close-popup />
+          <q-btn push class="col" flat label="Cancel" v-close-popup />
+          <q-btn push class="col" color="primary" label="Refresh" @click="again" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -134,8 +128,8 @@
           Your answer seems to be incomplete. Please, try at least to complete it randomly=)
         </q-card-section>
         <q-card-actions align="around">
-          <q-btn class="col" flat label="Cancel" v-close-popup />
-          <q-btn class="col" color="primary"  label="Confirm" @click="confirm" v-close-popup />
+          <q-btn push class="col" flat label="Cancel" v-close-popup />
+          <q-btn push class="col" color="primary"  label="Confirm" @click="confirm" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>

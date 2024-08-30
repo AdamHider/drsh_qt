@@ -1,7 +1,7 @@
 <template>
   <q-page-wrapper>
     <q-app-header class="transparent text-white rounded-b-md" ref="header">
-      <CourseToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event"/>
+      <CourseToggle v-bind:dialogOpened="dialog.active" v-on:update:dialogOpened="dialog.active = $event" @onSelect="getItem($event)"/>
       <q-toolbar-title></q-toolbar-title>
       <UserResourceBar :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>

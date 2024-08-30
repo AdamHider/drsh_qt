@@ -6,7 +6,11 @@ export class ApiService {
     Object.assign(this, config);
   }
   setResource = (context, method) =>  {
-    context = context.charAt(0).toUpperCase() + context.slice(1);
+    var url_parts = context.split('/')
+    for(var i in url_parts){
+      url_parts[i] = url_parts[i].charAt(0).toUpperCase() + url_parts[i].slice(1);
+    }
+    context = url_parts.join('/');
     return this.baseUrl+`${context}/${method}`;
   }
   setHeaders = (context, method) =>  {
@@ -222,5 +226,35 @@ export class Api extends ApiService{
         upload: (params) =>  {
           return this.post('image', 'uploadItem', params)
         }
+    }
+    admin = {
+      lesson: {
+        getItem: (params) => {
+            return this.post('admin/lesson', 'getItem', params)
+        },
+        getList: (params) => {
+            return this.post('admin/lesson', 'getList', params)
+        },
+        saveItem: (params) =>  {
+            return this.post('admin/lesson', 'saveItem', params)
+        },
+      },
+      course: {
+        getList: (params) => {
+            return this.post('admin/course', 'getList', params)
+        },
+        getItem: (params) => {
+            return this.post('admin/course', 'getItem', params)
+        }
+      },
+      course_section: {
+        getList: (params) => {
+            return this.post('admin/courseSection', 'getList', params)
+        },
+        getItem: (params) => {
+            return this.post('admin/courseSection', 'getItem', params)
+        }
+      }
+
     }
 }

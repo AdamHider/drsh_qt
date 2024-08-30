@@ -254,7 +254,17 @@ const routes = [
         meta: {
           pageTitle: 'CharacterSelect'
         }
-      }
+      },
+
+
+      {
+        path: 'admin/lesson-edit-:lesson_id',
+        component: () => import('pages/admin/LessonEdit.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
     ]
   },
 

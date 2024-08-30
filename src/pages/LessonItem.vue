@@ -32,8 +32,8 @@
           Are you sure? You can back to it whenever you want though
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat label="Cancel" color="grey" v-close-popup />
-          <q-btn flat label="Continue" @click="closeLesson" />
+          <q-btn flat class="col" label="Cancel" color="grey" v-close-popup />
+          <q-btn push class="col" color="primary" label="Continue" @click="closeLesson" />
         </q-card-actions>
       </q-card>
     </q-dialog>
