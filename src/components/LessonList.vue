@@ -5,7 +5,7 @@
             <q-spinner color="primary" name="dots" size="40px" />
             </div>
         </template>
-        <div v-for="(lesson, index) in lessonList" :key="index"
+        <div v-for="lesson in lessonList" :key="lesson.id"
             :class="`row q-px-lg ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
             v-intersection="onIntersection"
             :groupBackground="lesson.course_section.background_image"

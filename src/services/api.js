@@ -238,6 +238,9 @@ export class Api extends ApiService{
         saveItem: (params) =>  {
             return this.post('admin/lesson', 'saveItem', params)
         },
+        deleteItem: (params) =>  {
+            return this.post('admin/lesson', 'deleteItem', params)
+        },
       },
       course: {
         getList: (params) => {

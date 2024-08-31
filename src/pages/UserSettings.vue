@@ -32,6 +32,18 @@
             />
         </q-card-section>
       </q-card>
+
+      <q-list bordered separator v-if="user.active.data.previleges.is_admin || user.active.data.previleges.is_editor">
+        <q-item clickable v-ripple to="/admin/courses">
+          <q-item-section>Courses</q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/admin/course-sections">
+          <q-item-section>Course Sections</q-item-section>
+        </q-item>
+        <q-item clickable v-ripple to="/admin/lessons">
+          <q-item-section>Lessons</q-item-section>
+        </q-item>
+      </q-list>
     </q-page>
   </q-page-container>
 </template>

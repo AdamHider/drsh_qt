@@ -258,6 +258,30 @@ const routes = [
 
 
       {
+        path: 'admin/courses',
+        component: () => import('pages/admin/LessonList.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+      {
+        path: 'admin/course-sections',
+        component: () => import('pages/admin/LessonList.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+      {
+        path: 'admin/lessons',
+        component: () => import('pages/admin/LessonList.vue'),
+        meta: {
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+      {
         path: 'admin/lesson-edit-:lesson_id',
         component: () => import('pages/admin/LessonEdit.vue'),
         meta: {
