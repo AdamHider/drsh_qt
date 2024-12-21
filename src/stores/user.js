@@ -33,19 +33,18 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     userStorage.set(user)
     return true
   }
-
+  /* AUTH */
   async function getAuth (credentials) {
     if (!credentials) { return }
-    const authResponse = await api.user.getAuth(credentials)
+    const authResponse = await api.auth.getAuth(credentials)
     if (!authResponse.error) {
       update({ authorization: authResponse })
     }
     return authResponse
   }
-
   async function signIn (authKey) {
     if (!authKey) { return }
-    const result = await api.user.signIn({ auth_key: authKey })
+    const result = await api.auth.signIn({ auth_key: authKey })
     if (!result.error) {
       const userResponse = await api.user.getItem()
       update({ authorization: authKey, data: userResponse })
@@ -53,11 +52,6 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     }
     return result
   }
-  async function getItem () {
-    const userResponse = await api.user.getItem()
-    update({ data: userResponse })
-  }
-
   async function autoSignIn () {
     if (!user.active.authorization) {
       signOut()
@@ -72,21 +66,24 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     }
     update({ data: userResponse })
   }
-
   async function signOut () {
-    await api.user.signOut()
+    await api.auth.signOut()
     update(null)
     return true
   }
-
   async function signUp (credentials) {
-    const authResponse = await api.user.signUp(credentials)
+    const authResponse = await api.auth.signUp(credentials)
     if (!authResponse.error) {
       update({ authorization: authResponse })
     }
     return authResponse
   }
 
+  /* USER */
+  async function getItem () {
+    const userResponse = await api.user.getItem()
+    update({ data: userResponse })
+  }
   async function saveItem (data) {
     const userSavedResponse = await api.user.saveItem(data)
     if (!userSavedResponse.error) {
@@ -105,7 +102,6 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     showMessage('User profile saved!')
     return userSettingsResponse
   }
-
   async function savePassword (data) {
     const saveResponse = await api.user.savePassword(data)
     if (!saveResponse.error) {
@@ -115,20 +111,9 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     showMessage('User data saved!')
     return saveResponse
   }
-
-  async function activate (code) {
-    await signOut()
-    const result = await api.user.activate(code)
-    if (!result.error) {
-      await signIn(user.active.authorization)
-    }
-    return result
-  }
-
   function checkUsername (username) {
     return api.user.checkUsername(username)
   }
-
   function checkEmail (username) {
     return api.user.checkEmail(username)
   }
@@ -146,7 +131,6 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     saveItem,
     saveItemSetting,
     savePassword,
-    activate,
     checkUsername,
     checkEmail
   }

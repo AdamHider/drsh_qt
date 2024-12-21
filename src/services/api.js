@@ -31,7 +31,6 @@ export class ApiService {
     if(method == 'uploadItem') data = params
     await fetch(resource, {
         method: 'POST', // or 'PUT'
-        credentials: 'include',
         headers: headers,
         body: data,
         })
@@ -172,26 +171,27 @@ export class Api extends ApiService{
         savePassword: (params) => {
             return this.post('user', 'saveItemPassword', params)
         },
-        signUp: (params) =>  {
-            return this.post('user', 'signUp', params)
-        },
-        signOut: async (params) =>  {
-            const result = await this.post('user', 'signOut', params);
-            localStorage.removeItem('x-sid')
-            return result
-        },
-        getAuth: (params) => {
-            return this.post('user', 'getAuth', params);
-        },
-        signIn: (params) => {
-            return this.post('user', 'signIn', params);
-        },
         checkUsername: (params) => {
             return this.post('user', 'checkUsername', params);
         },
         checkEmail: (params) => {
             return this.post('user', 'checkEmail', params);
         }
+    }
+    auth = {
+        signUp: (params) =>  {
+            return this.post('auth', 'signUp', params)
+        },
+        signOut: async (params) =>  {
+            localStorage.removeItem('x-sid')
+            return await this.post('auth', 'signOut', params);
+        },
+        getAuth: (params) => {
+            return this.post('auth', 'getAuth', params);
+        },
+        signIn: (params) => {
+            return this.post('auth', 'signIn', params);
+        },
     }
     classroom = {
         subscribe: (params) =>  {

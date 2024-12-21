@@ -6,87 +6,125 @@
         <q-btn flat icon="check" @click="saveChanges()"/>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
-      <q-form ref="form" v-model="formData.valid" @submit.prevent="validate()" class="full-width">
-            <q-select
-              v-model="formData.fields.course_id.value"
-              :error-message="formData.fields.course_id.errors"
-              :error="formData.fields.course_id.errors !== ''"
-              clearable use-input
-              emit-value map-options
-              option-value="id" option-label="title"
-              label="Select course"
-              class="q-pt-sm q-pb-md"
-              :options="formData.fields.course_id.options"
-              @filter="courseAutocomplete"
-            >
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section avatar>
-                    <q-img :src="scope.opt.image" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.title }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-            <q-select v-if="formData.fields.course_id.value"
-              v-model="formData.fields.course_section_id.value"
-              :error-message="formData.fields.course_section_id.errors"
-              :error="formData.fields.course_section_id.errors !== ''"
-              clearable use-input
-              emit-value map-options
-              option-value="id" option-label="title"
-              label="Select course"
-              class="q-pt-sm q-pb-md"
-              :options="formData.fields.course_section_id.options"
-              @filter="courseSectionAutocomplete"
-            >
-              <template v-slot:no-option>
-                <q-item>
-                  <q-item-section class="text-grey">
-                    No results
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps">
-                  <q-item-section avatar>
-                    <q-img :src="scope.opt.image" />
-                  </q-item-section>
-                  <q-item-section>
-                    <q-item-label>{{ scope.opt.title }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
-            <q-input
-              v-model="formData.fields.title.value"
-              :rules="formData.fields.title.rules"
-              :error-messages="formData.fields.title.errors"
-              :error="formData.fields.title.isError"
-              label="Title"
-              required/>
-            <q-input
-              v-model="formData.fields.description.value"
-              :rules="formData.fields.description.rules"
-              :error-messages="formData.fields.description.errors"
-              :error="formData.fields.title.isError"
-              label="Description"
-              required/>
-      </q-form>
+      <q-list>
+        <q-expansion-item
+          expand-icon="settings"
+        >
+          <template v-slot:header>
+            <q-item-section avatar>
+              <q-img :src="lesson.image" no-spinner/>
+            </q-item-section>
+
+            <q-item-section>
+              {{ formData.fields.title.value }}
+            </q-item-section>
+          </template>
+          <q-form ref="form" v-model="formData.valid" @submit.prevent="validate()" class="full-width">
+                <q-select
+                  v-model="formData.fields.course_id.value"
+                  :error-message="formData.fields.course_id.errors"
+                  :error="formData.fields.course_id.errors !== ''"
+                  clearable use-input
+                  emit-value map-options
+                  option-value="id" option-label="title"
+                  label="Select course"
+                  class="q-pt-sm q-pb-md"
+                  :options="formData.fields.course_id.options"
+                  @filter="courseAutocomplete"
+                >
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-item-section avatar>
+                        <q-img :src="scope.opt.image" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ scope.opt.title }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+                <q-select v-if="formData.fields.course_id.value"
+                  v-model="formData.fields.course_section_id.value"
+                  :error-message="formData.fields.course_section_id.errors"
+                  :error="formData.fields.course_section_id.errors !== ''"
+                  clearable use-input
+                  emit-value map-options
+                  option-value="id" option-label="title"
+                  label="Select course"
+                  class="q-pt-sm q-pb-md"
+                  :options="formData.fields.course_section_id.options"
+                  @filter="courseSectionAutocomplete"
+                >
+                  <template v-slot:no-option>
+                    <q-item>
+                      <q-item-section class="text-grey">
+                        No results
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-item-section avatar>
+                        <q-img :src="scope.opt.image" />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ scope.opt.title }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+                <q-input
+                  v-model="formData.fields.title.value"
+                  :rules="formData.fields.title.rules"
+                  :error-messages="formData.fields.title.errors"
+                  :error="formData.fields.title.isError"
+                  label="Title"
+                  required/>
+                <q-input
+                  v-model="formData.fields.description.value"
+                  :rules="formData.fields.description.rules"
+                  :error-messages="formData.fields.description.errors"
+                  :error="formData.fields.title.isError"
+                  label="Description"
+                  required/>
+          </q-form>
+        </q-expansion-item>
+      </q-list>
+      <q-list>
+        <q-item v-for="(page, pageIndex) in lesson.pages" :key="`page-${pageIndex}`" clickable v-ripple @click="pageDialogOpened = true; activePage = page">
+          <q-item-section avatar>
+            <q-icon color="primary" :name="(page.form_template) ? 'edit' : 'menu_book'" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label><b>{{ page.index }}.</b> {{ page.title }} [{{ page.page_template }}.{{ page.form_template }}]</q-item-label>
+            <q-item-label caption>
+              {{ page.subtitle }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+      <q-dialog
+        v-model="pageDialogOpened"
+        persistent
+        maximized
+        transition-show="slide-up"
+        transition-hide="slide-down"
+      >
+        <lesson-page-edit :pageData="activePage"/>
+      </q-dialog>
     </q-page>
   </q-page-container>
 </template>
 
 <script setup >
+import LessonPageEdit from '../../components/Admin/LessonPageEdit.vue'
 import { reactive, ref, watch, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { api } from '../../services/index'
@@ -96,10 +134,8 @@ const buttonLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
 const lesson = ref({})
-
-const steps = [
-  '', 'username', 'password'
-]
+const pageDialogOpened = ref(false)
+const activePage = ref({})
 const formData = reactive({
   step: route.params.step * 1,
   valid: true,
