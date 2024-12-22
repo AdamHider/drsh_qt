@@ -81,7 +81,7 @@ const onPageChanged = async (action) => {
     router.go(-1)
     return
   }
-  if (pageResponse === 'finish') {
+  if (action === 'finish') {
     closeConfirmed.value = true
     router.push(`lesson-finish-${route.params.lesson_id}`)
     return

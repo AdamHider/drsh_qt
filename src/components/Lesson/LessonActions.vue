@@ -57,7 +57,7 @@
             color="positive"
             icon="done_all"
             label="Finish"
-            @click="next"
+            @click="finish"
         ></q-btn>
     </q-toolbar>
 
@@ -114,6 +114,10 @@ const { lesson } = useLesson()
 
 const next = async () => {
   emits('onPageChanged', 'next')
+  extraActions.value = false
+}
+const finish = async () => {
+  emits('onPageChanged', 'finish')
   extraActions.value = false
 }
 const confirm = async () => {
