@@ -81,6 +81,11 @@ const onPageChanged = async (action) => {
     router.go(-1)
     return
   }
+  if (pageResponse === 'finish') {
+    closeConfirmed.value = true
+    router.push(`lesson-finish-${route.params.lesson_id}`)
+    return
+  }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
   if (lesson.active.page?.header.form_template && pageTemplateTitle.value) {
     formTemplateTitle.value = lesson.active.page?.header.form_template.charAt(0).toUpperCase() + lesson.active.page?.header.form_template.slice(1)

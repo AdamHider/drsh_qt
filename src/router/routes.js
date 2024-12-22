@@ -244,6 +244,10 @@ const routes = [
         component: () => import('pages/LessonStartup.vue')
       },
       {
+        path: 'lesson-finish-:lesson_id',
+        component: () => import('pages/LessonFinish.vue')
+      },
+      {
         path: 'lesson-:lesson_id',
         component: () => import('src/pages/LessonItem.vue')
       },

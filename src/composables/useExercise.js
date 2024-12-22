@@ -1,8 +1,8 @@
 import { api } from '../services/index'
 
 export function useExercise () {
-  async function addItem (lessonId) {
-    const exerciseResponse = await api.exercise.addItem({ lesson_id: lessonId })
+  async function createItem (lessonId) {
+    const exerciseResponse = await api.exercise.createItem({ lesson_id: lessonId })
     return exerciseResponse
   }
   async function redoItem (lessonId) {
@@ -15,7 +15,7 @@ export function useExercise () {
   }
 
   return {
-    addItem,
+    createItem,
     redoItem,
     getLeaderboard
   }

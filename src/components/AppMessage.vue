@@ -17,6 +17,5 @@
 </template>
 
 <script setup>
-import { message } from '../composable/useAppMessage'
-
+import { message } from '../composables/useAppMessage'
 </script>

@@ -140,8 +140,8 @@ export class Api extends ApiService{
         }
     }
     exercise = {
-        addItem: (params) => {
-            return this.post('exercise', 'addItem', params)
+        createItem: (params) => {
+            return this.post('exercise', 'createItem', params)
         },
         redoItem: (params) => {
             return this.post('exercise', 'redoItem', params)

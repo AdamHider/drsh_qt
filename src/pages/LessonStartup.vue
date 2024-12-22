@@ -43,12 +43,12 @@
           <q-card-section class="q-py-sm text-left"  v-if="!lesson.active?.is_blocked && lesson.active.exercise?.id" >
               <div class="row " >
                   <div class="col-12 self-end text-right">
-                      <b>{{lesson.active?.exercise?.data.progress_percentage || 0 }}%</b>
+                      <b>{{progressPercentage()*100 || 0 }}%</b>
                   </div>
               </div>
               <q-linear-progress
-                  :color="(lesson.active?.exercise?.data.progress_percentage/100) >= 1 ? 'positive' : 'white'"
-                  :value="(lesson.active?.exercise?.data.progress_percentage / 100) || 0"
+                  :color="(progressPercentage()) >= 1 ? 'positive' : 'white'"
+                  :value="progressPercentage() ?? 0"
                   size="12px"
                   rounded
               ></q-linear-progress>
@@ -159,12 +159,14 @@ import UserResourceBar from '../components/UserResourceBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, watch, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const router = useRouter()
 const route = useRoute()
 const { user } = useUserStore()
 const { lesson, getItem, getSatteliteList } = useLesson()
-const { addItem, redoItem } = useExercise()
+const { createItem, redoItem } = useExercise()
 const dialog = ref(false)
 const activeSattelite = ref({})
 const transitionTrigger = ref(false)
@@ -174,11 +176,16 @@ const select = (index) => {
   dialog.value = true
 }
 const start = async (lessonId) => {
-  const exerciseCreated = await addItem(lessonId)
+  const exerciseCreated = await createItem(lessonId)
   if (!exerciseCreated.error) {
     await useUserStore().getItem()
     router.push(`/lesson-${lessonId}`)
     dialog.value = false
+  } else {
+    $q.notify({
+      message: exerciseCreated.messages.error,
+      type: 'negative'
+    })
   }
 }
 const open = async (lessonId) => {
@@ -192,6 +199,9 @@ const redo = async (lessonId) => {
 }
 const edit = async (lessonId) => {
   router.push(`/admin/lesson-edit-${lessonId}`)
+}
+const progressPercentage = () => {
+  return lesson.active?.exercise?.data.current_page / lesson.active?.exercise?.data.total_pages
 }
 
 onMounted(async () => {
