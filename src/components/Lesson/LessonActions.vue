@@ -11,6 +11,7 @@
         </q-card-section>
     </q-card>
     <q-toolbar
+        class="q-pa-sm"
         v-if="lesson.active.page && (lesson.active.page?.header?.page_template !== 'chat')">
         <q-fab
           v-model="extraActions"

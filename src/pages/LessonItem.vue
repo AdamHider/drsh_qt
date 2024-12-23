@@ -4,10 +4,10 @@
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <q-linear-progress
             rounded size="20px"
-            :value="(lesson.active.page?.exercise?.current_page / lesson.active.page?.exercise?.total_pages )"
+            :value="(lesson.active.page?.current / lesson.active.page?.total )"
             color="warning"  />
         <q-chip dense  color="transparent" text-color="orange" icon-right="star">
-            <b>{{ lesson.active.page?.exercise?.totals.total }}</b>
+            <b>{{ lesson.active.page?.points }}</b>
         </q-chip>
     </q-app-header>
     <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px;">

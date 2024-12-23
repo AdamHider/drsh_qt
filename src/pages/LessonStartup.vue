@@ -53,6 +53,47 @@
                   rounded
               ></q-linear-progress>
           </q-card-section>
+          <q-card-section>
+            <q-list bordered dark class="bg-dark-transparent rounded-sm">
+              <q-expansion-item expand-separator>
+                <template v-slot:header>
+                  <q-item-section>
+                    <q-item-label><b>Points gained</b></q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                      <q-item-label class="text-orange text-h6"><b>{{ lesson.active.exercise.data.totals.total }}</b> <q-icon name="star"></q-icon></q-item-label>
+                  </q-item-section>
+                </template>
+                <q-list>
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>Exercises</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-item-label class="text-orange"><b>{{ lesson.active.exercise.data.totals.exercises }}</b> <q-icon name="star"></q-icon></q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label>Time bonus</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-item-label class="text-orange"><b>{{ lesson.active.exercise.data.totals.time }}</b> <q-icon name="star"></q-icon></q-item-label>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator dark/>
+                  <q-item>
+                    <q-item-section>
+                      <q-item-label><b>Total</b></q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                        <q-item-label class="text-orange text-h6"><b>{{ lesson.active.exercise.data.totals.total }}</b> <q-icon name="star"></q-icon></q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-expansion-item>
+            </q-list>
+          </q-card-section>
           <q-card-actions class="text-right justify-end">
             <q-btn
                 v-if="user.active.data.previleges.is_admin || user.active.data.previleges.is_editor"
