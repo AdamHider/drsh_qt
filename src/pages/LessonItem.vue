@@ -3,7 +3,7 @@
     <q-app-header class="bg-white rounded-b-md" reveal>
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <q-linear-progress
-            rounded size="20px"
+            rounded size="20px" class="q-push"
             :value="(lesson.active.page?.current / lesson.active.page?.total )"
             color="warning"  />
         <q-chip dense  color="transparent" text-color="orange" icon-right="star">
@@ -78,13 +78,10 @@ const onPageChanged = async (action) => {
   const pageResponse = await getPage(action)
   if (pageResponse.error) {
     closeConfirmed.value = true
-    router.go(-1)
-    return
-  }
-  if (action === 'finish') {
-    closeConfirmed.value = true
-    router.push(`lesson-finish-${route.params.lesson_id}`)
-    return
+    if (pageResponse.messages?.error === 'finish') {
+      return router.replace(`lesson-finish-${route.params.lesson_id}`)
+    }
+    return router.go(-1)
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
   if (lesson.active.page?.header.form_template && pageTemplateTitle.value) {

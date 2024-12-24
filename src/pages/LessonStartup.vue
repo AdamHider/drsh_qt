@@ -47,13 +47,12 @@
                   </div>
               </div>
               <q-linear-progress
+                  rounded size="20px" class="q-push"
                   :color="(progressPercentage()) >= 1 ? 'positive' : 'white'"
                   :value="progressPercentage() ?? 0"
-                  size="12px"
-                  rounded
               ></q-linear-progress>
           </q-card-section>
-          <q-card-section>
+          <q-card-section v-if="lesson.active.exercise">
             <q-list bordered dark class="bg-dark-transparent rounded-sm">
               <q-expansion-item expand-separator>
                 <template v-slot:header>
@@ -198,7 +197,7 @@ import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 

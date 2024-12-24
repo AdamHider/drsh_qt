@@ -83,7 +83,7 @@
           icon="check"
           color="gradient-green"
           class="q-px-md q-mr-sm"
-          @click="open()"/>
+          @click="$router.go(-1)"/>
         </q-toolbar>
     </q-footer>
   </q-page-wrapper>
@@ -104,10 +104,6 @@ const transitionTrigger = ref(false)
 
 const load = async () => {
   await getItem(route.params.lesson_id)
-  transitionTrigger.value = true
-}
-const open = async () => {
-  router.push(`/lesson-startup-${route.params.lesson_id}`)
   transitionTrigger.value = true
 }
 const redo = async (lessonId) => {
