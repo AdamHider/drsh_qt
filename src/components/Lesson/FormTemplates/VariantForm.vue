@@ -6,6 +6,8 @@
                     dense
                     hide-dropdown-icon
                     v-model="formData.fields[index].value"
+                    option-value="text"
+                    option-label="text"
                     :options="formData.fields[index].options"
                     :color="(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'positive' : 'negative') : 'primary'"
                     :style="{ display: 'inline-block', minWidth: '50px', height: '18px', justifyContent: 'center', verticalAlign: 'bottom'  }"

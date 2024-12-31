@@ -84,7 +84,7 @@ const onPageChanged = async (action) => {
     return router.go(-1)
   }
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
-  if (lesson.active.page?.header.form_template && pageTemplateTitle.value) {
+  if (lesson.active.page?.header.form_template && lesson.active.page?.header.form_template !== 'none' && pageTemplateTitle.value) {
     formTemplateTitle.value = lesson.active.page?.header.form_template.charAt(0).toUpperCase() + lesson.active.page?.header.form_template.slice(1)
   }
 }

@@ -119,7 +119,7 @@
               push
               color="gradient-blue"
               icon-right="play_arrow"
-              :resources="lesson.active.cost"
+              :resources="lesson.active.cost ?? {}"
               @click="start(lesson.active.id)"></q-spend-button>
           </q-card-actions>
           <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
