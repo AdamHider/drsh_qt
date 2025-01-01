@@ -24,15 +24,15 @@
                     <q-circular-progress v-if="satelliteItem.exercise_id && !satelliteItem.is_blocked"
                         rounded
                         show-value
-                        :value="satelliteItem.exercise?.current_progress || 0"
-                        size="40px"
-                        :thickness="0.22"
-                        color="orange"
+                        :value="(satelliteItem.exercise?.data.current_page / satelliteItem.exercise?.data.total_pages)*100 || 0"
+                        size="50px"
+                        :thickness="0.18"
+                        color="white"
                         track-color="white-transparent1"
                         class="q-ma-none"
-                        style="z-index: 50; left: 0; background: none;"
+                        style="z-index: 50; left: 0; background: none; text-shadow: 1px 1px 5px black;"
                     >
-                        <b class="text-white ">{{ satelliteItem.exercise?.current_progress || 0 }}%</b>
+                        <b class="text-white ">{{ (satelliteItem.exercise?.data.current_page / satelliteItem.exercise?.data.total_pages)*100 || 0 }}%</b>
                     </q-circular-progress>
                 </div>
                 <q-img
@@ -59,7 +59,6 @@ import { defineEmits } from 'vue'
 import { useLesson } from '../composables/useLesson'
 import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { CONFIG } from '../config.js'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -80,10 +79,5 @@ const { lesson } = useLesson()
 
 const select = async (index) => {
   emits('select', index)
-}
-
-const onSwiper = (swiper) => {
-}
-const onSlideChange = (swiper) => {
 }
 </script>

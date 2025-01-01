@@ -247,7 +247,7 @@ const progressPercentage = () => {
 onMounted(async () => {
   await getItem(route.params.lesson_id)
   transitionTrigger.value = true
-  if (lesson.active.is_blocked) {
+  if (lesson.active.error || lesson.active.is_blocked) {
     router.go(-1)
     return
   }

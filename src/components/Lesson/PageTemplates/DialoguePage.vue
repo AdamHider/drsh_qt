@@ -1,11 +1,11 @@
 <template>
   <div class="full-width" style="padding-top: 50px">
-    <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md">
+    <q-card v-if="lesson.active.page?.header?.image" class="q-ma-md">
       <q-card-section class="q-pa-none ">
         <q-img
             class="rounded-borders"
             cover
-            :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
+            :src="`${CONFIG.API_HOST}/${lesson.active.page?.header?.image}`" />
         </q-card-section>
         <LessonAudioPlayer/>
     </q-card>
@@ -13,7 +13,7 @@
       <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
         <q-item-section avatar>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/img/avatar2.jpg">
+            <img :src="`${CONFIG.API_HOST}/${(replica?.image) ? replica?.image : 'image/placeholder.jpg'}`">
           </q-avatar>
         </q-item-section>
 

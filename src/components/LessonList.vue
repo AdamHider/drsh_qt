@@ -59,15 +59,15 @@
                             <q-circular-progress v-if="lesson.exercise_id && !lesson.is_blocked"
                                 rounded
                                 show-value
-                                :value="lesson.exercise?.data.progress_percentage || 0"
+                                :value="(lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0"
                                 size="50px"
-                                :thickness="0.22"
+                                :thickness="0.18"
                                 color="white"
                                 track-color="white-transparent1"
                                 class="q-ma-none"
-                                style="z-index: 50; left: 0; background: none;"
+                                style="z-index: 50; left: 0; background: none; text-shadow: 1px 1px 5px black;"
                             >
-                                <b class="text-white ">{{ lesson.exercise?.data.progress_percentage || 0 }}%</b>
+                                <b class="text-white ">{{ (lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0 }}%</b>
                             </q-circular-progress>
                         </div>
                         <q-img
