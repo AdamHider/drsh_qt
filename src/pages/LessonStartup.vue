@@ -11,12 +11,11 @@
               <transition
                   appear
                   enter-active-class="animated fadeInLeft animation-slow"
-                  leave-active-class="animated rubberBand  animation-delay-1" >
+                  leave-active-class="animated fadeOutLeft">
                 <q-img
                     v-if="transitionTrigger"
                     :src="lesson.active.image"
                     style="position: absolute; width: 500px; top: -25px; left: -150px;"
-
                     no-spinner
                 />
               </transition>
@@ -185,7 +184,6 @@
               @click="start(activeSattelite.id)"></q-spend-button>
           </q-card-actions>
         </q-card>
-
       </q-dialog>
     </q-page>
   </q-page-wrapper>
@@ -197,7 +195,7 @@ import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 
@@ -253,12 +251,12 @@ onMounted(async () => {
   }
   getSatteliteList()
 })
-onBeforeRouteLeave((to, from) => {
-  if (dialog.value) {
-    dialog.value = false
-    return false
-  }
+
+onBeforeRouteLeave((to, from, next) => {
   transitionTrigger.value = false
-  return true
+  console.log(transitionTrigger.value)
+  setTimeout(() => {
+    next()
+  }, 250)
 })
 </script>

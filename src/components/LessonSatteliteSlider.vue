@@ -5,8 +5,6 @@
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
       :navigation="props.navigation"
-      @swiper="onSwiper"
-      @slideChange="onSlideChange"
     >
       <swiper-slide v-for="(satelliteItem, index) in lesson.active.sattelites?.list" :key="index" :class="'text-center'" @click="select(index)">
         <q-card flat class="transparent q-ma-sm"

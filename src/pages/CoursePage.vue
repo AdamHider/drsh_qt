@@ -12,7 +12,15 @@
           justifyContent: 'end',
           flexDirection: 'column', paddingBottom: '48px'}"
         style="z-index: 10;" >
-        <LessonList v-if="course.active?.id" :disable="dialog.active"/>
+
+        <transition
+        appear
+        enter-active-class="animated zoomIn"
+        leave-active-class="animated zoomOut">
+        <div v-if="transitionTrigger">
+          <LessonList v-if="course.active?.id" :disable="dialog.active"/>
+          </div>
+        </transition>
         <q-card flat class="transparent">
           <q-card-section v-if="course.active?.id" class="text-white" >
             <div class="text-subtitle"><b>{{course.active?.title}}</b></div>
@@ -37,7 +45,7 @@
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import { ref, reactive, watch, onActivated } from 'vue'
+import { ref, reactive, watch, onActivated, onDeactivated } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
 import { useRoute } from 'vue-router'
@@ -48,11 +56,16 @@ const route = useRoute()
 const dialog = reactive({ active: false })
 const header = ref(null)
 const onScroll = function (event) { header.value.onScroll(event) }
+const transitionTrigger = ref(false)
 
 const { course, getItem } = useCourse()
 
 onActivated(async () => {
+  transitionTrigger.value = true
   await getItem(route.params.course_id)
+})
+onDeactivated(async () => {
+  transitionTrigger.value = false
 })
 watch(() => route.params.course_id, (newData, oldData) => {
   getItem(route.params.course_id)

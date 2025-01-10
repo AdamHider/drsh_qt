@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 
@@ -70,4 +70,8 @@ const switchUser = async (userItem, key) => {
 }
 
 const { signIn, user } = useUserStore()
+
+watch(() => user, (newValue, oldValue) => {
+  if (newValue.id) return router.push('/user')
+})
 </script>
