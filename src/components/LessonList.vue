@@ -5,89 +5,101 @@
             <q-spinner color="primary" name="dots" size="40px" />
             </div>
         </template>
+
           <div v-for="lesson in lessonList" :key="lesson.id"
               :class="`row q-px-lg ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
               v-intersection="onIntersection"
               :groupBackground="lesson.course_section.background_image"
               :groupGradient="lesson.course_section.background_gradient"
+              :lessonId="lesson.id"
+              @click="(!lesson.is_blocked) ? openLesson(lesson.id) : false"
           >
-              <q-card v-if="lesson.type == 'group'" class="transparent text-white full-width" flat>
-                  <q-card-section>
-                      <div class="text-h6"><b>{{ lesson.course_section.title }}</b></div>
-                      <div class="text-caption">{{ lesson.course_section.description }}</div>
-                  </q-card-section>
-                  <q-separator color="white"/>
-              </q-card>
-              <div v-else :class="`col-auto`">
-                  <q-card class="transparent no-shadow q-ma-sm"
-                      :disabled="(lesson.is_blocked === true) ? true : null">
-                      <q-btn v-if="lesson.is_blocked === true"
-                          color="white"
-                          text-color="dark"
-                          class="absolute-top"
-                          style="top: 10px; left: 10px; z-index: 5; width: 10px;"
-                          round
-                          icon="lock"
-                      ></q-btn>
-                      <router-link v-else
-                          :to="`/lesson-startup-${lesson.id}`"
-                          class="absolute-top absolute-left full-width full-height"
-                          style="z-index: 101"
-                      ></router-link>
-                      <q-card-section class="transparent no-shadow text-center" style="width: 130px; min-height: 130px">
-                          <div v-if="lesson.satellites?.preview_list"
-                          class="satellite-list">
-                              <div v-for="(satellite, index) in lesson.satellites.preview_list" :key="index"
-                              class="transparent satellite-item nopadding"
-                              :style="{
-                                  animationDelay: `-${satellite.delay}s`,
-                                  animationDuration: `${satellite.duration}s`,
-                                  scale: `1.${satellite.distance}`
-                              }">
-                                  <img
-                                  class="ui circular mini image"
-                                  :src="satellite.image"
-                                  :style="{
-                                      width: `${satellite.size}px`,
-                                      top: `calc(-${satellite.size}px/2)`,
-                                      scale: `calc(-1.${satellite.distance} + 2)`
-                                  }"
-                                  />
-                              </div>
-                          </div>
-                          <div class="absolute-top flex justify-center items-center full-width full-height">
-                              <q-circular-progress v-if="lesson.exercise_id && !lesson.is_blocked"
-                                  rounded
-                                  show-value
-                                  :value="(lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0"
-                                  size="50px"
-                                  :thickness="0.18"
-                                  color="white"
-                                  track-color="white-transparent1"
-                                  class="q-ma-none"
-                                  style="z-index: 50; left: 0; background: none; text-shadow: 1px 1px 5px black;"
-                              >
-                                  <b class="text-white ">{{ (lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0 }}%</b>
-                              </q-circular-progress>
-                          </div>
-                          <q-img
-                              :src="lesson.image"
-                              loading="lazy"
-                              spinner-color="white">
-                          </q-img>
-                      </q-card-section>
-                      <q-card-section class="text-center text-white q-pa-none">
-                          <div class="text-bold">{{lesson.title}}</div>
-                          <div class="row q-ma-sm">
-                              <div class="col text-left"></div>
-                              <div class="col  text-right">
-                                  <b>{{lesson.exercise?.current_page}}</b>
-                              </div>
-                          </div>
-                      </q-card-section>
-                  </q-card>
-              </div>
-          </div>
+                <transition
+                  appear
+                  enter-active-class="animated fadeInUp"
+                  leave-active-class="animated fadeOutDown">
+                    <div v-if="transitionTrigger" class="full-width">
+                      <q-card v-if="lesson.type == 'group'" class="transparent text-white" flat>
+                          <q-card-section>
+                              <div class="text-h6"><b>{{ lesson.course_section.title }}</b></div>
+                              <div class="text-caption">{{ lesson.course_section.description }}</div>
+                          </q-card-section>
+                          <q-separator color="white"/>
+                      </q-card>
+                    </div>
+                </transition>
+                <div v-if="lesson.type !== 'group'" :class="`col-auto`">
+                  <transition
+                  appear
+                  enter-active-class="animated zoomIn"
+                  :leave-active-class="(selectedLesson !== lesson.id) ? 'animated planetBounceInactive' : 'animated planetBounceActive'">
+                    <div v-if="transitionTrigger">
+                    <q-card class="transparent no-shadow q-ma-sm"
+                        :disabled="(lesson.is_blocked === true) ? true : null">
+                        <q-btn v-if="lesson.is_blocked === true"
+                            color="white"
+                            text-color="dark"
+                            class="absolute-top"
+                            style="top: 10px; left: 10px; z-index: 5; width: 10px;"
+                            round
+                            icon="lock"
+                        ></q-btn>
+                        <q-card-section class="transparent no-shadow text-center planet" style="width: 130px; min-height: 130px">
+                            <div v-if="lesson.satellites?.preview_list"
+                            class="satellite-list">
+                                <div v-for="(satellite, index) in lesson.satellites.preview_list" :key="index"
+                                class="transparent satellite-item nopadding"
+                                :style="{
+                                    animationDelay: `-${satellite.delay}s`,
+                                    animationDuration: `${satellite.duration}s`,
+                                    scale: `1.${satellite.distance}`
+                                }">
+                                    <img
+                                    class="ui circular mini image"
+                                    :src="satellite.image"
+                                    :style="{
+                                        width: `${satellite.size}px`,
+                                        top: `calc(-${satellite.size}px/2)`,
+                                        scale: `calc(-1.${satellite.distance} + 2)`
+                                    }"
+                                    />
+                                </div>
+                            </div>
+                            <div class="absolute-top flex justify-center items-center full-width full-height">
+                                <q-circular-progress v-if="lesson.exercise_id && !lesson.is_blocked"
+                                    rounded
+                                    show-value
+                                    :value="(lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0"
+                                    size="50px"
+                                    :thickness="0.18"
+                                    color="white"
+                                    track-color="white-transparent1"
+                                    class="q-ma-none"
+                                    style="z-index: 50; left: 0; background: none; text-shadow: 1px 1px 5px black;"
+                                >
+                                    <b class="text-white ">{{ (lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0 }}%</b>
+                                </q-circular-progress>
+                            </div>
+                            <q-img
+                                :src="lesson.image"
+                                loading="lazy"
+                                spinner-color="white">
+                            </q-img>
+                        </q-card-section>
+                        <q-card-section class="text-center text-white q-pa-none">
+                            <div class="text-bold">{{lesson.title}}</div>
+                            <div class="row q-ma-sm">
+                                <div class="col text-left"></div>
+                                <div class="col  text-right">
+                                    <b>{{lesson.exercise?.current_page}}</b>
+                                </div>
+                            </div>
+                        </q-card-section>
+                    </q-card>
+                    </div>
+                </transition>
+            </div>
+        </div>
     </q-infinite-scroll>
     <q-page-sticky
         class="fixed full-width full-height"
@@ -104,16 +116,21 @@
 
 <script setup>
 import { useLesson } from '../composables/useLesson'
-import { ref, onActivated, onDeactivated, toRef, watch } from 'vue'
+import { ref, onActivated, onDeactivated, onMounted, onUnmounted, toRef, watch } from 'vue'
 import { useCourse } from '../composables/useCourse'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 
 const { lesson, getList, getListUpdates } = useLesson()
 const { course } = useCourse()
+const router = useRouter()
 
 const groupBackground = ref(null)
 const groupGradient = ref(null)
 const infiniteList = ref(null)
+const selectedLesson = ref(0)
 const currentCourseSectionId = ref(0)
+const transitionTrigger = ref(false)
+const inView = ref({})
 
 const props = defineProps({
   disable: Boolean
@@ -144,20 +161,33 @@ const checkGroup = (courseSection) => {
   }
   return false
 }
+const openLesson = (lessonId) => {
+  transitionTrigger.value = false
+  selectedLesson.value = lessonId
+  setTimeout(() => {
+    router.push(`/lesson-startup-${selectedLesson.value}`)
+  }, 250)
+}
 const onIntersection = (entry) => {
   groupBackground.value = entry.target.attributes.groupBackground?.value
   groupGradient.value = entry.target.attributes.groupGradient?.value
+  setTimeout(() => {
+    inView.value[entry.target.attributes.lessonId?.value] = true
+  }, 0)
 }
-onDeactivated(() => {
+onMounted(() => {
+  transitionTrigger.value = true
+  selectedLesson.value = 0
 })
 onActivated(async () => {
   if (lesson.list.length > 0) {
     currentCourseSectionId.value = 0
     await getListUpdates()
     composeList()
+    transitionTrigger.value = true
+    selectedLesson.value = 0
   }
 })
-
 watch(() => course.active?.id, async (newData, oldData) => {
   infiniteList.value.setIndex(0)
   infiniteList.value.resume()

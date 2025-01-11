@@ -1,4 +1,8 @@
 <template>
+  <transition
+  appear
+    enter-active-class="animated slideInUp"
+    leave-active-class="animated slideOutDown">
   <q-page-sticky
     position="bottom"
     v-show="bottomBarEnabled"
@@ -22,11 +26,12 @@
       </q-route-tab>
     </q-tabs>
   </q-page-sticky>
+  </transition>
 </template>
 
 <script setup>
 import { useNavigationHistory } from '../composables/useNavigationHistory'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { watch, ref } from 'vue'
 
 const { routes } = useNavigationHistory();

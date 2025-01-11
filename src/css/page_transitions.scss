@@ -140,3 +140,31 @@ $transition-timing-function: 'linear';
 .page-slide-in-bottombar-leave-to {
   transform: translateY(20vh) !important;
 }
+
+
+
+.planetBounceActive.v-leave-to{
+  transition: 300ms;
+  transform: scale(1.1)
+}
+.planetBounceInactive.v-leave-to{
+  transition: 300ms;
+  transform: scale(0.8);
+  filter: grayscale(0.6);
+}
+.planetBounceActive .planet:after{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0px 0px 0px 1px white;
+  border-radius: 100%;
+  transition: 250ms;
+  transform: scale(0.8) !important; opacity: 1 !important;
+}
+.planetBounceActive.v-leave-to .planet:after{
+  display: block;
+  transform: scale(1.1) !important; opacity: 0 !important;
+}

@@ -118,12 +118,11 @@ const validate = async function () {
   }
   if (formData.valid) formData.step++
   return router.push('/authorization/sign-in/step' + formData.step)
-
 }
 
-const checkUsernameValue = async function(){
-  const checkUsernameResponse = await checkUsername({username: formData.fields.username.value})
-  if(!checkUsernameResponse){
+const checkUsernameValue = async function() {
+  const checkUsernameResponse = await checkUsername({ username: formData.fields.username.value })
+  if (!checkUsernameResponse) {
     formData.valid = false
     formData.fields.username.isError = true
     formData.fields.username.errors = 'No such user'

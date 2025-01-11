@@ -195,7 +195,7 @@ import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onActivated, onBeforeUnmount } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 
@@ -242,7 +242,7 @@ const progressPercentage = () => {
   return lesson.active?.exercise?.data.current_page / lesson.active?.exercise?.data.total_pages
 }
 
-onMounted(async () => {
+onActivated(async () => {
   await getItem(route.params.lesson_id)
   transitionTrigger.value = true
   if (lesson.active.error || lesson.active.is_blocked) {

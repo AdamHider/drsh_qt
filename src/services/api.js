@@ -47,6 +47,7 @@ export class ApiService {
             responseData = data;
         })
         .catch((error) => {
+            alert(error.status)
             responseData = error;
         });
     return responseData;
