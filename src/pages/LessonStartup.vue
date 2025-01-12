@@ -19,21 +19,8 @@
                       no-spinner
                   />
                 </transition>
-                <div class="bg-dark-transparent justify-end full-height border-sm flex absolute-right q-pa-sm q-ma-sm">
-                    <div class="vertical-progress-sections full-height flex column justify-around q-py-sm " style="width: 20px; overflow: hidden;">
-                      <div class="bg-dark-transparent col flex items-center q-mt-sm rounded-sm rounded-r-0">
-                        <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                      </div>
-                      <div class="bg-dark-transparent col flex items-center q-mt-sm rounded-sm rounded-r-0">
-                        <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                      </div>
-                      <div class="bg-dark-transparent col flex items-center q-mt-sm rounded-sm rounded-r-0">
-                        <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                      </div>
-                    </div>
-                  <div class="vertical-progress full-height relative-position rounded-borders bg-dark-transparent" style="width: 20px; overflow: hidden; border: 2px solid black">
-                    <div class="absolute-bottom" style="height: 10%; width: 100%; background: red"></div>
-                  </div>
+                <div class="absolute-right q-ma-sm">
+                  <lesson-progress-bar dark :value="progressPercentage()"/>
                 </div>
           </q-card-section>
       </q-card>
@@ -55,21 +42,6 @@
                 </div>
             </q-card-section>
 
-
-
-
-            <q-card-section class="q-py-sm text-left"  v-if="!lesson.active?.is_blocked && lesson.active.exercise?.id" >
-                <div class="row " >
-                    <div class="col-12 self-end text-right">
-                        <b>{{progressPercentage()*100 || 0 }}%</b>
-                    </div>
-                </div>
-                <q-linear-progress
-                    rounded size="20px" class="q-push"
-                    :color="(progressPercentage()) >= 1 ? 'positive' : 'white'"
-                    :value="progressPercentage() ?? 0"
-                ></q-linear-progress>
-            </q-card-section>
             <q-card-section v-if="lesson.active.exercise">
               <q-list bordered dark class="bg-dark-transparent rounded-sm">
                 <q-expansion-item expand-separator>
@@ -111,101 +83,10 @@
                 </q-expansion-item>
               </q-list>
             </q-card-section>
-            <q-card-section class="q-pa-sm" v-if="!lesson.active.exercise?.finished_at">
-              <div class=" text-left q-px-sm">
-                <b>Rewards:</b>
-              </div>
-              <q-card bordered dark flat class="bg-dark-transparent rounded-sm">
-                <q-tabs
-                  v-model="tab"
-                  dense
-                >
-                  <q-tab name="onestar">
-                    <div style="filter: drop-shadow(rgba(0, 0, 0, 0.46) 1px 3px 3px);">
-                       <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                    </div>
-                  </q-tab>
-                  <q-tab name="twostars">
-                    <div style="filter: drop-shadow(rgba(0, 0, 0, 0.46) 1px 3px 3px);">
-                       <q-avatar size="24px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                       <q-avatar size="24px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                    </div>
-                  </q-tab>
-                  <q-tab name="threestars">
-                    <div style="filter: drop-shadow(rgba(0, 0, 0, 0.46) 1px 3px 3px);">
-                       <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                       <q-avatar size="26px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                       <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-                    </div>
-                  </q-tab>
-                </q-tabs>
-
-                <q-separator dark/>
-
-                <q-tab-panels v-model="tab" animated class="bg-transparent">
-                  <q-tab-panel name="onestar">
-                    <div class="flex justify-center q-gutter-sm ">
-                      <div v-for="(resource, resourceIndex) in lesson.active.reward[1]" :key="resourceIndex" >
-                        <q-item class="text-left rounded-borders bg-dark-transparent-50" >
-                            <q-item-section avatar >
-                                <q-img width="25px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075)"/>
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                                <q-item-label class="text-sm"><b>{{resource.title}}</b></q-item-label>
-                            </q-item-section>
-                        </q-item>
-                      </div>
-                    </div>
-                  </q-tab-panel>
-
-                  <q-tab-panel name="twostars">
-                    <div class="flex justify-center q-gutter-sm ">
-                      <div v-for="(resource, resourceIndex) in lesson.active.reward[2]" :key="resourceIndex" >
-                        <q-item class="text-left rounded-borders bg-dark-transparent-50" >
-                            <q-item-section avatar >
-                                <q-img width="25px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075)"/>
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                                <q-item-label class="text-sm"><b>{{resource.title}}</b></q-item-label>
-                            </q-item-section>
-                        </q-item>
-                      </div>
-                    </div>
-                  </q-tab-panel>
-
-                  <q-tab-panel name="threestars">
-                    <div class="flex justify-center q-gutter-sm ">
-                      <div v-for="(resource, resourceIndex) in lesson.active.reward[3]" :key="resourceIndex" >
-                        <q-item class="text-left rounded-borders bg-dark-transparent-50" >
-                            <q-item-section avatar >
-                                <q-img width="28px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075)"/>
-                            </q-item-section>
-                            <q-item-section>
-                                <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                                <q-item-label class="text-sm"><b>{{resource.title}}</b></q-item-label>
-                            </q-item-section>
-                        </q-item>
-                      </div>
-                    </div>
-                  </q-tab-panel>
-                </q-tab-panels>
-              </q-card>
-            </q-card-section>
-
 
 
 
             <q-card-actions class="text-right justify-end">
-              <q-btn
-                  v-if="user.active.data.previleges.is_admin || user.active.data.previleges.is_editor"
-                  push
-                  label="Edit"
-                  icon-right="edit"
-                  color="dark"
-                  class="q-px-md"
-                  @click="edit(lesson.active.id)"/>
               <q-btn v-if="lesson.active.exercise?.finished_at"
                 push
                 label="Redo"
@@ -299,6 +180,7 @@ import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import LessonProgressBar from '../components/LessonProgressBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, onActivated } from 'vue'
 import { useUserStore } from '../stores/user'
@@ -345,7 +227,7 @@ const edit = async (lessonId) => {
   router.push(`/admin/lesson-edit-${lessonId}`)
 }
 const progressPercentage = () => {
-  return lesson.active?.exercise?.data.current_page / lesson.active?.exercise?.data.total_pages
+  return lesson.active?.exercise?.data.current_page / lesson.active?.exercise?.data.total_pages * 100
 }
 
 onActivated(async () => {
