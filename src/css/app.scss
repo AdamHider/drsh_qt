@@ -16,6 +16,10 @@
   border-bottom-left-radius: 0 !important;
   border-top-left-radius: 0 !important;
 }
+.rounded-r-0{
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
 .rounded-b-md{
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
@@ -150,6 +154,8 @@ a{
 
 .bg-dark-transparent { background: $dark-transparent; }
 .bg-dark-transparent .q-linear-progress__model { color:  $dark-transparent; }
+
+.bg-dark-transparent-50 { background: $dark-transparent-50; }
 
 .q-card__actions .q-btn--rectangle.q-btn--push{
   padding: 4px 16px;

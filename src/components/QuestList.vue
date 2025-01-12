@@ -69,7 +69,6 @@
             </div>
           </div>
           <div>
-
             <q-btn v-if="questItem.is_completed" color="positive" label="Claim" @click="claimReward(questItem.id)"/>
             <q-btn v-else-if="questItem.href" color="primary" icon="chevron_right" :to="`${questItem.href}`"/>
           </div>

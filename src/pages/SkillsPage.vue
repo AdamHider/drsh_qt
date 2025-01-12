@@ -15,15 +15,14 @@
 import SkillList from '../components/SkillList.vue'
 import { ref, onActivated } from 'vue'
 import { api } from '../services/index'
-import UserResourceBar from '../components/UserResourceBar.vue'
 import { useUserStore } from '../stores/user'
 import { useNavigationHistory } from '../composables/useNavigationHistory'
 
-const { user, getItem } = useUserStore()
+const { getItem } = useUserStore()
 const { getQuestsDataHash } = useNavigationHistory()
 
-const tab = ref(0)
 const skills = ref([])
+const error = ref(false)
 
 const load = async function (filter) {
   const skillListResponse = await api.skill.getList({ mode: 'by_user' })
@@ -34,7 +33,7 @@ const load = async function (filter) {
   }
   skills.value = skillListResponse
 }
-const reload = async function(){
+const reload = async function () {
   await getItem()
   load()
   getQuestsDataHash()
