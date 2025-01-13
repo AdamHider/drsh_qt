@@ -42,48 +42,6 @@
                 </div>
             </q-card-section>
 
-            <q-card-section v-if="lesson.active.exercise">
-              <q-list bordered dark class="bg-dark-transparent rounded-sm">
-                <q-expansion-item expand-separator>
-                  <template v-slot:header>
-                    <q-item-section>
-                      <q-item-label><b>Points gained</b></q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                        <q-item-label class="text-orange text-h6"><b>{{ lesson.active.exercise.data.totals.total }}</b> <q-icon name="star"></q-icon></q-item-label>
-                    </q-item-section>
-                  </template>
-                  <q-list>
-                    <q-item>
-                      <q-item-section>
-                        <q-item-label>Exercises</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                          <q-item-label class="text-orange"><b>{{ lesson.active.exercise.data.totals.exercises }}</b> <q-icon name="star"></q-icon></q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-item>
-                      <q-item-section>
-                        <q-item-label>Time bonus</q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                          <q-item-label class="text-orange"><b>{{ lesson.active.exercise.data.totals.time }}</b> <q-icon name="star"></q-icon></q-item-label>
-                      </q-item-section>
-                    </q-item>
-                    <q-separator dark/>
-                    <q-item>
-                      <q-item-section>
-                        <q-item-label><b>Total</b></q-item-label>
-                      </q-item-section>
-                      <q-item-section side>
-                          <q-item-label class="text-orange text-h6"><b>{{ lesson.active.exercise.data.totals.total }}</b> <q-icon name="star"></q-icon></q-item-label>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-expansion-item>
-              </q-list>
-            </q-card-section>
-
 
 
             <q-card-actions class="text-right justify-end">
@@ -227,7 +185,7 @@ const edit = async (lessonId) => {
   router.push(`/admin/lesson-edit-${lessonId}`)
 }
 const progressPercentage = () => {
-  return lesson.active?.exercise?.data.current_page / lesson.active?.exercise?.data.total_pages * 100
+  return lesson.active?.exercise?.data.totals.points / lesson.active?.exercise?.data.totals.total * 100
 }
 
 onActivated(async () => {

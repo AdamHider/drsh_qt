@@ -7,34 +7,12 @@
               <b v-else-if="answerPercentage < 50">You could better</b>
             </div>
             <div><b>Your result: </b></div>
-            <div class="text-h5"><b>{{ lesson.active.page?.answer?.total }}</b> <q-icon name="star"></q-icon></div>
+            <div class="text-h5"><b>{{ lesson.active.page?.answer?.points }}</b> <q-icon name="star"></q-icon></div>
         </q-card-section>
     </q-card>
     <q-toolbar
         class="q-pa-sm"
         v-if="lesson.active.page && (lesson.active.page?.header?.page_template !== 'chat')">
-        <q-fab
-          v-model="extraActions"
-          class="q-mr-sm"
-          vertical-actions-align="left"
-          color="grey"
-          push
-          icon="more_vert"
-          direction="up"
-          v-if="lesson.active.page?.actions?.back_attempts > 0"
-        >
-          <q-fab-action
-            v-if="!lesson.active.page?.actions?.back_attempts == 0"
-            push color="primary" @click="backDialog = true;" icon="arrow_back" label="Previous exercise" label-position="right">
-              <q-avatar
-                  size="sm"
-                  :color="(lesson.active.page?.actions?.back_attempts > 1) ? 'positive' : 'negative' "
-                  text-color="white"
-              >
-              {{ lesson.active.page?.actions?.back_attempts }}
-          </q-avatar></q-fab-action>
-
-        </q-fab>
         <q-btn
             v-if="lesson.active.page?.actions?.main == 'next'"
             push
@@ -108,7 +86,7 @@ const props = defineProps({
   pageAnswers: Object
 })
 
-const answerPercentage = computed(() => lesson.active.page?.answer?.correct * 100 / lesson.active.page?.answer?.answers)
+const answerPercentage = computed(() => lesson.active.page?.answer?.correct * 100 / lesson.active.page?.answer?.quantity)
 
 const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (props.pageAnswers[i].value === '') return true } return false })
 const { lesson } = useLesson()
@@ -127,10 +105,6 @@ const confirm = async () => {
     return
   }
   emits('onAnswerSaved')
-  extraActions.value = false
-}
-const back = async () => {
-  emits('onPageChanged', 'previous')
   extraActions.value = false
 }
 

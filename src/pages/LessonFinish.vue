@@ -46,21 +46,13 @@
                        <q-item-label class="text-orange"><b>{{ lesson.active.exercise.data.totals.exercises }}</b> <q-icon name="star"></q-icon></q-item-label>
                     </q-item-section>
                   </q-item>
-                  <q-item>
-                    <q-item-section>
-                      <q-item-label>Time bonus</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                       <q-item-label class="text-orange"><b>{{ lesson.active.exercise.data.totals.time }}</b> <q-icon name="star"></q-icon></q-item-label>
-                    </q-item-section>
-                  </q-item>
                   <q-separator dark/>
                   <q-item>
                     <q-item-section>
                       <q-item-label><b>Total</b></q-item-label>
                     </q-item-section>
                     <q-item-section side>
-                       <q-item-label class="text-orange text-h6"><b>{{ lesson.active.exercise.data.totals.total }}</b> <q-icon name="star"></q-icon></q-item-label>
+                       <q-item-label class="text-orange text-h6"><b>{{ lesson.active.exercise.data.totals.points }}</b> <q-icon name="star"></q-icon></q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
