@@ -5,9 +5,10 @@
         <q-toolbar-title></q-toolbar-title>
         <UserResourceBar :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
-    <q-page class="text-center full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
-      <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1; height: 300px">
-          <q-card-section  class="row full-height">
+    <q-page class="full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
+      <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1; height: 350px;">
+          <q-card-section  class="flex full-height justify-between">
+              <div>
                 <transition
                     appear
                     enter-active-class="animated fadeInLeft animation-slow"
@@ -19,9 +20,10 @@
                       no-spinner
                   />
                 </transition>
-                <div class="absolute-right q-ma-sm">
-                  <lesson-progress-bar dark :value="progressPercentage()"/>
-                </div>
+              </div>
+              <div class="q-ma-sm full-height">
+                <lesson-progress-bar dark :value="progressPercentage()" :reward="lesson.active.reward"/>
+              </div>
           </q-card-section>
       </q-card>
       <transition
@@ -41,9 +43,6 @@
                   </router-link>
                 </div>
             </q-card-section>
-
-
-
             <q-card-actions class="text-right justify-end">
               <q-btn v-if="lesson.active.exercise?.finished_at"
                 push
