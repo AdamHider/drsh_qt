@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, defineEmits } from 'vue'
+import { reactive, watch } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])

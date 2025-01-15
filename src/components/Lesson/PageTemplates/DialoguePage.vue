@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, defineEmits } from 'vue'
+import { reactive, onMounted } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'

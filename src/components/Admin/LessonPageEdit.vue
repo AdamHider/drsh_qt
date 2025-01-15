@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, defineEmits } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { CONFIG } from '../../config.js'
 
 

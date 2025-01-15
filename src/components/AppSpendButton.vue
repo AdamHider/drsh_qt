@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { ref, onActivated, defineExpose } from 'vue'
+import { ref, onActivated } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const props = defineProps({

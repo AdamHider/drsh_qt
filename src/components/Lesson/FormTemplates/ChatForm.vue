@@ -84,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, defineEmits } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { onBeforeRouteLeave } from 'vue-router'
 

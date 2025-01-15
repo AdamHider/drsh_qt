@@ -27,7 +27,6 @@
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
-import { defineEmits } from 'vue'
 import { CONFIG } from '../config.js'
 
 const props = defineProps({

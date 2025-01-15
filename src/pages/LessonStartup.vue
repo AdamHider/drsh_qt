@@ -22,7 +22,7 @@
                 </transition>
               </div>
               <div class="q-ma-sm full-height">
-                <lesson-progress-bar :value="progressPercentage()" :reward="lesson.active.reward" vertical/>
+                <lesson-vertical-progress-bar :value="progressPercentage()" :reward="lesson.active.reward" vertical/>
               </div>
           </q-card-section>
       </q-card>
@@ -42,6 +42,9 @@
                     {{ lesson.active.master_lesson.title }}
                   </router-link>
                 </div>
+            </q-card-section>
+            <q-card-section>
+              <lesson-progress-bar :value="progressPercentage()" :reward="lesson.active.reward"/>
             </q-card-section>
             <q-card-actions class="text-right justify-end">
               <q-btn v-if="lesson.active.exercise?.finished_at"
@@ -139,6 +142,7 @@ import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import LessonProgressBar from '../components/LessonProgressBar.vue'
+import LessonVerticalProgressBar from '../components/LessonVerticalProgressBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, onActivated } from 'vue'
 import { useUserStore } from '../stores/user'

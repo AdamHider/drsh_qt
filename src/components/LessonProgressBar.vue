@@ -1,121 +1,30 @@
 <template>
-    <div class="flex no-wrap justify-end full-height position-relative q-pa-none">
-      <transition
-          appear
-          enter-active-class="animated fadeInLeft"
-          leave-active-class="animated fadeOutLeft"
-      >
-        <q-card v-if="showReward"  flat class="q-mr-sm bg-transparent" style="padding-top: 30px;">
-          <img :src="`${CONFIG.API_HOST}/image/common/${tab}.png`" style="position: absolute; top: -30px;  z-index: 20;  width: 80%;  left: 10%; "/>
-          <q-card-section class="q-pa-none">
-            <q-tab-panels
-              v-model="tab"
-              animated
-              transition-prev="fade"
-              transition-next="fade"
-              class="rounded-borders full-height"
-              style="padding-top: 15px;"
-            >
-                <q-tab-panel name="threestars" class="position: relative;">
-                  <div class="text-h6"><b>Отлично</b></div>
-                  <div class="text-caption">Превосходный результат. Вы отлично справились.</div>
-                  <q-separator class="q-my-sm"/>
-                  <div class="text-h7"><b>Награда:</b></div>
-                  <div class="row q-gutter-sm q-py-sm">
-                    <div v-for="(resource, resourceIndex) in reward[3]" :key="resourceIndex" >
-                      <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
-                          <q-item-section avatar style="min-width: unset;">
-                              <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                          </q-item-section>
-                          <q-item-section>
-                              <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                              <q-item-label class="text-sm"><b>{{resource.title}}</b></q-item-label>
-                          </q-item-section>
-                      </q-item>
-                    </div>
-                  </div>
-                </q-tab-panel>
-
-                <q-tab-panel name="twostars">
-                  <div class="text-h6"><b>Хорошо</b></div>
-                  <div class="text-caption">Довольно неплохо, но ещё есть, над чем поработать.</div>
-                  <q-separator class="q-my-sm"/>
-                  <div class="text-h7"><b>Награда:</b></div>
-                  <div class="row q-gutter-sm q-py-sm">
-                    <div v-for="(resource, resourceIndex) in reward[2]" :key="resourceIndex" >
-                      <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
-                          <q-item-section avatar style="min-width: unset;">
-                              <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                          </q-item-section>
-                          <q-item-section>
-                              <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                              <q-item-label class="text-sm"><b>{{resource.title}}</b></q-item-label>
-                          </q-item-section>
-                      </q-item>
-                    </div>
-                  </div>
-                </q-tab-panel>
-
-                <q-tab-panel name="onestar">
-                  <div class="text-h6"><b>Можно и лучше</b></div>
-                  <div class="text-caption">Соберитесь с мыслями и попробуйте ещё раз.</div>
-                  <q-separator class="q-my-sm"/>
-                  <div class="text-h7"><b>Награда:</b></div>
-                  <div class="row q-gutter-sm q-py-sm">
-                    <div v-for="(resource, resourceIndex) in reward[1]" :key="resourceIndex" >
-                      <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
-                          <q-item-section avatar style="min-width: unset;">
-                              <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                          </q-item-section>
-                          <q-item-section>
-                              <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                              <q-item-label class="text-sm"><b>{{resource.title}}</b></q-item-label>
-                          </q-item-section>
-                      </q-item>
-                    </div>
-                  </div>
-                </q-tab-panel>
-            </q-tab-panels>
-          </q-card-section>
-        </q-card>
-      </transition>
-      <q-card flat dark :class="`column bg-transparent`" >
-        <q-card-section :class="`${(props.vertical) ? 'flex' : ''} col no-wrap q-pa-none`">
-          <q-tabs
-              v-model="tab"
-              stretch
-              indicator-color="transparent"
-              active-class="bg-primary"
-              :content-class="`${(props.vertical) ? 'column' : ''} q-py-sm`"
-            >
-            <q-tab name="threestars" :class="`star-item ${(props.dark) ? 'bg-dark-transparent' : 'bg-white'} rounded-sm rounded-r-0 q-pa-none`" @click="selectTab('threestars')">
-                <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-            </q-tab>
-            <q-tab  name="twostars" :class="`star-item ${(props.dark) ? 'bg-dark-transparent' : 'bg-white'} rounded-sm rounded-r-0 q-pa-none`" @click="selectTab('twostars')">
-                <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-            </q-tab>
-            <q-tab  name="onestar" :class="`star-item ${(props.dark) ? 'bg-dark-transparent' : 'bg-white'} rounded-sm rounded-r-0 q-pa-none`" @click="selectTab('onestar')">
-                <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-            </q-tab>
-
-          </q-tabs>
-          <div class="vertical-progress full-height relative-position border-md rounded-borders rounded-xs bg-dark-transparent">
-            <div class="progress-bar absolute-bottom" :style="(props.vertical) ? `height: ${props.value}%;` : `width: ${props.value}%;`">
+    <div class="position-relative q-pa-none">
+      <q-card flat  class="rounded-sm bg-transparent" >
+        <q-card-section class="col no-wrap q-pa-xs ">
+          <div class="vertical-progress full-width relative-position border-md rounded-borders rounded-xs bg-dark-transparent">
+            <div class="progress-bar absolute-left" :style="(props.vertical) ? `height: ${props.value}%;` : `width: ${props.value}%;`">
               <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-top`" ></div>
             </div>
-            <div class="vertical-progress-delimiters full-height full-width justify-around flex column q-py-sm absolute-right" style="margin-right: -1px;">
-              <span class="vertical-progress-section"></span>
-              <span class="vertical-progress-delimiter bg-grey-5"></span>
-              <span class="vertical-progress-section"></span>
-              <span class="vertical-progress-delimiter bg-grey-5"></span>
-              <span class="vertical-progress-section"></span>
+            <div class="vertical-progress-delimiters full-width justify-around flex q-px-sm absolute-right">
+              <span class="vertical-progress-section">
+              </span>
+              <span class="vertical-progress-delimiter full-height bg-white relative-position">
+                <q-avatar size="22px" class=""><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
+              </span>
+              <span class="vertical-progress-section">
+              </span>
+              <span class="vertical-progress-delimiter full-height bg-white relative-position">
+                <q-avatar size="22px" class=" absolute"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
+              </span>
+              <span class="vertical-progress-section">
+              </span>
+              <span class="vertical-progress-delimiter full-height bg-white relative-position">
+                <q-avatar size="28px" class=""><img src="https://cdn-icons-png.flaticon.com/128/18587/18587906.png"></q-avatar>
+              </span>
             </div>
           </div>
         </q-card-section>
-        <q-card-actions class="justify-center">
-            <q-btn v-if="!showReward" icon="chevron_left" flat @click="showReward = true" color="dark" class="bg-white"></q-btn>
-            <q-btn v-else icon="chevron_right"  @click="showReward = false" color="primary" ></q-btn>
-        </q-card-actions>
       </q-card>
     </div>
 </template>
@@ -150,23 +59,22 @@ const selectTab = (name) => {
 <style scoped lang="scss">
 .star-item{
   border: 1px solid rgba(255, 255, 255, 0.28);
-  margin: 2px 0;
+  margin: 0 2px;
   min-height: unset;
   &:nth-child(1){
-    flex: 1;
+    flex: 5;
   }
   &:nth-child(2){
-    flex: 2;
+    flex: 3;
   }
   &:nth-child(3){
-    flex: 3;
+    flex: 2;
   }
 }
 .vertical-progress{
-  width: 20px;
-  overflow: hidden;
+  height: 25px;
   .progress-bar{
-    width: 100%;
+    height: 100%;
     padding: 2px;
     .progress-bar-fill{
       height: 100%;
@@ -175,18 +83,22 @@ const selectTab = (name) => {
   }
   .vertical-progress-delimiters{
     .vertical-progress-delimiter{
-      height: 1px;
+      width: 2px;
+      .q-avatar{
+        top: -25px;
+        left: -10px;
+      }
     }
     .vertical-progress-section{
-      margin: 2px 0;
+      margin: 0 2px;
       &:nth-child(1){
-        flex: 1;
+        flex: 4;
       }
       &:nth-child(3){
-        flex: 2;
+        flex: 4;
       }
       &:nth-child(5){
-        flex: 3;
+        flex: 2;
       }
     }
   }

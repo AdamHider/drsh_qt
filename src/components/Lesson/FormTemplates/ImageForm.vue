@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, defineEmits, onMounted } from 'vue'
+import { reactive, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { CONFIG } from '../../../config.js'

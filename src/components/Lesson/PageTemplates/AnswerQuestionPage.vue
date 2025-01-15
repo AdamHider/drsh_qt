@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, onMounted, defineEmits } from 'vue'
+import { reactive, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { CONFIG } from '../../../config.js'
 

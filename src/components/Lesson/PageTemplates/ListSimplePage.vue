@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, onMounted, defineEmits } from 'vue'
+import { reactive, watch, onMounted } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
