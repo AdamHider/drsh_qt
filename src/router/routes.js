@@ -49,11 +49,6 @@ const routes = [
         }
       },
       {
-        path: 'explore',
-        component: () => import('pages/ExplorePage.vue'),
-        meta: { requiresAuth: true, bottomBarEnabled: true }
-      },
-      {
         path: 'leaderboard',
         name: 'leaderboard',
         component: () => import('pages/LeaderboardPage.vue'),
@@ -116,62 +111,6 @@ const routes = [
         meta: {
           level: 2,
           requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: '/classrooms',
-        component: () => import('pages/ClassroomsPage.vue'),
-        meta: {
-          requiresAuth: true,
-          bottomBarEnabled: true
-        }
-      },
-      {
-        path: 'classroom-dashboard',
-        name: 'classroom_dashboard',
-        component: () => import('pages/ClassroomDashboardPage.vue'),
-        meta: {
-          requiresAuth: true,
-          bottomBarEnabled: true,
-          transitionConfig: {
-            course: 'slide-right',
-            leaderboard: 'slide-left',
-            user: 'slide-left'
-          }
-        }
-      },
-      {
-        path: 'classroom-:classroom_id',
-        component: () => import('pages/ClassroomPage.vue'),
-        meta: {
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'classroom-:classroom_id/edit',
-        component: () => import('pages/ClassroomEdit.vue'),
-        meta: {
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'classroom/join',
-        redirect: 'classroom/join/code=0'
-      },
-      {
-        path: 'classroom/join/code=:code',
-        component: () => import('pages/ClassroomJoin.vue'),
-        meta: { requiresAuth: true }
-      },
-      {
-        path: 'classroom-:classroom_id/subscribers',
-        component: () => import('pages/ClassroomSubscribers.vue'),
-        meta: {
-          requiresAuth: true,
-          bottomBarEnabled: true,
           transition: 'slide-in'
         }
       },

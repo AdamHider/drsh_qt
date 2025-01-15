@@ -1,24 +1,4 @@
 {
   "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": true,
-  "editor.formatOnSave": false,
-  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "editor.codeActionsOnSave": [
-    "source.fixAll.eslint"
-  ],
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "vue"
-  ],
-  "[xml]": {
-    "editor.defaultFormatter": "redhat.vscode-xml"
-  },
-  "[vue]": {
-    "editor.defaultFormatter": "Vue.volar"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  }
+  "editor.guides.bracketPairs": true
 }

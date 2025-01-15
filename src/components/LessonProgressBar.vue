@@ -78,40 +78,40 @@
       </transition>
       <q-card flat dark class="column bg-transparent" >
         <q-card-section class="flex col no-wrap q-pa-none">
-        <q-tabs
-            v-model="tab"
-            stretch
-            indicator-color="transparent"
-            :active-bg-color="(showReward) ? 'primary' : ''"
-            content-class="vertical-progress-sections column q-py-sm"
-          >
-          <q-tab  name="threestars" class="star-item bg-dark-transparent rounded-sm rounded-r-0 q-pa-none" @click="selectTab('threestars')">
-              <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-          </q-tab>
-          <q-tab  name="twostars" class="star-item bg-dark-transparent rounded-sm rounded-r-0 q-pa-none" @click="selectTab('twostars')">
-              <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-          </q-tab>
-          <q-tab  name="onestar" class="star-item bg-dark-transparent rounded-sm rounded-r-0 q-pa-none" @click="selectTab('onestar')">
-              <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-          </q-tab>
+          <q-tabs
+              v-model="tab"
+              stretch
+              indicator-color="transparent"
+              active-class="bg-primary"
+              content-class="column q-py-sm"
+            >
+            <q-tab name="threestars" :class="`star-item ${(props.dark) ? 'bg-dark-transparent' : 'bg-white'} rounded-sm rounded-r-0 q-pa-none`" @click="selectTab('threestars')">
+                <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
+            </q-tab>
+            <q-tab  name="twostars" :class="`star-item ${(props.dark) ? 'bg-dark-transparent' : 'bg-white'} rounded-sm rounded-r-0 q-pa-none`" @click="selectTab('twostars')">
+                <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
+            </q-tab>
+            <q-tab  name="onestar" :class="`star-item ${(props.dark) ? 'bg-dark-transparent' : 'bg-white'} rounded-sm rounded-r-0 q-pa-none`" @click="selectTab('onestar')">
+                <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
+            </q-tab>
 
-        </q-tabs>
-        <div class="vertical-progress full-height relative-position rounded-borders rounded-xs bg-dark-transparent">
-          <div class="progress-bar absolute-bottom" :style="`height: ${props.value}%;`">
-            <div class="progress-bar-fill rounded-borders"></div>
+          </q-tabs>
+          <div class="vertical-progress full-height relative-position border-md rounded-borders rounded-xs bg-dark-transparent">
+            <div class="progress-bar absolute-bottom" :style="`height: ${props.value}%;`">
+              <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-top`" ></div>
+            </div>
+            <div class="vertical-progress-delimiters full-height full-width justify-around flex column q-py-sm absolute-right" style="margin-right: -1px;">
+              <span class="vertical-progress-section"/>
+              <span class="vertical-progress-delimiter bg-white"/>
+              <span class="vertical-progress-section"/>
+              <span class="vertical-progress-delimiter bg-white"/>
+              <span class="vertical-progress-section"/>
+            </div>
           </div>
-          <div class="vertical-progress-delimiters full-height full-width justify-around flex column q-py-sm absolute-right" style="margin-right: -1px;">
-            <span class="vertical-progress-section"/>
-            <span class="vertical-progress-delimiter"/>
-            <span class="vertical-progress-section"/>
-            <span class="vertical-progress-delimiter"/>
-            <span class="vertical-progress-section"/>
-          </div>
-        </div>
         </q-card-section>
         <q-card-actions class="justify-center">
-            <q-btn v-if="!showReward" icon="chevron_left" flat @click="showReward = true"></q-btn>
-            <q-btn v-else icon="chevron_right" flat @click="showReward = false"></q-btn>
+            <q-btn v-if="!showReward" icon="chevron_left" flat @click="showReward = true" color="dark" class="bg-white"></q-btn>
+            <q-btn v-else icon="chevron_right" flat @click="showReward = false" color="dark" class="bg-warning"></q-btn>
         </q-card-actions>
       </q-card>
     </div>
@@ -132,6 +132,7 @@ const reward = toRefs(props).reward
 const showReward = ref(false)
 const tab = ref('threestars')
 const tabSelected = ref('threestars')
+const color = ref('orange')
 
 const selectTab = (name) => {
   if (tabSelected.value === name) {
@@ -146,6 +147,7 @@ const selectTab = (name) => {
 .star-item{
   border: 1px solid rgba(255, 255, 255, 0.28);
   margin: 2px 0;
+  min-height: unset;
   &:nth-child(1){
     flex: 1;
   }
@@ -159,12 +161,10 @@ const selectTab = (name) => {
 .vertical-progress{
   width: 20px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.28);
   .progress-bar{
     width: 100%;
     padding: 2px;
     .progress-bar-fill{
-      background: red;
       height: 100%;
       border-radius: 4px;
     }
@@ -172,7 +172,6 @@ const selectTab = (name) => {
   .vertical-progress-delimiters{
     .vertical-progress-delimiter{
       height: 1px;
-      background: rgba(255, 255, 255, 0.15);
     }
     .vertical-progress-section{
       margin: 2px 0;

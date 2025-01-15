@@ -22,7 +22,7 @@
                 </transition>
               </div>
               <div class="q-ma-sm full-height">
-                <lesson-progress-bar dark :value="progressPercentage()" :reward="lesson.active.reward"/>
+                <lesson-progress-bar  :value="progressPercentage()" :reward="lesson.active.reward" />
               </div>
           </q-card-section>
       </q-card>
@@ -184,7 +184,7 @@ const edit = async (lessonId) => {
   router.push(`/admin/lesson-edit-${lessonId}`)
 }
 const progressPercentage = () => {
-  return lesson.active?.exercise?.data.totals.points / lesson.active?.exercise?.data.totals.total * 100
+  return Math.ceil(lesson.active?.exercise?.data.totals.points / lesson.active?.exercise?.data.totals.total * 100)
 }
 
 onActivated(async () => {
