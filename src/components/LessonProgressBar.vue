@@ -18,8 +18,9 @@
             >
                 <q-tab-panel name="threestars" class="position: relative;">
                   <div class="text-h6"><b>Отлично</b></div>
-                  <div class="text-caption">За три <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar> вы получите:</div>
-                  <q-separator/>
+                  <div class="text-caption">Превосходный результат. Вы отлично справились.</div>
+                  <q-separator class="q-my-sm"/>
+                  <div class="text-h7"><b>Награда:</b></div>
                   <div class="row q-gutter-sm q-py-sm">
                     <div v-for="(resource, resourceIndex) in reward[3]" :key="resourceIndex" >
                       <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
@@ -37,8 +38,9 @@
 
                 <q-tab-panel name="twostars">
                   <div class="text-h6"><b>Хорошо</b></div>
-                  <div class="text-caption">За две <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar> вы получите:</div>
-                  <q-separator/>
+                  <div class="text-caption">Довольно неплохо, но ещё есть, над чем поработать.</div>
+                  <q-separator class="q-my-sm"/>
+                  <div class="text-h7"><b>Награда:</b></div>
                   <div class="row q-gutter-sm q-py-sm">
                     <div v-for="(resource, resourceIndex) in reward[2]" :key="resourceIndex" >
                       <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
@@ -56,8 +58,9 @@
 
                 <q-tab-panel name="onestar">
                   <div class="text-h6"><b>Можно и лучше</b></div>
-                  <div class="text-caption">За одну <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar> вы получите:</div>
-                  <q-separator/>
+                  <div class="text-caption">Соберитесь с мыслями и попробуйте ещё раз.</div>
+                  <q-separator class="q-my-sm"/>
+                  <div class="text-h7"><b>Награда:</b></div>
                   <div class="row q-gutter-sm q-py-sm">
                     <div v-for="(resource, resourceIndex) in reward[1]" :key="resourceIndex" >
                       <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
@@ -76,14 +79,14 @@
           </q-card-section>
         </q-card>
       </transition>
-      <q-card flat dark class="column bg-transparent" >
-        <q-card-section class="flex col no-wrap q-pa-none">
+      <q-card flat dark :class="`column bg-transparent`" >
+        <q-card-section :class="`${(props.vertical) ? 'flex' : ''} col no-wrap q-pa-none`">
           <q-tabs
               v-model="tab"
               stretch
               indicator-color="transparent"
               active-class="bg-primary"
-              content-class="column q-py-sm"
+              :content-class="`${(props.vertical) ? 'column' : ''} q-py-sm`"
             >
             <q-tab name="threestars" :class="`star-item ${(props.dark) ? 'bg-dark-transparent' : 'bg-white'} rounded-sm rounded-r-0 q-pa-none`" @click="selectTab('threestars')">
                 <q-avatar size="22px"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
@@ -97,21 +100,21 @@
 
           </q-tabs>
           <div class="vertical-progress full-height relative-position border-md rounded-borders rounded-xs bg-dark-transparent">
-            <div class="progress-bar absolute-bottom" :style="`height: ${props.value}%;`">
+            <div class="progress-bar absolute-bottom" :style="(props.vertical) ? `height: ${props.value}%;` : `width: ${props.value}%;`">
               <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-top`" ></div>
             </div>
             <div class="vertical-progress-delimiters full-height full-width justify-around flex column q-py-sm absolute-right" style="margin-right: -1px;">
-              <span class="vertical-progress-section"/>
-              <span class="vertical-progress-delimiter bg-white"/>
-              <span class="vertical-progress-section"/>
-              <span class="vertical-progress-delimiter bg-white"/>
-              <span class="vertical-progress-section"/>
+              <span class="vertical-progress-section"></span>
+              <span class="vertical-progress-delimiter bg-grey-5"></span>
+              <span class="vertical-progress-section"></span>
+              <span class="vertical-progress-delimiter bg-grey-5"></span>
+              <span class="vertical-progress-section"></span>
             </div>
           </div>
         </q-card-section>
         <q-card-actions class="justify-center">
             <q-btn v-if="!showReward" icon="chevron_left" flat @click="showReward = true" color="dark" class="bg-white"></q-btn>
-            <q-btn v-else icon="chevron_right" flat @click="showReward = false" color="dark" class="bg-warning"></q-btn>
+            <q-btn v-else icon="chevron_right"  @click="showReward = false" color="primary" ></q-btn>
         </q-card-actions>
       </q-card>
     </div>
@@ -125,7 +128,8 @@ const props = defineProps({
   exercise: Object,
   reward: Object,
   dark: Boolean,
-  value: Number
+  value: Number,
+  vertical: Boolean
 })
 const exercise = toRefs(props).exercise
 const reward = toRefs(props).reward

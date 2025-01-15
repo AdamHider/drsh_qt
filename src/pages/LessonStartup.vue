@@ -22,7 +22,7 @@
                 </transition>
               </div>
               <div class="q-ma-sm full-height">
-                <lesson-progress-bar  :value="progressPercentage()" :reward="lesson.active.reward" />
+                <lesson-progress-bar :value="progressPercentage()" :reward="lesson.active.reward" vertical/>
               </div>
           </q-card-section>
       </q-card>
@@ -95,13 +95,14 @@
             />
         </q-page-sticky>
         <q-dialog v-model="dialog">
-          <q-card flat class="relative text-center" style="overflow: visible">
+          <q-card flat class="relative text-center bg-primary" style="overflow: visible">
               <q-img
                   class=""
                   :src="activeSattelite.image"
                   style="max-width: 250px; width: 180px; margin-top: -80px"
                   no-spinner
               />
+            <lesson-progress-bar  :value="progressPercentage()" :reward="lesson.active.reward"  />
             <q-card-section class="text-left">
                 <div class="text-h5"><b>{{activeSattelite.title}}</b></div>
                 <div class="text-caption">{{activeSattelite.description}}</div>
