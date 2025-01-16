@@ -1,6 +1,6 @@
 <template>
     <q-page-sticky :class="`q-app-header ${props.class}`"  ref="header" style="z-index: 100" expand position="top">
-      <q-toolbar class="justify-center">
+      <q-toolbar :class="`${props.contentClass} justify-center`">
         <slot name="back-button"></slot>
         <slot/>
       </q-toolbar>
@@ -14,7 +14,8 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const props = defineProps({
   reveal: Boolean,
-  class: String
+  class: String,
+  contentClass: String
 })
 const header = ref(null)
 let revealOffset = 0

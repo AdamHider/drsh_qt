@@ -1,15 +1,15 @@
 <template>
     <div :class="`lesson-progress position-relative full-width q-pa-none ${ (props.dark) ? 'progress-dark' : ''}`">
       <q-card flat  class="rounded-sm bg-transparent" >
-        <q-card-section class="col no-wrap q-px-xs q-pt-sm q-pr-md  q-pb-none">
-          <div class="full-width flex" :style="`height: ${props.size}`">
+        <q-card-section class="col no-wrap q-pl-none q-pr-md  q-py-sm">
+          <div class="full-width flex" >
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size" class="absolute"><img src="/images/star_1.png"></q-avatar>
+              <q-avatar :size="props.size*1.2" class="absolute" color="grey-2" text-color="grey-5" icon="star"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size" class="absolute"><img src="/images/star_2.png"></q-avatar>
+              <q-avatar :size="props.size*1.2" class="absolute" color="grey-2" text-color="grey-5" icon="star"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
@@ -36,8 +36,18 @@
             </div>
           </div>
         </q-card-section>
+        <div v-if="!props.compact" :class="`flex justify-between q-pa-sm${ (props.dark) ? 'text-white' : '' }`">
+          <div class="text-left">
+            <div class="text-caption">Изучено: </div>
+            <div><b>{{(props.value) ? props.value : 0}} / 100%</b></div>
+          </div>
+          <div>
+            <q-btn flat round @click="rewardsDialog = true" :color="(props.dark) ? 'white' : 'primary'" icon="help_outline"/>
+          </div>
+        </div>
       </q-card>
       <q-dialog
+        v-if="!props.compact"
         v-model="rewardsDialog"
         position="bottom"
       >
@@ -130,7 +140,8 @@ const props = defineProps({
   dark: Boolean,
   value: Number,
   vertical: Boolean,
-  size: String
+  size: String,
+  compact: Boolean
 })
 const exercise = toRefs(props).exercise
 const reward = toRefs(props).reward
@@ -175,16 +186,18 @@ const selectTab = (name) => {
   &:before{
   }
   .q-avatar{
-    top: -3px;
+    font-size: 24px !important;
+    z-index: 1;
+    top: -2px;
     left: -15px;
+    box-shadow: 0 0 0 2px #e0e0e0;
   }
 }
 .vertical-progress{
-  height: 25px;
+  height: 20px;
   border-color: var(--border-color);
   .progress-bar{
     height: 100%;
-    padding: 2px;
     .progress-bar-fill{
       height: 100%;
       border-radius: 4px;

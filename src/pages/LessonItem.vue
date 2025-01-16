@@ -1,11 +1,11 @@
 <template>
   <q-page-wrapper>
-    <q-app-header class="bg-white rounded-b-md" reveal>
-        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
-        <lesson-progress-bar size="30px" :value="progressPercentage()" :reward="lesson.active.reward"/>
+    <q-app-header class="bg-white rounded-b-md" contentClass="items-end" reveal>
+        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button" class="self-end"/>
+        <lesson-progress-bar size="15px" :value="progressPercentage()" :reward="lesson.active.reward" compact/>
     </q-app-header>
-    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px;">
-        <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 50px">
+    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 70px;">
+        <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 70px">
             <q-card-section class="q-py-none">
                 <div class="text-subtitle1"><b>{{lesson.active.page?.header?.title}}</b></div>
                 <div class="text-caption">{{lesson.active.page?.header?.subtitle}}</div>
