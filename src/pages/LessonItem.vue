@@ -2,13 +2,7 @@
   <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md" reveal>
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
-        <q-linear-progress
-            rounded size="20px" class="q-push"
-            :value="(lesson.active.page?.totals?.points / lesson.active.page?.totals?.total )"
-            color="warning"  />
-        <q-chip dense  color="transparent" text-color="orange" icon-right="star">
-            <b>{{ lesson.active.page?.totals?.points }}</b>
-        </q-chip>
+        <lesson-progress-bar size="30px" :value="progressPercentage()" :reward="lesson.active.reward"/>
     </q-app-header>
     <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 50px;">
         <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 50px">
@@ -42,6 +36,7 @@
 
 <script setup>
 import LessonActions from '../components/Lesson/LessonActions.vue'
+import LessonProgressBar from '../components/LessonProgressBar.vue'
 import { useLesson } from '../composables/useLesson'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
@@ -62,6 +57,9 @@ const closeConfirmed = ref(false)
 const PageTemplate = computed(() => pageTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/PageTemplates/${pageTemplateTitle.value}Page.vue`)) : null)
 const FormTemplate = computed(() => formTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/FormTemplates/${formTemplateTitle.value}Form.vue`)) : null)
 
+const progressPercentage = () => {
+  return Math.ceil(lesson.active?.exercise?.data.totals.points / lesson.active?.exercise?.data.totals.total * 100)
+}
 const load = async () => {
   await getItem(route.params.lesson_id)
   onPageChanged()

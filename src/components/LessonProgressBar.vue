@@ -36,15 +36,6 @@
             </div>
           </div>
         </q-card-section>
-        <div class="flex justify-between q-pa-sm text-white">
-          <div>
-            <div class="text-caption">Изучено: </div>
-            <div><b>{{(props.value) ? props.value : 0}} / 100%</b></div>
-          </div>
-          <div>
-            <q-btn flat round @click="rewardsDialog = true" color="white" icon="help_outline"/>
-          </div>
-        </div>
       </q-card>
       <q-dialog
         v-model="rewardsDialog"
@@ -197,6 +188,8 @@ const selectTab = (name) => {
     .progress-bar-fill{
       height: 100%;
       border-radius: 4px;
+      border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), inset 0px -1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1);
     }
   }
   .vertical-progress-delimiters{

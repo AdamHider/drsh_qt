@@ -41,7 +41,7 @@
                 </div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <lesson-progress-bar size="30px" dark :value="progressPercentage()" :reward="lesson.active.reward"  :exercise="lesson.active.exercise?.data"/>
+              <lesson-progress-bar size="30px" dark :value="progressPercentage()" :reward="lesson.active.reward"/>
             </q-card-section>
             <q-card-actions class="text-right justify-end">
               <q-btn v-if="lesson.active.exercise?.finished_at"
@@ -107,7 +107,7 @@
                 <div class="text-caption">{{activeSattelite.description}}</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <lesson-progress-bar size="30px" :value="satteliteProgressPercentage()" :reward="activeSattelite.reward" :exercise="activeSattelite.exercise?.data" />
+              <lesson-progress-bar size="30px" :value="satteliteProgressPercentage()" :reward="activeSattelite.reward"/>
             </q-card-section>
             <q-card-actions class="justify-end text-right">
               <q-btn v-if="activeSattelite.exercise?.finished_at"
@@ -141,7 +141,6 @@ import { useExercise } from '../composables/useExercise'
 import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import LessonProgressBar from '../components/LessonProgressBar.vue'
-import LessonVerticalProgressBar from '../components/LessonVerticalProgressBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, onActivated } from 'vue'
 import { useUserStore } from '../stores/user'
