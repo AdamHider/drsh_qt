@@ -1,31 +1,131 @@
 <template>
-    <div class="position-relative q-pa-none">
+    <div :class="`lesson-progress position-relative full-width q-pa-none ${ (props.dark) ? 'progress-dark' : ''}`">
       <q-card flat  class="rounded-sm bg-transparent" >
-        <q-card-section class="col no-wrap q-pa-xs ">
-          <div class="vertical-progress full-width relative-position border-md rounded-borders rounded-xs bg-dark-transparent">
+        <q-card-section class="col no-wrap q-px-xs q-pt-sm q-pr-md  q-pb-none">
+          <div class="full-width flex" :style="`height: ${props.size}`">
+            <span class="star-item"></span>
+            <span class="star-item-delimiter relative-position">
+              <q-avatar :size="props.size" class="absolute"><img src="/images/star_1.png"></q-avatar>
+            </span>
+            <span class="star-item"></span>
+            <span class="star-item-delimiter relative-position">
+              <q-avatar :size="props.size" class="absolute"><img src="/images/star_2.png"></q-avatar>
+            </span>
+            <span class="star-item"></span>
+            <span class="star-item-delimiter relative-position">
+              <q-avatar :size="props.size" class="absolute"><img src="/images/star_3.png"></q-avatar>
+            </span>
+          </div>
+          <div :class="`vertical-progress full-width relative-position border-md rounded-borders rounded-xs ${ (props.dark) ? 'bg-dark-transparent' : 'bg-grey-2' }`">
             <div class="progress-bar absolute-left" :style="(props.vertical) ? `height: ${props.value}%;` : `width: ${props.value}%;`">
-              <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-top`" ></div>
+              <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-right`" ></div>
             </div>
-            <div class="vertical-progress-delimiters full-width justify-around flex q-px-sm absolute-right">
+            <div class="vertical-progress-delimiters full-width flex absolute-right">
               <span class="vertical-progress-section">
               </span>
-              <span class="vertical-progress-delimiter full-height bg-white relative-position">
-                <q-avatar size="22px" class=""><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
-              </span>
-              <span class="vertical-progress-section">
-              </span>
-              <span class="vertical-progress-delimiter full-height bg-white relative-position">
-                <q-avatar size="22px" class=" absolute"><img src="https://cdn-icons-png.flaticon.com/128/7656/7656139.png"></q-avatar>
+              <span class="vertical-progress-delimiter full-height relative-position">
               </span>
               <span class="vertical-progress-section">
               </span>
-              <span class="vertical-progress-delimiter full-height bg-white relative-position">
-                <q-avatar size="28px" class=""><img src="https://cdn-icons-png.flaticon.com/128/18587/18587906.png"></q-avatar>
+              <span class="vertical-progress-delimiter full-height relative-position">
+              </span>
+              <span class="vertical-progress-section">
+              </span>
+              <span class="vertical-progress-delimiter full-height relative-position">
               </span>
             </div>
           </div>
         </q-card-section>
+        <div class="flex justify-between q-pa-sm text-white">
+          <div>
+            <div class="text-caption">Изучено: </div>
+            <div><b>{{(props.value) ? props.value : 0}} / 100%</b></div>
+          </div>
+          <div>
+            <q-btn flat round @click="rewardsDialog = true" color="white" icon="help_outline"/>
+          </div>
+        </div>
       </q-card>
+      <q-dialog
+        v-model="rewardsDialog"
+        position="bottom"
+      >
+        <q-card class="rounded-b-0">
+          <q-list bordered separator>
+            <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
+            <q-item dense clickable v-ripple>
+              <q-item-section avatar>
+                <q-avatar rounded>
+                  <img src="/images/star_1.png">
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <div class="row q-gutter-sm q-py-sm">
+                  <div v-for="(resource, resourceIndex) in reward[1]" :key="resourceIndex" >
+                    <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
+                        <q-item-section avatar style="min-width: unset;">
+                            <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                        </q-item-section>
+                    </q-item>
+                  </div>
+                </div>
+              </q-item-section>
+            </q-item>
+
+            <q-item dense clickable v-ripple>
+              <q-item-section avatar>
+                <q-avatar rounded>
+                  <img src="/images/star_2.png">
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <div class="row q-gutter-sm q-py-sm">
+                  <div v-for="(resource, resourceIndex) in reward[2]" :key="resourceIndex" >
+                    <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
+                        <q-item-section avatar style="min-width: unset;">
+                            <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                        </q-item-section>
+                    </q-item>
+                  </div>
+                </div>
+              </q-item-section>
+            </q-item>
+
+            <q-item dense clickable v-ripple>
+              <q-item-section avatar>
+                <q-avatar rounded>
+                  <img src="/images/star_3.png">
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <div class="row q-gutter-sm q-py-sm">
+                  <div v-for="(resource, resourceIndex) in reward[3]" :key="resourceIndex" >
+                    <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
+                        <q-item-section avatar style="min-width: unset;">
+                            <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                        </q-item-section>
+                    </q-item>
+                  </div>
+                </div>
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <q-card-actions>
+            <q-btn push color="primary" @click="rewardsDialog = false" class="full-width">
+              Понятно
+            </q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </div>
 </template>
 
@@ -38,7 +138,8 @@ const props = defineProps({
   reward: Object,
   dark: Boolean,
   value: Number,
-  vertical: Boolean
+  vertical: Boolean,
+  size: String
 })
 const exercise = toRefs(props).exercise
 const reward = toRefs(props).reward
@@ -46,6 +147,7 @@ const showReward = ref(false)
 const tab = ref('threestars')
 const tabSelected = ref('threestars')
 const color = ref('orange')
+const rewardsDialog = ref(false)
 
 const selectTab = (name) => {
   if (tabSelected.value === name) {
@@ -57,22 +159,38 @@ const selectTab = (name) => {
 }
 </script>
 <style scoped lang="scss">
+.lesson-progress{
+  --border-color: #{$grey-4};
+}
+.lesson-progress.progress-dark{
+  --border-color: white;
+}
 .star-item{
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  margin: 0 2px;
-  min-height: unset;
+  margin: 0 1px;
   &:nth-child(1){
-    flex: 5;
-  }
-  &:nth-child(2){
-    flex: 3;
+    margin-left: 0px;
+    flex: 4;
   }
   &:nth-child(3){
+    flex: 4;
+  }
+  &:nth-child(5){
+    margin-right: 0px;
     flex: 2;
+  }
+}
+.star-item-delimiter{
+  width: 0px;
+  &:before{
+  }
+  .q-avatar{
+    top: -3px;
+    left: -15px;
   }
 }
 .vertical-progress{
   height: 25px;
+  border-color: var(--border-color);
   .progress-bar{
     height: 100%;
     padding: 2px;
@@ -82,23 +200,47 @@ const selectTab = (name) => {
     }
   }
   .vertical-progress-delimiters{
+    overflow: hidden;
     .vertical-progress-delimiter{
-      width: 2px;
-      .q-avatar{
-        top: -25px;
-        left: -10px;
+      width: 0px;
+      background: var(--border-color);
+      &:before{
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -3px;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-top: 3px solid var(--border-color);
+      }
+      &:after{
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: -3px;
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-bottom: 3px solid var(--border-color);
       }
     }
     .vertical-progress-section{
-      margin: 0 2px;
+      margin: 0 1px;
       &:nth-child(1){
+        margin-left: 0px;
         flex: 4;
+        box-shadow: 0px 0px 0px 2px var(--border-color);
+        border-radius: 7px;
       }
       &:nth-child(3){
         flex: 4;
+        box-shadow: 0px 0px 0px 2px var(--border-color);
+        border-radius: 7px;
       }
       &:nth-child(5){
         flex: 2;
+        box-shadow: 0px 0px 0px 2px var(--border-color);
+        border-radius: 7px;
+        margin-right: 0px;
       }
     }
   }

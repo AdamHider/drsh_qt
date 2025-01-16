@@ -21,9 +21,6 @@
                   />
                 </transition>
               </div>
-              <div class="q-ma-sm full-height">
-                <lesson-vertical-progress-bar :value="progressPercentage()" :reward="lesson.active.reward" vertical/>
-              </div>
           </q-card-section>
       </q-card>
       <transition
@@ -43,8 +40,8 @@
                   </router-link>
                 </div>
             </q-card-section>
-            <q-card-section>
-              <lesson-progress-bar :value="progressPercentage()" :reward="lesson.active.reward"/>
+            <q-card-section class="q-pt-none">
+              <lesson-progress-bar size="30px" dark :value="progressPercentage()" :reward="lesson.active.reward"  :exercise="lesson.active.exercise?.data"/>
             </q-card-section>
             <q-card-actions class="text-right justify-end">
               <q-btn v-if="lesson.active.exercise?.finished_at"
@@ -97,18 +94,20 @@
             spinner-color="white"
             />
         </q-page-sticky>
-        <q-dialog v-model="dialog">
-          <q-card flat class="relative text-center bg-primary" style="overflow: visible">
+        <q-dialog v-model="dialog" full-width>
+          <q-card flat class="relative text-center" style="overflow: visible">
               <q-img
                   class=""
                   :src="activeSattelite.image"
                   style="max-width: 250px; width: 180px; margin-top: -80px"
                   no-spinner
               />
-            <lesson-progress-bar  :value="progressPercentage()" :reward="lesson.active.reward"  />
-            <q-card-section class="text-left">
+            <q-card-section class="text-left q-pb-sm">
                 <div class="text-h5"><b>{{activeSattelite.title}}</b></div>
                 <div class="text-caption">{{activeSattelite.description}}</div>
+            </q-card-section>
+            <q-card-section class="q-pt-none">
+              <lesson-progress-bar size="30px" :value="satteliteProgressPercentage()" :reward="activeSattelite.reward" :exercise="activeSattelite.exercise?.data" />
             </q-card-section>
             <q-card-actions class="justify-end text-right">
               <q-btn v-if="activeSattelite.exercise?.finished_at"
@@ -190,6 +189,9 @@ const edit = async (lessonId) => {
 }
 const progressPercentage = () => {
   return Math.ceil(lesson.active?.exercise?.data.totals.points / lesson.active?.exercise?.data.totals.total * 100)
+}
+const satteliteProgressPercentage = () => {
+  return Math.ceil(activeSattelite.value?.exercise?.data.totals.points / activeSattelite.value?.exercise?.data.totals.total * 100)
 }
 
 onActivated(async () => {
