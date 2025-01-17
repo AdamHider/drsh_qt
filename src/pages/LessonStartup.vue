@@ -11,12 +11,12 @@
               <div>
                 <transition
                     appear
-                    enter-active-class="animated fadeInLeft animation-slow"
-                    leave-active-class="animated fadeOutLeft">
+                    enter-active-class="animated fadeInRight animation-slow"
+                    leave-active-class="animated fadeOutRight">
                   <q-img
                       v-if="transitionTrigger"
                       :src="lesson.active.image"
-                      style="position: absolute; width: 500px; top: -25px; left: -150px;"
+                      style="position: absolute; width: 470px; top: -50px; right: -120px;"
                       no-spinner
                   />
                 </transition>
@@ -34,14 +34,14 @@
             </q-card-section>
             <q-card-section v-if="lesson.active.parent_id" class="q-pb-sm">
                 <div class="text-caption">
-                  This lesson is sattelite of
+                  This lesson is Satellite of
                   <router-link :to="`/lesson-startup-${lesson.active.parent_id}`">
                     {{ lesson.active.master_lesson.title }}
                   </router-link>
                 </div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <lesson-progress-bar size="30px" dark :value="progressPercentage()" :reward="lesson.active.reward"/>
+              <lesson-progress-bar size="25px" dark :value="lesson.active.progress" :reward="lesson.active.reward"/>
             </q-card-section>
             <q-card-actions class="text-right justify-end">
               <q-btn v-if="lesson.active.exercise?.finished_at"
@@ -64,14 +64,15 @@
                 :resources="lesson.active.cost ?? {}"
                 @click="start(lesson.active.id)"></q-spend-button>
             </q-card-actions>
-            <q-card-section v-if="lesson.active.sattelites?.list.length > 0">
-                <div class="text-h6">Sattelites</div>
+            <q-card-section v-if="lesson.active.satellites?.list.length > 0">
+                <div class="text-h6">Спутники <q-badge color="primary" :label="lesson.active.satellites?.list.length" /></div>
+                <div class="text-caption"><span>Изучено:</span> <b>{{lesson.active.satellites?.progress}}%</b></div>
             </q-card-section>
             <transition
               appear
               enter-active-class="animated zoomIn animation-delay-2"
               leave-active-class="animated zoomOut">
-                <LessonSatteliteSlider
+                <LessonSatelliteSlider
                     :slidesPerView=3.4
                     :centerAligned="false"
                     :withButton="false"
@@ -98,36 +99,36 @@
           <q-card flat class="relative text-center" style="overflow: visible">
               <q-img
                   class=""
-                  :src="activeSattelite.image"
+                  :src="activeSatellite.image"
                   style="max-width: 250px; width: 180px; margin-top: -80px"
                   no-spinner
               />
             <q-card-section class="text-left q-pb-sm">
-                <div class="text-h5"><b>{{activeSattelite.title}}</b></div>
-                <div class="text-caption">{{activeSattelite.description}}</div>
+                <div class="text-h5"><b>{{activeSatellite.title}}</b></div>
+                <div class="text-caption">{{activeSatellite.description}}</div>
             </q-card-section>
             <q-card-section class="q-pt-none">
-              <lesson-progress-bar size="30px" :value="satteliteProgressPercentage()" :reward="activeSattelite.reward"/>
+              <lesson-progress-bar size="25px" :value="activeSatellite.progress" :reward="activeSatellite.reward"/>
             </q-card-section>
             <q-card-actions class="justify-end text-right">
-              <q-btn v-if="activeSattelite.exercise?.finished_at"
+              <q-btn v-if="activeSatellite.exercise?.finished_at"
                 push
                 label="Redo"
                 icon-right="replay"
                 color="gradient-orange"
-                @click="redo(activeSattelite.id)"/>
-              <q-btn v-else-if="activeSattelite.exercise?.id"
+                @click="redo(activeSatellite.id)"/>
+              <q-btn v-else-if="activeSatellite.exercise?.id"
                 push
                 label="Continue"
                 icon-right="play_arrow"
                 color="gradient-green"
-                @click="open(activeSattelite.id)"/>
+                @click="open(activeSatellite.id)"/>
               <q-spend-button v-else
                 push
                 color="gradient-blue"
                 icon-right="play_arrow"
-                :resources="activeSattelite.cost"
-                @click="start(activeSattelite.id)"></q-spend-button>
+                :resources="activeSatellite.cost"
+                @click="start(activeSatellite.id)"></q-spend-button>
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -138,7 +139,7 @@
 <script setup>
 import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
-import LessonSatteliteSlider from '../components/LessonSatteliteSlider.vue'
+import LessonSatelliteSlider from '../components/LessonSatelliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import LessonProgressBar from '../components/LessonProgressBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
@@ -150,15 +151,15 @@ const $q = useQuasar()
 const router = useRouter()
 const route = useRoute()
 const { user } = useUserStore()
-const { lesson, getItem, getSatteliteList } = useLesson()
+const { lesson, getItem, getSatelliteList } = useLesson()
 const { createItem, redoItem } = useExercise()
 const dialog = ref(false)
-const activeSattelite = ref({})
+const activeSatellite = ref({})
 const transitionTrigger = ref(false)
 const tab = ref('threestars')
 
 const select = (index) => {
-  activeSattelite.value = lesson.active.sattelites.list[index]
+  activeSatellite.value = lesson.active.satellites.list[index]
   dialog.value = true
 }
 const start = async (lessonId) => {
@@ -186,12 +187,6 @@ const redo = async (lessonId) => {
 const edit = async (lessonId) => {
   router.push(`/admin/lesson-edit-${lessonId}`)
 }
-const progressPercentage = () => {
-  return Math.ceil(lesson.active?.exercise?.data.totals.points / lesson.active?.exercise?.data.totals.total * 100)
-}
-const satteliteProgressPercentage = () => {
-  return Math.ceil(activeSattelite.value?.exercise?.data.totals.points / activeSattelite.value?.exercise?.data.totals.total * 100)
-}
 
 onActivated(async () => {
   await getItem(route.params.lesson_id)
@@ -200,7 +195,7 @@ onActivated(async () => {
     router.go(-1)
     return
   }
-  getSatteliteList()
+  getSatelliteList()
 })
 
 onBeforeRouteLeave((to, from, next) => {

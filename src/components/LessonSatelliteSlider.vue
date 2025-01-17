@@ -5,8 +5,23 @@
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
       :navigation="props.navigation"
+      effect="creative"
+      :creativeEffect="{
+          perspective: true,
+          limitProgress: 3,
+          prev: {
+              translate: ['-90%', '20%', -100],
+              rotate: [0, 0, -20],
+              origin: 'bottom'
+          },
+          next: {
+              translate: ['90%', '20%', -100],
+              rotate: [0, 0, 20],
+              origin: 'bottom'
+          },
+      }"
     >
-      <swiper-slide v-for="(satelliteItem, index) in lesson.active.sattelites?.list" :key="index" :class="'text-center'" @click="select(index)">
+      <swiper-slide v-for="(satelliteItem, index) in lesson.active.satellites?.list" :key="index" :class="'text-center'" @click="select(index)">
         <q-card flat class="transparent q-ma-sm"
             :disabled="satelliteItem.is_blocked ? true : null">
             <q-btn v-if="satelliteItem.is_blocked === true"
@@ -17,22 +32,7 @@
                 round
                 icon="lock"
             ></q-btn>
-            <q-card-section class="q-pa-none transparent no-shadow text-center" style="width: 100px; min-height: 100px">
-                <div class="absolute-top flex justify-center items-center full-width full-height">
-                    <q-circular-progress v-if="satelliteItem.exercise_id && !satelliteItem.is_blocked"
-                        rounded
-                        show-value
-                        :value="(satelliteItem.exercise?.data.current_page / satelliteItem.exercise?.data.total_pages)*100 || 0"
-                        size="50px"
-                        :thickness="0.18"
-                        color="white"
-                        track-color="white-transparent1"
-                        class="q-ma-none"
-                        style="z-index: 50; left: 0; background: none; text-shadow: 1px 1px 5px black;"
-                    >
-                        <b class="text-white ">{{ (satelliteItem.exercise?.data.current_page / satelliteItem.exercise?.data.total_pages)*100 || 0 }}%</b>
-                    </q-circular-progress>
-                </div>
+            <q-card-section class="q-pa-none transparent no-shadow text-center" style="min-height: 100px">
                 <q-img
                     :src="satelliteItem.image"
                     loading="lazy"
@@ -40,13 +40,8 @@
                 </q-img>
             </q-card-section>
             <q-card-section class="text-center text-white q-pa-none">
+                <div class="text-caption"><span>Изучено:</span> <b :class="(satelliteItem.progress > 0 && satelliteItem.progress < 100) ? 'text-warning': ''">{{satelliteItem.progress}}%</b></div>
                 <div class="text-bold">{{satelliteItem.title}}</div>
-                <div class="row q-ma-sm">
-                    <div class="col text-left"></div>
-                    <div class="col  text-right">
-                        <b>{{satelliteItem.exercise?.current_page}}</b>
-                    </div>
-                </div>
             </q-card-section>
         </q-card>
       </swiper-slide>

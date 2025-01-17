@@ -1,8 +1,8 @@
 <template>
   <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md" contentClass="items-end" reveal>
-        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button" class="self-end"/>
-        <lesson-progress-bar size="15px" :value="progressPercentage()" :reward="lesson.active.reward" compact/>
+        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
+        <lesson-progress-bar size="25px" :value="lesson.active.progress" :reward="lesson.active.reward" compact/>
     </q-app-header>
     <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 70px;">
         <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 70px">
@@ -57,9 +57,6 @@ const closeConfirmed = ref(false)
 const PageTemplate = computed(() => pageTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/PageTemplates/${pageTemplateTitle.value}Page.vue`)) : null)
 const FormTemplate = computed(() => formTemplateTitle.value ? defineAsyncComponent(() => import(`../components/Lesson/FormTemplates/${formTemplateTitle.value}Form.vue`)) : null)
 
-const progressPercentage = () => {
-  return Math.ceil(lesson.active?.exercise?.data.totals.points / lesson.active?.exercise?.data.totals.total * 100)
-}
 const load = async () => {
   await getItem(route.params.lesson_id)
   onPageChanged()

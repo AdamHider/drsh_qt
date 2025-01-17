@@ -1,45 +1,31 @@
 <template>
     <div :class="`lesson-progress position-relative full-width q-pa-none ${ (props.dark) ? 'progress-dark' : ''}`">
-      <q-card flat  class="rounded-sm bg-transparent" >
+      <q-card flat class="rounded-sm bg-transparent" >
         <q-card-section class="col no-wrap q-pl-none q-pr-md  q-py-sm">
           <div class="full-width flex" >
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size*1.2" class="absolute" color="grey-2" text-color="grey-5" icon="star"></q-avatar>
+              <q-avatar :class="`${(starsLevel == 1) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_1.png"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size*1.2" class="absolute" color="grey-2" text-color="grey-5" icon="star"></q-avatar>
+              <q-avatar :class="`${(starsLevel == 2) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_2.png"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size" class="absolute"><img src="/images/star_3.png"></q-avatar>
+              <q-avatar :class="`${(starsLevel == 3) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_3.png"></q-avatar>
             </span>
           </div>
-          <div :class="`vertical-progress full-width relative-position border-md rounded-borders rounded-xs ${ (props.dark) ? 'bg-dark-transparent' : 'bg-grey-2' }`">
-            <div class="progress-bar absolute-left" :style="(props.vertical) ? `height: ${props.value}%;` : `width: ${props.value}%;`">
+          <div :class="`vertical-progress full-width relative-position rounded-borders rounded-xs ${ (props.dark) ? 'bg-white-transparent' : 'bg-grey-4' }`"  :style="`height: ${props.size}`">
+            <div class="progress-bar absolute-left" :style="(props.vertical) ? `height: ${props.value}%;` : `width: ${props.value}%`">
               <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-right`" ></div>
-            </div>
-            <div class="vertical-progress-delimiters full-width flex absolute-right">
-              <span class="vertical-progress-section">
-              </span>
-              <span class="vertical-progress-delimiter full-height relative-position">
-              </span>
-              <span class="vertical-progress-section">
-              </span>
-              <span class="vertical-progress-delimiter full-height relative-position">
-              </span>
-              <span class="vertical-progress-section">
-              </span>
-              <span class="vertical-progress-delimiter full-height relative-position">
-              </span>
             </div>
           </div>
         </q-card-section>
-        <div v-if="!props.compact" :class="`flex justify-between q-pa-sm${ (props.dark) ? 'text-white' : '' }`">
+        <div v-if="!props.compact" :class="`flex justify-between items-center q-pa-sm${ (props.dark) ? 'text-white' : '' }`">
           <div class="text-left">
-            <div class="text-caption">Изучено: </div>
-            <div><b>{{(props.value) ? props.value : 0}} / 100%</b></div>
+            <span class="text-caption">Изучено: </span>
+            <span><b :class="(props.value > 0 && props.value < 100) ? 'text-warning': ''">{{(props.value) ? props.value : 0}}%</b></span>
           </div>
           <div>
             <q-btn flat round @click="rewardsDialog = true" :color="(props.dark) ? 'white' : 'primary'" icon="help_outline"/>
@@ -131,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from 'vue'
+import { ref, toRefs, onMounted } from 'vue'
 import { CONFIG } from '../config.js'
 
 const props = defineProps({
@@ -150,6 +136,7 @@ const tab = ref('threestars')
 const tabSelected = ref('threestars')
 const color = ref('orange')
 const rewardsDialog = ref(false)
+const starsLevel = ref(0)
 
 const selectTab = (name) => {
   if (tabSelected.value === name) {
@@ -159,13 +146,23 @@ const selectTab = (name) => {
   }
   tabSelected.value = name
 }
+
+onMounted(() => {
+  if(props.value >= 40 && props.value < 80) starsLevel.value = 1
+  if(props.value >=80 && props.value < 100) starsLevel.value = 2
+  if(props.value == 100) starsLevel.value = 3
+})
 </script>
 <style scoped lang="scss">
 .lesson-progress{
-  --border-color: #{$grey-4};
+  --border-color: #{$grey-3};
 }
 .lesson-progress.progress-dark{
   --border-color: white;
+  .star-item-delimiter .q-avatar:not(.active){
+    filter: grayscale(1) brightness(0.8);
+    box-shadow: 0 0 0 3px #e0e0e038;
+  }
 }
 .star-item{
   margin: 0 1px;
@@ -186,68 +183,28 @@ const selectTab = (name) => {
   &:before{
   }
   .q-avatar{
-    font-size: 24px !important;
     z-index: 1;
-    top: -2px;
+    top: 0px;
     left: -15px;
-    box-shadow: 0 0 0 2px #e0e0e0;
+    box-shadow: 0 0 0 2px #ffaa2c;
+    background: white !important;
+    &:not(.active) {
+      box-shadow: 0 0 0 2px #e0e0e0 ;
+      img{
+        filter: grayscale(1) brightness(0.8);
+      }
+    }
   }
 }
+
 .vertical-progress{
-  height: 20px;
-  border-color: var(--border-color);
   .progress-bar{
+    padding: 4px;
     height: 100%;
     .progress-bar-fill{
       height: 100%;
       border-radius: 4px;
       border-bottom: 3px solid rgba(0, 0, 0, 0.15);
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), inset 0px -1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1);
-    }
-  }
-  .vertical-progress-delimiters{
-    overflow: hidden;
-    .vertical-progress-delimiter{
-      width: 0px;
-      background: var(--border-color);
-      &:before{
-        content: "";
-        position: absolute;
-        top: 0;
-        right: -3px;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-        border-top: 3px solid var(--border-color);
-      }
-      &:after{
-        content: "";
-        position: absolute;
-        bottom: 0;
-        right: -3px;
-        border-left: 3px solid transparent;
-        border-right: 3px solid transparent;
-        border-bottom: 3px solid var(--border-color);
-      }
-    }
-    .vertical-progress-section{
-      margin: 0 1px;
-      &:nth-child(1){
-        margin-left: 0px;
-        flex: 4;
-        box-shadow: 0px 0px 0px 2px var(--border-color);
-        border-radius: 7px;
-      }
-      &:nth-child(3){
-        flex: 4;
-        box-shadow: 0px 0px 0px 2px var(--border-color);
-        border-radius: 7px;
-      }
-      &:nth-child(5){
-        flex: 2;
-        box-shadow: 0px 0px 0px 2px var(--border-color);
-        border-radius: 7px;
-        margin-right: 0px;
-      }
     }
   }
 }

@@ -7,7 +7,7 @@
         </template>
 
           <div v-for="lesson in lessonList" :key="lesson.id"
-              :class="`row q-px-lg ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
+              :class="`planet-block row q-px-sm ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
               v-intersection="onIntersection"
               :groupBackground="lesson.course_section.background_image"
               :groupGradient="lesson.course_section.background_gradient"
@@ -28,74 +28,43 @@
                       </q-card>
                     </div>
                 </transition>
-                <div v-if="lesson.type !== 'group'" :class="`col-auto`">
+                <div v-if="lesson.type !== 'group'" :class="`col-6`">
                   <transition
                   appear
                   enter-active-class="animated zoomIn"
                   :leave-active-class="(selectedLesson !== lesson.id) ? 'animated planetBounceInactive' : 'animated planetBounceActive'">
                     <div v-if="transitionTrigger">
-                    <q-card class="transparent no-shadow q-ma-sm"
-                        :disabled="(lesson.is_blocked === true) ? true : null">
-                        <q-btn v-if="lesson.is_blocked === true"
-                            color="white"
-                            text-color="dark"
-                            class="absolute-top"
-                            style="top: 10px; left: 10px; z-index: 5; width: 10px;"
-                            round
-                            icon="lock"
-                        ></q-btn>
-                        <q-card-section class="transparent no-shadow text-center planet" style="width: 130px; min-height: 130px">
-                            <div v-if="lesson.satellites?.preview_list"
-                            class="satellite-list">
-                                <div v-for="(satellite, index) in lesson.satellites.preview_list" :key="index"
-                                class="transparent satellite-item nopadding"
-                                :style="{
-                                    animationDelay: `-${satellite.delay}s`,
-                                    animationDuration: `${satellite.duration}s`,
-                                    scale: `1.${satellite.distance}`
-                                }">
-                                    <img
-                                    class="ui circular mini image"
-                                    :src="satellite.image"
-                                    :style="{
-                                        width: `${satellite.size}px`,
-                                        top: `calc(-${satellite.size}px/2)`,
-                                        scale: `calc(-1.${satellite.distance} + 2)`
-                                    }"
-                                    />
-                                </div>
-                            </div>
-                            <div class="absolute-top flex justify-center items-center full-width full-height">
-                                <q-circular-progress v-if="lesson.exercise_id && !lesson.is_blocked"
-                                    rounded
-                                    show-value
-                                    :value="(lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0"
-                                    size="50px"
-                                    :thickness="0.18"
-                                    color="white"
-                                    track-color="white-transparent1"
-                                    class="q-ma-none"
-                                    style="z-index: 50; left: 0; background: none; text-shadow: 1px 1px 5px black;"
-                                >
-                                    <b class="text-white ">{{ (lesson.exercise?.data.current_page / lesson.exercise?.data.total_pages)*100 || 0 }}%</b>
-                                </q-circular-progress>
-                            </div>
-                            <q-img
-                                :src="lesson.image"
-                                loading="lazy"
-                                spinner-color="white">
-                            </q-img>
-                        </q-card-section>
-                        <q-card-section class="text-center text-white q-pa-none">
-                            <div class="text-bold">{{lesson.title}}</div>
-                            <div class="row q-ma-sm">
-                                <div class="col text-left"></div>
-                                <div class="col  text-right">
-                                    <b>{{lesson.exercise?.current_page}}</b>
-                                </div>
-                            </div>
-                        </q-card-section>
-                    </q-card>
+                      <q-card flat class="bg-transparent flex justify-center q-ma-sm q-pa-sm q-pt-none" :disabled="(lesson.is_blocked === true) ? true : null">
+                          <q-card-section class="transparent no-shadow text-center planet" style="width: 130px; min-height: 130px">
+                              <div v-if="lesson.satellites?.preview_list"
+                              class="satellite-list">
+                                  <div v-for="(satellite, index) in lesson.satellites.preview_list" :key="index"
+                                  class="transparent satellite-item nopadding"
+                                  :style="{
+                                      animationDelay: `-${satellite.delay}s`,
+                                      animationDuration: `${satellite.duration}s`,
+                                      scale: `1.${satellite.distance}`
+                                  }">
+                                      <img  :src="satellite.image"
+                                        :style="{
+                                            width: `${satellite.size}px`,
+                                            top: `calc(-${satellite.size}px/2)`,
+                                            scale: `calc(-1.${satellite.distance} + 2)`
+                                        }"
+                                      />
+                                  </div>
+                              </div>
+                              <q-img
+                                  :src="lesson.image"
+                                  loading="lazy"
+                                  spinner-color="white">
+                              </q-img>
+                          </q-card-section>
+                          <q-card-section class="text-center text-white q-pa-none" v-if="inView[lesson.id]">
+                              <div class="text-caption"><span>Изучено:</span> <b :class="(lesson.progress > 0 && lesson.progress < 100) ? 'text-warning': ''">{{lesson.progress}}%</b></div>
+                              <div class="text-bold"><q-icon v-if="lesson.is_blocked === true" name="lock"></q-icon> {{lesson.title}}</div>
+                          </q-card-section>
+                      </q-card>
                     </div>
                 </transition>
             </div>
@@ -195,7 +164,9 @@ watch(() => course.active?.id, async (newData, oldData) => {
 })
 </script>
 <style scoped>
-
+.planet-block:not(:last-child){
+  margin-top: -70px;
+}
 .satellite-item{
     position: absolute;
     top: 10%;
@@ -211,8 +182,8 @@ watch(() => course.active?.id, async (newData, oldData) => {
 }
 .satellite-item img{
   position: absolute;
-  -webkit-animation: 8s linear 0s infinite satelitePlanetRotate;
-  animation: 8s linear 0s infinite satelitePlanetRotate;
+  -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
+  animation: 16s linear 0s infinite satelitePlanetRotate;
 }
 @keyframes sateliteRotate {
   0%   {transform: rotate(0deg);}

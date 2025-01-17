@@ -34,9 +34,9 @@ export function useLesson () {
       lesson.list = lessonListResponse.reverse()
     }
   }
-  async function getSatteliteList () {
+  async function getSatelliteList () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
-    lesson.active.sattelites = lessonResponse
+    lesson.active.satellites = lessonResponse
   }
   async function getPage (action) {
     const lessonPageResponse = await api.lesson.getPage({ lesson_id: lesson.active.id, action })
@@ -53,7 +53,7 @@ export function useLesson () {
     getItem,
     getList,
     getListUpdates,
-    getSatteliteList,
+    getSatelliteList,
     getPage,
     saveAnswer,
     lesson
