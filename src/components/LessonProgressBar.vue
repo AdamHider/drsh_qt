@@ -40,7 +40,7 @@
         <q-card class="rounded-b-0">
           <q-list bordered separator>
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
-            <q-item dense clickable v-ripple>
+            <q-item dense clickable v-ripple :class="(starsLevel == 1) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
                 <q-avatar rounded>
                   <img src="/images/star_1.png">
@@ -62,7 +62,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item dense clickable v-ripple>
+            <q-item dense clickable v-ripple :class="(starsLevel == 2) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
                 <q-avatar rounded>
                   <img src="/images/star_2.png">
@@ -84,7 +84,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item dense clickable v-ripple>
+            <q-item dense clickable v-ripple :class="(starsLevel == 3) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
                 <q-avatar rounded>
                   <img src="/images/star_3.png">

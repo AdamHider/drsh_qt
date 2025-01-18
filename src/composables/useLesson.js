@@ -37,6 +37,7 @@ export function useLesson () {
   async function getSatelliteList () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
     lesson.active.satellites = lessonResponse
+    lesson.active.satellites.list.push(lesson.active)
   }
   async function getPage (action) {
     const lessonPageResponse = await api.lesson.getPage({ lesson_id: lesson.active.id, action })

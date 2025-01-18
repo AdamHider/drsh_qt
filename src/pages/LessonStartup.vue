@@ -5,85 +5,26 @@
         <q-toolbar-title></q-toolbar-title>
         <UserResourceBar :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
-    <q-page class="full-width" style="padding-top: 50px" v-if="!lesson.active.is_blocked">
-      <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1; height: 350px;">
-          <q-card-section  class="flex full-height justify-between">
-              <div>
-                <transition
-                    appear
-                    enter-active-class="animated fadeInRight animation-slow"
-                    leave-active-class="animated fadeOutRight">
-                  <q-img
-                      v-if="transitionTrigger"
-                      :src="lesson.active.image"
-                      style="position: absolute; width: 470px; top: -50px; right: -120px;"
-                      no-spinner
-                  />
-                </transition>
-              </div>
-          </q-card-section>
-      </q-card>
-      <transition
-        appear
-        enter-active-class="animated zoomIn animation-delay-1 "
-        leave-active-class="animated zoomOut">
-        <q-card flat class="relative text-white text-left transparent full-width " style="z-index: 1;" v-if="transitionTrigger">
-            <q-card-section class="q-pb-sm">
-                <div class="text-h5"><b>{{lesson.active.title}}</b></div>
-                <div class="text-caption">{{lesson.active.description}}</div>
-            </q-card-section>
-            <q-card-section v-if="lesson.active.parent_id" class="q-pb-sm">
-                <div class="text-caption">
-                  This lesson is Satellite of
-                  <router-link :to="`/lesson-startup-${lesson.active.parent_id}`">
-                    {{ lesson.active.master_lesson.title }}
-                  </router-link>
-                </div>
-            </q-card-section>
-            <q-card-section class="q-pt-none">
-              <lesson-progress-bar size="25px" dark :value="lesson.active.progress" :reward="lesson.active.reward"/>
-            </q-card-section>
-            <q-card-actions class="text-right justify-end">
-              <q-btn v-if="lesson.active.exercise?.finished_at"
-                push
-                label="Redo"
-                icon="replay"
-                color="gradient-orange"
-                @click="redo(lesson.active.id)"/>
-              <q-btn v-else-if="lesson.active.exercise?.id"
-                push
-                label="Continue"
-                icon-right="play_arrow"
-                color="gradient-green"
-                class="q-px-md"
-                @click="open(lesson.active.id)"/>
-              <q-spend-button v-else
-                push
-                color="gradient-blue"
-                icon-right="play_arrow"
-                :resources="lesson.active.cost ?? {}"
-                @click="start(lesson.active.id)"></q-spend-button>
-            </q-card-actions>
-            <q-card-section v-if="lesson.active.satellites?.list.length > 0">
-                <div class="text-h6">Спутники <q-badge color="primary" :label="lesson.active.satellites?.list.length" /></div>
-                <div class="text-caption"><span>Изучено:</span> <b>{{lesson.active.satellites?.progress}}%</b></div>
-            </q-card-section>
+    <q-page class="full-width" style="padding-top: 50px; overflow: hidden;" v-if="!lesson.active.is_blocked">
+      <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1;">
             <transition
               appear
-              enter-active-class="animated zoomIn animation-delay-2"
-              leave-active-class="animated zoomOut">
+              enter-active-class="animated fadeIn animation-delay-2"
+              leave-active-class="animated fadeOut">
                 <LessonSatelliteSlider
-                    :slidesPerView=3.4
-                    :centerAligned="false"
+                    v-if="transitionTrigger"
+                    :slidesPerView=1.3
+                    :centerAligned="true"
                     :withButton="false"
                     slideHeight="100"
                     :navigation="false"
                     captionMode="full"
                     @select="select"
+                    @change="change"
                 />
             </transition>
-        </q-card>
-        </transition>
+      </q-card>
+
         <q-page-sticky
             class="fixed full-width full-height"
             :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
@@ -95,43 +36,45 @@
             spinner-color="white"
             />
         </q-page-sticky>
-        <q-dialog v-model="dialog" full-width>
-          <q-card flat class="relative text-center" style="overflow: visible">
-              <q-img
-                  class=""
-                  :src="activeSatellite.image"
-                  style="max-width: 250px; width: 180px; margin-top: -80px"
-                  no-spinner
-              />
-            <q-card-section class="text-left q-pb-sm">
-                <div class="text-h5"><b>{{activeSatellite.title}}</b></div>
-                <div class="text-caption">{{activeSatellite.description}}</div>
-            </q-card-section>
-            <q-card-section class="q-pt-none">
-              <lesson-progress-bar size="25px" :value="activeSatellite.progress" :reward="activeSatellite.reward"/>
-            </q-card-section>
-            <q-card-actions class="justify-end text-right">
-              <q-btn v-if="activeSatellite.exercise?.finished_at"
-                push
-                label="Redo"
-                icon-right="replay"
-                color="gradient-orange"
-                @click="redo(activeSatellite.id)"/>
-              <q-btn v-else-if="activeSatellite.exercise?.id"
-                push
-                label="Continue"
-                icon-right="play_arrow"
-                color="gradient-green"
-                @click="open(activeSatellite.id)"/>
-              <q-spend-button v-else
-                push
-                color="gradient-blue"
-                icon-right="play_arrow"
-                :resources="activeSatellite.cost"
-                @click="start(activeSatellite.id)"></q-spend-button>
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
+        <q-page-sticky class="fixed full-width text-white" expand style="z-index: 1;">
+          <transition
+            appear
+            enter-active-class="animated fadeInUp"
+            leave-active-class="animated fadeOutDown">
+            <q-card flat class="bg-transparent rounded-b-0 full-width"  v-if="transitionTrigger && dialog">
+              <q-card-section class="q-pb-sm">
+                  <div class="text-h5"><b>{{activeLesson.title}}</b></div>
+                  <div class="text-caption">{{activeLesson.description}}</div>
+              </q-card-section>
+              <q-card-section class="q-pt-none">
+                <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward"/>
+              </q-card-section>
+              <q-card-actions class="text-right justify-end q-pa-md">
+                <q-btn v-if="activeLesson.exercise?.finished_at"
+                  push
+                  label="Redo"
+                  icon="replay"
+                  color="gradient-orange"
+                  class="full-width"
+                  @click="redo(activeLesson.id)"/>
+                <q-btn v-else-if="activeLesson.exercise?.id"
+                  push
+                  label="Continue"
+                  icon-right="play_arrow"
+                  color="gradient-green"
+                  class="q-px-md full-width"
+                  @click="open(activeLesson.id)"/>
+                <q-spend-button v-else
+                  push
+                  color="gradient-blue"
+                  icon-right="play_arrow"
+                  class="full-width"
+                  :resources="activeLesson.cost ?? {}"
+                  @click="start(activeLesson.id)"></q-spend-button>
+              </q-card-actions>
+            </q-card>
+          </transition>
+        </q-page-sticky>
     </q-page>
   </q-page-wrapper>
 </template>
@@ -155,12 +98,21 @@ const { lesson, getItem, getSatelliteList } = useLesson()
 const { createItem, redoItem } = useExercise()
 const dialog = ref(false)
 const activeSatellite = ref({})
+const activeLesson = ref({})
 const transitionTrigger = ref(false)
 const tab = ref('threestars')
 
 const select = (index) => {
   activeSatellite.value = lesson.active.satellites.list[index]
   dialog.value = true
+}
+const change = (index) => {
+  dialog.value = false
+  activeLesson.value = lesson.active.satellites.list[index]
+  setTimeout(() => {
+    dialog.value = true
+  }, 250)
+
 }
 const start = async (lessonId) => {
   const exerciseCreated = await createItem(lessonId)
@@ -189,13 +141,15 @@ const edit = async (lessonId) => {
 }
 
 onActivated(async () => {
+  dialog.value = false
   await getItem(route.params.lesson_id)
   transitionTrigger.value = true
   if (lesson.active.error || lesson.active.is_blocked) {
     router.go(-1)
     return
   }
-  getSatelliteList()
+  await getSatelliteList()
+  change(0)
 })
 
 onBeforeRouteLeave((to, from, next) => {
