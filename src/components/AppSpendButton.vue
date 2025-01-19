@@ -1,7 +1,7 @@
 <template>
     <q-btn :push="props.push" dense :class="`${props.class}`" :color="props.color" style="padding-right: 2px;">
       <div class="flex justify-between items-center">
-        <span class="block">Start</span>
+        <span class="block">Начать</span>
         <q-icon :name="props.iconRight"/>
         <div class="q-ma-xs" style="background-color: #00000038; border-radius: 8px">
           <q-chip  v-for="(resource, index) in props.resources" :key="index"

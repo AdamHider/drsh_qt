@@ -23,7 +23,10 @@
           </div>
         </q-card-section>
         <div v-if="!props.compact" :class="`flex justify-between items-center q-pa-sm${ (props.dark) ? 'text-white' : '' }`">
-          <div class="text-left">
+          <div v-if="exercise && exercise.finished_at" class="text-left">
+            <span class="text-caption text-positive"><b>Изучено</b> <q-icon name="check_circle"/></span>
+          </div>
+          <div v-else class="text-left">
             <span class="text-caption">Изучено: </span>
             <span><b :class="(value > 0 && value < 100) ? 'text-warning': ''">{{(value) ? value : 0}}%</b></span>
           </div>
@@ -117,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch } from 'vue'
+import { ref, toRefs, watch, onMounted } from 'vue'
 import { CONFIG } from '../config.js'
 
 const props = defineProps({
@@ -149,11 +152,16 @@ const selectTab = (name) => {
   tabSelected.value = name
 }
 
-watch(() => props.value, () => {
+watch(() => props.value, (newValue) => {
+})
+onMounted(() => {
   if(props.value >= 40 && props.value < 80) starsLevel.value = 1
   if(props.value >=80 && props.value < 100) starsLevel.value = 2
   if(props.value == 100) starsLevel.value = 3
+  if(exercise.value?.finished_at) color.value = 'positive'
+  console.log(exercise.value)
 })
+
 </script>
 <style scoped lang="scss">
 .lesson-progress{

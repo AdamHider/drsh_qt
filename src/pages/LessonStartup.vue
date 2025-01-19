@@ -47,19 +47,19 @@
                   <div class="text-caption">{{activeLesson.description}}</div>
               </q-card-section>
               <q-card-section class="q-pt-none">
-                <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward"/>
+                <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
               </q-card-section>
               <q-card-actions class="text-right justify-end q-pa-md">
                 <q-btn v-if="activeLesson.exercise?.finished_at"
                   push
-                  label="Redo"
+                  label="Заново"
                   icon="replay"
                   color="gradient-orange"
                   class="full-width"
                   @click="redo(activeLesson.id)"/>
                 <q-btn v-else-if="activeLesson.exercise?.id"
                   push
-                  label="Continue"
+                  label="Продолжить"
                   icon-right="play_arrow"
                   color="gradient-green"
                   class="q-px-md full-width"

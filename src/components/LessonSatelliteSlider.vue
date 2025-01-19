@@ -26,7 +26,9 @@
       }"
       style="padding-bottom: 50px;"
     >
-      <swiper-slide v-for="(satelliteItem, index) in lesson.active.satellites?.list" :key="index" :class="`text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'}`" @click="select(index)">
+      <swiper-slide v-for="(satelliteItem, index) in lesson.active.satellites?.list" :key="index"
+        :class="`text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'} ${(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'lesson-finished' : 'lesson'}`"
+        @click="select(index)">
         <q-card flat class="transparent q-ma-sm"
             :disabled="satelliteItem.is_blocked ? true : null">
             <q-btn v-if="satelliteItem.is_blocked === true"
@@ -45,8 +47,10 @@
                 </q-img>
             </q-card-section>
             <q-card-section class="text-center text-white q-pa-none">
-              <q-chip v-if="satelliteItem.parent_id" dense color="dark" text-color="white" class="q-pa-xs q-px-sm"><b>Спутник</b></q-chip>
-              <q-chip v-else dense color="primary" text-color="white" class="q-pa-xs q-px-sm"
+              <q-chip v-if="satelliteItem.parent_id" dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': 'dark'" text-color="white" class="q-pa-xs q-px-sm">
+                <b>Спутник</b>
+              </q-chip>
+              <q-chip v-else dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': 'primary'" text-color="white" class="q-pa-xs q-px-sm"
                 style="position: absolute; transform: translate3D(0%,400%,0) rotate(20deg);transform-origin: top;"><b>Планета</b></q-chip>
             </q-card-section>
         </q-card>
@@ -112,7 +116,12 @@ const change = async (event) => {
       }
     }
   }
-
+  .lesson-finished{
+    .satellite-image .q-img:before{
+      border-color: $positive !important;
+      opacity: 0.5;
+    }
+  }
   .main-lesson{
     overflow: visible;
     .satellite-image .q-img:before{
