@@ -5,11 +5,11 @@
           <div class="full-width flex" >
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel == 1) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_1.png"></q-avatar>
+              <q-avatar :class="`${(starsLevel >= 1) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_1.png"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel == 2) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_2.png"></q-avatar>
+              <q-avatar :class="`${(starsLevel >= 2) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_2.png"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
@@ -17,7 +17,7 @@
             </span>
           </div>
           <div :class="`vertical-progress full-width relative-position rounded-borders rounded-xs ${ (props.dark) ? 'bg-white-transparent' : 'bg-grey-4' }`"  :style="`height: ${props.size}`">
-            <div class="progress-bar absolute-left" :style="(props.vertical) ? `height: ${props.value}%;` : `width: ${props.value}%`">
+            <div class="progress-bar absolute-left" :style="(props.vertical) ? `height: ${value}%;` : `width: ${value}%`">
               <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-right`" ></div>
             </div>
           </div>
@@ -25,7 +25,7 @@
         <div v-if="!props.compact" :class="`flex justify-between items-center q-pa-sm${ (props.dark) ? 'text-white' : '' }`">
           <div class="text-left">
             <span class="text-caption">Изучено: </span>
-            <span><b :class="(props.value > 0 && props.value < 100) ? 'text-warning': ''">{{(props.value) ? props.value : 0}}%</b></span>
+            <span><b :class="(value > 0 && value < 100) ? 'text-warning': ''">{{(value) ? value : 0}}%</b></span>
           </div>
           <div>
             <q-btn flat round @click="rewardsDialog = true" :color="(props.dark) ? 'white' : 'primary'" icon="help_outline"/>
@@ -40,7 +40,7 @@
         <q-card class="rounded-b-0">
           <q-list bordered separator>
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
-            <q-item dense clickable v-ripple :class="(starsLevel == 1) ? 'bg-amber-1' : ''">
+            <q-item dense clickable v-ripple :class="(starsLevel >= 1) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
                 <q-avatar rounded>
                   <img src="/images/star_1.png">
@@ -62,7 +62,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item dense clickable v-ripple :class="(starsLevel == 2) ? 'bg-amber-1' : ''">
+            <q-item dense clickable v-ripple :class="(starsLevel >= 2) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
                 <q-avatar rounded>
                   <img src="/images/star_2.png">
@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, onMounted } from 'vue'
+import { ref, toRefs, watch } from 'vue'
 import { CONFIG } from '../config.js'
 
 const props = defineProps({
@@ -131,6 +131,8 @@ const props = defineProps({
 })
 const exercise = toRefs(props).exercise
 const reward = toRefs(props).reward
+const value = toRefs(props).value
+
 const showReward = ref(false)
 const tab = ref('threestars')
 const tabSelected = ref('threestars')
@@ -147,7 +149,7 @@ const selectTab = (name) => {
   tabSelected.value = name
 }
 
-onMounted(() => {
+watch(() => props.value, () => {
   if(props.value >= 40 && props.value < 80) starsLevel.value = 1
   if(props.value >=80 && props.value < 100) starsLevel.value = 2
   if(props.value == 100) starsLevel.value = 3
@@ -201,6 +203,7 @@ onMounted(() => {
   .progress-bar{
     padding: 4px;
     height: 100%;
+    transition: 0.5s all;
     .progress-bar-fill{
       height: 100%;
       border-radius: 4px;

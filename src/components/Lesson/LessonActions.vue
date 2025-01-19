@@ -1,5 +1,5 @@
 <template>
-    <q-card v-if="lesson.active.page?.answer?.answers" flat class="bg-white text-dark ">
+    <q-card v-if="lesson.active.page?.answer?.quantity" flat class="bg-white text-dark ">
         <q-card-section>
             <div class="text-h5">
               <b v-if="answerPercentage == 100">Perfect!</b>

@@ -1,25 +1,13 @@
 <template>
   <q-page-wrapper>
     <q-page class="text-center full-width finish-page" style="padding-top: 50px;">
-        <transition
-            appear
-            enter-active-class="animated fadeInUp animation-slow"
-            leave-active-class="animated rubberBand  animation-delay-1">
-          <q-card v-if="transitionTrigger" flat class="relative text-white text-center transparent full-width " style="z-index: 1;">
-              <q-card-section class="q-pb-sm">
-                  <div class="text-h5"><b>Congratulations!</b></div>
-                  <div class="text-h6">You have completed the lesson!</div>
-              </q-card-section>
-          </q-card>
-        </transition>
-        <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;">
+        <q-card class="transparent text-white no-shadow full-width" style="position: relative; z-index: 1;">
             <q-card-section class="lesson-image">
                 <transition
                     appear
                     enter-active-class="animated fadeInUp animation-slow"
                     leave-active-class="animated rubberBand  animation-delay-1" >
                   <q-img
-                    width="300px"
                     v-if="transitionTrigger"
                     :src="lesson.active.image"
                     no-spinner
@@ -27,57 +15,84 @@
                 </transition>
             </q-card-section>
         </q-card>
-        <transition
+
+    </q-page>
+    <q-footer expand position="bottom" class="bg-transparent">
+      <transition
           appear
           enter-active-class="animated fadeInUp animation-delay-2"
           leave-active-class="animated zoomOut">
-          <q-card flat class="relative text-white transparent full-width " style="z-index: 1;"
-            v-if="transitionTrigger">
-              <q-card-section class="q-pb-sm text-center">
-                  <div class="text-h5"><b>{{lesson.active.title}}</b></div>
-              </q-card-section>
-              <q-card-section class="q-pb-sm text-left">
-                <q-list bordered dark class="bg-dark-transparent rounded-sm">
-                  <q-item>
-                    <q-item-section>
-                      <q-item-label>Exercises</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                       <q-item-label class="text-orange"><b>{{ lesson.active.exercise.data.totals.exercises }}</b> <q-icon name="star"></q-icon></q-item-label>
-                    </q-item-section>
-                  </q-item>
-                  <q-separator dark/>
-                  <q-item>
-                    <q-item-section>
-                      <q-item-label><b>Total</b></q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                       <q-item-label class="text-orange text-h6"><b>{{ lesson.active.exercise.data.totals.points }}</b> <q-icon name="star"></q-icon></q-item-label>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-card-section>
-            </q-card>
+          <q-card flat class="relative text-center text-dark rounded-b-0" style="z-index: 1;" v-if="transitionTrigger">
+            <q-card-section v-if="lesson.active.exercise.data.totals.difference > 0" class="q-pb-sm text-white bg-gradient-green">
+                <div class="text-h5"><b>Победа!</b></div>
+                <div class="text-h6">You have completed the lesson!</div>
+            </q-card-section>
+            <q-card-section v-else class="q-pb-sm q-pt-none text-white bg-negative">
+                <div class="text-h5"><b>Поражение!</b></div>
+                <div class="text-h6">You have completed the lesson!</div>
+            </q-card-section>
+            <div class="flex justify-center items-end">
+                <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level >= 1) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
+                <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level >= 2) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
+                <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level == 3) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
+            </div>
+            <q-card-section class="q-pb-sm q-pt-none">
+              <div class="text-subtitle2" v-if="lesson.active.exercise.data.totals.difference > 0">
+                <b>Предыдущий результат: </b>
+                <b>{{ lesson.active.exercise.data.totals.points - lesson.active.exercise.data.totals.difference }}</b>
+              </div>
+              <div class="text-subtitle1">
+                <b>Ваш результат: </b>
+                <b :class="(lesson.active.exercise.data.totals.difference > 0) ? 'text-positive' : 'text-warning'">{{ lesson.active.exercise.data.totals.points }}</b>
+              </div>
+            </q-card-section>
+            <q-separator/>
+            <q-card-section class="q-pb-sm q-pt-sm">
+              <div class="text-center text-subtitle2"><b>Награда: </b></div>
+              <div class="row justify-center q-gutter-sm q-py-sm">
+                <div v-for="(resource, resourceIndex) in lesson.active.exercise.data.totals.reward" :key="resourceIndex" >
+                  <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
+                        <q-item-section avatar style="min-width: unset;">
+                            <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </div>
+              </div>
+            </q-card-section>
+            <q-separator/>
+            <q-card-actions class="justify-center q-pa-md">
+              <q-btn
+                push
+                label="Redo"
+                icon="replay"
+                color="gradient-orange"
+                class="q-px-md q-mr-sm"
+                @click="redo(lesson.active.id)"/>
+              <q-btn
+                push
+                label="Great!"
+                icon="check"
+                color="gradient-green"
+                class="q-px-md q-mr-sm"
+                @click="$router.go(-1)"/>
+            </q-card-actions>
+          </q-card>
         </transition>
-    </q-page>
-    <q-footer expand position="bottom" class="bg-transparent">
-      <q-toolbar class="q-pa-sm justify-center">
-        <q-btn
-          push
-          label="Redo"
-          icon="replay"
-          color="gradient-orange"
-          class="q-px-md q-mr-sm"
-          @click="redo(lesson.active.id)"/>
-        <q-btn
-          push
-          label="Great!"
-          icon="check"
-          color="gradient-green"
-          class="q-px-md q-mr-sm"
-          @click="$router.go(-1)"/>
-        </q-toolbar>
     </q-footer>
+    <q-page-sticky
+        class="fixed full-width full-height"
+        :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
+        >
+        <q-img
+        :src="lesson.active.course_section?.background_image"
+        class="absolute-top absolute-left full-width full-height"
+        loading="lazy"
+        spinner-color="white"
+        />
+    </q-page-sticky>
   </q-page-wrapper>
 </template>
 
@@ -107,6 +122,13 @@ onMounted(() => {
 })
 </script>
 <style lang="scss">
+
+.star-item{
+  filter: grayscale(1) brightness(0.5);
+  &.active{
+    filter: grayscale(0) brightness(1) drop-shadow(rgba(0, 0, 0, 0.1) 1px 3px 3px);
+  }
+}
 $particles: 50;
 $width: 300;
 $height: 300;
@@ -177,6 +199,7 @@ $box-shadow2: ();
 .finish-page:after {
   content: "";
   position: absolute;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 3px;
