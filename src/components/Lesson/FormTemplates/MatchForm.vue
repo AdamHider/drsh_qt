@@ -5,7 +5,7 @@
                 <q-select
                     dense
                     hide-dropdown-icon
-                    v-model="formData.fields[index].value"
+                    v-model="formData.fields[index].value.text"
                     :color="(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct ) ? 'green' : 'negative') : 'primary'"
                     :style="{ display: 'inline-block', minWidth: '50px', height: '18px', justifyContent: 'center', verticalAlign: 'bottom'  }"
                     behavior="menu"
@@ -38,10 +38,10 @@
                   <template v-slot:no-option v-if="formData.fields[index].answer">
                         <q-item>
                             <q-item-section>
-                                <q-item-label v-if="formData.fields[index].value !== ''">
+                                <q-item-label v-if="formData.fields[index].value.text !== ''">
                                     Your answer:
                                     <b :class="`text-${(formData.fields[index].answer.is_correct ) ? 'positive' : 'negative'}`">
-                                        {{ formData.fields[index].value }}
+                                        {{ formData.fields[index].value.text }}
                                     </b>
                                 </q-item-label>
                                 <q-item-label v-else>
@@ -79,10 +79,12 @@ const renderFields = () => {
   if (!lesson.active.page.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
-    let value = ''
+    let value = {
+      text: ''
+    }
     let options = []
     if (field.answer) {
-      value = field.answer.value
+      value.text = field.answer.value
       options = []
     }
     formData.fields.push({ value, options, index: field.index, answer: field.answer })
@@ -95,24 +97,24 @@ const matchEnd = (variantIndex) => {
     fieldsRefs.value[currentIndex.value].blur()
     return
   }
-  const prevVariantIndex = lesson.active.page.data.match_variants.findIndex(variant => variant.answer === formData.fields[currentIndex.value].value)
+  const prevVariantIndex = lesson.active.page.data.match_variants.findIndex(variant => variant.answer === formData.fields[currentIndex.value].value.text)
   if (lesson.active.page.data.match_variants[prevVariantIndex]) lesson.active.page.data.match_variants[prevVariantIndex].selected = false
   if (lesson.active.page.data.match_variants[variantIndex].selected) {
     if (lesson.active.page.data.match_variants[variantIndex].selectedTarget == currentIndex.value) {
       lesson.active.page.data.match_variants[variantIndex].selected = false
-      formData.fields[currentIndex.value].value = ''
+      formData.fields[currentIndex.value].value.text = ''
       return
     }
-    formData.fields[lesson.active.page.data.match_variants[variantIndex].selectedTarget].value = ''
+    formData.fields[lesson.active.page.data.match_variants[variantIndex].selectedTarget].value.text = ''
   }
   lesson.active.page.data.match_variants[variantIndex].selected = true
   lesson.active.page.data.match_variants[variantIndex].selectedTarget = currentIndex.value
   fieldsRefs.value[currentIndex.value].hidePopup()
-  formData.fields[currentIndex.value].value = lesson.active.page?.data.match_variants[variantIndex].answer
+  formData.fields[currentIndex.value].value.text = lesson.active.page?.data.match_variants[variantIndex].answer
 }
 
 const matchStart = (fieldIndex) => {
-  if (lesson.active.page.answers.is_finished) return
+  if (lesson.active.page.answers) return
   matchMode.value = true
   currentIndex.value = fieldIndex
 }

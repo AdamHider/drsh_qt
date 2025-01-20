@@ -23,28 +23,33 @@
           enter-active-class="animated fadeInUp animation-delay-2"
           leave-active-class="animated zoomOut">
           <q-card flat class="relative text-center text-dark rounded-b-0" style="z-index: 1;" v-if="transitionTrigger">
-            <q-card-section v-if="lesson.active.exercise.data.totals.difference > 0" class="q-pb-sm text-white bg-gradient-green">
-                <div class="text-h5"><b>Победа!</b></div>
-                <div class="text-h6">You have completed the lesson!</div>
+            <q-card-section v-if="lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum" class="q-pb-sm q-pt-sm text-white bg-gradient-green">
+                <div v-if="lesson.active.exercise.data.totals.is_maximum" class="text-h5"><b>Лучше некуда!</b></div>
+                <div v-else class="text-h5"><b>Победа!</b></div>
+                <div class="text-h6">Отличный результат</div>
             </q-card-section>
-            <q-card-section v-else class="q-pb-sm q-pt-none text-white bg-negative">
+            <q-card-section v-else-if="lesson.active.exercise.data.totals.difference == 0" class="q-pb-sm q-pt-sm text-white bg-gradient-orange">
+                <div class="text-h5"><b>Ничья!</b></div>
+                <div class="text-h6">Ни лучше, ни хуже</div>
+            </q-card-section>
+            <q-card-section v-else class="q-pb-sm q-pt-sm text-white bg-negative">
                 <div class="text-h5"><b>Поражение!</b></div>
-                <div class="text-h6">You have completed the lesson!</div>
+                <div class="text-h6">Ты можешь лучше</div>
             </q-card-section>
-            <div class="flex justify-center items-end">
+            <div class="flex justify-center items-end q-pb-none" v-if="lesson.active.exercise.data.totals.difference > 0">
                 <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level >= 1) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
                 <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level >= 2) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
                 <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level == 3) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
             </div>
-            <q-card-section class="q-pb-sm q-pt-none">
-              <div class="text-subtitle2" v-if="lesson.active.exercise.data.totals.difference > 0">
-                <b>Предыдущий результат: </b>
-                <b>{{ lesson.active.exercise.data.totals.points - lesson.active.exercise.data.totals.difference }}</b>
-              </div>
-              <div class="text-subtitle1">
-                <b>Ваш результат: </b>
-                <b :class="(lesson.active.exercise.data.totals.difference > 0) ? 'text-positive' : 'text-warning'">{{ lesson.active.exercise.data.totals.points }}</b>
-              </div>
+            <q-card-section class="q-pb-sm q-pt-sm">
+                <div class="text-subtitle2" v-if="lesson.active.exercise.data.totals.difference !== 0">
+                  <b>Предыдущий результат: </b>
+                  <b>{{ previousPoints }}</b>
+                </div>
+                <div class="text-subtitle1">
+                  <b>Ваш результат: </b>
+                  <b :class="(lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum) ? 'text-positive' : 'text-negative'">{{ currentPoints }}</b>
+                </div>
             </q-card-section>
             <q-separator/>
             <q-card-section class="q-pb-sm q-pt-sm">
@@ -109,16 +114,32 @@ const { redoItem } = useExercise()
 
 const transitionTrigger = ref(false)
 
+const currentPoints = ref(0)
+const previousPoints = ref(0)
+
 const load = async () => {
   await getItem(route.params.lesson_id)
   transitionTrigger.value = true
+  if(lesson.active.exercise?.data.totals.difference > 0) {
+    currentPoints.value = lesson.active.exercise?.data.totals.points;
+    previousPoints.value = lesson.active.exercise?.data.totals.points - lesson.active.exercise?.data.totals.difference;
+  }
+  if(lesson.active.exercise?.data.totals.difference < 0) {
+    currentPoints.value = lesson.active.exercise?.data.totals.points + lesson.active.exercise?.data.totals.difference;
+    previousPoints.value = lesson.active.exercise?.data.totals.points;
+  }
+  if(lesson.active.exercise?.data.totals.difference == 0) {
+    currentPoints.value = lesson.active.exercise?.data.totals.points
+  }
 }
+
 const redo = async (lessonId) => {
   const exerciseRedoCreated = await redoItem(lessonId)
-  if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
+  if (!exerciseRedoCreated.error) router.replace(`/lesson-${lessonId}`)
 }
-onMounted(() => {
-  load()
+onMounted(async () => {
+  await load()
+  if(!lesson.active.exercise?.finished_at) router.go(-1)
 })
 </script>
 <style lang="scss">

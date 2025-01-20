@@ -47,11 +47,14 @@
                 </q-img>
             </q-card-section>
             <q-card-section class="text-center text-white q-pa-none">
-              <q-chip v-if="satelliteItem.parent_id" dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': 'dark'" text-color="white" class="q-pa-xs q-px-sm">
+              <q-chip v-if="satelliteItem.parent_id" dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
+                :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
                 <b>Спутник</b>
               </q-chip>
-              <q-chip v-else dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': 'primary'" text-color="white" class="q-pa-xs q-px-sm"
-                style="position: absolute; transform: translate3D(0%,400%,0) rotate(20deg);transform-origin: top;"><b>Планета</b></q-chip>
+              <q-chip v-else dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
+                style="position: absolute; transform: translate3D(0%,400%,0) rotate(20deg);transform-origin: top;"
+                :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
+                <b>Планета</b></q-chip>
             </q-card-section>
         </q-card>
       </swiper-slide>

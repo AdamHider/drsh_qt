@@ -154,7 +154,6 @@ onActivated(async () => {
 
 onBeforeRouteLeave((to, from, next) => {
   transitionTrigger.value = false
-  console.log(transitionTrigger.value)
   setTimeout(() => {
     next()
   }, 250)

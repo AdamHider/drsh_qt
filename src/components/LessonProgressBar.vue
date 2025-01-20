@@ -1,25 +1,29 @@
 <template>
-    <div :class="`lesson-progress position-relative full-width q-pa-none ${ (props.dark) ? 'progress-dark' : ''}`">
+    <div :class="`lesson-progress position-relative full-width q-pa-none ${ (props.dark) ? 'progress-dark' : ''} ${(exercise && exercise.finished_at) ? 'is-finished' : ''}`">
       <q-card flat class="rounded-sm bg-transparent" >
         <q-card-section class="col no-wrap q-pl-none q-pr-md  q-py-sm">
           <div class="full-width flex" >
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel >= 1) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_1.png"></q-avatar>
+              <q-avatar :class="`${(starsLevel >= 1) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_21.png"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel >= 2) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_2.png"></q-avatar>
+              <q-avatar :class="`${(starsLevel >= 2) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_22.png"></q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel == 3) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_3.png"></q-avatar>
+              <q-avatar :class="`${(starsLevel == 3) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_23.png"></q-avatar>
             </span>
           </div>
           <div :class="`vertical-progress full-width relative-position rounded-borders rounded-xs ${ (props.dark) ? 'bg-white-transparent' : 'bg-grey-4' }`"  :style="`height: ${props.size}`">
-            <div class="progress-bar absolute-left" :style="(props.vertical) ? `height: ${value}%;` : `width: ${value}%`">
+            <div class="progress-bar absolute-left" :style="`width: ${value}%`">
               <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-right`" ></div>
             </div>
+            <div v-if="backfaceValue > 0" class="backface-progress-bar absolute-left" :style="`width: ${backfaceValue}%`">
+              <div :class="`backface-progress-bar-fill rounded-borders bg-light-gradient-positive-to-right`" ></div>
+            </div>
+
           </div>
         </q-card-section>
         <div v-if="!props.compact" :class="`flex justify-between items-center q-pa-sm${ (props.dark) ? 'text-white' : '' }`">
@@ -45,9 +49,7 @@
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
             <q-item dense clickable v-ripple :class="(starsLevel >= 1) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                <q-avatar rounded>
-                  <img src="/images/star_1.png">
-                </q-avatar>
+                  <img src="/images/star_11.png" width="40px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -67,9 +69,7 @@
 
             <q-item dense clickable v-ripple :class="(starsLevel >= 2) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                <q-avatar rounded>
-                  <img src="/images/star_2.png">
-                </q-avatar>
+                  <img src="/images/star_12.png" width="40px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -89,9 +89,7 @@
 
             <q-item dense clickable v-ripple :class="(starsLevel == 3) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                <q-avatar rounded>
-                  <img src="/images/star_3.png">
-                </q-avatar>
+                  <img src="/images/star_13.png" width="40px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -120,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch, onMounted } from 'vue'
+import { ref, toRefs, watch, onMounted, onActivated } from 'vue'
 import { CONFIG } from '../config.js'
 
 const props = defineProps({
@@ -142,25 +140,48 @@ const tabSelected = ref('threestars')
 const color = ref('orange')
 const rewardsDialog = ref(false)
 const starsLevel = ref(0)
+const backfaceValue = ref(0)
 
-const selectTab = (name) => {
-  if (tabSelected.value === name) {
-    showReward.value = !showReward.value
-  } else {
-    showReward.value = true
+const calculateStarsValue = () => {
+  if(props.value >= 40 && props.value < 80) starsLevel.value = 1
+  if(props.value >=80 && props.value < 99) starsLevel.value = 2
+  if(props.value >= 99) starsLevel.value = 3
+}
+const calculateBackface = () => {
+  if(exercise.value && exercise.value.data?.totals?.prev_points) {
+    backfaceValue.value = exercise.value.data.totals.prev_points / exercise.value.data.totals.total * 100
   }
-  tabSelected.value = name
 }
 
 watch(() => props.value, (newValue) => {
+  if(exercise.value?.finished_at) {
+    color.value = 'positive'
+  } else {
+    color.value = 'orange'
+  }
+  calculateStarsValue()
+  calculateBackface()
+})
+watch(() => exercise?.value?.data.totals, (newValue) => {
+  if(exercise.value?.finished_at) {
+    color.value = 'positive'
+  } else {
+    color.value = 'orange'
+  }
+  calculateStarsValue()
+  calculateBackface()
 })
 onMounted(() => {
-  if(props.value >= 40 && props.value < 80) starsLevel.value = 1
-  if(props.value >=80 && props.value < 100) starsLevel.value = 2
-  if(props.value == 100) starsLevel.value = 3
-  if(exercise.value?.finished_at) color.value = 'positive'
-  console.log(exercise.value)
+  if(exercise.value?.finished_at) {
+    color.value = 'positive'
+  } else {
+    color.value = 'orange'
+  }
+  calculateStarsValue()
+  calculateBackface()
 })
+
+
 
 </script>
 <style scoped lang="scss">
@@ -193,7 +214,7 @@ onMounted(() => {
   &:before{
   }
   .q-avatar{
-    z-index: 1;
+    z-index: 10;
     top: 0px;
     left: -15px;
     box-shadow: 0 0 0 2px #ffaa2c;
@@ -206,13 +227,32 @@ onMounted(() => {
     }
   }
 }
+.is-finished{
+  .star-item-delimiter{
+    .q-avatar{
+      box-shadow: 0 0 0 2px #22bc46;
+    }
+  }
+}
 
 .vertical-progress{
   .progress-bar{
     padding: 4px;
     height: 100%;
+    z-index: 1;
     transition: 0.5s all;
     .progress-bar-fill{
+      height: 100%;
+      border-radius: 4px;
+      border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+    }
+  }
+  .backface-progress-bar{
+    padding: 4px;
+    height: 100%;
+    transition: 0.5s all;
+    opacity: 0.5;
+    .backface-progress-bar-fill{
       height: 100%;
       border-radius: 4px;
       border-bottom: 3px solid rgba(0, 0, 0, 0.15);

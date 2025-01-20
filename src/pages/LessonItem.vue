@@ -2,7 +2,7 @@
   <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md" contentClass="items-end" reveal>
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
-        <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" compact/>
+        <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" :exercise="lesson.active.exercise" compact/>
     </q-app-header>
     <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 70px;">
         <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 70px">
@@ -91,7 +91,8 @@ const onAnswerSaved = async () => {
   for (const i in pageAnswers.value) {
     answers[i] = pageAnswers.value[i].value
   }
-  await saveAnswer(answers)
+  const exerciseAnswerResponse = await saveAnswer(answers)
+  progress.value = exerciseAnswerResponse.progress
 }
 const onDialogOpened = async (status) => {
   dialogOpened.value = status

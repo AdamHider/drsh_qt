@@ -2,12 +2,16 @@
     <q-card v-if="lesson.active.page?.answer?.quantity" flat class="bg-white text-dark ">
         <q-card-section>
             <div class="text-h5">
-              <b v-if="answerPercentage == 100">Perfect!</b>
-              <b v-else-if="answerPercentage < 100 && answerPercentage >= 50">Good!</b>
-              <b v-else-if="answerPercentage < 50">You could better</b>
+              <b v-if="answerPercentage == 100">Отлично!</b>
+              <b v-else-if="answerPercentage < 80 && answerPercentage >= 40">Хорошо!</b>
+              <b v-else-if="answerPercentage < 40">Можно было и лучше!</b>
             </div>
-            <div><b>Your result: </b></div>
-            <div class="text-h5"><b>{{ lesson.active.page?.answer?.points }}</b> <q-icon name="star"></q-icon></div>
+            <div class="text-subtitle1"><b>Ваш результат: </b></div>
+            <div class="text-h5">
+              <b v-if="answerPercentage == 100" class="text-positive">{{ lesson.active.page?.answer?.points }}</b>
+              <b v-else-if="answerPercentage < 80 && answerPercentage >= 40" class="text-warning">{{ lesson.active.page?.answer?.points }}</b>
+              <b v-else-if="answerPercentage < 40" class="text-negative">{{ lesson.active.page?.answer?.points }}</b>
+            </div>
         </q-card-section>
     </q-card>
     <q-toolbar
@@ -18,7 +22,7 @@
             push
             style="flex: 2"
             color="positive"
-            label="Next"
+            label="Далее"
             @click="next"
         ></q-btn>
         <q-btn
@@ -26,7 +30,7 @@
             push
             style="flex: 2"
             color="primary"
-            label="Confirm"
+            label="Ответить"
             @click="confirm"
         ></q-btn>
         <q-btn
@@ -35,7 +39,7 @@
             style="flex: 2"
             color="positive"
             icon="done_all"
-            label="Finish"
+            label="Завершить"
             @click="finish"
         ></q-btn>
     </q-toolbar>
