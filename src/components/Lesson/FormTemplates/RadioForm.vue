@@ -2,25 +2,52 @@
   <div v-if="formData.fields.length > 0">
         <div v-for="(input, index) in formData.fields" :key="index">
             <Teleport :to="`\#input_${input.index}`">
+              <div v-if="input.mode == 'match'">
+                <q-list v-if="!formData.fields[index].answer">
+                  <q-item tag="label" v-ripple v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex">
+                    <q-item-section avatar>
+                      <q-radio
+                        dense
+                        v-model="formData.fields[index].value.text"
+                        :val="variant.text"/>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>{{ variant.text }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+                <q-list v-else>
+                  <q-item tag="label" v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex" v-ripple
+                    :class="`${(formData.fields[index].answer.answer == variant.text) ? 'text-positive' : (formData.fields[index].answer.value == variant.text) ? 'text-negative' : ''}`">
+                    <q-item-section avatar>
+                      <q-icon :name="(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'"></q-icon>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label>{{ variant.text }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+              <div  v-else-if="input.mode == 'variant'">
                 <div v-if="!formData.fields[index].answer" class="q-gutter-sm q-my-sm">
                   <q-radio  v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
                     dense
-                    v-model="formData.fields[index].value"
-                    :val="variant"
-                    :label="variant" />
+                    v-model="formData.fields[index].value.text"
+                    :val="variant.text"
+                    :label="variant.text" />
                 </div>
-
-                <q-chip
-                  v-else
-                  size="15px"
-                  :icon="(formData.fields[index].answer && formData.fields[index].answer.is_correct) ? 'check' : 'close'"
-                  color="transparent"
-                  :text-color="(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'positive' : 'negative') : 'primary'"
-                >
-
-                  <span v-if="formData.fields[index].answer.value!== 'false'">{{ formData.fields[index].answer.value }}</span>
-                  <span v-else>No answer</span>
-                </q-chip>
+                <div v-else>
+                <q-chip   v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
+                    size="14px"
+                    dense
+                    :icon="`${(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'}`"
+                    color="transparent"
+                    :text-color="`${(formData.fields[index].answer.answer == variant.text) ? 'positive' : (formData.fields[index].answer.value == variant.text) ? 'negative' : ''}`"
+                  >
+                    <span >{{ variant.text }}</span>
+                  </q-chip>
+                </div>
+              </div>
             </Teleport>
         </div>
   </div>
@@ -41,13 +68,14 @@ const renderFields = () => {
   if (!lesson.active.page.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
-    let value = false
+    let value = {
+      text: false
+    }
     let options = field.variants
     if (field.answer) {
-      value = field.answer.value
-      options = []
+      value.text = field.answer.value
     }
-    formData.fields.push({ value, options, index: field.index, answer: field.answer, label: field.label })
+    formData.fields.push({ value, options, mode: field.mode, index: field.index, answer: field.answer, label: field.label })
   }
   console.log(formData.fields)
   emits('update-answer', formData.fields)

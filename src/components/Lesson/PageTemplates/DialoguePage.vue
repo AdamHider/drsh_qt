@@ -11,12 +11,11 @@
     </q-card>
     <q-list class="q-mb-md">
       <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
-        <q-item-section avatar>
+        <q-item-section avatar >
           <q-avatar>
             <img :src="`${CONFIG.API_HOST}/${(replica?.image) ? replica?.image : 'image/placeholder.jpg'}`">
           </q-avatar>
         </q-item-section>
-
         <q-item-section>
           <q-item-label lines="1"><b>{{ replica.name }}</b></q-item-label>
           <q-item-label style="white-space: break-spaces;"><div v-html="replica.text"></div></q-item-label>

@@ -18,10 +18,10 @@
                     <template v-slot:no-option v-if="formData.fields[index].answer">
                         <q-item>
                             <q-item-section>
-                                <q-item-label v-if="formData.fields[index].value !== ''">
+                                <q-item-label v-if="formData.fields[index].value.text !== ''">
                                     Your answer:
                                     <b :class="`text-${(formData.fields[index].answer.is_correct) ? 'positive' : 'negative'}`">
-                                        {{ formData.fields[index].value }}
+                                        {{ formData.fields[index].value.text }}
                                     </b>
                                 </q-item-label>
                                 <q-item-label v-else>
@@ -56,10 +56,12 @@ const renderFields = () => {
   if (!lesson.active.page?.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
-    let value = ''
+    let value = {
+      text: ''
+    }
     let options = field.variants
     if (field.answer) {
-      value = field.answer.value
+      value.text = field.answer.value
       options = []
     }
     formData.fields.push({ value, options, index: field.index, answer: field.answer })

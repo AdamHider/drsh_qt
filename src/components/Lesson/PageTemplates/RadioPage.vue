@@ -1,32 +1,32 @@
 <template>
   <div class="full-width" style="padding-top: 50px">
-    <q-card v-if="lesson.active.page?.header?.image" class="q-ma-md">
+    <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md">
       <q-card-section class="q-pa-none ">
         <q-img
             class="rounded-borders"
             cover
-            :src="`${CONFIG.API_HOST}/${lesson.active.page?.header?.image}`" />
+            :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
         </q-card-section>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>
     <q-list class="q-mb-md">
-      <q-item  v-for="(replica, index) in itemList.list" :key="index" dense >
+      <q-item  v-for="(item, index) in itemList.list" :key="index" dense >
         <q-item-section>
-          <q-item-label lines="1"><b>{{ replica.name }}</b></q-item-label>
-          <q-item-label lines="3" ><div v-html="replica.text"></div></q-item-label>
+          <q-item-label lines="1"><b>{{ item.title }}</b></q-item-label>
+          <q-item-label><div v-html="item.text"></div></q-item-label>
         </q-item-section>
-        <q-item-section v-if="replica.audio_link" side>
+        <q-item-section v-if="item.audio_link" side>
           <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"
             flat
             class="play-audio"
-            :data-audio="replica.audio_link"
+            :data-audio="item.audio_link"
             @click="pauseAudio()"
             icon="pause"
           />
           <q-btn  v-else
             class="play-audio"
-            :data-audio="replica.audio_link"
-            @click="playAudio(replica.audio_link)"
+            :data-audio="item.audio_link"
+            @click="playAudio(item.audio_link)"
             icon="play_arrow"
           />
         </q-item-section>
@@ -53,15 +53,16 @@ const itemList = reactive({
 
 const renderData = () => {
   itemList.list = []
-  for (const i in lesson.active.page.data.item_list) {
-    if (lesson.active.page.data.item_list[i].text.indexOf('input') > -1) {
-      const inputs = lesson.active.page.data.item_list[i].text.match(/{{input[0-9]+}}/g)
+  for (const i in lesson.active.page.data.radio_list) {
+    if (lesson.active.page.data.radio_list	[i].text.indexOf('input') > -1) {
+      const inputs = lesson.active.page.data.radio_list[i].text.match(/{{input[0-9]+}}/g)
       for (const k in inputs) {
         const inputIndex = inputs[k].match(/[0-9]+/g)[0]
-        lesson.active.page.data.item_list[i].text = lesson.active.page.data.item_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
+        console.log(inputIndex)
+        lesson.active.page.data.radio_list[i].text = lesson.active.page.data.radio_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
       }
     }
-    itemList.list.push(lesson.active.page.data.item_list[i])
+    itemList.list.push(lesson.active.page.data.radio_list[i])
   }
 }
 
@@ -69,6 +70,7 @@ renderData()
 
 onMounted(() => {
   emits('onRendered', true)
+  loadAudio()
 })
 
 </script>
