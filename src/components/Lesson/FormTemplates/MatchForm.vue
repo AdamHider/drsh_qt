@@ -2,38 +2,19 @@
     <div v-if="formData.fields.length > 0">
         <div v-for="(field, index) in formData.fields" :key="index">
             <Teleport :to="`\#input_${field.index}`">
-                <q-select
+                <q-field
                     dense
                     hide-dropdown-icon
                     v-model="formData.fields[index].value.text"
                     :color="(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct ) ? 'green' : 'negative') : 'primary'"
-                    :style="{ display: 'inline-block', minWidth: '50px', height: '18px', justifyContent: 'center', verticalAlign: 'bottom'  }"
-                    behavior="menu"
-                    menu-self="top middle"
                     :class="`q-select-inline ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct ) ? 'correct-answer' : 'wrong-answer') : ''}`"
                     :ref="el => { fieldsRefs[index] = el }"
-                    @popup-show="matchStart(index)"
-                    @popup-hide="matchEnd(false)"
+                    @focus="matchStart(index)"
+                    @blur="matchEnd(false)"
                 >
-                  <template v-slot:no-option v-if="lesson.active.page?.data.match_variants">
-                      <q-card flat>
-                        <q-card-section>
-                          <q-chip v-for="(field, index) in lesson.active.page?.data.match_variants" :key="index"
-                              @click="matchEnd(index)"
-                              clickable
-                              :color="field.selected ? 'positive' : 'primary'"
-                              text-color="white"
-                          >
-                                <span v-if="field.image" class="ui label large quiz-input-variant anim anim-fadeInFromRight" :data-value="field.answer" :data-key="index+1">
-                                    <h4>{{ index+1 }}</h4>
-                                    <img :src="`images/${field.image}`" />
-                                </span>
-                                <span v-else class="ui label large quiz-input-variant wrtmode-true" :data-variant_index="index" :data-value="field.answer">
-                                  {{ field.answer }}
-                                </span>
-                            </q-chip>
-                          </q-card-section>
-                      </q-card>
+
+                  <template v-slot:control>
+                      <b>{{ formData.fields[index].value.text }}</b>
                   </template>
                   <template v-slot:no-option v-if="formData.fields[index].answer">
                         <q-item>
@@ -55,9 +36,25 @@
                             </q-item-section>
                         </q-item>
                     </template>
-                </q-select>
+                </q-field>
             </Teleport>
         </div>
+        <q-page-sticky position="bottom" :offset="[0, 18]">
+          <q-chip v-for="(field, index) in lesson.active.page?.data.match_variants" :key="index"
+            @click="matchEnd(index)"
+            clickable
+            :color="field.selected ? 'positive' : 'primary'"
+            text-color="white"
+          >
+            <span v-if="field.image" class="ui label large quiz-input-variant anim anim-fadeInFromRight" :data-value="field.answer" :data-key="index+1">
+              <h4>{{ index+1 }}</h4>
+              <img :src="`images/${field.image}`" />
+            </span>
+            <span v-else class="ui label large quiz-input-variant wrtmode-true" :data-variant_index="index" :data-value="field.answer">
+              {{ field.answer }}
+            </span>
+          </q-chip>
+        </q-page-sticky>
     </div>
 </template>
 
@@ -93,6 +90,7 @@ const renderFields = () => {
 }
 
 const matchEnd = (variantIndex) => {
+  if(!currentIndex.value) return false
   if (variantIndex === false) {
     fieldsRefs.value[currentIndex.value].blur()
     return
@@ -111,6 +109,7 @@ const matchEnd = (variantIndex) => {
   lesson.active.page.data.match_variants[variantIndex].selectedTarget = currentIndex.value
   fieldsRefs.value[currentIndex.value].hidePopup()
   formData.fields[currentIndex.value].value.text = lesson.active.page?.data.match_variants[variantIndex].answer
+  currentIndex.value = false
 }
 
 const matchStart = (fieldIndex) => {
