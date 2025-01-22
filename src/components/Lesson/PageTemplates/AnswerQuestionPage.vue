@@ -41,7 +41,6 @@ const renderData = () => {
       const inputs = lesson.active.page.data.block_list[i].text.match(/{{input[0-9]+}}/g)
       for (const k in inputs) {
         const inputIndex = inputs[k].match(/[0-9]+/g)[0]
-        console.log(inputIndex)
         lesson.active.page.data.block_list[i].text = lesson.active.page.data.block_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
       }
     }

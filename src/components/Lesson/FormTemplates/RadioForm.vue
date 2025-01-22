@@ -4,15 +4,18 @@
             <Teleport :to="`\#input_${input.index}`">
               <div v-if="input.mode == 'match'">
                 <q-list v-if="!formData.fields[index].answer">
-                  <q-item tag="label" v-ripple v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex">
+                  <q-item v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
+                   tag="label" :class="`q-lesson-radio q-mb-sm rounded-sm ${(formData.fields[index].value.text == variant.text) ? 'q-active' : ''}`"
+                  >
                     <q-item-section avatar>
                       <q-radio
                         dense
                         v-model="formData.fields[index].value.text"
+                        :color="`${(formData.fields[index].value.text == variant.text) ? 'white' : ''}`"
                         :val="variant.text"/>
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label>{{ variant.text }}</q-item-label>
+                      <q-item-label><b>{{ variant.text }}</b></q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -91,3 +94,14 @@ watch(formData.fields, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
 })
 </script>
+<style scoped lang="scss">
+.q-lesson-radio{
+  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+
+  &.q-active{
+    background: $primary !important;
+    color: white !important;
+  }
+}
+</style>

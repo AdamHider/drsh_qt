@@ -12,9 +12,9 @@
             </q-card-section>
         </q-card>
         <component :is="PageTemplate" @onRendered="rendered = true"/>
-        <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
     </q-page>
     <q-footer expand position="bottom" class="bg-white lesson-bottombar ">
+        <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
         <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved" @onDialogOpened="onDialogOpened" :pageAnswers="pageAnswers"/>
     </q-footer>
     <q-dialog v-model="closeDialog"  transition-show="scale" transition-hide="scale">
@@ -134,7 +134,6 @@ onBeforeRouteLeave((to, from) => {
 }
 
 .lesson-bottombar{
-  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.12);
 }
 
 </style>

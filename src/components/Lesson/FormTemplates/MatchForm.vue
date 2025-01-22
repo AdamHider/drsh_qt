@@ -1,61 +1,58 @@
 <template>
-    <div v-if="formData.fields.length > 0">
-        <div v-for="(field, index) in formData.fields" :key="index">
-            <Teleport :to="`\#input_${field.index}`">
-                <q-field
-                    dense
-                    hide-dropdown-icon
-                    v-model="formData.fields[index].value.text"
-                    :color="(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct ) ? 'green' : 'negative') : 'primary'"
-                    :class="`q-select-inline ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct ) ? 'correct-answer' : 'wrong-answer') : ''}`"
-                    :ref="el => { fieldsRefs[index] = el }"
-                    @focus="matchStart(index)"
-                    @blur="matchEnd(false)"
-                >
-
-                  <template v-slot:control>
-                      <b>{{ formData.fields[index].value.text }}</b>
-                  </template>
-                  <template v-slot:no-option v-if="formData.fields[index].answer">
-                        <q-item>
-                            <q-item-section>
-                                <q-item-label v-if="formData.fields[index].value.text !== ''">
-                                    Your answer:
-                                    <b :class="`text-${(formData.fields[index].answer.is_correct ) ? 'positive' : 'negative'}`">
-                                        {{ formData.fields[index].value.text }}
-                                    </b>
-                                </q-item-label>
-                                <q-item-label v-else>
-                                    <b class="text-negative">Empty answer</b>
-                                </q-item-label>
-                            </q-item-section>
-                        </q-item>
-                        <q-item v-if="!formData.fields[index].answer.is_correct" class="q-pt-none">
-                            <q-item-section>
-                                <q-item-label>Correct answer: <b  class="text-positive">{{ formData.fields[index].answer.answer }}</b></q-item-label>
-                            </q-item-section>
-                        </q-item>
-                    </template>
-                </q-field>
-            </Teleport>
-        </div>
-        <q-page-sticky position="bottom" :offset="[0, 18]">
-          <q-chip v-for="(field, index) in lesson.active.page?.data.match_variants" :key="index"
-            @click="matchEnd(index)"
-            clickable
-            :color="field.selected ? 'positive' : 'primary'"
-            text-color="white"
-          >
-            <span v-if="field.image" class="ui label large quiz-input-variant anim anim-fadeInFromRight" :data-value="field.answer" :data-key="index+1">
-              <h4>{{ index+1 }}</h4>
-              <img :src="`images/${field.image}`" />
-            </span>
-            <span v-else class="ui label large quiz-input-variant wrtmode-true" :data-variant_index="index" :data-value="field.answer">
-              {{ field.answer }}
-            </span>
-          </q-chip>
-        </q-page-sticky>
-    </div>
+  <div v-if="formData.fields.length > 0">
+    <div v-for="(input, index) in formData.fields" :key="index">
+          <Teleport :to="`\#input_${input.index}`">
+            <div
+              tabindex="-1"
+              @focus="matchStart(index)"
+              @blur="matchEnd"
+              :ref="el => { fieldsRefs[index] = el }"
+              :class="`q-lesson-field bg-grey-3 ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
+            >
+              <q-chip
+                :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
+                size="16px"
+                style="pointer-events: none" >
+                <b>{{ input.value.text }}</b>
+              </q-chip>
+            </div>
+          </Teleport>
+      </div>
+      <q-card v-if="!lesson.active.page?.answer?.quantity" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+          <q-card-section >
+            <div class="flex justify-center wrap">
+              <div v-for="(option, optionIndex) in lesson.active.page.data.match_variants" :key="optionIndex">
+                <q-chip v-if="option.answer !== formData.fields[currentIndex]?.value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px"
+                  :color="(option.selected) ? 'grey-3' : 'white'"
+                  clickable @click.stop="selectVariant(option.answer)">
+                  <b>{{ option.answer }}</b>
+                </q-chip>
+                <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="orange" text-color="white">
+                  <b>{{ option.answer }}</b>
+                </q-chip>
+              </div>
+            </div>
+          </q-card-section>
+      </q-card>
+      <q-card v-else flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+        <q-card-section v-if="currentIndex !== null">
+          <div class="flex justify-center wrap">
+            <div v-for="(option, optionIndex) in lesson.active.page.data.match_variants" :key="optionIndex">
+              <q-chip v-if="formData.fields[currentIndex] && option.answer !== formData.fields[currentIndex]?.value?.text" class="q-lesson-field-value rounded-xs" size="18px"
+                :color="(formData.fields[currentIndex].answer.answer == option.answer) ? 'positive' : 'white'"
+                :text-color="(formData.fields[currentIndex].answer.answer == option.answer) ? 'white' : 'dark'">
+                <b>{{ option.answer }}</b>
+              </q-chip>
+              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" icon="done"
+                :color="(formData.fields[currentIndex].answer.answer == option.answer) ? 'positive' : 'negative'"
+                text-color="white">
+                <b>{{ option.answer }}</b>
+              </q-chip>
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+  </div>
 </template>
 
 <script setup>
@@ -64,7 +61,7 @@ import { useLesson } from '../../../composables/useLesson'
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
-const currentIndex = ref(0)
+const currentIndex = ref(null)
 const matchMode = ref(false)
 const fieldsRefs = ref([])
 
@@ -90,32 +87,40 @@ const renderFields = () => {
 }
 
 const matchEnd = (variantIndex) => {
-  if(!currentIndex.value) return false
-  if (variantIndex === false) {
-    fieldsRefs.value[currentIndex.value].blur()
-    return
-  }
-  const prevVariantIndex = lesson.active.page.data.match_variants.findIndex(variant => variant.answer === formData.fields[currentIndex.value].value.text)
-  if (lesson.active.page.data.match_variants[prevVariantIndex]) lesson.active.page.data.match_variants[prevVariantIndex].selected = false
-  if (lesson.active.page.data.match_variants[variantIndex].selected) {
-    if (lesson.active.page.data.match_variants[variantIndex].selectedTarget == currentIndex.value) {
-      lesson.active.page.data.match_variants[variantIndex].selected = false
-      formData.fields[currentIndex.value].value.text = ''
-      return
-    }
-    formData.fields[lesson.active.page.data.match_variants[variantIndex].selectedTarget].value.text = ''
-  }
-  lesson.active.page.data.match_variants[variantIndex].selected = true
-  lesson.active.page.data.match_variants[variantIndex].selectedTarget = currentIndex.value
-  fieldsRefs.value[currentIndex.value].hidePopup()
-  formData.fields[currentIndex.value].value.text = lesson.active.page?.data.match_variants[variantIndex].answer
-  currentIndex.value = false
+  currentIndex.value = null
 }
 
 const matchStart = (fieldIndex) => {
   if (lesson.active.page.answers) return
-  matchMode.value = true
   currentIndex.value = fieldIndex
+}
+const selectVariant = (text) => {
+  for(var i in formData.fields){
+    if(formData.fields[i].value.text == text) formData.fields[i].value.text = ''
+  }
+
+  if(!formData.fields[currentIndex.value]){
+    currentIndex.value = 0
+  }
+  formData.fields[currentIndex.value].value.text = text
+  calculateSelected()
+  currentIndex.value++
+}
+const clearVariant = (text) => {
+  formData.fields[currentIndex.value].value.text = ''
+  calculateSelected()
+}
+
+const calculateSelected = () => {
+
+  for(var k in lesson.active.page.data.match_variants){
+    lesson.active.page.data.match_variants[k].selected = false
+    for(var i in formData.fields){
+        if(lesson.active.page.data.match_variants[k].answer == formData.fields[i].value.text) {
+          lesson.active.page.data.match_variants[k].selected = true
+        }
+    }
+  }
 }
 
 renderFields()
@@ -128,3 +133,54 @@ watch(formData.fields, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
 })
 </script>
+<style scoped lang="scss">
+.q-lesson-field {
+  display: inline-block;
+  min-width: 60px;
+  vertical-align: middle;
+  overflow: hidden;
+  margin: 0 5px;
+  border-radius: 11px;
+  transition: 0.3s all ease;
+  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
+  &.q-active{
+    background: $grey-5 !important;
+    .q-lesson-field-value{
+      background: $orange !important;
+      color: white !important;
+    }
+  }
+  &.is-correct{
+    &.q-active .q-lesson-field-value{
+      background: $green-7 !important;
+      color: white !important;
+    }
+    .q-lesson-field-value{
+      background: $positive !important;
+      color: white !important;
+    }
+  }
+  &.is-incorrect{
+    &.q-active .q-lesson-field-value{
+      background: $red-7 !important;
+      color: white !important;
+    }
+    .q-lesson-field-value{
+      background: $negative !important;
+      color: white !important;
+    }
+  }
+
+}
+.q-lesson-field-value{
+  border-radius: 9px;
+  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+  &.disabled {
+    opacity: 0 !important;
+  }
+  .q-chip__content{
+    justify-content: center;
+  }
+}
+</style>
