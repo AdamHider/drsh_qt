@@ -20,35 +20,42 @@
                   </q-item>
                 </q-list>
                 <q-list v-else>
-                  <q-item tag="label" v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex" v-ripple
-                    :class="`${(formData.fields[index].answer.answer == variant.text) ? 'text-positive' : (formData.fields[index].answer.value == variant.text) ? 'text-negative' : ''}`">
+                  <q-item tag="label"  v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex" v-ripple
+                    :class="`q-lesson-radio q-mb-sm rounded-sm ${(formData.fields[index].answer.answer == variant.text) ? 'is-correct' : (formData.fields[index].answer.value == variant.text) ? 'is-incorrect' : ''}`">
                     <q-item-section avatar>
-                      <q-icon :name="(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'"></q-icon>
+                      <q-icon :name="(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'" size="20px"></q-icon>
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label>{{ variant.text }}</q-item-label>
+                      <q-item-label><b>{{ variant.text }}</b></q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
               </div>
               <div  v-else-if="input.mode == 'variant'">
-                <div v-if="!formData.fields[index].answer" class="q-gutter-sm q-my-sm">
-                  <q-radio  v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
-                    dense
-                    v-model="formData.fields[index].value.text"
-                    :val="variant.text"
-                    :label="variant.text" />
+                <div v-if="!formData.fields[index].answer" class="flex q-gutter-xs">
+                  <div v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
+                    :class="`q-lesson-radio q-pa-sm q-mb-sm rounded-sm ${(formData.fields[index].value.text == variant.text) ? 'q-active' : ''}`">
+                    <q-radio
+                      dense
+                      v-model="formData.fields[index].value.text"
+                      :color="`${(formData.fields[index].value.text == variant.text) ? 'white' : ''}`"
+                      :val="variant.text"
+                      class="text-bold"
+                      :label="variant.text" />
+                  </div>
                 </div>
-                <div v-else>
-                <q-chip   v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
-                    size="14px"
-                    dense
-                    :icon="`${(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'}`"
-                    color="transparent"
-                    :text-color="`${(formData.fields[index].answer.answer == variant.text) ? 'positive' : (formData.fields[index].answer.value == variant.text) ? 'negative' : ''}`"
-                  >
-                    <span >{{ variant.text }}</span>
-                  </q-chip>
+                <div v-else  class="flex q-gutter-xs">
+                  <div v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
+                    :class="`q-lesson-radio q-mb-sm q-pa-sm rounded-sm ${(formData.fields[index].answer.answer == variant.text) ? 'is-correct' : (formData.fields[index].answer.value == variant.text) ? 'is-incorrect' : ''}`">
+                    <q-radio
+                      style="pointer-events: none"
+                      dense
+                      v-model="formData.fields[index].value.text"
+                      :color="`${(formData.fields[index].answer.answer == variant.text) ? 'white' : ((formData.fields[index].answer.value == variant.text) ? 'white' : 'white')}`"
+                      :val="variant.text"
+                      class="text-bold"
+                      :label="variant.text" />
+                  </div>
                 </div>
               </div>
             </Teleport>
@@ -94,7 +101,7 @@ watch(formData.fields, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
 })
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 .q-lesson-radio{
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
   border-bottom: 3px solid rgba(0, 0, 0, 0.15);
@@ -102,6 +109,20 @@ watch(formData.fields, (newValue, oldValue) => {
   &.q-active{
     background: $primary !important;
     color: white !important;
+  }
+  &.is-correct{
+    background: $positive !important;
+    color: white !important;
+    .q-radio__inner{
+      color: white !important;
+    }
+  }
+  &.is-incorrect{
+    background: $negative !important;
+    color: white !important;
+    .q-radio__inner{
+      color: white !important;
+    }
   }
 }
 </style>

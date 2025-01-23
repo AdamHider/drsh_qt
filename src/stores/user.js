@@ -58,6 +58,9 @@ export const useUserStore = defineStore('drsh_user_store', () => {
       return false
     }
     const userResponse = await api.user.getItem()
+    if(userResponse.error) {
+      return signOut();
+    }
     if (user.active.data.id && user.active.data.id != userResponse.id) {
       const result = await signIn(user.active.authorization)
       if (result.error) {
@@ -82,7 +85,10 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   /* USER */
   async function getItem () {
     const userResponse = await api.user.getItem()
-    update({ data: userResponse })
+    if(!userResponse.error){
+      update({ data: userResponse })
+    }
+
   }
   async function saveItem (data) {
     const userSavedResponse = await api.user.saveItem(data)

@@ -44,7 +44,7 @@
                 <b>{{ option.answer }}</b>
               </q-chip>
               <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" icon="done"
-                :color="(formData.fields[currentIndex].answer.answer == option.answer) ? 'positive' : 'negative'"
+                :color="(formData.fields[currentIndex]?.answer?.answer == option.answer) ? 'positive' : 'negative'"
                 text-color="white">
                 <b>{{ option.answer }}</b>
               </q-chip>
@@ -104,7 +104,6 @@ const selectVariant = (text) => {
   }
   formData.fields[currentIndex.value].value.text = text
   calculateSelected()
-  currentIndex.value++
 }
 const clearVariant = (text) => {
   formData.fields[currentIndex.value].value.text = ''
@@ -144,13 +143,16 @@ watch(formData.fields, (newValue, oldValue) => {
   transition: 0.3s all ease;
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
   &.q-active{
-    background: $grey-5 !important;
+    background: $grey-4 !important;
+    box-shadow: inset 0px 0px 0px 2px rgba(25, 118, 210, 0.5);
     .q-lesson-field-value{
       background: $orange !important;
       color: white !important;
     }
   }
   &.is-correct{
+    box-shadow: inset 0px 0px 0px 2px rgba(25, 210, 65, 0.5);
+    background: $green-3 !important;
     &.q-active .q-lesson-field-value{
       background: $green-7 !important;
       color: white !important;
@@ -161,6 +163,8 @@ watch(formData.fields, (newValue, oldValue) => {
     }
   }
   &.is-incorrect{
+    box-shadow: inset 0px 0px 0px 2px rgba(210, 25, 25, 0.5);
+    background: $red-3 !important;
     &.q-active .q-lesson-field-value{
       background: $red-7 !important;
       color: white !important;

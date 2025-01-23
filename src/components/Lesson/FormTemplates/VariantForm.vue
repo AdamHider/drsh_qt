@@ -6,7 +6,7 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field bg-grey-3 ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
+            :class="`q-lesson-field bg-grey-2 ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
           >
             <q-chip
               size="16px"
@@ -119,13 +119,16 @@ watch(formData.fields, (newValue, oldValue) => {
   transition: 0.3s all ease;
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
   &.q-active{
-    background: $grey-5 !important;
+    background: $grey-4 !important;
+    box-shadow: inset 0px 0px 0px 2px rgba(25, 118, 210, 0.5);
     .q-lesson-field-value{
       background: $orange !important;
       color: white !important;
     }
   }
   &.is-correct{
+    box-shadow: inset 0px 0px 0px 2px rgba(25, 210, 65, 0.5);
+    background: $green-3 !important;
     &.q-active .q-lesson-field-value{
       background: $green-7 !important;
       color: white !important;
@@ -136,6 +139,8 @@ watch(formData.fields, (newValue, oldValue) => {
     }
   }
   &.is-incorrect{
+    box-shadow: inset 0px 0px 0px 2px rgba(210, 25, 25, 0.5);
+    background: $red-3 !important;
     &.q-active .q-lesson-field-value{
       background: $red-7 !important;
       color: white !important;

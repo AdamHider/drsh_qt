@@ -7,8 +7,8 @@
     <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 70px;">
         <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 70px">
             <q-card-section class="q-py-none">
-                <div class="text-subtitle1"><b>{{lesson.active.page?.header?.title}}</b></div>
-                <div class="text-caption">{{lesson.active.page?.header?.subtitle}}</div>
+                <div class="text-subtitle1"><b v-html="lesson.active.page?.header?.title"></b></div>
+                <div class="text-caption" v-html="lesson.active.page?.header?.subtitle"></div>
             </q-card-section>
         </q-card>
         <component :is="PageTemplate" @onRendered="rendered = true"/>

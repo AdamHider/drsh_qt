@@ -151,6 +151,7 @@ const calculateBackface = () => {
   if(exercise.value && exercise.value.data?.totals?.prev_points) {
     backfaceValue.value = exercise.value.data.totals.prev_points / exercise.value.data.totals.total * 100
   }
+  if(backfaceValue.value > 100) {backfaceValue.value = 100}
 }
 
 watch(() => props.value, (newValue) => {
@@ -161,6 +162,8 @@ watch(() => props.value, (newValue) => {
   }
   calculateStarsValue()
   calculateBackface()
+  value.value = props.value
+  if(value.value > 100) value.value = 100
 })
 watch(() => exercise?.value?.data.totals, (newValue) => {
   if(exercise.value?.finished_at) {

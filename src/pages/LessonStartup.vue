@@ -3,7 +3,7 @@
     <q-app-header class="transparent text-white rounded-b-md" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title></q-toolbar-title>
-        <UserResourceBar :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
     <q-page class="full-width" style="padding-top: 50px; overflow: hidden;" v-if="!lesson.active.is_blocked">
       <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1;">

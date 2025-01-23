@@ -41,14 +41,13 @@ export class ApiService {
             if(response.headers.get('Data-Hash')){
               this.lastRequestDataHash = response.headers.get('Data-Hash')
             }
-            return response.json()
+            return response.json();
         })
         .then((data) => {
             responseData = data;
         })
         .catch((error) => {
-            alert(error.status)
-            responseData = error;
+            responseData = error
         });
     return responseData;
   }

@@ -2,37 +2,37 @@
   <div v-if="formData.fields.length > 0">
         <div v-for="(input, index) in formData.fields" :key="index">
             <Teleport :to="`\#input_${input.index}`">
-                <div class="row justify-between  full-width">
-                  <div class="col-6 q-pa-sm " v-for="(image, imageIndex) in formData.fields[index].options" :key="imageIndex">
-                    <q-btn v-if="!formData.fields[index].answer" push
-                      :class="`full-width full-height ${(formData.fields[index].value == image.text) ?  'bg-positive text-white' : ''} `"
-                      @click="formData.fields[index].value = image.text; playAudio(image.audio_link)">
-                      <q-card class="bg-transparent full-width full-height" flat>
-                        <q-card-section class="q-pa-sm ">
+                <div class="row justify-between ">
+                  <div class="col-6 q-pa-xs" v-for="(image, imageIndex) in formData.fields[index].options" :key="imageIndex">
+                    <q-card v-if="!formData.fields[index].answer"
+                      :class="`q-lesson-radio rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
+                      @click="formData.fields[index].value.text = image.text; playAudio(image.audio_link)">
+                      <q-card-section class="q-pa-sm ">
+                        <q-img
+                          v-if="image.image"
+                          :ratio="1"
+                          :data-audio="image.audio_link"
+                          class="rounded-sm play-audio"
+                          :src="`${CONFIG.API_HOST}/${image.image}`"
+                        />
+                      </q-card-section>
+                      <q-card-section class="text-center q-pt-sm ">
+                        <b>{{ image.text }}</b>
+                      </q-card-section>
+                    </q-card>
+                    <q-card v-else :class="`q-lesson-radio rounded-sm ${(formData.fields[index].answer.answer == image.text) ? 'is-correct' : (formData.fields[index].answer.value == image.text) ? 'is-incorrect' : ''}`">
+                        <q-card-section class="q-pa-sm">
                           <q-img
                             v-if="image.image"
+                            :ratio="1"
                             :data-audio="image.audio_link"
-                            class="rounded-borders play-audio"
+                            class="rounded-sm"
                             :src="`${CONFIG.API_HOST}/${image.image}`"
                           />
                         </q-card-section>
-                        <q-card-section vertical class="flex flex-center text-center">
-                          <b>{{ image.text }}</b>
-                        </q-card-section>
-                      </q-card>
-                    </q-btn>
-                    <q-card v-else
-                      :class="`${(formData.fields[index].answer.answer == image.text || (formData.fields[index].answer.value == image.text && formData.fields[index].answer.is_correct))  ?  'bg-positive text-white' : ((formData.fields[index].answer.value == image.text ) ?  'bg-negative text-white' : '')  }`">
-                        <q-card-section class="q-pa-sm ">
-                          <q-img
-                            v-if="image.image"
-                            :data-audio="image.audio_link"
-                            class="rounded-borders"
-                            :src="`${CONFIG.API_HOST}/${image.image}`"
-                          />
-                        </q-card-section>
-                        <q-card-section vertical class="flex flex-center text-center">
-                          <b>{{ image.text }}</b>
+                        <q-card-section class="text-center q-pt-sm">
+                          <q-icon v-if="formData.fields[index].answer.value == image.text" class="q-mr-sm " name="check" size="20px"></q-icon>
+                          <b class="vertical-middle">{{ image.text }}</b>
                         </q-card-section>
                     </q-card>
                   </div>
@@ -61,10 +61,12 @@ const renderFields = () => {
   if (!lesson.active.page?.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
-    let value = ''
+    let value = {
+      text: ''
+    }
     const options = field.variants
     if (field.answer) {
-      value = field.answer.value
+      value.text = field.answer.value
     }
     formData.fields.push({ value, options, index: field.index, answer: field.answer, label: field.label })
   }
@@ -86,9 +88,23 @@ onMounted(() => {
 })
 </script>
 
-<style>
-.q-radio__inner{
-  display: none;
-}
+<style lang="scss">
 
+.q-lesson-radio{
+  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+
+  &.q-active{
+    background: $primary !important;
+    color: white !important;
+  }
+  &.is-correct{
+    background: $positive !important;
+    color: white !important;
+  }
+  &.is-incorrect{
+    background: $negative !important;
+    color: white !important;
+  }
+}
 </style>
