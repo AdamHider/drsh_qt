@@ -109,7 +109,7 @@ const change = async (event) => {
     width: 180vw;
     height: 180vw;
     border-radius: 100%;
-    border: 1px solid white;
+    border: 2px dashed white;
     opacity: 0.6;
   }
   .swiper-slide-active {

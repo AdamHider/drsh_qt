@@ -1,5 +1,5 @@
 <template>
-    <div class="full-width q-pa-md chat-container" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers.is_finished) ? 30 : 120}px`" >
+    <div class="full-width q-pa-md chat-container" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers?.is_finished) ? 30 : 120}px`" >
       <transition v-for="(replica, index) in replicaList.list" :key="index"
         appear
         :enter-active-class="(!replica.rendered) ? `animated fadeInUp animation-delay-${replica.sortIndex}` : ''"

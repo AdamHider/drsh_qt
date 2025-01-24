@@ -21,11 +21,16 @@
         <q-card-section v-if="currentIndex !== null">
           <div class="flex justify-center wrap">
             <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
-              <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px" color="white" clickable @click.stop="selectVariant(option.text)">
+              <q-chip class="q-lesson-field-value bg-white rounded-xs" size="20px" clickable @click.stop="selectVariant(option.text, optionIndex)"
+              :color="(option.count > 0) ? 'orange' : 'white'"
+              :text-color="(option.count > 0) ? 'white' : ''"
+              >
                 <b>{{ option.text }}</b>
               </q-chip>
-              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="orange" text-color="white">
-                <b>{{ option.text }}</b>
+            </div>
+            <div v-if="currentValue.length > 0">
+              <q-chip class="q-lesson-field-value rounded-sm" size="20px" clickable @click.stop="clearVariant()" color="negative" text-color="white">
+                <q-icon name="keyboard_backspace"></q-icon>
               </q-chip>
             </div>
           </div>
@@ -38,16 +43,20 @@
     <q-card v-else flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
       <q-card-section v-if="currentIndex !== null">
         <div class="flex justify-center wrap">
-          <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
-            <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value rounded-xs" size="18px"
-              :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'white'"
-              :text-color="(formData.fields[currentIndex].answer.answer == option.text) ? 'white' : 'dark'">
-              <b>{{ option.text }}</b>
-            </q-chip>
-            <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" icon="done"
-              :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'negative'"
+          <div v-for="(option, optionIndex) in formData.fields[currentIndex].answer.answer.split('')" :key="optionIndex">
+            <q-chip class="q-lesson-field-value rounded-xs" size="20px"
+              color="positive"
               text-color="white">
-              <b>{{ option.text }}</b>
+              <b>{{ option }}</b>
+            </q-chip>
+          </div>
+        </div>
+        <div class="flex justify-center wrap" v-if="!formData.fields[currentIndex].answer.is_correct">
+          <div v-for="(option, optionIndex) in formData.fields[currentIndex].answer.value.split('')" :key="optionIndex">
+            <q-chip class="q-lesson-field-value rounded-xs" size="20px"
+              color="negative"
+              text-color="white">
+              <b>{{ option }}</b>
             </q-chip>
           </div>
         </div>
@@ -64,6 +73,7 @@ const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
 
 const currentIndex = ref(null)
+const currentValue = ref('')
 const selectMode = ref(false)
 
 const formData = reactive({
@@ -86,16 +96,28 @@ const renderFields = () => {
   emits('update-answer', formData.fields)
 }
 const matchEnd = (evt) => {
-  if(evt.explicitOriginalTarget.nodeName == '#text' || !evt.explicitOriginalTarget.closest(".q-field")) currentIndex.value = null;
+  if(evt.explicitOriginalTarget.nodeName == '#text' || !evt.explicitOriginalTarget.closest(".q-field")) {
+    currentIndex.value = null;
+    currentValue.value = '';
+  }
 }
 const matchStart = (index) => {
   currentIndex.value = index
+  currentValue.value = formData.fields[currentIndex.value].value.text
 }
-const selectVariant = (text) => {
-  formData.fields[currentIndex.value].value.text = text
+const selectVariant = (text, variantIndex) => {
+  currentValue.value += text
+  formData.fields[currentIndex.value].value.text = currentValue.value
+  if(!formData.fields[currentIndex.value].options[variantIndex].count) formData.fields[currentIndex.value].options[variantIndex].count = 0
+  formData.fields[currentIndex.value].options[variantIndex].count++
+  console.log(formData.fields[currentIndex.value])
 }
 const clearVariant = (text) => {
-  formData.fields[currentIndex.value].value.text = ''
+  const lastCharacter = currentValue.value.slice(-1);
+  currentValue.value = currentValue.value.substring(0, currentValue.value.length - 1);
+  formData.fields[currentIndex.value].value.text = currentValue.value
+  const variantIndex = formData.fields[currentIndex.value].options.findIndex((variant) => variant.text == lastCharacter)
+  formData.fields[currentIndex.value].options[variantIndex].count--
 }
 
 renderFields()

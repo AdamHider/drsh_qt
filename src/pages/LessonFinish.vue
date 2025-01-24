@@ -135,7 +135,6 @@ const load = async () => {
 
 const redo = async (lessonId) => {
   const exerciseRedoCreated = await redoItem(lessonId)
-  console.log(exerciseRedoCreated)
   if (!exerciseRedoCreated.error) router.replace(`/lesson-${lessonId}`)
 }
 onMounted(async () => {

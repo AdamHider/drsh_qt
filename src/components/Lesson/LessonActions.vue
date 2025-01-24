@@ -1,14 +1,14 @@
 <template>
     <q-card v-if="lesson.active.page?.answer?.quantity" flat class="bg-white text-dark ">
         <q-card-section class="text-center">
-            <div class="text-h5">
+            <div class="text-h5 vertical-middle">
               <b v-if="answerPercentage == 100">Отлично!</b>
               <b v-else-if="answerPercentage < 80 && answerPercentage >= 40">Хорошо!</b>
               <b v-else-if="answerPercentage < 40">Можно было и лучше!</b>
             </div>
             <div class="text-subtitle1">
-              <b>Ваш результат: </b>
-              <span class="text-h5">
+              <b class="vertical-middle">Ваш результат: </b>
+              <span class="text-h5 vertical-middle">
                 <b v-if="answerPercentage == 100" class="text-positive">{{ lesson.active.page?.answer?.points }}</b>
                 <b v-else-if="answerPercentage < 80 && answerPercentage >= 40" class="text-warning">{{ lesson.active.page?.answer?.points }}</b>
                 <b v-else-if="answerPercentage < 40" class="text-negative">{{ lesson.active.page?.answer?.points }}</b>

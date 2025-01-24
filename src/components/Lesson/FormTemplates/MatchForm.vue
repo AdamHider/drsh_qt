@@ -18,7 +18,7 @@
             </div>
           </Teleport>
       </div>
-      <q-card v-if="!lesson.active.page?.answer?.quantity" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+      <q-card v-if="!lesson.active.page?.answer?.is_finished" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
           <q-card-section >
             <div class="flex justify-center wrap">
               <div v-for="(option, optionIndex) in lesson.active.page.data.match_variants" :key="optionIndex">

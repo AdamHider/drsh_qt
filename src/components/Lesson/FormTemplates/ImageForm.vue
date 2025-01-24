@@ -16,7 +16,7 @@
                           :src="`${CONFIG.API_HOST}/${image.image}`"
                         />
                       </q-card-section>
-                      <q-card-section class="text-center q-pt-sm ">
+                      <q-card-section class="text-center q-pt-sm text-subtitle1 ">
                         <b>{{ image.text }}</b>
                       </q-card-section>
                     </q-card>

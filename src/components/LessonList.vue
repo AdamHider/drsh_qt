@@ -7,7 +7,7 @@
         </template>
 
           <div v-for="lesson in lessonList" :key="lesson.id"
-              :class="`planet-block row q-px-sm ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
+              :class="`${(lesson.type !== 'group') ? 'planet-block' : ''}  row q-px-sm ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
               v-intersection="onIntersection"
               :groupBackground="lesson.course_section.background_image"
               :groupGradient="lesson.course_section.background_gradient"
@@ -34,8 +34,8 @@
                   enter-active-class="animated zoomIn"
                   :leave-active-class="(selectedLesson !== lesson.id) ? 'animated planetBounceInactive' : 'animated planetBounceActive'">
                     <div v-if="transitionTrigger">
-                      <q-card flat class="bg-transparent flex justify-center q-ma-sm q-pa-sm q-pt-none" :disabled="(lesson.is_blocked === true) ? true : null">
-                          <q-card-section class="transparent no-shadow text-center planet" style="width: 130px; min-height: 130px">
+                      <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center ${(lesson.is_blocked === true) ? 'is-blocked' : ''}`">
+                          <q-card-section class="transparent no-shadow text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto;">
                               <div v-if="lesson.satellites?.preview_list"
                               class="satellite-list">
                                   <div v-for="(satellite, index) in lesson.satellites.preview_list" :key="index"
@@ -60,7 +60,7 @@
                                   spinner-color="white">
                               </q-img>
                           </q-card-section>
-                          <q-card-section class="text-center text-white q-pa-none" v-if="inView[lesson.id]">
+                          <q-card-section class="text-center text-white q-pa-none absolute full-width" v-if="inView[lesson.id]" style="top: 100%;">
                               <div class="text-caption"><span>Изучено:</span> <b :class="(lesson.progress > 0 && lesson.progress < 100) ? 'text-warning': ''">{{lesson.progress}}%</b></div>
                               <div class="text-bold"><q-icon v-if="lesson.is_blocked === true" name="lock"></q-icon> {{lesson.title}}</div>
                           </q-card-section>
@@ -163,9 +163,49 @@ watch(() => course.active?.id, async (newData, oldData) => {
   infiniteList.value.trigger()
 })
 </script>
-<style scoped>
-.planet-block:not(:last-child){
-  margin-top: -70px;
+<style scoped lang="scss">
+.planet-block{
+  &:not(:last-child){
+  }
+  &:not(:last-child) {
+      z-index: 1;
+      &:before{
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 65px;
+        height: 100%;
+        z-index: 0;
+        width: calc(100% - 130px);
+        opacity: 0.5;
+        transform-origin: right top;
+        background: url('/images/dotted_line_right.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+    &.justify-end{
+      .planet{
+        z-index: 1;
+        &:before{
+          content: "";
+          position: absolute;
+          top: -150%;
+          left: 50%;
+          height: 200%;
+          z-index: 0;
+          width: 0;
+          border-left: 2px dashed white;
+          transform: rotate(-135deg);
+          transform-origin: left bottom;
+        }
+      }
+    }
+  }
+
+  .is-blocked{
+    filter: grayscale(1);
+  }
 }
 .satellite-item{
     position: absolute;

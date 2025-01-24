@@ -10,24 +10,9 @@
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>
     <q-list class="q-mb-md">
-      <q-item  v-for="(item, index) in itemList.list" :key="index" dense >
+      <q-item>
         <q-item-section>
-          <q-item-label lines="3"><div v-html="item.text"></div></q-item-label>
-        </q-item-section>
-        <q-item-section v-if="item.audio_link" side>
-          <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == item.audio_link && lessonAudio.is_playing"
-            flat
-            class="play-audio"
-            :data-audio="item.audio_link"
-            @click="pauseAudio()"
-            icon="pause"
-          />
-          <q-btn  v-else
-            class="play-audio"
-            :data-audio="item.audio_link"
-            @click="playAudio(item.audio_link)"
-            icon="play_arrow"
-          />
+          <q-item-label><div class="text-subtitle1 text-bold" v-html="text.text"></div></q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -46,21 +31,18 @@ const emits = defineEmits(['onRendered'])
 const { lesson } = useLesson()
 const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
-const itemList = reactive({
-  list: []
+const text = reactive({
+  text: ''
 })
 
 const renderData = () => {
-  itemList.list = []
-  for (const i in lesson.active.page.data.item_list) {
-    if (lesson.active.page.data.item_list[i].text.indexOf('input') > -1) {
-      const inputs = lesson.active.page.data.item_list[i].text.match(/{{input[0-9]+}}/g)
-      for (const k in inputs) {
-        const inputIndex = inputs[k].match(/[0-9]+/g)[0]
-        lesson.active.page.data.item_list[i].text = lesson.active.page.data.item_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
-      }
+  if (lesson.active.page.data.text.indexOf('input') > -1) {
+    text.text = lesson.active.page.data.text
+    const inputs = text.text.match(/{{input[0-9]+}}/g)
+    for (const k in inputs) {
+      const inputIndex = inputs[k].match(/[0-9]+/g)[0]
+      text.text = text.text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
     }
-    itemList.list.push(lesson.active.page.data.item_list[i])
   }
 }
 
