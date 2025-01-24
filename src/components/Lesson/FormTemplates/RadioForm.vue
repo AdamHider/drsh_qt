@@ -19,7 +19,7 @@
                     </q-item-section>
                   </q-item>
                 </q-list>
-                <q-list v-else>
+                <q-list v-else  >
                   <q-item tag="label"  v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex" v-ripple
                     :class="`q-lesson-radio q-mb-sm rounded-sm ${(formData.fields[index].answer.answer == variant.text) ? 'is-correct' : (formData.fields[index].answer.value == variant.text) ? 'is-incorrect' : ''}`">
                     <q-item-section avatar>
@@ -34,7 +34,8 @@
               <div  v-else-if="input.mode == 'variant'">
                 <div v-if="!formData.fields[index].answer" class="flex q-gutter-xs">
                   <div v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
-                    :class="`q-lesson-radio q-pa-sm q-mb-sm rounded-sm ${(formData.fields[index].value.text == variant.text) ? 'q-active' : ''}`">
+                    :class="`q-lesson-radio q-px-sm q-py-xs q-mb-sm rounded-sm ${(formData.fields[index].value.text == variant.text) ? 'q-active' : ''}`"
+                    >
                     <q-radio
                       dense
                       v-model="formData.fields[index].value.text"
@@ -44,9 +45,10 @@
                       :label="variant.text" />
                   </div>
                 </div>
-                <div v-else  class="flex q-gutter-xs">
+                <div v-else  class="flex q-gutter-xs ">
                   <div v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
-                    :class="`q-lesson-radio q-mb-sm q-pa-sm rounded-sm ${(formData.fields[index].answer.answer == variant.text) ? 'is-correct' : (formData.fields[index].answer.value == variant.text) ? 'is-incorrect' : ''}`">
+                    :class="`q-lesson-radio q-px-sm q-py-xs q-mb-sm rounded-sm ${(formData.fields[index].answer.answer == variant.text) ? 'is-correct' : (formData.fields[index].answer.value == variant.text) ? 'is-incorrect' : ''}`"
+                    >
                     <q-radio
                       style="pointer-events: none"
                       dense
@@ -105,6 +107,7 @@ watch(formData.fields, (newValue, oldValue) => {
 .q-lesson-radio{
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
   border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+  font-weight: initial;
 
   &.q-active{
     background: $primary !important;

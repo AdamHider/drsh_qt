@@ -118,6 +118,7 @@ watch(formData.fields, (newValue, oldValue) => {
   border-radius: 11px;
   transition: 0.3s all ease;
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
+  font-weight: initial;
   &.q-active{
     background: $grey-4 !important;
     box-shadow: inset 0px 0px 0px 2px rgba(25, 118, 210, 0.5);

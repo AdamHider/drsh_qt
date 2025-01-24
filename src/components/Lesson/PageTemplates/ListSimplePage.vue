@@ -12,7 +12,7 @@
     <q-list class="q-mb-md">
       <q-item  v-for="(item, index) in itemList.list" :key="index" dense >
         <q-item-section>
-          <q-item-label lines="3"><div v-html="item.text"></div></q-item-label>
+          <q-item-label lines="3"><div class="text-subtitle1 text-bold" v-html="item.text"></div></q-item-label>
         </q-item-section>
         <q-item-section v-if="item.audio_link" side>
           <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == item.audio_link && lessonAudio.is_playing"

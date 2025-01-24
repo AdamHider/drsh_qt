@@ -14,7 +14,7 @@
               </q-chip>
             </q-img>
           <q-card-section vertical class="flex flex-center text-center">
-            <div v-html="column.text"></div>
+            <div class="text-subtitle1 text-bold" v-html="column.text"></div>
           </q-card-section>
           <q-card-section v-if="column.audio_link"  class="q-pt-none">
             <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == column.audio_link && lessonAudio.is_playing"

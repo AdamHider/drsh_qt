@@ -165,6 +165,7 @@ watch(() => course.active?.id, async (newData, oldData) => {
 </script>
 <style scoped lang="scss">
 .planet-block{
+  position: relative;
   &:not(:last-child){
   }
   &:not(:last-child) {
@@ -185,20 +186,21 @@ watch(() => course.active?.id, async (newData, oldData) => {
         background-position: center center;
       }
     &.justify-end{
-      .planet{
         z-index: 1;
         &:before{
-          content: "";
-          position: absolute;
-          top: -150%;
-          left: 50%;
-          height: 200%;
-          z-index: 0;
-          width: 0;
-          border-left: 2px dashed white;
-          transform: rotate(-135deg);
-          transform-origin: left bottom;
-        }
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 65px;
+        height: 100%;
+        z-index: 0;
+        width: calc(100% - 130px);
+        opacity: 0.5;
+        transform-origin: right top;
+        background: url('/images/dotted_line_left.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center center;
       }
     }
   }

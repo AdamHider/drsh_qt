@@ -30,7 +30,7 @@
                             :src="`${CONFIG.API_HOST}/${image.image}`"
                           />
                         </q-card-section>
-                        <q-card-section class="text-center q-pt-sm">
+                        <q-card-section class="text-center q-pt-sm text-subtitle1">
                           <q-icon v-if="formData.fields[index].answer.value == image.text" class="q-mr-sm " name="check" size="20px"></q-icon>
                           <b class="vertical-middle">{{ image.text }}</b>
                         </q-card-section>
@@ -88,12 +88,12 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 
 .q-lesson-radio{
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
   border-bottom: 3px solid rgba(0, 0, 0, 0.15);
-
+  font-weight: initial;
   &.q-active{
     background: $primary !important;
     color: white !important;
