@@ -49,7 +49,7 @@
               <q-card-section class="q-pt-none">
                 <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
               </q-card-section>
-              <q-card-actions class="text-right justify-end q-pa-md" v-if="!lesson.active.is_blocked">
+              <q-card-actions class="text-right justify-end q-pa-md" v-if="!activeLesson.is_blocked">
                 <q-btn v-if="activeLesson.exercise?.finished_at"
                   push
                   label="Заново"
