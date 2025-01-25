@@ -218,7 +218,7 @@ watch(() => course.active?.id, async (newData, oldData) => {
   }
 
   &.is-blocked{
-    filter: grayscale(1);
+    filter: grayscale(1) brightness(0.9);
     &:before{
       opacity: 0.3;
     }

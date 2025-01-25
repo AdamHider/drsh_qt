@@ -105,11 +105,9 @@ const { user } = useUserStore()
 const { lesson, getItem, getSatelliteList } = useLesson()
 const { createItem, redoItem } = useExercise()
 const dialog = ref(false)
-const activeSatellite = ref({})
 const activeIndex = ref(0)
 const activeLesson = ref({})
 const transitionTrigger = ref(false)
-const tab = ref('threestars')
 
 const change = (index) => {
   dialog.value = false

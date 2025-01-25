@@ -94,7 +94,7 @@ watch(() => activeSlide.value, () => {
 <style scoped lang="scss">
 
 .is-blocked{
-  filter: grayscale(1);
+  filter: grayscale(1) brightness(0.9);
 }
 .swiper.swiper-creative{
   overflow: visible;
