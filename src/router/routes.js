@@ -180,7 +180,11 @@ const routes = [
       },
       {
         path: 'lesson-startup-:lesson_id',
-        component: () => import('pages/LessonStartup.vue')
+        component: () => import('pages/LessonStartup.vue'),
+        beforeEnter: (to, from) => {
+          if(from.params.lesson_id) to.params.prev_lesson_id = from.params.lesson_id
+          return
+        },
       },
       {
         path: 'lesson-finish-:lesson_id',

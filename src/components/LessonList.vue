@@ -7,12 +7,11 @@
         </template>
 
           <div v-for="lesson in lessonList" :key="lesson.id"
-              :class="`${(lesson.type !== 'group') ? 'planet-block' : ''}  row q-px-sm ${(lesson.order % 2) ? 'justify-start' : 'justify-end'}`"
+              :class="`${(lesson.type !== 'group') ? 'planet-block' : ''}  row q-px-sm ${(lesson.order % 2) ? 'justify-start' : 'justify-end'} ${(lesson.is_blocked === true) ? 'is-blocked' : ''} ${(lesson.is_initial) ? 'is-initial' : ''}`"
               v-intersection="onIntersection"
               :groupBackground="lesson.course_section.background_image"
               :groupGradient="lesson.course_section.background_gradient"
               :lessonId="lesson.id"
-              @click="(!lesson.is_blocked) ? openLesson(lesson.id) : false"
           >
                 <transition
                   appear
@@ -28,22 +27,22 @@
                       </q-card>
                     </div>
                 </transition>
-                <div v-if="lesson.type !== 'group'" :class="`col-6`">
+                <div v-if="lesson.type !== 'group'" :class="`col-6`" style="position: relative; z-index: 10;">
                   <transition
                   appear
                   enter-active-class="animated zoomIn"
                   :leave-active-class="(selectedLesson !== lesson.id) ? 'animated planetBounceInactive' : 'animated planetBounceActive'">
                     <div v-if="transitionTrigger">
-                      <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center ${(lesson.is_blocked === true) ? 'is-blocked' : ''}`">
-                          <q-card-section class="transparent no-shadow text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto;">
-                              <div v-if="lesson.satellites?.preview_list"
-                              class="satellite-list">
-                                  <div v-for="(satellite, index) in lesson.satellites.preview_list" :key="index"
-                                  class="transparent satellite-item nopadding"
+                      <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`"
+                          @click="openLesson(lesson.id)">
+
+                          <q-card-section class="text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto;">
+                              <div v-if="lesson.satellites?.preview_list" class="satellite-list">
+                                  <div v-for="(satellite, index) in lesson.satellites.preview_list" :key="index" class="transparent satellite-item nopadding"
                                   :style="{
                                       animationDelay: `-${satellite.delay}s`,
                                       animationDuration: `${satellite.duration}s`,
-                                      scale: `1.${satellite.distance}`
+                                      scale: `1.${satellite.distance /2}`
                                   }">
                                       <img  :src="satellite.image"
                                         :style="{
@@ -81,6 +80,20 @@
         spinner-color="white"
         />
     </q-page-sticky>
+
+    <q-dialog v-model="lockDialog"  transition-show="scale" transition-hide="scale">
+      <q-card class="bg-white text-center" style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Пока недоступно</div>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          Сначала исследуйте предыдущую планету
+        </q-card-section>
+        <q-card-actions align="center" class="bg-white text-teal">
+          <q-btn push class="col" color="primary" label="Понятно" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
@@ -100,6 +113,7 @@ const selectedLesson = ref(0)
 const currentCourseSectionId = ref(0)
 const transitionTrigger = ref(false)
 const inView = ref({})
+const lockDialog = ref(false)
 
 const props = defineProps({
   disable: Boolean
@@ -118,6 +132,7 @@ const composeList = () => {
   lessonList.value = []
   for (let i = lesson.list.length - 1; i >= 0; i--) {
     if (checkGroup(lesson.list[i] && lesson.list[i].course_section)) {
+      lesson.list[i].is_initial = true
       lessonList.value.unshift({ ...{ course_section: lesson.list[i].course_section }, ...{ type: 'group' } })
     }
     lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'lesson' } })
@@ -166,19 +181,18 @@ watch(() => course.active?.id, async (newData, oldData) => {
 <style scoped lang="scss">
 .planet-block{
   position: relative;
-  &:not(:last-child){
+  &.is-initial{
+    margin-bottom: 2em;
   }
-  &:not(:last-child) {
-      z-index: 1;
+  &:not(.is-initial) {
       &:before{
         content: "";
         position: absolute;
         top: 50%;
-        left: 65px;
+        left: 25%;
         height: 100%;
         z-index: 0;
-        width: calc(100% - 130px);
-        opacity: 0.5;
+        width: 50%;
         transform-origin: right top;
         background: url('/images/dotted_line_right.png');
         background-size: contain;
@@ -186,16 +200,14 @@ watch(() => course.active?.id, async (newData, oldData) => {
         background-position: center center;
       }
     &.justify-end{
-        z-index: 1;
         &:before{
         content: "";
         position: absolute;
         top: 50%;
-        left: 65px;
+        left: 25%;
         height: 100%;
         z-index: 0;
-        width: calc(100% - 130px);
-        opacity: 0.5;
+        width: 50%;
         transform-origin: right top;
         background: url('/images/dotted_line_left.png');
         background-size: contain;
@@ -205,8 +217,11 @@ watch(() => course.active?.id, async (newData, oldData) => {
     }
   }
 
-  .is-blocked{
+  &.is-blocked{
     filter: grayscale(1);
+    &:before{
+      opacity: 0.3;
+    }
   }
 }
 .satellite-item{

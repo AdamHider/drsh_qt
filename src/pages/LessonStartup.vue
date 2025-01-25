@@ -5,7 +5,7 @@
         <q-toolbar-title></q-toolbar-title>
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
-    <q-page class="full-width" style="padding-top: 50px; overflow: hidden;" v-if="!lesson.active.is_blocked">
+    <q-page class="full-width" style="padding-top: 50px; overflow: hidden;">
       <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1;">
             <transition
               appear
@@ -19,8 +19,8 @@
                     slideHeight="100"
                     :navigation="false"
                     captionMode="full"
-                    @select="select"
                     @change="change"
+                    :activeSlide="activeIndex"
                 />
             </transition>
       </q-card>
@@ -43,13 +43,13 @@
             leave-active-class="animated fadeOutDown">
             <q-card flat class="bg-transparent rounded-b-0 full-width"  v-if="transitionTrigger && dialog">
               <q-card-section class="q-pb-sm">
-                  <div class="text-h5"><b>{{activeLesson.title}}</b></div>
+                  <div class="text-h5"><q-icon v-if="activeLesson.is_blocked === true" name="lock"></q-icon> <b>{{activeLesson.title}}</b></div>
                   <div class="text-caption">{{activeLesson.description}}</div>
               </q-card-section>
               <q-card-section class="q-pt-none">
                 <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
               </q-card-section>
-              <q-card-actions class="text-right justify-end q-pa-md">
+              <q-card-actions class="text-right justify-end q-pa-md" v-if="!lesson.active.is_blocked">
                 <q-btn v-if="activeLesson.exercise?.finished_at"
                   push
                   label="Заново"
@@ -71,6 +71,14 @@
                   class="full-width"
                   :resources="activeLesson.cost ?? {}"
                   @click="start(activeLesson.id)"></q-spend-button>
+              </q-card-actions>
+              <q-card-actions class="text-right justify-end q-pa-md" v-else>
+                <q-btn
+                  push
+                  label="Заблокировано"
+                  icon="lock"
+                  color="grey-8"
+                  class="full-width"/>
               </q-card-actions>
             </q-card>
           </transition>
@@ -98,17 +106,14 @@ const { lesson, getItem, getSatelliteList } = useLesson()
 const { createItem, redoItem } = useExercise()
 const dialog = ref(false)
 const activeSatellite = ref({})
+const activeIndex = ref(0)
 const activeLesson = ref({})
 const transitionTrigger = ref(false)
 const tab = ref('threestars')
 
-const select = (index) => {
-  activeSatellite.value = lesson.active.satellites.list[index]
-  dialog.value = true
-}
 const change = (index) => {
   dialog.value = false
-  activeLesson.value = lesson.active.satellites.list[index]
+  activeLesson.value = lesson.active.satellites?.list[index]
   setTimeout(() => {
     dialog.value = true
   }, 250)
@@ -136,20 +141,22 @@ const redo = async (lessonId) => {
   const exerciseRedoCreated = await redoItem(lessonId)
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
-const edit = async (lessonId) => {
-  router.push(`/admin/lesson-edit-${lessonId}`)
-}
 
 onActivated(async () => {
   dialog.value = false
   await getItem(route.params.lesson_id)
   transitionTrigger.value = true
-  if (lesson.active.error || lesson.active.is_blocked) {
+  if (lesson.active.error) {
     router.go(-1)
     return
   }
   await getSatelliteList()
-  change(0)
+  if(route.params.prev_lesson_id){
+    activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == route.params.prev_lesson_id)
+  } else {
+    activeIndex.value = 0;
+  }
+  change(activeIndex.value)
 })
 
 onBeforeRouteLeave((to, from, next) => {

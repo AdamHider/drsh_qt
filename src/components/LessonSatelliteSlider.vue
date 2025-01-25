@@ -8,6 +8,7 @@
       :navigation="props.navigation"
       @activeIndexChange="change"
       effect="creative"
+      @swiper="onSwiper"
       :creativeEffect="{
           perspective: false,
           limitProgress: 4,
@@ -26,19 +27,10 @@
       }"
       style="padding-bottom: 50px;"
     >
-      <swiper-slide v-for="(satelliteItem, index) in lesson.active.satellites?.list" :key="index"
-        :class="`text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'} ${(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'lesson-finished' : 'lesson'}`"
-        @click="select(index)">
-        <q-card flat class="transparent q-ma-sm"
-            :disabled="satelliteItem.is_blocked ? true : null">
-            <q-btn v-if="satelliteItem.is_blocked === true"
-                color="white"
-                text-color="dark"
-                class="absolute-top"
-                style="top: 10px; left: 10px; z-index: 5"
-                round
-                icon="lock"
-            ></q-btn>
+      <swiper-slide v-for="(satelliteItem, index) in lesson.active.satellites?.list" :key="index" ref
+        :class="`text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'} ${(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'lesson-finished' : 'lesson'} ${(satelliteItem.is_blocked === true) ? 'is-blocked' : ''}`"
+        >
+        <q-card flat class="transparent q-ma-sm">
             <q-card-section class="transparent no-shadow text-center q-pa-none satellite-image" style="min-height: 100px">
                 <q-img
                     :src="satelliteItem.image"
@@ -65,6 +57,7 @@
 import { useLesson } from '../composables/useLesson'
 import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import { ref, watch, toRefs } from 'vue'
 import { EffectCreative } from 'swiper/modules';
 import 'swiper/css/effect-creative';
 import 'swiper/css'
@@ -72,25 +65,37 @@ import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
-const emits = defineEmits(['select','change'])
+const swiperElement = ref(null)
+
+const emits = defineEmits(['change'])
 
 const props = defineProps({
   slidesPerView: Number,
   centerAligned: Boolean,
   slideHeight: String,
   navigation: Boolean,
-  captionMode: String
+  captionMode: String,
+  activeSlide: Number
 })
+const activeSlide = toRefs(props).activeSlide
 
 const { lesson } = useLesson()
-const select = async (index) => {
-  emits('select', index)
-}
 const change = async (event) => {
   emits('change', event.activeIndex)
 }
+const swiperEl = ref(null)
+const onSwiper = (swiper) => {
+  swiperEl.value = swiper
+}
+watch(() => activeSlide.value, () => {
+  swiperEl.value.slideTo(activeSlide.value)
+})
 </script>
 <style scoped lang="scss">
+
+.is-blocked{
+  filter: grayscale(1);
+}
 .swiper.swiper-creative{
   overflow: visible;
 }
@@ -98,9 +103,6 @@ const change = async (event) => {
   margin-top: 100px;
   max-width: 100vw;
   position: relative;
-  .satellite-lesson{
-
-  }
   &:before{
     content: "";
     position: absolute;

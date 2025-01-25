@@ -28,8 +28,8 @@
                 <b>{{ option.text }}</b>
               </q-chip>
             </div>
-            <div v-if="currentValue.length > 0">
-              <q-chip class="q-lesson-field-value rounded-sm" size="20px" clickable @click.stop="clearVariant()" color="negative" text-color="white">
+            <div :style="(currentValue.length > 0) ? '' : 'pointer-events: none'">
+              <q-chip class="q-lesson-field-value rounded-sm" size="20px" clickable @click.stop="clearVariant()" :color="(currentValue.length == 0) ? 'red-5' : 'negative'" text-color="white">
                 <q-icon name="keyboard_backspace"></q-icon>
               </q-chip>
             </div>
