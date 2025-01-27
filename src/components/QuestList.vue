@@ -39,39 +39,30 @@
                   <b>{{questItem.progress.percentage_text}}</b>
               </div>
             </div>
-            <q-linear-progress
-                :color="(questItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
-                :value="(questItem.progress.percentage/100)"
-                size="12px"
-                rounded
-            ></q-linear-progress>
+            <q-progress-bar :value="questItem.progress.percentage" size="25px" :color="(questItem.progress.percentage == 100) ? 'positive' : 'orange'"/>
           </q-item-section>
         </q-item>
       </q-card-section>
       <q-separator/>
-      <q-card-section class="q-pa-sm">
-        <div class=" text-left q-px-sm">
-          <b>Rewards</b>
-        </div>
-        <div class="row justify-between items-center q-gutter-sm">
-          <div>
-            <div class="flex justify-center q-gutter-sm ">
-              <div v-for="(resource, resourceIndex) in questItem.reward" :key="resourceIndex" >
-                <q-item class="bg-grey-3 text-left rounded-borders" >
-                    <q-item-section avatar>
-                        <q-img width="28px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075)"/>
-                    </q-item-section>
-                    <q-item-section>
-                        <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                    </q-item-section>
-                </q-item>
-              </div>
+      <q-card-section class="q-pa-sm justify-between row">
+        <div class="q-pa-sm bg-grey-3 rounded-sm">
+          <div class="text-center text-subtitle2"><b>Награда: </b></div>
+          <div class="row q-gutter-sm q-py-sm items-center">
+            <div v-for="(resource, resourceIndex) in questItem.reward" :key="resourceIndex" >
+              <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
+                  <q-item-section avatar style="min-width: unset;">
+                      <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
+                  </q-item-section>
+                  <q-item-section>
+                      <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                  </q-item-section>
+              </q-item>
             </div>
           </div>
-          <div>
-            <q-btn v-if="questItem.is_completed" color="positive" label="Claim" @click="claimReward(questItem.id)"/>
-            <q-btn v-else-if="questItem.href" color="primary" icon="chevron_right" :to="`${questItem.href}`"/>
-          </div>
+        </div>
+        <div>
+          <q-btn v-if="questItem.is_completed" color="positive" push label="Claim" @click="claimReward(questItem.id)"/>
+          <q-btn v-else-if="questItem.href" color="primary" push icon="chevron_right" :to="`${questItem.href}`"/>
         </div>
       </q-card-section>
     </q-card>

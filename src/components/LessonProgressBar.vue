@@ -1,30 +1,28 @@
 <template>
     <div :class="`lesson-progress position-relative full-width q-pa-none ${ (props.dark) ? 'progress-dark' : ''} ${(exercise && exercise.finished_at) ? 'is-finished' : ''}`">
-      <q-card flat class="rounded-sm bg-transparent" >
+      <q-card flat class="rounded bg-transparent" >
         <q-card-section class="col no-wrap q-pl-none q-pr-md  q-py-sm">
           <div class="full-width flex" >
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel >= 1) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_21.png"></q-avatar>
+              <q-avatar :size="props.size" class="absolute" color="grey-2">
+                <img :src="(starsLevel >= 1) ? '/images/star_21.png' : '/images/star_21_inactive.png'">
+              </q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel >= 2) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_22.png"></q-avatar>
+              <q-avatar :size="props.size" class="absolute" color="grey-2">
+                <img :src="(starsLevel >= 2) ? '/images/star_22.png' : '/images/star_22_inactive.png'">
+              </q-avatar>
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :class="`${(starsLevel == 3) ? 'active' : ''}`" :size="props.size" class="absolute" color="grey-2"><img src="/images/star_23.png"></q-avatar>
+              <q-avatar :size="props.size" class="absolute" color="grey-2">
+                <img :src="(starsLevel == 3) ? '/images/star_23.png' : '/images/star_23_inactive.png'">
+              </q-avatar>
             </span>
           </div>
-          <div :class="`vertical-progress full-width relative-position rounded-borders rounded-xs ${ (props.dark) ? 'bg-white-transparent' : 'bg-grey-4' }`"  :style="`height: ${props.size}`">
-            <div class="progress-bar absolute-left" :style="`width: ${value}%`">
-              <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${color}-to-right`" ></div>
-            </div>
-            <div v-if="backfaceValue > 0" class="backface-progress-bar absolute-left" :style="`width: ${backfaceValue}%`">
-              <div :class="`backface-progress-bar-fill rounded-borders bg-light-gradient-positive-to-right`" ></div>
-            </div>
-
-          </div>
+          <q-progress-bar :dark="props.dark" :value="value" :backfaceValue="backfaceValue" :size="props.size" :color="color"/>
         </q-card-section>
         <div v-if="!props.compact" :class="`flex justify-between items-center q-pa-sm${ (props.dark) ? 'text-white' : '' }`">
           <div v-if="exercise && exercise.finished_at" class="text-left">
@@ -49,7 +47,7 @@
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
             <q-item dense clickable v-ripple :class="(starsLevel >= 1) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                  <img src="/images/star_11.png" width="40px">
+                  <img src="/images/star_21.png" width="40px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -69,7 +67,7 @@
 
             <q-item dense clickable v-ripple :class="(starsLevel >= 2) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                  <img src="/images/star_12.png" width="40px">
+                  <img src="/images/star_22.png" width="40px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -89,7 +87,7 @@
 
             <q-item dense clickable v-ripple :class="(starsLevel == 3) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                  <img src="/images/star_13.png" width="40px">
+                  <img src="/images/star_23.png" width="40px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -134,9 +132,6 @@ const exercise = toRefs(props).exercise
 const reward = toRefs(props).reward
 const value = toRefs(props).value
 
-const showReward = ref(false)
-const tab = ref('threestars')
-const tabSelected = ref('threestars')
 const color = ref('orange')
 const rewardsDialog = ref(false)
 const starsLevel = ref(0)
@@ -194,7 +189,6 @@ onMounted(() => {
 .lesson-progress.progress-dark{
   --border-color: white;
   .star-item-delimiter .q-avatar:not(.active){
-    filter: grayscale(1) brightness(0.8);
     box-shadow: 0 0 0 3px #e0e0e038;
   }
 }
@@ -224,9 +218,6 @@ onMounted(() => {
     background: white !important;
     &:not(.active) {
       box-shadow: 0 0 0 2px #e0e0e0 ;
-      img{
-        filter: grayscale(1) brightness(0.8);
-      }
     }
   }
 }
@@ -238,28 +229,4 @@ onMounted(() => {
   }
 }
 
-.vertical-progress{
-  .progress-bar{
-    padding: 4px;
-    height: 100%;
-    z-index: 1;
-    transition: 0.5s all;
-    .progress-bar-fill{
-      height: 100%;
-      border-radius: 4px;
-      border-bottom: 3px solid rgba(0, 0, 0, 0.15);
-    }
-  }
-  .backface-progress-bar{
-    padding: 4px;
-    height: 100%;
-    transition: 0.5s all;
-    opacity: 0.5;
-    .backface-progress-bar-fill{
-      height: 100%;
-      border-radius: 4px;
-      border-bottom: 3px solid rgba(0, 0, 0, 0.15);
-    }
-  }
-}
 </style>

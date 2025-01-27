@@ -38,12 +38,7 @@
                 </div>
               </q-card-section>
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
-                <q-linear-progress
-                    color="positive"
-                    :value="(user.active.data.level?.percentage / 100)"
-                    size="12px"
-                    stripe rounded
-                ></q-linear-progress>
+                <q-progress-bar :value="user.active.data.level?.percentage" size="25px" color="positive"/>
                 <div class="row q-ma-sm ">
                     <div class="col text-left">
                         <b>Level {{user.active.data.level?.level}}</b>

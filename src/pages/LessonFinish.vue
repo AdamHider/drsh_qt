@@ -14,6 +14,9 @@
                   />
                 </transition>
             </q-card-section>
+            <q-card-section class="absolute-top">
+                <div class="text-h5"><b>{{ lesson.active.title }}</b></div>
+            </q-card-section>
         </q-card>
 
     </q-page>
@@ -22,25 +25,25 @@
           appear
           enter-active-class="animated fadeInUp animation-delay-2"
           leave-active-class="animated zoomOut">
-          <q-card flat class="relative text-center text-dark rounded-b-0" style="z-index: 1;" v-if="transitionTrigger">
-            <q-card-section v-if="lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum" class="q-pb-sm q-pt-sm text-white bg-gradient-green">
+          <q-card flat class="relative text-center text-dark rounded-b-0 q-pt-sm" style="z-index: 1;" v-if="transitionTrigger">
+            <q-card-section class="flex justify-center items-end q-pb-none absolute full-width" v-if="lesson.active.exercise.data.totals.difference > 0" style="top: -100px; z-index: 1">
+                <q-avatar size="90px" :class="`star-item`"><img :src="(lesson.active.exercise.data.totals.reward_level >= 1) ? '/images/star_21.png' : '/images/star_21_inactive.png'"></q-avatar>
+                <q-avatar size="90px" :class="`star-item q-mb-md`"><img :src="(lesson.active.exercise.data.totals.reward_level == 3) ? '/images/star_23.png' : '/images/star_23_inactive.png'"></q-avatar>
+                <q-avatar size="90px" :class="`star-item`"><img :src="(lesson.active.exercise.data.totals.reward_level >= 2) ? '/images/star_22.png' : '/images/star_22_inactive.png'"></q-avatar>
+            </q-card-section>
+            <q-card-section v-if="lesson.active.exercise.data.totals.difference == 0" class="q-pb-sm q-pt-sm text-orange">
+                <div class="text-h5"><b>Ничья!</b></div>
+                <div class="text-h6"><b>Ни лучше, ни хуже</b></div>
+            </q-card-section>
+            <q-card-section v-else-if="lesson.active.exercise.data.reward_level > 0 || lesson.active.exercise.data.totals.is_maximum" class="q-pb-sm q-pt-sm text-positive">
                 <div v-if="lesson.active.exercise.data.totals.is_maximum" class="text-h5"><b>Лучше некуда!</b></div>
                 <div v-else class="text-h5"><b>Победа!</b></div>
-                <div class="text-h6">Отличный результат</div>
+                <div class="text-h6"><b>Отличный результат</b></div>
             </q-card-section>
-            <q-card-section v-else-if="lesson.active.exercise.data.totals.difference == 0" class="q-pb-sm q-pt-sm text-white bg-gradient-orange">
-                <div class="text-h5"><b>Ничья!</b></div>
-                <div class="text-h6">Ни лучше, ни хуже</div>
-            </q-card-section>
-            <q-card-section v-else class="q-pb-sm q-pt-sm text-white bg-negative">
+            <q-card-section v-else class="q-pb-sm q-pt-sm text-negative">
                 <div class="text-h5"><b>Поражение!</b></div>
-                <div class="text-h6">Ты можешь лучше</div>
+                <div class="text-h6"><b>Ты можешь лучше</b></div>
             </q-card-section>
-            <div class="flex justify-center items-end q-pb-none" v-if="lesson.active.exercise.data.totals.difference > 0">
-                <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level >= 1) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
-                <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level >= 2) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
-                <q-avatar size="70px" :class="`star-item ${(lesson.active.exercise.data.totals.reward_level == 3) ? 'active' : ''}`"><img src="/images/star_1.png"></q-avatar>
-            </div>
             <q-card-section class="q-pb-sm q-pt-sm">
                 <div class="text-subtitle2" v-if="lesson.active.exercise.data.totals.difference !== 0">
                   <b>Предыдущий результат: </b>
@@ -51,35 +54,35 @@
                   <b :class="(lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum) ? 'text-positive' : 'text-negative'">{{ currentPoints }}</b>
                 </div>
             </q-card-section>
-            <q-separator/>
             <q-card-section class="q-pb-sm q-pt-sm">
-              <div class="text-center text-subtitle2"><b>Награда: </b></div>
-              <div class="row justify-center q-gutter-sm q-py-sm">
-                <div v-for="(resource, resourceIndex) in lesson.active.exercise.data.totals.reward" :key="resourceIndex" >
-                  <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
-                        <q-item-section avatar style="min-width: unset;">
-                            <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                        </q-item-section>
-                    </q-item>
+              <div class="q-pa-sm bg-grey-3 rounded-sm">
+                <div class="text-center text-subtitle2"><b>Награда: </b></div>
+                <div class="row justify-center q-gutter-sm q-py-sm">
+                  <div v-for="(resource, resourceIndex) in lesson.active.exercise.data.totals.reward" :key="resourceIndex" >
+                    <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
+                          <q-item-section avatar style="min-width: unset;">
+                              <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
+                          </q-item-section>
+                          <q-item-section>
+                              <q-item-label><b>{{resource.quantity}}</b></q-item-label>
+                          </q-item-section>
+                      </q-item>
+                  </div>
                 </div>
               </div>
             </q-card-section>
-            <q-separator/>
             <q-card-actions class="justify-center q-pa-md">
               <q-btn
                 push
-                label="Redo"
+                label="Заново"
                 icon="replay"
                 color="gradient-orange"
                 class="q-px-md q-mr-sm"
                 @click="redo(lesson.active.id)"/>
               <q-btn
                 push
-                label="Great!"
-                icon="check"
+                label="Далее"
+                icon-right="chevron_right"
                 color="gradient-green"
                 class="q-px-md q-mr-sm"
                 @click="$router.go(-1)"/>
@@ -144,12 +147,6 @@ onMounted(async () => {
 </script>
 <style lang="scss">
 
-.star-item{
-  filter: grayscale(1) brightness(0.5);
-  &.active{
-    filter: grayscale(0) brightness(1) drop-shadow(rgba(0, 0, 0, 0.1) 1px 3px 3px);
-  }
-}
 $particles: 50;
 $width: 300;
 $height: 300;

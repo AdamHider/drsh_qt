@@ -8,7 +8,7 @@
               <div><b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
               <div><q-badge color="white" text-color="blue"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(0)}}%</b></q-badge></div>
             </div>
-            <q-linear-progress rounded size="15px" :value="subcategory.gained_total/subcategory.total" color="gradient-blue" class="q-mt-sm q-progress--push"/>
+            <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="20px" color="blue"/>
           </div>
           <div >
               <swiper :class="`q-pa-sm`"  slides-per-view="auto" spaceBetween="50" >
