@@ -8,7 +8,7 @@
     <q-card  v-for="(questItem, index) in quests" :key="index" class="q-ma-sm cursor-pointer q-mt-md">
       <q-item :class="`bg-gradient-${questItem.group.color} text-white`">
         <q-item-section avatar>
-            <img :src="questItem.group.image" width="50px" class="absolute-bottom q-mx-sm">
+            <img :src="questItem.group.image_avatar" width="50px" class="absolute-bottom q-mx-sm">
         </q-item-section>
 
         <q-item-section>
@@ -16,9 +16,7 @@
             <q-item-label class="text-white" caption lines="2">{{ questItem.group.description }}</q-item-label>
         </q-item-section>
       </q-item>
-
-      <q-separator />
-      <q-card-section class="q-pa-sm q-pb-md">
+      <q-card-section class="q-pa-sm">
         <q-item class="q-pa-none">
           <q-item-section class="text-left">
             <div class="row q-my-sm justify-between items-end" >
@@ -41,13 +39,17 @@
             </div>
             <q-progress-bar :value="questItem.progress.percentage" size="25px" :color="(questItem.progress.percentage == 100) ? 'positive' : 'orange'"/>
           </q-item-section>
+          <q-item-section side>
+            <q-btn v-if="questItem.is_completed" color="positive" push label="Claim" @click="claimReward(questItem.id)"/>
+            <q-btn v-else-if="questItem.href" color="primary" push icon="chevron_right" :to="`${questItem.href}`"/>
+          </q-item-section>
         </q-item>
       </q-card-section>
       <q-separator/>
-      <q-card-section class="q-pa-sm justify-between row">
-        <div class="q-pa-sm bg-grey-3 rounded-sm">
-          <div class="text-center text-subtitle2"><b>Награда: </b></div>
-          <div class="row q-gutter-sm q-py-sm items-center">
+      <q-card-section class="q-pa-sm">
+        <div class="q-pa-none row items-center justify-between full-width">
+          <div class="text-left text-subtitle2"><b>Награда: </b></div>
+          <div class="row q-gutter-sm items-center">
             <div v-for="(resource, resourceIndex) in questItem.reward" :key="resourceIndex" >
               <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
                   <q-item-section avatar style="min-width: unset;">
@@ -59,10 +61,6 @@
               </q-item>
             </div>
           </div>
-        </div>
-        <div>
-          <q-btn v-if="questItem.is_completed" color="positive" push label="Claim" @click="claimReward(questItem.id)"/>
-          <q-btn v-else-if="questItem.href" color="primary" push icon="chevron_right" :to="`${questItem.href}`"/>
         </div>
       </q-card-section>
     </q-card>
