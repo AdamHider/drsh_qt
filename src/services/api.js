@@ -73,6 +73,9 @@ export class Api extends ApiService{
         createItem: (params) =>  {
             return this.post('quest', 'createItem', params)
         },
+        startItem: (params) => {
+          return this.post('quest', 'startItem', params)
+        },
         saveItem: (params) =>  {
             return this.post('quest', 'saveItem', params)
         },

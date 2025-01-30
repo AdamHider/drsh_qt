@@ -11,9 +11,9 @@
           display: 'flex',
           justifyContent: 'end',
           flexDirection: 'column', paddingBottom: '48px'}"
-        style="z-index: 10;" >
+        style="z-index: 10;">
 
-          <LessonList v-if="course.active?.id" :disable="dialog.active"/>
+        <LessonList v-if="course.active?.id" :disable="dialog.active"/>
         <q-card flat class="transparent">
           <q-card-section v-if="course.active?.id" class="text-white" >
             <div class="text-subtitle"><b>{{course.active?.title}}</b></div>
@@ -25,9 +25,15 @@
             <q-btn color="primary" push @click="dialog.active=true" class="q-ma-md">Choose</q-btn>
           </q-card-section>
         </q-card>
+
         <q-page-sticky position="bottom" style="margin-bottom: 20px;">
           <q-img :src="`/images/dershane/robot/rocket.png`" width="50px"/>
         </q-page-sticky>
+
+        <q-page-sticky position="top-left" style="z-index: 100" :offset="[0, 50]">
+          <QuestListWidget active-only/>
+        </q-page-sticky>
+
         <q-scroll-observer @scroll="onScroll" />
       </q-scroll-area>
     </q-page>
@@ -38,6 +44,7 @@
 import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import QuestListWidget from '../components/QuestListWidget.vue'
 import { ref, reactive, watch, onActivated, onDeactivated } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
