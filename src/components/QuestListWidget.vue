@@ -157,33 +157,25 @@
 
 <script setup>
 import { api } from '../services/index'
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
+import { ref, onMounted, onActivated } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 import { useNavigationHistory } from '../composables/useNavigationHistory'
 
 const { routes } = useNavigationHistory()
 
-const route = useRoute()
-const router = useRouter()
+const error = ref(false)
 const claimDialog = ref(false)
 const claimRewards = ref({})
 const claimError = ref(false)
 const reloadTrigger = ref(false)
 const quests = ref([])
-const error = ref({})
-const inactiveQuests = ref([])
 const assignedQuest = ref({})
 const assignedQuestActivePage = ref(0)
 const assignedQuestDialog = ref(false)
-const showInactiveReward = ref(false)
 const activeQuest = ref({})
 const activeQuestDialog = ref(false)
 
-
-
 const props = defineProps({
-  classroomId: String,
-  mode: String,
   activeOnly: Boolean
 })
 
@@ -191,26 +183,21 @@ const load = async function () {
   const questListResponse = await api.quest.getList({ mode: props.mode, active_only: props.activeOnly })
   if (questListResponse.error) {
     error.value = questListResponse
-    return []
-  }
-  const dataHash = api.lastRequestDataHash
-  if(dataHash !== routes.quests.hash && routes.quests.hash !== ''){
-    routes.quests.hash = dataHash
-    routes.quests.is_updated = true
-  } else {
-    routes.quests.is_updated = false
+    quests.value = []
+    return false;
   }
   quests.value = questListResponse
   checkInactive()
 }
 
 const checkInactive = function () {
-  inactiveQuests.value = quests.value.filter((quest) => { return quest.status == 'created'})
-  if(inactiveQuests.value.length > 0){
-    assignedQuest.value = inactiveQuests.value[0]
+  const inactiveQuests = quests.value.filter((quest) => { return quest.status == 'created'})
+  if(inactiveQuests.length > 0){
+    assignedQuest.value = inactiveQuests[0]
     assignedQuestDialog.value = true
   }
 }
+
 const startQuest = async function (questId) {
   const questStartedResponse = await api.quest.startItem({ quest_id: questId })
   if(questStartedResponse){
@@ -219,6 +206,7 @@ const startQuest = async function (questId) {
     assignedQuestActivePage.value = 0
   }
 }
+
 const claimReward = async function (questId) {
   const questRewardResponse = await api.quest.claimReward({ quest_id: questId })
   reloadTrigger.value = !reloadTrigger.value
@@ -231,20 +219,25 @@ const claimReward = async function (questId) {
     claimRewards.value = questRewardResponse
   }
 }
+
 const reload = async function () {
   claimDialog.value = false
   activeQuestDialog.value = false
   activeQuest.value = {}
   load()
 }
+
 onBeforeRouteLeave((to, from) => {
   if (claimDialog.value) {
-    claimDialog.value = false
     return false
   }
   return true
 })
+
 onMounted(() => {
+  load()
+})
+onActivated(() => {
   load()
 })
 
