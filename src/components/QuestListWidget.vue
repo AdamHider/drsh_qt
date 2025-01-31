@@ -3,28 +3,35 @@
     <div class="flex column">
       <q-btn v-for="(questItem, index) in quests" :key="index" push dense
         @click="activeQuestDialog = true; activeQuest = questItem"
+        size="sm"
         :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-md push`" >
-        <div style="width: 50px">
-          <img :src="questItem.group.image_avatar" width="50px" class="absolute-bottom q-mx-sm q-mb-xs">
+        <div style="width: 40px">
+          <img :src="questItem.group.image_avatar" width="40px" class="absolute-bottom q-mx-sm q-mb-xs">
         </div>
-        <q-icon class="q-pa-sm" name="chevron_right" size="24px"></q-icon>
-        <q-badge color="negative" floating >
+        <q-icon class="q-py-xs q-px-sm" name="chevron_right" size="24px"></q-icon>
+        <q-badge v-if="!questItem.is_completed" floating color="warning" class="q-pa-xs">
           <q-icon name="priority_high" size="14px"></q-icon>
         </q-badge>
+        <q-badge v-else floating color="positive" class="q-pa-xs">
+          <q-icon name="done" size="14px"></q-icon>
+        </q-badge>
+
       </q-btn>
     </div>
-    <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale">
+    <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale" @hide="reload()">
       <q-card class="bg-white text-center" style="width: 300px">
         <q-card-section>
-          <div v-if="!claimError" class="text-h6">Your reward</div>
+          <div v-if="!claimError" class="text-h6">Задание выполнено!</div>
           <div v-else class="text-h6">Ooops...</div>
         </q-card-section>
         <q-card-section v-if="!claimError">
-            <div class="row justify-center q-gutter-sm q-py-sm">
-              <div v-for="(resource, resourceIndex) in claimRewards" :key="resourceIndex" >
-                <q-item :class="`bg-grey-3 text-left rounded-borders`" >
-                    <q-item-section avatar>
-                        <q-img width="28px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
+          <div class="full-width q-pb-sm rounded-sm bg-grey-2">
+            <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
+            <div class="row q-gutter-sm items-center justify-center">
+              <div v-for="(resource, resourceIndex) in activeQuest.reward" :key="`resource-${resourceIndex}`" >
+                <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
+                    <q-item-section avatar style="min-width: unset;">
+                        <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
                     </q-item-section>
                     <q-item-section>
                         <q-item-label><b>{{resource.quantity}}</b></q-item-label>
@@ -32,16 +39,17 @@
                 </q-item>
               </div>
             </div>
+          </div>
         </q-card-section>
         <q-card-section v-else>
           Something went wrong.
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn class="full-width" label="Okay" color="primary" v-close-popup />
+          <q-btn class="full-width" push label="Отлично" color="positive" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="assignedQuestDialog" position="bottom">
+    <q-dialog v-model="assignedQuestDialog" position="bottom" persistent>
       <q-card class="bg-white  full-width" style="overflow: visible;">
         <q-card-section :class="`bg-gradient-${assignedQuest.group.color} text-white row no-wrap q-pa-none`">
           <div class="col-4"></div>
@@ -82,14 +90,14 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="activeQuestDialog" position="bottom">
-      <q-card class="bg-white  full-width" style="overflow: visible;">
+      <q-card class="bg-white  full-width rounded-b-0" style="overflow: visible;">
         <q-item :class="`bg-gradient-${activeQuest.group.color} text-white`">
           <q-item-section avatar>
               <img :src="activeQuest.group.image_avatar" width="50px" class="absolute-bottom q-mx-sm">
           </q-item-section>
 
           <q-item-section>
-              <q-item-label class="text-subtitle1"><b>{{ assignedQuest.group.title }}</b></q-item-label>
+              <q-item-label class="text-subtitle1"><b>{{ activeQuest.group.title }}</b></q-item-label>
           </q-item-section>
         </q-item>
         <q-card-section class="q-pa-sm">
@@ -97,7 +105,10 @@
             <q-item-section class="text-left">
               <div class="row q-my-sm justify-between items-end" >
                 <div>
-                  <q-item-label><b>{{ activeQuest.title }}</b></q-item-label>
+                  <q-item-label>
+                    <b class="vertical-middle">{{ activeQuest.title }}</b>
+                    <q-icon name="check_circle" class="vertical-middle q-ml-sm" color="positive"></q-icon>
+                  </q-item-label>
                   <q-chip
                       v-if="activeQuest.time_left_humanized"
                       dense
@@ -110,10 +121,10 @@
                   </q-chip>
                 </div>
                 <div class="col text-right">
-                    <b>{{activeQuest.progress.percentage_text}}</b>
+                    <b>{{activeQuest.progress}} / {{activeQuest.value}}</b>
                 </div>
               </div>
-              <q-progress-bar :value="activeQuest.progress.percentage" size="25px" :color="(activeQuest.progress.percentage == 100) ? 'positive' : 'orange'"/>
+              <q-progress-bar :value="activeQuest.progress/activeQuest.value*100" size="25px" :color="(activeQuest.progress >= activeQuest.value) ? 'positive' : 'orange'"/>
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -136,7 +147,7 @@
         </q-card-section>
         <q-card-actions class="justify-center">
           <q-btn color="grey" push label="Закрыть" v-close-popup/>
-          <q-btn v-if="activeQuest.is_completed" color="positive" push label="Claim" @click="claimReward(activeQuest.id)"/>
+          <q-btn v-if="activeQuest.is_completed" color="positive" push label="Завершить" icon-right="done" @click="claimReward(activeQuest.id)"/>
           <q-btn v-else-if="activeQuest.href" color="primary" push label="Перейти" icon-right="chevron_right" :to="`${activeQuest.href}`"/>
         </q-card-actions>
       </q-card>
@@ -219,6 +230,12 @@ const claimReward = async function (questId) {
   } else {
     claimRewards.value = questRewardResponse
   }
+}
+const reload = async function () {
+  claimDialog.value = false
+  activeQuestDialog.value = false
+  activeQuest.value = {}
+  load()
 }
 onBeforeRouteLeave((to, from) => {
   if (claimDialog.value) {

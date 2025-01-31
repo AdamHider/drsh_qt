@@ -124,24 +124,6 @@ const routes = [
         }
       },
       {
-        path: 'quest-:quest_id',
-        component: () => import('pages/QuestPage.vue'),
-        meta: {
-          pageTitle: 'Quest',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
-        path: 'quest-:quest_id/edit',
-        component: () => import('pages/QuestEdit.vue'),
-        meta: {
-          pageTitle: 'Edit quest',
-          requiresAuth: true,
-          transition: 'slide-in'
-        }
-      },
-      {
         path: '/skills',
         component: () => import('pages/SkillsPage.vue'),
         meta: {
@@ -183,7 +165,15 @@ const routes = [
         component: () => import('pages/LessonStartup.vue'),
         beforeEnter: (to, from) => {
           if(from.params.lesson_id) to.params.prev_lesson_id = from.params.lesson_id
+          if(to.redirectedFrom?.name == 'redirect-lesson-startup') to.params.prev_lesson_id = to.redirectedFrom.params.lesson_id
           return
+        },
+      },
+      {
+        path: 'redirect-lesson-startup-:lesson_id-:parent_lesson_id',
+        name: 'redirect-lesson-startup',
+        redirect: to => {
+          return { path: '/lesson-startup-'+to.params.parent_lesson_id }
         },
       },
       {

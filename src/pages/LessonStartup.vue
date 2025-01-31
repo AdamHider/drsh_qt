@@ -149,10 +149,9 @@ onActivated(async () => {
     return
   }
   await getSatelliteList()
+  activeIndex.value = 0;
   if(route.params.prev_lesson_id){
     activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == route.params.prev_lesson_id)
-  } else {
-    activeIndex.value = 0;
   }
   change(activeIndex.value)
 })

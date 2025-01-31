@@ -35,10 +35,14 @@
                 <div class="text-h5"><b>Ничья!</b></div>
                 <div class="text-h6"><b>Ни лучше, ни хуже</b></div>
             </q-card-section>
-            <q-card-section v-else-if="lesson.active.exercise.data.reward_level > 0 || lesson.active.exercise.data.totals.is_maximum" class="q-pb-sm q-pt-sm text-positive">
+            <q-card-section v-else-if="lesson.active.exercise.data.totals.reward_level > 0 || lesson.active.exercise.data.totals.is_maximum" class="q-pb-sm q-pt-sm text-positive">
                 <div v-if="lesson.active.exercise.data.totals.is_maximum" class="text-h5"><b>Лучше некуда!</b></div>
                 <div v-else class="text-h5"><b>Победа!</b></div>
-                <div class="text-h6"><b>Отличный результат</b></div>
+                <div class="text-h6">
+                  <b v-if="lesson.active.exercise.data.totals.reward_level >= 1">Неплохой результат</b>
+                  <b v-if="lesson.active.exercise.data.totals.reward_level >= 2">Хороший результат</b>
+                  <b v-if="lesson.active.exercise.data.totals.reward_level == 3">Отличный результат</b>
+                </div>
             </q-card-section>
             <q-card-section v-else class="q-pb-sm q-pt-sm text-negative">
                 <div class="text-h5"><b>Поражение!</b></div>

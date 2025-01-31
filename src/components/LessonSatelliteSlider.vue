@@ -57,7 +57,7 @@
 import { useLesson } from '../composables/useLesson'
 import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { ref, watch, toRefs } from 'vue'
+import { ref, watch, toRefs, onMounted } from 'vue'
 import { EffectCreative } from 'swiper/modules';
 import 'swiper/css/effect-creative';
 import 'swiper/css'
@@ -87,6 +87,9 @@ const swiperEl = ref(null)
 const onSwiper = (swiper) => {
   swiperEl.value = swiper
 }
+onMounted(() => {
+  swiperEl.value.slideTo(activeSlide.value)
+})
 watch(() => activeSlide.value, () => {
   swiperEl.value.slideTo(activeSlide.value)
 })

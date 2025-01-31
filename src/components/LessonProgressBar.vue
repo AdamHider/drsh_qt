@@ -116,7 +116,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch, onMounted, onActivated } from 'vue'
+import { ref, toRefs, toRef, watch, onMounted, onActivated } from 'vue'
 import { CONFIG } from '../config.js'
 
 const props = defineProps({
@@ -130,7 +130,8 @@ const props = defineProps({
 })
 const exercise = toRefs(props).exercise
 const reward = toRefs(props).reward
-const value = toRefs(props).value
+const value = ref(0);
+
 
 const color = ref('orange')
 const rewardsDialog = ref(false)

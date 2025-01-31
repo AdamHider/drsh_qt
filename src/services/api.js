@@ -61,32 +61,14 @@ export class Api extends ApiService{
         }
     }
     quest = {
-        getItem: (params) => {
-            return this.post('quest', 'getItem', params)
-        },
         getList: (params) => {
             return this.post('quest', 'getList', params)
         },
         claimReward: (params) => {
             return this.post('quest', 'claimReward', params)
         },
-        createItem: (params) =>  {
-            return this.post('quest', 'createItem', params)
-        },
         startItem: (params) => {
           return this.post('quest', 'startItem', params)
-        },
-        saveItem: (params) =>  {
-            return this.post('quest', 'saveItem', params)
-        },
-        getAvailableLessons: (params) => {
-          return this.post('quest', 'getAvailableLessons', params)
-        },
-        calculateReward: (params) => {
-          return this.post('quest', 'calculateReward', params)
-        },
-        getAvailableCodes: (params) => {
-          return this.post('quest', 'getAvailableCodes', params)
         }
     }
     homework = {
