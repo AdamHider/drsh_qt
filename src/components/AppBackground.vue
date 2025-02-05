@@ -52,7 +52,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background-image: url(/src/assets/images/star_pattern.png);
+    background-image: url(/images/star_pattern.png);
     transform: rotate(28deg);
     background-size: 180px;
     background-repeat: repeat;
@@ -68,7 +68,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background-image: url(/src/assets/images/star_pattern.png);
+    background-image: url(/images/star_pattern.png);
     transform: rotate(26deg);
     background-size: 100px;
     background-repeat: repeat;

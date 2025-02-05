@@ -20,7 +20,7 @@
                   <q-avatar
                     size="150px"
                     style="margin-bottom: -30px; box-shadow: 0px 0px 0px 4px white;">
-                    <img :src="user.active.data?.settings.avatarImage?.value">
+                    <img :src="user.active.data?.settings?.avatarImage?.value">
                   </q-avatar>
                 </q-card-section>
             </q-card>
@@ -116,7 +116,6 @@
 
 <script setup>
 import { useUserStore } from '../stores/user'
-import UserToggle from '../components/UserToggle.vue'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { useRoute } from 'vue-router'

@@ -13,9 +13,6 @@
       <q-route-tab icon="map" :to="`${routes.course.link}`" exact replace>
         <q-badge v-if="routes.course.is_updated" color="red" rounded floating />
       </q-route-tab>
-      <q-route-tab icon="task_alt" :to="routes.quests.link" exact replace>
-        <q-badge v-if="routes.quests.is_updated" color="red" rounded floating />
-      </q-route-tab>
       <q-route-tab icon="biotech" :to="routes.skills.link" exact replace>
         <q-badge v-if="routes.skills.is_updated" color="red" rounded floating />
       </q-route-tab>
@@ -48,6 +45,5 @@ watch(route, (currentValue, oldValue) => {
   bottomBarEnabled.value = currentValue.meta.bottomBarEnabled === true
 
 });
-
-
 </script>
+

@@ -25,7 +25,6 @@
 </template>
 
 <script setup >
-import UserToggle from '../components/UserToggle.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import LeaderboardChart from '../components/LeaderboardChart.vue'
 </script>

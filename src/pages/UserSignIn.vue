@@ -54,6 +54,10 @@
         </q-card>
 
       </q-form>
+      <!--
+      <q-dialog v-model="mainStoryDialog" maximized>
+        <AppMainStorySlider/>
+      </q-dialog>-->
     </q-page>
   </q-page-container>
 </template>
@@ -62,11 +66,13 @@
 import { useUserStore } from '../stores/user'
 import { reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import AppMainStorySlider from 'components/AppMainStorySlider.vue'
 
 const form = ref(null)
 const buttonLoading = ref(false)
 const route = useRoute()
 const router = useRouter()
+const mainStoryDialog = ref(true)
 
 const steps = [
   '', 'username', 'password'
