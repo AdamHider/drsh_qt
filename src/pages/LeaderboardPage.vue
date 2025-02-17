@@ -10,13 +10,13 @@
             <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width">
                 <q-card-section class="q-pa-none">
                     <LeaderboardTable
-                        :allowed-filters="['time_period', 'by_classroom']"
+                        :allowed-filters="['time_period']"
                     />
 
                 </q-card-section>
                 <q-card-section class="q-pa-none">
                     <LeaderboardChart
-                        :allowed-filters="['time_period', 'by_classroom']"
+                        :allowed-filters="['time_period']"
                     />
                 </q-card-section>
             </q-card>

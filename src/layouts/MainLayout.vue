@@ -2,7 +2,7 @@
   <AppBackground/>
     <q-layout view="hHh LpR fFf">
         <router-view v-slot="{ Component }">
-          <keep-alive :exclude="['LessonItem', 'LessonFinish', 'HomeworkPage', 'ChallengePage', 'ClassroomEdit', 'HomeworkEdit', 'ChallengeEdit']">
+          <keep-alive :exclude="['LessonItem', 'LessonFinish']">
               <component :is="Component"/>
           </keep-alive>
         </router-view>

@@ -4,7 +4,7 @@
       <q-btn v-for="(questItem, index) in quests" :key="index" push dense
         @click="activeQuestDialog = true; activeQuest = questItem"
         size="sm"
-        :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-md push`" >
+        :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm push`" >
         <div style="width: 40px">
           <img :src="questItem.group.image_avatar" width="40px" class="absolute-bottom q-mx-sm q-mb-xs">
         </div>

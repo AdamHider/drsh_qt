@@ -13,7 +13,6 @@
     <q-card-section v-if="filterExpanded" class="q-py-sm text-left">
       <LeaderboardFilter
         :allowed-filters="props.allowedFilters"
-        :classroomId="props.classroomId"
         :timePeriod="props.timePeriod"
         @update-filter="updateFilter($event)"
       />
@@ -90,7 +89,6 @@ const filterExpanded = ref(false)
 
 const props = defineProps({
   allowedFilters: Array,
-  classroomId: String,
   lessonId: String,
   challengeId: String,
   timePeriod: String
@@ -105,7 +103,6 @@ const loadTable = async () => {
 }
 
 const prepareFilter = () => {
-  if (props.classroomId) leaderboardData.filter.classroom_id = props.classroomId
   if (props.lessonId) leaderboardData.filter.lesson_id = props.lessonId
   if (props.challengeId) leaderboardData.filter.challenge_id = props.challengeId
   if (props.timePeriod) leaderboardData.filter.time_period = props.timePeriod
@@ -125,8 +122,4 @@ onMounted(async () => {
   if (isLoading.value === true) return
   loadTable()
 })
-watch(() => props.classroomId, async (newData, oldData) => {
-  loadTable()
-})
-
 </script>

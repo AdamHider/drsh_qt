@@ -27,7 +27,6 @@ const routes = [
           requiresAuth: true,
           bottomBarEnabled: true,
           transitionConfig: {
-            classroom_dashboard: 'slide-left',
             leaderboard: 'slide-left',
             user: 'slide-left'
           }
@@ -42,7 +41,6 @@ const routes = [
           requiresAuth: true,
           bottomBarEnabled: true,
           transitionConfig: {
-            classroom_dashboard: 'slide-left',
             leaderboard: 'slide-left',
             user: 'slide-left'
           }
@@ -59,7 +57,6 @@ const routes = [
           transition: 'slide-in',
           transitionConfig: {
             course: 'slide-right',
-            classroom_dashboard: 'slide-right',
             user: 'slide-left'
           }
         }
@@ -75,7 +72,6 @@ const routes = [
           transition: 'slide-out',
           transitionConfig: {
             course: 'slide-right',
-            classroom_dashboard: 'slide-right',
             leaderboard: 'slide-right'
           }
         }

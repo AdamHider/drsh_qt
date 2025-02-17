@@ -178,71 +178,9 @@ export class Api extends ApiService{
             return this.post('auth', 'signIn', params);
         },
     }
-    classroom = {
-        subscribe: (params) =>  {
-            return this.post('classroom', 'subscribe', params)
-        },
-        unsubscribe: (params) =>  {
-            return this.post('classroom', 'unsubscribe', params)
-        },
-        getItem: (params) =>  {
-            return this.post('classroom', 'getItem', params)
-        },
-        getList: (params) =>  {
-            return this.post('classroom', 'getList', params)
-        },
-        createItem: () =>  {
-            return this.post('classroom', 'createItem', {})
-        },
-        saveItem: (params) =>  {
-            return this.post('classroom', 'saveItem', params)
-        },
-        checkIfExists: (params) =>  {
-            return this.post('classroom', 'checkIfExists', params)
-        },
-        getSubscriberList: (params) =>  {
-            return this.post('classroom', 'getSubscribers', params)
-        },
-        getFeed: (params) =>  {
-            return this.post('classroom', 'getFeed', params)
-        }
-    }
     image = {
         upload: (params) =>  {
           return this.post('image', 'uploadItem', params)
         }
-    }
-    admin = {
-      lesson: {
-        getItem: (params) => {
-            return this.post('admin/lesson', 'getItem', params)
-        },
-        getList: (params) => {
-            return this.post('admin/lesson', 'getList', params)
-        },
-        saveItem: (params) =>  {
-            return this.post('admin/lesson', 'saveItem', params)
-        },
-        deleteItem: (params) =>  {
-            return this.post('admin/lesson', 'deleteItem', params)
-        },
-      },
-      course: {
-        getList: (params) => {
-            return this.post('admin/course', 'getList', params)
-        },
-        getItem: (params) => {
-            return this.post('admin/course', 'getItem', params)
-        }
-      },
-      course_section: {
-        getList: (params) => {
-            return this.post('admin/courseSection', 'getList', params)
-        },
-        getItem: (params) => {
-            return this.post('admin/courseSection', 'getItem', params)
-        }
-      }
-
     }
 }

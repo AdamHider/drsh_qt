@@ -25,7 +25,6 @@ const form = ref(null)
 
 const props = defineProps({
   allowedFilters: Array,
-  classroomId: String,
   timePeriod: String
 })
 const formData = reactive({

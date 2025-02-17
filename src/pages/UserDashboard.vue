@@ -20,7 +20,7 @@
                   <q-avatar
                     size="150px"
                     style="margin-bottom: -30px; box-shadow: 0px 0px 0px 4px white;">
-                    <img :src="user.active.data?.settings?.avatarImage?.value">
+                    <img :src="user.active?.data.character?.image">
                   </q-avatar>
                 </q-card-section>
             </q-card>
@@ -80,6 +80,13 @@
               <q-card-section class="q-py-none ">
                   <div class="text-h6">Effects</div>
               </q-card-section>
+              <q-card-section class="q-pa-none">
+                  <div class="q-pa-sm flex items-start">
+                      <UserSettingBar :setting="user.active?.data.settings.resourceGainModifier" size="38px" percentage/>
+                      <UserSettingBar :setting="user.active?.data.settings.energyRestorationTime" size="38px" />
+                      <UserSettingBar :setting="user.active?.data.settings.energyMaxValue" size="38px" />
+                  </div>
+              </q-card-section>
               <q-card-section class="q-py-none ">
                   <div class="text-h6">Resources</div>
               </q-card-section>
@@ -121,6 +128,7 @@
 import { useUserStore } from '../stores/user'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import UserSettingBar from '../components/UserSettingBar.vue'
 import { useRoute } from 'vue-router'
 import { onMounted, onBeforeMount, onActivated, ref, watch } from 'vue'
 

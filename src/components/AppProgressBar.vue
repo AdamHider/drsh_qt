@@ -1,6 +1,6 @@
 <template>
     <div :class="`progress full-width relative-position rounded-borders rounded ${ (props.dark) ? 'bg-white-transparent' : 'bg-grey-4' }`"  :style="`height: ${props.size}`">
-      <div class="progress-bar absolute-left" :style="`width: ${value}%`">
+      <div class="progress-bar absolute-left" :style="`width: ${value}%; max-width: 100%;`">
         <div :class="`progress-bar-fill rounded-borders bg-light-gradient-${props.color}-to-right`" ></div>
       </div>
       <div v-if="props.backfaceValue > 0" class="backface-progress-bar absolute-left" :style="`width: ${props.backfaceValue}%`">
