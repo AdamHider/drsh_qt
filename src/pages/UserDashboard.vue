@@ -34,7 +34,7 @@
               <q-card-section class="text-center q-pa-none">
                 <div class="text-h6"><b>{{ user.active?.data.username }}</b></div>
                 <div class="text-caption">
-                  {{ user.active?.data.character.title }}
+                  {{ user.active?.data.character?.title }}
                 </div>
               </q-card-section>
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
@@ -76,6 +76,9 @@
                         </q-item>
                       </div>
                   </div>
+              </q-card-section>
+              <q-card-section class="q-py-none ">
+                  <div class="text-h6">Effects</div>
               </q-card-section>
               <q-card-section class="q-py-none ">
                   <div class="text-h6">Resources</div>

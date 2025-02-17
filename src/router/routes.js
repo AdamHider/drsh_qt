@@ -141,9 +141,7 @@ const routes = [
       },
       {
         path: 'authorization/sign-in',
-        component: () => import('pages/UserSignIn.vue'),
-        meta: { noBottomBar: true },
-        beforeEnter: checkIfSigned
+        redirect: 'authorization/sign-in/step1'
       },
       {
         path: 'authorization/sign-in/step:step',

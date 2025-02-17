@@ -1,4 +1,15 @@
 <template>
+  <div class="video-container">
+    <video :controls="false" autoplay height="100%" width="100%" @ended="emits('onEnded', true)">
+      <source src="/videos/mektepium trailer_2.mp4" type="video/mp4" />
+    </video>
+    <q-card class="bg-transparent absolute-bottom full-width" flat>
+      <q-card-actions class="justify-end">
+        <q-btn flat color="white" icon-right="chevron_right" @click="emits('onEnded', true)"><b>Пропустить</b></q-btn>
+      </q-card-actions>
+    </q-card>
+  </div>
+  <!--
     <swiper
       :slides-per-view="props.slidesPerView"
       :centeredSlides="props.centerAligned"
@@ -26,6 +37,7 @@
         </q-card>
       </swiper-slide>
     </swiper>
+    -->
 </template>
 <script setup>
 import { api } from '../services/index'
@@ -40,6 +52,7 @@ import 'swiper/css'
 import 'swiper/css/effect-fade';
 
 const modules = [ EffectFade, Autoplay ]
+const emits = defineEmits(['onEnded'])
 
 const props = defineProps({
   slidesPerView: Number,
@@ -86,6 +99,17 @@ slides.value = [
 @keyframes scaleUp {
   0% {transform: scale(1)}
   100% {transform: scale(1.2)}
+}
+
+.video-container{
+  position: relative;
+  overflow: hidden;
+}
+.video-container video{
+  min-width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
 }
 
 </style>

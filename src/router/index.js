@@ -74,11 +74,7 @@ export default route(function (/* { store, ssrContext } */) {
       if (!user.active.data.id) {
         next({ path: '/authorization' })
       } else {
-        if (user.active.data.settings.characterId.value == 0) {
-          next({ path: '/character-select' })
-        } else {
-          next() // go to wherever I'm going
-        }
+        next() // go to wherever I'm going
       }
     } else {
       next() // does not require auth, make sure to always call next()!
