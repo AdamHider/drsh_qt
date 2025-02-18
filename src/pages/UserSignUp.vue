@@ -24,7 +24,8 @@
                   push
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Вперёд!" />
+                  label="Вперёд!"/>
+              <div class="text-caption text-grey q-py-sm">Продолжая, вы соглашаетесь с <a @click="termsDialog = true;">нашими правилами</a>.</div>
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 2" class="ful-width rounded-b-0">
@@ -41,11 +42,13 @@
                 placeholder="Введите имя..."
                 bottom-slots
                 standout
+                debounce="400"
                 required
               >
               <template v-slot:error>
                 <span>{{ formData.fields.name.errors }}</span>
               </template></q-input>
+              <div v-if="formData.fields.username.value !== ''" class="">Ваш никнейм будет: <b>{{ formData.fields.username.value }}</b></div>
             </q-card-section>
             <q-card-actions vertical>
               <q-btn
@@ -60,10 +63,9 @@
           <q-card v-else-if="formData.step == 3" class="ful-width rounded-b-0">
             <q-card-section>
               <div class="text-h6"><b>Вы мальчик или девочка?</b></div>
-              <div class="text-grey">Выберите правильный вариант</div>
+              <div class="text-grey">Этот выбор нельзя будет изменить</div>
             </q-card-section>
             <q-card-section>
-
               <q-btn-toggle
                 v-model="formData.fields.gender.value"
                 :rules="formData.fields.gender.rules"
@@ -140,52 +142,6 @@
                   label="Продолжить" />
             </q-card-actions>
           </q-card>
-          <q-card v-else-if="formData.step == 6" class="ful-width rounded-b-0">
-            <q-card-section>
-              <div class="text-h6">Do you agree with our Terms?</div>
-              <div class="text-grey">It would be very nice, maybe</div>
-            </q-card-section>
-            <q-card-section>
-              <q-item class="text-left" tag="label">
-                <q-item-section avatar>
-                  <q-field
-                    borderless
-                    hide-bottom-space
-                    v-model="formData.fields.terms.value"
-                    :rules="formData.fields.terms.rules"
-                    no-error-icon
-                  >
-                    <template v-slot:control>
-                      <q-checkbox
-                        v-model="formData.fields.terms.value"
-                      >
-                      </q-checkbox>
-                    </template>
-                  </q-field>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>I agree with the Terms</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-btn
-                  class="full-width"
-                  color="white"
-                  text-color="primary"
-                  icon="visibility"
-                  @click="termsDialog = true;"
-                  label="I want to see these terms" />
-            </q-card-section>
-            <q-separator />
-            <q-card-actions vertical>
-              <q-btn
-                  :disabled="!formData.valid"
-                  :loading="buttonLoading"
-                  @click="validate()"
-                  v-on:keyup.enter="validate()"
-                  color="primary"
-                  label="Sign Up" />
-            </q-card-actions>
-          </q-card>
       </q-form>
 
       <q-dialog v-model="mainStoryDialog" maximized transition-show="fade" transition-hide="fade">
@@ -219,10 +175,10 @@ import AppMainStorySlider from 'components/AppMainStorySlider.vue'
 import { reactive, ref, watch, onActivated } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
-const { user, signUp, signIn } = useUserStore()
+const { user, signUp, signIn, generateUsername } = useUserStore()
 const route = useRoute()
 const router = useRouter()
-const mainStoryDialog = ref(true)
+const mainStoryDialog = ref(false)
 
 const buttonLoading = ref(false)
 const termsDialog = ref(false)
@@ -235,12 +191,15 @@ const formData = reactive({
     name: {
       value: '',
       rules: [
-        v => !!v || 'Нужно ввести имя'
+        v => !!v || 'Нужно ввести имя',
+        v => v.length > 3 || 'Имя должно быть минимум 3 символа',
+        v => !(/[^A-Za-zА-Яа-я0-9\_ ]/.test(v)) || 'Только буквы и цифры'
       ],
       errors: '',
       isError: false,
       required: true
     },
+    username: { value: '' },
     gender: {
       value: '',
       rules: [
@@ -283,10 +242,11 @@ const steps = [
 ]
 const validate = async function () {
   formData.valid = await form.value.validate()
-  if (formData.step === 6) {
+  if (formData.step === 5) {
     buttonLoading.value = true
     const data = {
       name: formData.fields.name.value,
+      username: formData.fields.username.value,
       password: formData.fields.password.value,
       passwordConfirm: formData.fields.passwordConfirm.value,
       gender: formData.fields.gender.value,
@@ -307,10 +267,22 @@ const validate = async function () {
   return router.push('/authorization/sign-up/step' + formData.step)
 }
 onActivated(() => {
-  mainStoryDialog.value = true
+  if(formData.step == 1) mainStoryDialog.value = true
 })
 watch(formData.fields, async (currentValue, oldValue) => {
   formData.valid = await form.value.validate()
+})
+watch(() => formData.fields.name.value, async (currentValue, oldValue) => {
+  setTimeout( async () => {
+    if(!formData.valid || formData.fields.name.value == '') {
+      formData.fields.username.value = ''
+      return false;
+    }
+    const generateUsernameResponse = await generateUsername({ name: currentValue })
+    if (!generateUsernameResponse.error) {
+      formData.fields.username.value = generateUsernameResponse
+    }
+  }, 100)
 })
 watch(() => formData.fields.password.value, async (currentValue, oldValue) => {
   if (currentValue.length === 4) setTimeout(() => { validate()}, 100)

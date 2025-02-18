@@ -14,16 +14,25 @@
           class="full-width q-py-sm"
         >
           <q-input
+            v-model="formData.fields.name.value"
+            :rules="formData.fields.name.rules"
+            :error-message="formData.fields.name.errors"
+            :error="formData.fields.name.errors !== ''"
+            label="Имя"
+            standout
+            required
+          />
+          <q-input
             v-model="formData.fields.username.value"
             :rules="formData.fields.username.rules"
             :error-message="formData.fields.username.errors"
             :error="formData.fields.username.errors !== ''"
-            label="Name"
+            label="Никнейм"
             standout
             required
           >
             <template v-if="formData.fields.username.errors == ''" v-slot:append>
-                <q-icon color="success" name="check"></q-icon>
+              <q-icon color="success" name="check"></q-icon>
             </template>
           </q-input>
           <q-card
@@ -45,13 +54,13 @@
               </q-item>
             </q-list>
           </q-card>
-          <router-link to="edit/password" >Change password</router-link>
+          <q-btn class="full-width q-ma-sm" color="dark" to="edit/password" push>Изменить пароль</q-btn>
           <q-input
             v-model="formData.fields.email.value"
             :rules="formData.fields.email.rules"
             :error-message="formData.fields.email.errors"
             :error="formData.fields.email.errors !== ''"
-            label="E-mail"
+            label="Эл. почта"
             standout
           ></q-input>
           <q-input
@@ -62,17 +71,10 @@
             mask="+# (###) ### - ## - ##"
             fill-mask
             unmasked-value
-            label="Phone"
+            label="Телефон"
             standout
           ></q-input>
         </q-form>
-        <q-btn
-            class="full-width"
-            color="primary"
-            @click="exitUser(); "
-            append-icon="mdi-logout-variant"
-            label="Sign out"
-        />
     </q-page>
   </q-page-container>
 </template>
@@ -88,15 +90,25 @@ const router = useRouter()
 const { user, checkUsername, checkEmail, saveItem  } = useUserStore()
 
 const formData = reactive({
-  step: route.params.step,
-  passwordIsPin: true,
   valid: true,
   fields: {
+    name: {
+      value: user.active.data.name,
+      rules: [
+        v => !!v || 'Нужно ввести имя',
+        v => v.length > 3 || 'Имя должно быть минимум 3 символа',
+        v => !(/[^A-Za-zА-Яа-я0-9\_ ]/.test(v)) || 'Только буквы и цифры'
+      ],
+      errors: '',
+      isError: false,
+      required: true
+    },
     username: {
       value: user.active.data.username,
       rules: [
-        v => !!v || 'Username is required',
-        v => v.length > 3 || 'Username must be at least 3 characters long'
+        v => !!v || 'Нужно ввести никнейм',
+        v => v.length > 3 || 'Никнейм должен быть минимум 3 символа',
+        v => !(/[^A-Za-z0-9\_]/.test(v)) || 'Только латинские буквы и цифры'
       ],
       errors: '',
       suggestions: []
@@ -124,6 +136,7 @@ const saveChanges = async function () {
   if (formData.valid) {
     const data = {
       user_id: user.active.data.id,
+      name: formData.fields.name.value,
       username: formData.fields.username.value,
       email: formData.fields.email.value,
       phone: formData.fields.phone.value

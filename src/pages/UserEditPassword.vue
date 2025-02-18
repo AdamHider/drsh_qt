@@ -11,7 +11,7 @@
           v-model="formData.valid"
           @submit.prevent="validate()"
           autocomplete="off"
-          class="full-width"
+          class="full-width q-py-sm"
         >
         <q-input v-if="formData.passwordIsPin"
             :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
@@ -21,6 +21,7 @@
             :type="formData.fields.oldPassword.reveal ? 'text' : 'password'"
             no-error-icon
             label="Old pin password"
+            standout
             mask="####"
           />
           <q-input v-else
@@ -29,6 +30,7 @@
             :error-message="formData.fields.oldPassword.errors"
             :type="formData.fields.oldPassword.reveal ? 'text' : 'password'"
             label="Old Password"
+            standout
           >
             <template v-slot:append>
               <q-icon
@@ -47,6 +49,7 @@
             :error="formData.fields.password.errors !== ''"
             :type="formData.fields.password.reveal ? 'text' : 'password'"
             no-error-icon
+            standout
             label="New pin password"
             mask="####"
           />
@@ -56,6 +59,7 @@
             :error-message="formData.fields.password.errors"
             :type="formData.fields.password.reveal ? 'text' : 'password'"
             label="New password"
+            standout
           >
             <template v-slot:append>
               <q-icon
@@ -73,6 +77,7 @@
             :error-message="formData.fields.passwordConfirm.errors"
             :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
             no-error-icon
+            standout
             label="Confirm new pin password"
             mask="####"
           />
@@ -82,6 +87,7 @@
             :error-message="formData.fields.passwordConfirm.errors"
             :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
             label="Confirm new password"
+            standout
           >
             <template v-slot:append>
               <q-icon

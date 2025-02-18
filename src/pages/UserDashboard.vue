@@ -32,9 +32,9 @@
             leave-active-class="animated fadeOutDownBig">
           <q-card flat square class="relative text-left q-pt-md q-pb-md col full-width no-shadow user-card">
               <q-card-section class="text-center q-pa-none">
-                <div class="text-h6"><b>{{ user.active?.data.username }}</b></div>
+                <div class="text-h6"><b>{{ user.active?.data.name }}</b></div>
                 <div class="text-caption">
-                  {{ user.active?.data.character?.title }}
+                  {{ user.active?.data.username }}
                 </div>
               </q-card-section>
               <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">

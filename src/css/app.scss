@@ -236,6 +236,10 @@ a{
   }
   .q-field__control{
     border: 2px solid rgba(0, 0, 0, 0.15);
+    .q-field__label{
+      font-size: 14px;
+      font-weight: bold;
+    }
     input{
       font-weight: bold;
     }

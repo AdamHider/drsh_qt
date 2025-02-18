@@ -138,11 +138,6 @@ export class Api extends ApiService{
             return this.post('exercise', 'getLeaderboard', params)
         }
     }
-    notifications = {
-        getList: (params) => {
-            return this.post('notification', 'getList', params)
-        }
-    }
     user = {
         getItem: (params) =>  {
             return this.post('user', 'getItem', params)
@@ -161,6 +156,9 @@ export class Api extends ApiService{
         },
         checkEmail: (params) => {
             return this.post('user', 'checkEmail', params);
+        },
+        generateUsername: (params) => {
+            return this.post('user', 'generateUsername', params);
         }
     }
     auth = {

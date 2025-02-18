@@ -117,11 +117,14 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     showMessage('User data saved!')
     return saveResponse
   }
-  function checkUsername (username) {
-    return api.user.checkUsername(username)
+  function checkUsername (params) {
+    return api.user.checkUsername(params)
   }
-  function checkEmail (username) {
-    return api.user.checkEmail(username)
+  function checkEmail (params) {
+    return api.user.checkEmail(params)
+  }
+  function generateUsername (params) {
+    return api.user.generateUsername(params)
   }
 
   return {
@@ -138,6 +141,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     saveItemSetting,
     savePassword,
     checkUsername,
-    checkEmail
+    checkEmail,
+    generateUsername
   }
 })
