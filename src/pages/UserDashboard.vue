@@ -49,7 +49,7 @@
                 </div>
               </q-card-section>
 
-              <q-card-section class="q-pa-none">
+              <q-card-section class="q-pa-none" v-if="user.active?.data.statistics">
                   <div class="q-pa-sm row items-start border-between">
                       <div class="col-4">
                         <q-item class="rounded-borders text-center">
@@ -81,28 +81,26 @@
                   <div class="text-h6">Effects</div>
               </q-card-section>
               <q-card-section class="q-pa-none">
-                  <div class="q-pa-sm flex items-start">
-                      <UserSettingBar :setting="user.active?.data.settings.resourceGainModifier" size="38px" percentage/>
-                      <UserSettingBar :setting="user.active?.data.settings.energyRestorationTime" size="38px" />
-                      <UserSettingBar :setting="user.active?.data.settings.energyMaxValue" size="38px" />
+                  <div class="q-py-sm">
+                    <UserSettingSlider :settings="user.active?.data.settings"/>
                   </div>
               </q-card-section>
               <q-card-section class="q-py-none ">
                   <div class="text-h6">Resources</div>
               </q-card-section>
-              <q-card-section class="q-pa-none">
+              <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
                   <div class="q-pa-sm row items-start">
                       <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.energy" size="38px"/>
+                          <UserResourceBar :resource="user.active?.data.resources.energy" size="38px" push/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.cobalt" size="38px"/>
+                          <UserResourceBar :resource="user.active?.data.resources.cobalt" size="38px" push/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.rubidium" size="38px"/>
+                          <UserResourceBar :resource="user.active?.data.resources.rubidium" size="38px" push/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.science" size="38px"/>
+                          <UserResourceBar :resource="user.active?.data.resources.science" size="38px" push/>
                       </div>
                   </div>
               </q-card-section>
@@ -128,7 +126,7 @@
 import { useUserStore } from '../stores/user'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import UserSettingBar from '../components/UserSettingBar.vue'
+import UserSettingSlider from '../components/UserSettingSlider.vue'
 import { useRoute } from 'vue-router'
 import { onMounted, onBeforeMount, onActivated, ref, watch } from 'vue'
 

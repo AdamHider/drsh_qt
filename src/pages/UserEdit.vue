@@ -11,7 +11,7 @@
           v-model="formData.valid"
           @submit.prevent="validate()"
           autocomplete="off"
-          class="full-width"
+          class="full-width q-py-sm"
         >
           <q-input
             v-model="formData.fields.username.value"
@@ -19,6 +19,7 @@
             :error-message="formData.fields.username.errors"
             :error="formData.fields.username.errors !== ''"
             label="Name"
+            standout
             required
           >
             <template v-if="formData.fields.username.errors == ''" v-slot:append>
@@ -51,6 +52,7 @@
             :error-message="formData.fields.email.errors"
             :error="formData.fields.email.errors !== ''"
             label="E-mail"
+            standout
           ></q-input>
           <q-input
             v-model="formData.fields.phone.value"
@@ -61,6 +63,7 @@
             fill-mask
             unmasked-value
             label="Phone"
+            standout
           ></q-input>
         </q-form>
         <q-btn

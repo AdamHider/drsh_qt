@@ -32,8 +32,24 @@
               <div class="text-h6"><b>Как Вас зовут?</b></div>
               <div class="text-grey">Придумайте имя для своего героя</div>
             </q-card-section>
+            <q-card-section>
+              <q-input
+                v-model="formData.fields.name.value"
+                :rules="formData.fields.name.rules"
+                :error-messages="formData.fields.name.errors"
+                :error="formData.fields.name.isError"
+                placeholder="Введите имя..."
+                bottom-slots
+                standout
+                required
+              >
+              <template v-slot:error>
+                <span>{{ formData.fields.name.errors }}</span>
+              </template></q-input>
+            </q-card-section>
             <q-card-actions vertical>
               <q-btn
+                  :disabled="!formData.valid"
                   @click="validate()"
                   push
                   v-on:keyup.enter="validate()"
@@ -42,6 +58,44 @@
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 3" class="ful-width rounded-b-0">
+            <q-card-section>
+              <div class="text-h6"><b>Вы мальчик или девочка?</b></div>
+              <div class="text-grey">Выберите правильный вариант</div>
+            </q-card-section>
+            <q-card-section>
+
+              <q-btn-toggle
+                v-model="formData.fields.gender.value"
+                :rules="formData.fields.gender.rules"
+                push
+                :text-color="(formData.fields.gender.value == 'male') ? 'red-4' : 'blue-4'"
+                :toggle-color="(formData.fields.gender.value == 'male') ? 'blue' : 'red'"
+                toggle-text-color="white"
+                :options="[
+                  {value: 'male', slot: 'maleSlot'},
+                  {value: 'female', slot: 'femaleSlot'}
+                ]"
+                required
+              >
+              <template v-slot:maleSlot>
+                <span style="text-shadow: none">Я мальчик</span>
+              </template>
+              <template v-slot:femaleSlot>
+                <span style="text-shadow: none">Я девочка</span>
+              </template>
+              </q-btn-toggle>
+            </q-card-section>
+            <q-card-actions vertical>
+              <q-btn
+                  :disabled="!formData.valid"
+                  @click="validate()"
+                  push
+                  v-on:keyup.enter="validate()"
+                  color="primary"
+                  label="Вперёд!"/>
+            </q-card-actions>
+          </q-card>
+          <q-card v-else-if="formData.step == 4" class="ful-width rounded-b-0">
             <q-card-section>
               <div class="text-h6"><b>Придумайте пин-код</b></div>
               <div class="text-grey">Он нужен для того, чтобы в любой момент продолжить путешествие</div>
@@ -63,7 +117,7 @@
                   label="Продолжить" />
             </q-card-actions>
           </q-card>
-          <q-card v-else-if="formData.step == 4" class="ful-width rounded-b-0">
+          <q-card v-else-if="formData.step == 5" class="ful-width rounded-b-0">
             <q-card-section>
               <div class="text-h6"><b>Повторите пин-код</b></div>
               <div class="text-grey">И убедитесь, что помните его</div>
@@ -86,7 +140,7 @@
                   label="Продолжить" />
             </q-card-actions>
           </q-card>
-          <q-card v-else-if="formData.step == 5" class="ful-width rounded-b-0">
+          <q-card v-else-if="formData.step == 6" class="ful-width rounded-b-0">
             <q-card-section>
               <div class="text-h6">Do you agree with our Terms?</div>
               <div class="text-grey">It would be very nice, maybe</div>
@@ -181,7 +235,7 @@ const formData = reactive({
     name: {
       value: '',
       rules: [
-        v => !!v || 'Name is required'
+        v => !!v || 'Нужно ввести имя'
       ],
       errors: '',
       isError: false,
@@ -190,7 +244,7 @@ const formData = reactive({
     gender: {
       value: '',
       rules: [
-        v => !!v || 'Gender is required'
+        v => !!v || 'Нужно выбрать'
       ],
       errors: '',
       isError: false,
@@ -225,17 +279,19 @@ const formData = reactive({
 })
 
 const steps = [
-  '', '', 'name', 'password', 'passwordConfirm', 'terms'
+  '', '', 'name', 'gender', 'password', 'passwordConfirm', 'terms'
 ]
 const validate = async function () {
   formData.valid = await form.value.validate()
-  if (formData.step === 5) {
+  if (formData.step === 6) {
     buttonLoading.value = true
-    const credentials = {
+    const data = {
+      name: formData.fields.name.value,
       password: formData.fields.password.value,
-      passwordConfirm: formData.fields.passwordConfirm.value
+      passwordConfirm: formData.fields.passwordConfirm.value,
+      gender: formData.fields.gender.value,
     }
-    const authResponse = await signUp(credentials)
+    const authResponse = await signUp(data)
     if (!authResponse.error) {
       const logged = await signIn(authResponse.auth_key)
       buttonLoading.value = false
