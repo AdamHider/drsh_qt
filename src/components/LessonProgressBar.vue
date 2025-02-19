@@ -92,7 +92,7 @@
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
                   <div v-for="(resource, resourceIndex) in reward[3]" :key="resourceIndex" >
-                    <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
+                    <q-item dense :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
                         <q-item-section avatar style="min-width: unset;">
                             <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
                         </q-item-section>

@@ -4,11 +4,9 @@
             :src="(props.image) ? props.image : defaultImage"
             width="80px"
         />
-        <q-card-section class="q-pb-none">
-            <div class="text-h6">{{ props.title }}</div>
-        </q-card-section>
-        <q-card-section class="q-py-none">
-            {{ props.description }}
+        <q-card-section>
+            <div class="text-subtitle1"><b>{{ props.title }}</b></div>
+            <div class="text-caption text-grey">{{ props.description }}</div>
         </q-card-section>
     </q-card>
 </template>

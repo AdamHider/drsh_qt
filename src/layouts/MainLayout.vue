@@ -1,15 +1,17 @@
 <template>
   <AppBackground/>
-    <q-layout view="hHh LpR fFf">
-        <router-view v-slot="{ Component }">
-          <keep-alive :exclude="['LessonItem', 'LessonFinish']">
-              <component :is="Component"/>
-          </keep-alive>
-        </router-view>
-          <q-bottom-bar/>
-    </q-layout>
+  <q-layout view="hHh LpR fFf">
+      <router-view v-slot="{ Component }">
+        <keep-alive :exclude="['LessonItem', 'LessonFinish']">
+            <component :is="Component"/>
+        </keep-alive>
+      </router-view>
+        <q-bottom-bar/>
+  </q-layout>
+  <AppLoader/>
 </template>
 
 <script setup>
 import AppBackground from 'components/AppBackground.vue'
+import AppLoader from 'components/AppLoader.vue'
 </script>

@@ -1,6 +1,6 @@
 <template>
   <q-item flat clickable
-    :class="`q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
+    :class="`q-push q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
     <q-item-section avatar>
       <q-avatar :size="props.size" text-color="white">
         <img class="absolute" :src="skill.image" />
@@ -29,6 +29,6 @@ const skill = toRefs(props).skill
 $glow: 0px 0px 5px -1px $blue;
 
 .skill-item.is_blocked { filter: grayscale(1); }
-.skill-item.is_gained { background: $gradient-positive !important; color: white; }
-.skill-item.is_available { box-shadow: inset 0px 0px 0px 3px $positive }
+.skill-item.is_gained { background: $gradient-positive !important; color: white; text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.27); }
+.skill-item.is_available { background: $gradient-light-blue !important; color: white; text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.27);}
 </style>

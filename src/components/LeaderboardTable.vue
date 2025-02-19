@@ -1,16 +1,6 @@
 <template>
   <q-card flat >
-    <q-card-section class="q-py-none flex justify-between items-center text-left">
-      <div class="text-h6">Leaderboard</div>
-      <q-icon
-        v-if="props.allowedFilters && props.allowedFilters.length > 0"
-        @click="filterExpanded = !filterExpanded"
-        size="sm"
-        color="gray"
-        :name="(filterExpanded) ? 'filter_alt_off' : 'filter_alt'"
-      ></q-icon>
-    </q-card-section>
-    <q-card-section v-if="filterExpanded" class="q-py-sm text-left">
+    <q-card-section class="q-py-sm text-left">
       <LeaderboardFilter
         :allowed-filters="props.allowedFilters"
         :timePeriod="props.timePeriod"
@@ -20,41 +10,29 @@
     <q-card-section v-if="leaderboardData.data.length > 0" class="q-py-sm relative-position">
       <q-inner-loading :showing="isLoading"/>
       <q-list separator >
-        <q-item v-for="(commonItem, commonKey) in leaderboardData.data" :key="commonKey" :active="commonItem.is_active" class="q-my-sm q-px-none text-left">
+        <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" class="q-my-sm q-px-none text-left">
             <q-item-section avatar class="text-center">
-              <q-avatar size="40px"
-                :color="(commonItem.is_winner) ? 'orange' : 'white'"
-                :text-color="(commonItem.is_winner) ? 'white' : 'dark'"
-                >
-                <b>{{ commonItem.place }}</b>
+              <q-avatar size="40px">
+                <b>{{ row.place }}</b>
               </q-avatar>
             </q-item-section>
 
             <q-item-section avatar>
               <div class="q-gutter-sm">
-                <q-avatar
-                    v-for="(userData, userKey) in commonItem.data.slice(0, 2)" :key="userKey"
-                    size="40px"
-                    class="overlapping"
-                    :style="`left: -${userKey * 15}px`"
-                  >
-                    <img :src="userData.avatar">
+                <q-avatar size="40px">
+                    <img :src="row.image">
                 </q-avatar>
               </div>
             </q-item-section>
             <q-item-section>
               <q-item-label>
-                <span v-for="(userData, userKey) in commonItem.data.slice(0, 2)" :key="userKey" class="q-pa-none text-dark">
-                  <b :class="(userData.is_active == 1) ? 'text-primary' : 'text-dark'">{{ userData.username }}</b>
-                  <b v-if="commonItem.data.slice(0, 2)[userKey+1]">, </b>
-                </span>
-                <span v-if="commonItem.data.length > 2" class="text-dark">
-                  <b> and {{commonItem.data.length - 2}} more</b>
+                <span class="q-pa-none text-dark">
+                  <b :class="(row.is_active == 1) ? 'text-primary' : 'text-dark'">{{ row.name }}</b>
                 </span>
               </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <div class="text-subtitle"><b>{{ commonItem.points }}</b></div>
+              <div class="text-subtitle"><b>{{ row.points }}</b></div>
             </q-item-section>
         </q-item>
       </q-list>
@@ -85,7 +63,6 @@ const leaderboardData = reactive({
 })
 
 const isLoading = ref(false)
-const filterExpanded = ref(false)
 
 const props = defineProps({
   allowedFilters: Array,
@@ -97,14 +74,13 @@ const props = defineProps({
 const loadTable = async () => {
   const filter = prepareFilter()
   isLoading.value = true
-  const leaderboardResponse = await getLeaderboard('table', filter)
+  const leaderboardResponse = await getLeaderboard(filter)
   leaderboardData.data = leaderboardResponse
   isLoading.value = false
 }
 
 const prepareFilter = () => {
   if (props.lessonId) leaderboardData.filter.lesson_id = props.lessonId
-  if (props.challengeId) leaderboardData.filter.challenge_id = props.challengeId
   if (props.timePeriod) leaderboardData.filter.time_period = props.timePeriod
   return leaderboardData.filter
 }

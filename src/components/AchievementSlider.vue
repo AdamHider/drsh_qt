@@ -25,8 +25,8 @@
       </swiper-slide>
     </swiper>
     <BannerNotFound v-else
-      title="Ooops..."
-      description="There are no achievements yet"
+      title="Упс..."
+      description="У вас пока нет достижений"
       default-image
     />
 </template>

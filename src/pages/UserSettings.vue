@@ -2,7 +2,7 @@
   <q-page-container>
     <q-app-header class="bg-white rounded-b-md " reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-        <q-toolbar-title>Настройки</q-toolbar-title>
+        <q-toolbar-title><b>Настройки</b></q-toolbar-title>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
       <q-card flat>
@@ -21,7 +21,7 @@
                 </q-item-section>
             </q-item>
         </q-card-section>
-        <q-card-section>
+        <q-card-actions>
             <q-btn
                 class="full-width"
                 @click="exitUser();"
@@ -29,7 +29,7 @@
                 label="Выйти"
                 push color="dark"
             />
-        </q-card-section>
+        </q-card-actions>
       </q-card>
     </q-page>
   </q-page-container>

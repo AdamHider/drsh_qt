@@ -1,18 +1,17 @@
 <template>
   <div>
-
-  <div class="justify-center">
+    <div class="justify-center">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block">
-          <div class="q-pa-sm q-mt-sm">
-            <div class="row justify-between ">
-              <div><b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
-              <div><q-badge color="white" text-color="blue"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(0)}}%</b></q-badge></div>
+          <div class="q-pa-md q-mt-sm">
+            <div class="row justify-between q-mb-sm">
+              <div class="text-subtitle1"><b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
+              <div class="text-subtitle2"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(0)}}%</b></div>
             </div>
             <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="20px" color="blue"/>
           </div>
           <div >
-              <swiper :class="`q-pa-sm`"  slides-per-view="auto" spaceBetween="50" >
-                <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center q-pa-sm">
+              <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
+                <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center">
                   <SkillAvatar v-for="(skill, skillIndex) in skillCol.slots" :key="skillIndex"
                     :skill="skill"
                     @click="openModal(skill)"
@@ -35,7 +34,7 @@
         </q-card-section>
         <q-separator/>
         <q-card-section v-if="currentSkill.modifiers">
-          <div class="text-center"><b>Эффекты: </b></div>
+          <div class="text-subtitle1"><b>Эффекты: </b></div>
           <q-list>
             <q-item v-for="(modifier, modifierIndex) in currentSkill.modifiers" :key="modifierIndex" class="text-left rounded-borders" >
                 <q-item-section>
@@ -45,32 +44,34 @@
             </q-item>
           </q-list>
         </q-card-section>
-        <q-separator/>
         <q-card-actions >
           <div v-if="currentSkill.is_available" class="full-width">
-            <div v-if="currentSkill.cost" class="q-pa-sm">
-              <div class="text-center"><b>Необходимо: </b></div>
+            <div v-if="currentSkill.cost" class="q-pa-sm bg-grey-2 rounded-sm">
+              <div class="text-center text-subtitle1"><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
                 <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
-                  <q-item :class="`bg-grey-3 text-${(resource.quantity > resource.quantity_cost) ? resource.color : 'red'} text-left rounded-borders`" >
-                      <q-item-section avatar>
-                          <q-img width="28px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );;"/>
+                  <q-item :class="`${(resource.quantity > resource.quantity_cost) ? `bg-light-gradient-${resource?.color} text-white` : 'bg-grey-4 text-red'} text-left rounded-borders`" >
+                      <q-item-section avatar style="min-width: unset;">
+                          <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075 );"/>
                       </q-item-section>
                       <q-item-section>
-                          <q-item-label><b>{{resource.quantity}}/{{ resource.quantity_cost }}</b></q-item-label>
+                          <q-item-label>
+                            <span class="text-subtitle2"><b>{{resource.quantity}}</b></span>
+                            <span class="text-caption"><b>/{{ resource.quantity_cost }}</b></span>
+                          </q-item-label>
                       </q-item-section>
                   </q-item>
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.is_purchasable" color="primary" class="full-width" icon="file_upload" label="Upgrade" @click="claimSkill(currentSkill.id)"/>
-            <q-btn v-else color="gray" flat class="full-width" label="Not enough resources"/>
+            <q-btn v-if="currentSkill.is_purchasable" color="primary" class="full-width text-bold" icon="file_upload" label="Upgrade" @click="claimSkill(currentSkill.id)"/>
+            <q-btn v-else color="gray" flat class="full-width text-bold" label="Недостаточно ресурсов"/>
           </div>
           <div v-if="currentSkill.is_gained" class="full-width">
-            <q-btn color="white" icon="check" flat class="full-width" label="Upgraded"/>
+            <q-btn color="white" icon="check" flat class="full-width text-bold" label="Исследовано"/>
           </div>
           <div v-if="!currentSkill.is_gained && !currentSkill.is_available" class="full-width">
-            <div><b>Сначала изучите: </b></div>
+            <div class="text-subtitle1"><b>Сначала изучите: </b></div>
             <q-list class="text-left">
               <q-item  clickable  v-for="(requiredSkill, requiredSkillIndex) in currentSkill.required_skills" :key="requiredSkillIndex"  @click="openModal(requiredSkill)">
                 <q-item-section avatar>

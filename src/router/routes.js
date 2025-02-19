@@ -111,15 +111,6 @@ const routes = [
         }
       },
       {
-        path: '/quests',
-        component: () => import('pages/QuestsPage.vue'),
-        meta: {
-          requiresAuth: true,
-          bottomBarEnabled: true,
-          transition: 'slide-in'
-        }
-      },
-      {
         path: '/skills',
         component: () => import('pages/SkillsPage.vue'),
         meta: {

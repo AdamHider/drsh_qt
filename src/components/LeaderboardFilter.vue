@@ -34,15 +34,15 @@ const formData = reactive({
       value: 'all',
       options: [
         {
-          label: 'All time',
+          label: 'За всё время',
           value: 'all'
         },
         {
-          label: 'Month',
+          label: 'За месяц',
           value: 'month'
         },
         {
-          label: 'Week',
+          label: 'За неделю',
           value: 'week'
         }
       ]

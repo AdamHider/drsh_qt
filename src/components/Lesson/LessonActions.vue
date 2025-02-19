@@ -22,6 +22,7 @@
         <q-btn
             v-if="lesson.active.page?.actions?.main == 'next'"
             push
+            :loading="isLoading"
             style="flex: 2"
             color="positive"
             label="Далее"
@@ -30,6 +31,7 @@
         <q-btn
             v-if="lesson.active.page?.actions?.main == 'confirm'"
             push
+            :loading="isLoading"
             style="flex: 2"
             color="primary"
             label="Ответить"
@@ -38,6 +40,7 @@
         <q-btn
             v-if="lesson.active.page?.actions?.main == 'finish'"
             push
+            :loading="isLoading"
             style="flex: 2"
             color="positive"
             icon="done_all"
@@ -86,6 +89,7 @@ const backDialog = ref(false)
 const confirmDialog = ref(false)
 
 const extraActions = ref(false)
+const isLoading = ref(false)
 
 const emits = defineEmits(['onPageChanged', 'onAnswerSaved', 'onDialogOpened'])
 const props = defineProps({
@@ -98,10 +102,12 @@ const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (
 const { lesson } = useLesson()
 
 const next = async () => {
+  isLoading.value = true
   emits('onPageChanged', 'next')
   extraActions.value = false
 }
 const finish = async () => {
+  isLoading.value = true
   emits('onPageChanged', 'finish')
   extraActions.value = false
 }
@@ -110,6 +116,8 @@ const confirm = async () => {
     confirmDialog.value = true
     return
   }
+
+  isLoading.value = true
   emits('onAnswerSaved')
   extraActions.value = false
 }
@@ -131,5 +139,8 @@ watch(() => backDialog.value, (newValue, oldValue) => {
 })
 watch(() => confirmDialog.value, (newValue, oldValue) => {
   emits('onDialogOpened', newValue)
+})
+watch(() => lesson.active.page, (newValue, oldValue) => {
+  isLoading.value = false
 })
 </script>

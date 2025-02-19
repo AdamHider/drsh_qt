@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class=" rounded-b-md " reveal>
-        <q-toolbar-title>Исследования</q-toolbar-title>
+        <q-toolbar-title><b>Исследования</b></q-toolbar-title>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 35px;" class="bg-white">
       <div class="q-pb-md">

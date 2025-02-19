@@ -9,8 +9,8 @@ export function useExercise () {
     const exerciseResponse = await api.exercise.redoItem({ lesson_id: lessonId })
     return exerciseResponse
   }
-  async function getLeaderboard (mode, filter) {
-    const leaderboardResponse = await api.exercise.getLeaderboard({ ...{ mode }, ...filter })
+  async function getLeaderboard (filter) {
+    const leaderboardResponse = await api.exercise.getLeaderboard(filter)
     return leaderboardResponse
   }
 

@@ -41,7 +41,7 @@
                 <q-progress-bar :value="user.active.data.level?.percentage" size="25px" color="positive"/>
                 <div class="row q-ma-sm ">
                     <div class="col text-left">
-                        <b>Level {{user.active.data.level?.level}}</b>
+                        <b>Уровень {{user.active.data.level?.level}}</b>
                     </div>
                     <div class="col text-right">
                         <b>{{user.active.data.level?.experience}}/{{user.active.data.level?.points_to}}</b>
@@ -77,16 +77,16 @@
                       </div>
                   </div>
               </q-card-section>
-              <q-card-section class="q-py-none ">
-                  <div class="text-h6">Effects</div>
+              <q-card-section class="q-py-none q-pt-sm">
+                  <div class="text-subtitle1"><b>Активные эффекты</b></div>
               </q-card-section>
               <q-card-section class="q-pa-none">
                   <div class="q-py-sm">
                     <UserSettingSlider :settings="user.active?.data.settings"/>
                   </div>
               </q-card-section>
-              <q-card-section class="q-py-none ">
-                  <div class="text-h6">Resources</div>
+              <q-card-section class="q-py-none q-pt-sm">
+                  <div class="text-subtitle1"><b>Ресурсы</b></div>
               </q-card-section>
               <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
                   <div class="q-pa-sm row items-start">
@@ -104,9 +104,9 @@
                       </div>
                   </div>
               </q-card-section>
-              <q-card-section class="q-py-none flex justify-between items-center">
-                  <div class="text-h6">Achievements</div>
-                  <router-link to="/achievements">Show all</router-link>
+              <q-card-section class="q-py-none flex justify-between items-center q-pt-sm">
+                  <div class="text-subtitle1"><b>Достижения</b></div>
+                  <router-link to="/achievements">Показать все</router-link>
               </q-card-section>
                   <AchievementSlider
                       :slidesPerView=2.4
