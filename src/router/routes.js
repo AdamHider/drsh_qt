@@ -1,4 +1,5 @@
 import MainLayout from 'layouts/MainLayout.vue'
+import CoursePage from 'pages/CoursePage.vue'
 import { useUserStore } from '../stores/user'
 const checkIfSigned = function (to, from) {
   const { user } = useUserStore()
@@ -21,7 +22,7 @@ const routes = [
       {
         path: 'course',
         name: 'course',
-        component: () => import('pages/CoursePage.vue'),
+        component: CoursePage,
         meta: {
           level: 1,
           requiresAuth: true,

@@ -22,7 +22,7 @@
       <q-card class="bg-white text-center" style="width: 300px">
         <q-card-section>
           <div v-if="!claimError" class="text-h6">Задание выполнено!</div>
-          <div v-else class="text-h6">Ooops...</div>
+          <div v-else class="text-h6">Упс...</div>
         </q-card-section>
         <q-card-section v-if="!claimError">
           <div class="full-width q-pb-sm rounded-sm bg-grey-2">
@@ -91,24 +91,16 @@
     </q-dialog>
     <q-dialog v-model="activeQuestDialog" position="bottom">
       <q-card class="bg-white  full-width rounded-b-0" style="overflow: visible;">
-        <q-item :class="`bg-gradient-${activeQuest.group.color} text-white`">
-          <q-item-section avatar>
-              <img :src="activeQuest.group.image_avatar" width="50px" class="absolute-bottom q-mx-sm">
-          </q-item-section>
-
-          <q-item-section>
-              <q-item-label class="text-subtitle1"><b>{{ activeQuest.group.title }}</b></q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-card-section class="q-pa-sm">
+        <q-card-section class="q-pb-none q-pt-sm">
           <q-item class="q-pa-none">
-            <q-item-section class="text-left">
+            <q-item-section avatar class="relative-position col-3" style="justify-content: end;">
+                <img :src="activeQuest.group.image_full" style="width: 120%; left: -30%;" class="absolute-bottom q-mx-sm">
+            </q-item-section>
+            <q-item-section class="text-left q-pb-sm">
               <div class="row q-my-sm justify-between items-end" >
                 <div>
-                  <q-item-label>
-                    <b class="vertical-middle">{{ activeQuest.title }}</b>
-                    <q-icon name="check_circle" class="vertical-middle q-ml-sm" color="positive"></q-icon>
-                  </q-item-label>
+                  <q-item-label :class="`text-caption text-${activeQuest.group.color}`"><b>{{ activeQuest.group.title }}</b></q-item-label>
+                  <q-item-label class="text-subtitle2"><b>{{ activeQuest.title }}</b></q-item-label>
                   <q-chip
                       v-if="activeQuest.time_left_humanized"
                       dense
@@ -120,15 +112,17 @@
                       <b>{{ activeQuest.time_left_humanized }}</b>
                   </q-chip>
                 </div>
-                <div class="col text-right">
+                <div class="col text-right self-end">
                     <b>{{activeQuest.progress}} / {{activeQuest.value}}</b>
                 </div>
               </div>
               <q-progress-bar :value="activeQuest.progress/activeQuest.value*100" size="25px" :color="(activeQuest.progress >= activeQuest.value) ? 'positive' : 'orange'"/>
+
             </q-item-section>
           </q-item>
         </q-card-section>
-        <q-card-section class="q-px-sm q-pt-none q-pb-sm">
+        <q-separator/>
+        <q-card-section class="q-pa-sm ">
           <div class="full-width q-pb-sm rounded-sm bg-grey-2">
             <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
             <div class="row q-gutter-sm items-center justify-center">

@@ -3,7 +3,7 @@
     :class="`q-push q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'}`">
     <q-item-section avatar>
       <q-avatar :size="props.size" text-color="white">
-        <img class="absolute" :src="skill.image" />
+        <q-img class="absolute" :src="skill.image" no-spinner/>
       </q-avatar>
       </q-item-section>
     <q-item-section class="q-pt-none text-left"><div  class="text-subtitle2" style=""><b>{{ skill.title }}</b></div></q-item-section>

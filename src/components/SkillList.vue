@@ -26,8 +26,8 @@
       </div>
     </div>
     <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" full-width position="bottom">
-      <q-card :class="`q-pt-sm skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
-        <q-img width="90px" :src="currentSkill.image" />
+      <q-card :class="`q-pt-sm rounded-b-0 skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
+        <q-img width="90px" :src="currentSkill.image" no-spinner/>
         <q-card-section>
           <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
           <div class="text-caption">{{ currentSkill.description }}</div>

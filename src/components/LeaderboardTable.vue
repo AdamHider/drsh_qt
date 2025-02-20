@@ -7,7 +7,7 @@
         @update-filter="updateFilter($event)"
       />
     </q-card-section>
-    <q-card-section v-if="leaderboardData.data.length > 0" class="q-py-sm relative-position">
+    <q-card-section v-if="leaderboardData.data.length > 0 " class="q-py-sm relative-position">
       <q-inner-loading :showing="isLoading"/>
       <q-list separator >
         <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" class="q-my-sm q-px-none text-left">
@@ -37,7 +37,7 @@
         </q-item>
       </q-list>
     </q-card-section>
-    <q-card-section v-else class="q-pa-none">
+    <q-card-section v-else-if="!isLoading" class="q-pa-none">
       <BannerNotFound
         title="Ooops..."
         description="There is no available statistics"

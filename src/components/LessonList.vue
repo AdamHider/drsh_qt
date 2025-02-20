@@ -1,13 +1,7 @@
 <template>
-    <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" @load="onLoad" reverse class="relative-position" style="z-index: 1;padding-top: 50px">
-        <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-            <q-spinner color="primary" name="dots" size="40px" />
-            </div>
-        </template>
-
+    <div ref="infiniteList" class="relative-position" style="z-index: 1;padding-top: 50px">
           <div v-for="lesson in lessonList" :key="lesson.id"
-              :class="`${(lesson.type !== 'group') ? 'planet-block' : ''}  row q-px-sm ${(lesson.order % 2) ? 'justify-start' : 'justify-end'} ${(lesson.is_blocked === true) ? 'is-blocked' : ''} ${(lesson.is_initial) ? 'is-initial' : ''}`"
+              :class="`${(lesson.type !== 'group') ? 'planet-block' : ''}  row q-px-sm ${(lesson.order % 2) ? 'justify-end' : 'justify-start'} ${(lesson.is_blocked === true) ? 'is-blocked' : ''} ${(lesson.is_initial) ? 'is-initial' : ''}`"
               v-intersection="onIntersection"
               :groupBackground="lesson.course_section.background_image"
               :groupGradient="lesson.course_section.background_gradient"
@@ -42,13 +36,13 @@
                                   :style="{
                                       animationDelay: `-${satellite.delay}s`,
                                       animationDuration: `${satellite.duration}s`,
-                                      scale: `1.${satellite.distance /2}`
+
                                   }">
                                       <img  :src="satellite.image"
                                         :style="{
                                             width: `${satellite.size}px`,
+                                            left: `calc(50% - ${satellite.size}px/2)`,
                                             top: `calc(-${satellite.size}px/2)`,
-                                            scale: `calc(-1.${satellite.distance} + 2)`
                                         }"
                                       />
                                   </div>
@@ -56,7 +50,7 @@
                               <q-img
                                   :src="lesson.image"
                                   loading="lazy"
-                                  spinner-color="white">
+                                  no-spinner>
                               </q-img>
                           </q-card-section>
                           <q-card-section class="text-center text-white q-pa-none absolute full-width" v-if="inView[lesson.id]" style="top: 100%;">
@@ -68,7 +62,7 @@
                 </transition>
             </div>
         </div>
-    </q-infinite-scroll>
+    </div>
     <q-page-sticky
         class="fixed full-width full-height"
         :style="`background: ${groupGradient}; transform: none`"
@@ -76,8 +70,7 @@
         <q-img
         :src="groupBackground"
         class="absolute-top absolute-left full-width full-height"
-        loading="lazy"
-        spinner-color="white"
+        no-spinner
         />
     </q-page-sticky>
 
@@ -137,6 +130,7 @@ const composeList = () => {
     }
     lessonList.value.unshift({ ...lesson.list[i], ...{ type: 'lesson' } })
   }
+  console.log(lessonList)
 }
 const checkGroup = (courseSection) => {
   if (courseSection.id != currentCourseSectionId.value) {
@@ -159,15 +153,17 @@ const onIntersection = (entry) => {
     inView.value[entry.target.attributes.lessonId?.value] = true
   }, 0)
 }
-onMounted(() => {
+onMounted(async () => {
+  await getList()
   transitionTrigger.value = true
   selectedLesson.value = 0
+  composeList()
 })
 onActivated(async () => {
+  await getList()
   if (lesson.list.length > 0) {
     currentCourseSectionId.value = 0
-    await getListUpdates()
-    composeList()
+    //composeList()
     transitionTrigger.value = true
     selectedLesson.value = 0
   }
@@ -232,15 +228,32 @@ watch(() => course.active?.id, async (newData, oldData) => {
     width: 80%;
     z-index: 100;
     border-radius: 100%;
-    border: 1px solid #ffffff29;
     text-align: center;
-    -webkit-animation: 8s linear 0s infinite sateliteRotate;
-    animation: linear infinite sateliteRotate;
+    /*-webkit-animation: 8s linear 0s infinite sateliteRotate;
+    animation: linear infinite sateliteRotate;*/
+    &:nth-child(1){
+      transform: rotate(180deg) scale(0.9);
+      img{
+        transform: rotate(-180deg) scale(1.4);
+      }
+    }
+    &:nth-child(2){
+      transform: rotate(150deg) scale(0.9);
+      img{
+        transform: rotate(-150deg) scale(1.4);
+      }
+    }
+    &:nth-child(3){
+      transform: rotate(210deg) scale(0.9);
+      img{
+        transform: rotate(-210deg) scale(1.4);
+      }
+    }
 }
 .satellite-item img{
   position: absolute;
-  -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
-  animation: 16s linear 0s infinite satelitePlanetRotate;
+  /*-webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
+  animation: 16s linear 0s infinite satelitePlanetRotate;*/
 }
 @keyframes sateliteRotate {
   0%   {transform: rotate(0deg);}
