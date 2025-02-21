@@ -70,7 +70,6 @@ export default route(function (/* { store, ssrContext } */) {
       // this route requires auth, check if logged in
       // if not, redirect to login page.
       const { user } = useUserStore()
-      console.log(user.active.data)
       if (!user.active.data.id) {
         next({ path: '/authorization' })
       } else {
