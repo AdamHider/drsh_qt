@@ -7,23 +7,39 @@ const achievement = reactive({
 })
 
 export function useUpdate () {
-  async function initSSE () {
+  function initSSE () {
     var url = api.baseUrl+'SSE';
     if(localStorage['x-sid']) url += '/'+localStorage['x-sid'];
     const eventSource = new EventSource(url);
 
+    eventSource.addEventListener("ping", function(event) {
+      console.log('ping:', event.data);
+    });
     eventSource.onmessage = (event) => {
+
       const data = JSON.parse(event.data);
-      this.message = data.message;
       console.log('Полученные данные:', data);
     };
 
     eventSource.onerror = (error) => {
       console.error('SSE error:', error);
+
+    };
+  }
+  function initWebSocket() {
+    const ws = new WebSocket('ws://mektepium-app.local:8080');
+
+    ws.onmessage = (event) => {
+      console.log('Полученные данные WebSocket:', event.data);
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
     };
   }
 
   return {
-    initSSE
+    initSSE,
+    initWebSocket
   }
 }

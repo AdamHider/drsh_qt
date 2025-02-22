@@ -14,7 +14,7 @@ import { useRouter, useRoute } from 'vue-router'
 const { getList } = useLesson()
 const { getItem } = useCourse()
 const { showLoader, hideLoader } = useLoader()
-const { initSSE } = useUpdate()
+const { initSSE, initWebSocket } = useUpdate()
 const router = useRouter()
 const route = useRoute()
 
