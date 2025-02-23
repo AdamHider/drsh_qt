@@ -7,14 +7,14 @@ import { useUserStore } from './stores/user'
 import { useLesson } from './composables/useLesson'
 import { useCourse } from './composables/useCourse'
 import { useLoader } from './composables/useLoader'
-import { useUpdate } from './composables/useUpdate'
+import { useNotification } from './composables/useNotification'
 
 import { useRouter, useRoute } from 'vue-router'
 
 const { getList } = useLesson()
 const { getItem } = useCourse()
 const { showLoader, hideLoader } = useLoader()
-const { initSSE, initWebSocket } = useUpdate()
+const { initSSE } = useNotification()
 const router = useRouter()
 const route = useRoute()
 

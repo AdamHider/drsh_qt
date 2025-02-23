@@ -6,7 +6,8 @@
             <component :is="Component"/>
         </keep-alive>
       </router-view>
-        <q-bottom-bar/>
+      <q-bottom-bar/>
+      <AppNotifications/>
   </q-layout>
   <AppLoader/>
 </template>
@@ -14,4 +15,7 @@
 <script setup>
 import AppBackground from 'components/AppBackground.vue'
 import AppLoader from 'components/AppLoader.vue'
+import AppNotifications from 'components/AppNotifications.vue'
+
+
 </script>
