@@ -42,9 +42,10 @@ const progressAnimation = ref(0)
 
 watch(() => notifications.list, () => {
   if(notifications.list.length > 0){
-    notificationQueue.value =notifications.list
+    notificationQueue.value = notifications.levels
   }
 })
+/*
 const runTimer = function () {
   progress.value = 0
   timer.value = setInterval(() => {
@@ -53,7 +54,7 @@ const runTimer = function () {
       clearInterval(timer.value)
       timer.value = null
       dialog.value = false
-      notificationQueue.value = [notificationQueue.value[1]];
+      notificationQueue.value.shift();
       return false;
     }
 
@@ -62,10 +63,9 @@ const runTimer = function () {
   }, 50)
 }
 watch(() => notificationQueue.value, () => {
-
     console.log(notificationQueue.value)
     notification.value = notificationQueue.value[0].data
     dialog.value = true
     runTimer()
-})
+})*/
 </script>
