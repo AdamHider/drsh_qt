@@ -9,7 +9,7 @@
             </div>
             <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="20px" color="blue"/>
           </div>
-          <div >
+          <div>
               <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
                 <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center">
                   <SkillAvatar v-for="(skill, skillIndex) in skillCol.slots" :key="skillIndex"

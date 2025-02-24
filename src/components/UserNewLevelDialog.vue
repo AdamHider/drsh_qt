@@ -1,24 +1,17 @@
 <template>
     <div>
-      <q-dialog v-model="dialog" maximized @hide="onClose">
-        <q-card style="width: 350px" >
+      <q-dialog v-model="dialog" maximized @hide="onClose" transition-show="slide-up" transition-hide="slide-down">
+        <AppBackground/>
+        <q-card class="column justify-center text-center bg-transparent text-white">
+          <q-img :src="notification.image" width="150px" class="self-center"/>
           <q-card-section>
-            <q-item :to="notification.link">
-              <q-item-section avatar>
-                  <q-img :src="notification.image" size="60px"/>
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label class="text-subtitle1"><b>{{ notification.title }}</b></q-item-label>
-                <q-item-label class="text-caption"><b>{{ notification.description }}</b></q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                <q-icon name="chevron_right"/>
-              </q-item-section>
-            </q-item>
+            <div class="text-h6"><b>{{ notification.title }}</b></div>
+            <div class="text-subtitle2"><b>{{ notification.description }}</b></div>
           </q-card-section>
-          <q-linear-progress :value="progress" color="primary" :animation-speed="progressAnimation" />
+          <q-card-actions class="justify-center">
+            <q-btn flat color="white" v-close-popup><b>Нажмите, чтобы продолжить</b></q-btn>
+          </q-card-actions>
+
         </q-card>
       </q-dialog>
 
@@ -26,20 +19,18 @@
 </template>
 
 <script setup>
+import AppBackground from 'components/AppBackground.vue'
 import { useNotification } from '../composables/useNotification'
 import { ref, watch } from 'vue'
 
-const { notifications, clearLists } = useNotification()
+const { notifications } = useNotification()
 
 const dialog = ref(false)
 const notification = ref({})
 const notificationList = ref([])
-const progress = ref(0)
-const progressAnimation = ref(0)
-const isStarted = ref(false)
 
 const composeList = () => {
-  if(notifications.levels.list.length > 0){
+  if(notificationList.value.length > 0){
     showNotification()
   }
 }
@@ -56,12 +47,11 @@ const onClose = () => {
       showNotification()
   } else {
     notification.value = {}
-    clearLists(['levels'])
   }
 }
 
-watch(notifications.levels, () => {
-  notificationList.value.push(notifications.levels.list)
+watch(() => notifications.value.level, () => {
+  notificationList.value.push(notifications.value.level)
   composeList()
 })
 </script>

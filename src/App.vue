@@ -9,12 +9,13 @@ import { useCourse } from './composables/useCourse'
 import { useLoader } from './composables/useLoader'
 import { useNotification } from './composables/useNotification'
 
+import { onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const { getList } = useLesson()
 const { getItem } = useCourse()
 const { showLoader, hideLoader } = useLoader()
-const { initSSE } = useNotification()
+const { initSSE, closeSSE } = useNotification()
 const router = useRouter()
 const route = useRoute()
 
@@ -30,6 +31,10 @@ async function init () {
   await getItem(user.active.data.settings.courseId.value)*/
   //hideLoader()
 }
-init()
+async function dismount () {
+  closeSSE()
+}
+onMounted(() => init())
+onUnmounted(() => dismount() )
 
 </script>
