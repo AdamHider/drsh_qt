@@ -30,12 +30,15 @@
 import { useNavigationHistory } from '../composables/useNavigationHistory'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { watch, ref } from 'vue'
+import { useNotification } from '../composables/useNotification'
+
+const { notifications } = useNotification()
 
 const { routes } = useNavigationHistory();
 const route = useRoute();
-const router = useRouter();
 const isRootPage = ref(false);
 const bottomBarEnabled = ref(false);
+
 
 isRootPage.value = route.fullPath.split('/').length === 2
 bottomBarEnabled.value = route.meta.bottomBarEnabled === true
@@ -43,7 +46,13 @@ bottomBarEnabled.value = route.meta.bottomBarEnabled === true
 watch(route, (currentValue, oldValue) => {
   isRootPage.value = currentValue.fullPath.split('/').length === 2
   bottomBarEnabled.value = currentValue.meta.bottomBarEnabled === true
-
+  const routeLinks = Object.keys(routes)
+  for(var i in routeLinks){
+    if(routes[routeLinks[i]].link == currentValue.fullPath) routes[routeLinks[i]].is_updated = false
+  }
 });
+watch(() => notifications.value.level, () => {
+  routes.user.is_updated = true
+})
 </script>
 

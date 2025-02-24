@@ -7,11 +7,6 @@ const routes = reactive({
     is_updated: false,
     hash: ''
   },
-  quests: {
-    link: '/quests',
-    is_updated: false,
-    hash: ''
-  },
   skills: {
     link: '/skills',
     is_updated: false,
