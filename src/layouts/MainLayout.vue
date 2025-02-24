@@ -8,6 +8,7 @@
       </router-view>
       <q-bottom-bar/>
       <AppNotifications/>
+      <UserNewLevelDialog/>
   </q-layout>
   <AppLoader/>
 </template>
@@ -16,6 +17,8 @@
 import AppBackground from 'components/AppBackground.vue'
 import AppLoader from 'components/AppLoader.vue'
 import AppNotifications from 'components/AppNotifications.vue'
+import UserNewLevelDialog from 'components/UserNewLevelDialog.vue'
+
 
 
 </script>
