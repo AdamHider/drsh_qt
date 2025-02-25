@@ -10,18 +10,18 @@
             <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="20px" color="blue"/>
           </div>
           <div>
-              <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
-                <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center">
-                  <SkillAvatar v-for="(skill, skillIndex) in skillCol.slots" :key="skillIndex"
-                    :skill="skill"
-                    @click="openModal(skill)"
-                    size="60px"
-                    style="z-index: 10; width: 165px;"
-                    :color="props.color"
-                  />
-                  <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
-            </swiper-slide>
-          </swiper>
+            <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
+              <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center">
+                <SkillItem v-for="(skill, skillIndex) in skillCol.slots" :key="skillIndex"
+                  :skill="skill"
+                  @click="openModal(skill)"
+                  size="60px"
+                  style="z-index: 10; width: 165px;"
+                  :color="props.color"
+                />
+                <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
+              </swiper-slide>
+            </swiper>
           </div>
       </div>
     </div>
@@ -95,11 +95,11 @@
 
 <script setup>
 import { api } from '../services/index'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
-import SkillAvatar from '../components/SkillAvatar.vue'
+import SkillItem from '../components/SkillItem.vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'

@@ -169,6 +169,8 @@ watch(() => exercise?.value?.data.totals, (newValue) => {
   }
   calculateStarsValue()
   calculateBackface()
+  value.value = props.value
+  if(value.value > 100) value.value = 100
 })
 onMounted(() => {
   if(exercise.value?.finished_at) {
@@ -178,6 +180,8 @@ onMounted(() => {
   }
   calculateStarsValue()
   calculateBackface()
+  value.value = props.value
+  if(value.value > 100) value.value = 100
 })
 
 

@@ -2,9 +2,9 @@
     <div>
       <q-dialog v-model="dialog" seamless position="top">
         <div>
-          <q-card class="q-ma-sm" style="max-width: 350px" v-if="notification?.id">
+          <q-card v-if="notification?.id" class="q-ma-sm" style="max-width: 350px" @click="openNotification(notification.link)">
             <q-card-section>
-              <q-item :to="notification.link">
+              <q-item >
                 <q-item-section avatar>
                     <q-img :src="notification.image" size="60px"/>
                 </q-item-section>
@@ -26,8 +26,10 @@
 <script setup>
 import { useNotification } from '../composables/useNotification'
 import { ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 const { notifications } = useNotification()
+const router = useRouter()
 
 const dialog = ref(false)
 const notification = ref({})
@@ -39,7 +41,6 @@ const composeList = () => {
     if(!isStarted.value) showNotification()
   }
 }
-
 const showNotification = () => {
   isStarted.value = true
   setTimeout(() => {
@@ -55,6 +56,11 @@ const showNotification = () => {
       isStarted.value = false
     }
   }, 5000)
+}
+
+const openNotification = (link) => {
+  dialog.value = false
+  router.push(link)
 }
 
 watch(() => notifications.value.achievement, () => {

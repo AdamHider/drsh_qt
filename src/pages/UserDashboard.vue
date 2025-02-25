@@ -128,40 +128,17 @@ import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingSlider from '../components/UserSettingSlider.vue'
 import { useRoute } from 'vue-router'
-import { onMounted, onBeforeMount, onActivated, ref, watch } from 'vue'
+import { onMounted, onActivated } from 'vue'
 
-const { user, signOut } = useUserStore()
+const { user, getItem } = useUserStore()
 const route = useRoute()
-const startTime = ref()
-const endTime = ref()
-const AchievementDialog = ref(false)
-
-onBeforeMount(async () => {
-  startTime.value = new Date()
-})
 
 onMounted(async () => {
-  endTime.value = new Date()
-  let timeDiff = endTime.value - startTime.value // in ms
-  // strip the ms
-  timeDiff /= 1000
-
-  // get seconds
-  console.log('UserDashboard: ' + timeDiff + ' mseconds')
+  await getItem()
 })
 
 onActivated(async () => {
-  endTime.value = new Date()
-  let timeDiff = endTime.value - startTime.value // in ms
-  // strip the ms
-  timeDiff /= 1000
-
-  // get seconds
-  console.log('UserDashboard: ' + timeDiff + ' mseconds')
-})
-
-watch(route, (to) => {
-  startTime.value = new Date()
+  await getItem()
 })
 
 </script>

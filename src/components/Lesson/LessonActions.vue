@@ -64,16 +64,16 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="confirmDialog"  transition-show="scale" transition-hide="scale">
-      <q-card class="bg-white" style="width: 300px">
+      <q-card class="bg-white text-center" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Confirm the answer?</div>
+          <div class="text-h6">Подтвердить ответ?</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Your answer seems to be incomplete. Please, try at least to complete it randomly=)
+          Некоторые поля остались незаполненными. Советуем заполнить их хотя-бы случайными ответами.
         </q-card-section>
         <q-card-actions align="around">
-          <q-btn push class="col" flat label="Cancel" v-close-popup />
-          <q-btn push class="col" color="primary"  label="Confirm" @click="confirm" v-close-popup />
+          <q-btn push class="col" flat label="Отмена" v-close-popup />
+          <q-btn push class="col" color="primary"  label="Продолжить" @click="confirm" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>

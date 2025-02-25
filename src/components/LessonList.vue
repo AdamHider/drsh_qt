@@ -152,17 +152,9 @@
 
 <script setup>
 import { useLesson } from "../composables/useLesson";
-import {
-  ref,
-  onActivated,
-  onDeactivated,
-  onMounted,
-  onUnmounted,
-  toRef,
-  watch,
-} from "vue";
+import { ref, onActivated, onMounted, toRef, watch } from "vue";
 import { useCourse } from "../composables/useCourse";
-import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useRouter } from "vue-router";
 
 const { lesson, getList, getListUpdates } = useLesson();
 const { course } = useCourse();
@@ -227,14 +219,12 @@ onActivated(async () => {
   await getList();
   if (lesson.list.length > 0) {
     currentCourseSectionId.value = 0;
-    //composeList()
+    composeList()
     transitionTrigger.value = true;
     selectedLesson.value = 0;
   }
 });
-watch(
-  () => course.active?.id,
-  async (newData, oldData) => {
+watch( () => course.active?.id, async () => {
     infiniteList.value.setIndex(0);
     infiniteList.value.resume();
     infiniteList.value.trigger();
@@ -297,13 +287,13 @@ watch(
   border-radius: 100%;
   border: 2px dashed #ffffff33;
   text-align: center;
-  -webkit-animation: 8s linear 0s infinite sateliteRotate;
-  animation: linear infinite sateliteRotate;
+  -webkit-animation: 16s linear 0s infinite sateliteRotate;
+  animation: 16s linear infinite sateliteRotate;
 }
 .satellite-item img {
   position: absolute;
-  -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
-  animation: 16s linear 0s infinite satelitePlanetRotate;
+  -webkit-animation: 32s linear 0s infinite satelitePlanetRotate;
+  animation: 32s linear 0s infinite satelitePlanetRotate;
 }
 @keyframes sateliteRotate {
   0% {
