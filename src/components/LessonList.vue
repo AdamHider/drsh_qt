@@ -1,9 +1,10 @@
 <template>
-  <div
-    ref="infiniteList"
-    class="relative-position"
-    style="z-index: 1; padding-top: 50px"
-  >
+  <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" @load="onLoad" reverse class="relative-position q-pb-md" style="z-index: 1;padding-top: 50px">
+        <template v-slot:loading>
+            <div class="row justify-center q-my-md">
+            <q-spinner color="primary" name="dots" size="40px" />
+            </div>
+        </template>
     <div
       v-for="lesson in lessonList"
       :key="lesson.id"
@@ -119,7 +120,7 @@
         </transition>
       </div>
     </div>
-  </div>
+  </q-infinite-scroll>
   <q-page-sticky
     class="fixed full-width full-height"
     :style="`background: ${groupGradient}; transform: none`"
@@ -175,6 +176,13 @@ const props = defineProps({
 const disable = toRef(props, "disable");
 const lessonList = ref([]);
 
+const onLoad = async function (index, done) {
+  if (disable.value) return false
+  currentCourseSectionId.value = 0
+  const isDone = await getList(index)
+  if (!isDone) composeList()
+  done(isDone)
+}
 const composeList = () => {
   lessonList.value = [];
   for (let i = lesson.list.length - 1; i >= 0; i--) {
@@ -210,16 +218,12 @@ const onIntersection = (entry) => {
   }, 0);
 };
 onMounted(async () => {
-  await getList();
   transitionTrigger.value = true;
   selectedLesson.value = 0;
-  composeList();
 });
 onActivated(async () => {
-  await getList();
   if (lesson.list.length > 0) {
     currentCourseSectionId.value = 0;
-    composeList()
     transitionTrigger.value = true;
     selectedLesson.value = 0;
   }
