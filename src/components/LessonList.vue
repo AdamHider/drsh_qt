@@ -89,7 +89,7 @@
                     />
                   </div>
                 </div>
-                <q-img :src="lesson.image" loading="lazy" no-spinner> </q-img>
+                <q-img :src="lesson.image" class="planet-image" loading="lazy" no-spinner> </q-img>
               </q-card-section>
               <q-card-section
                 class="text-center text-white q-pa-none absolute full-width"
@@ -273,9 +273,11 @@ watch( () => course.active?.id, async () => {
       }
     }
   }
-
+  .planet-image{
+    filter: drop-shadow(0px 0px 15px #35adf4);
+  }
   &.is-blocked {
-    filter: grayscale(1) brightness(0.9);
+    /*filter: grayscale(1) brightness(0.9);*/
     &:before {
       opacity: 0.3;
     }

@@ -39,14 +39,20 @@
                 </q-img>
             </q-card-section>
             <q-card-section class="text-center text-white q-pa-none">
-              <q-chip v-if="satelliteItem.parent_id" dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
-                :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
-                <b>Спутник</b>
-              </q-chip>
-              <q-chip v-else dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
-                style="position: absolute; transform: translate3D(0%,400%,0) rotate(20deg);transform-origin: top;"
-                :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
-                <b>Планета</b></q-chip>
+              <div v-if="satelliteItem.parent_id" >
+                <q-chip dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
+                  :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
+                  <b>{{ satelliteItem.title }}</b>
+                </q-chip>
+                <div class="text-caption">Спутник</div>
+              </div>
+              <div v-else style="position: absolute; transform: translate3d(110%, 165%, 0px) rotate(25deg); transform-origin: top;">
+                <q-chip dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
+                  :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
+                  <b>{{ satelliteItem.title }}</b>
+                </q-chip>
+                <div class="text-caption">Планета</div>
+              </div>
             </q-card-section>
         </q-card>
       </swiper-slide>
@@ -97,7 +103,7 @@ watch(() => activeSlide.value, () => {
 <style scoped lang="scss">
 
 .is-blocked{
-  filter: grayscale(1) brightness(0.9);
+  /*filter: grayscale(1) brightness(0.9);*/
 }
 .swiper.swiper-creative{
   overflow: visible;
@@ -136,6 +142,8 @@ watch(() => activeSlide.value, () => {
       border-color: #00c3ff;
     }
     .q-img{
+
+      filter: drop-shadow(0px 0px 7px #35adf4);
       scale: 2;
       transform: translateX(24%);
     }
@@ -153,18 +161,20 @@ watch(() => activeSlide.value, () => {
       transition: 0.5s all;
       opacity: 0;
     }
-    .q-img:before{
-      content: "";
-      position: absolute;
-      top: 3%;
-      left: 3%;
-      width: 94%;
-      height: 94%;
-      border-radius: 100%;
-      border: 1px solid white;
-      opacity: 0.2;
-      transition: 0.5s all;
-      background: #0003;
+    .q-img{
+      filter: drop-shadow(0px 0px 7px #35adf4);
+      &:before{
+        content: "";
+        position: absolute;
+        top: 3%;
+        left: 3%;
+        width: 94%;
+        height: 94%;
+        border-radius: 100%;
+        opacity: 0.2;
+        transition: 0.5s all;
+        background: #0003;
+      }
     }
   }
 }

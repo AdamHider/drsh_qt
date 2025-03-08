@@ -44,7 +44,13 @@
             <q-card flat class="bg-transparent rounded-b-0 full-width"  v-if="transitionTrigger && dialog">
               <q-card-section class="q-pb-sm">
                   <div class="text-h5"><q-icon v-if="activeLesson.is_blocked === true" name="lock"></q-icon> <b>{{activeLesson.title}}</b></div>
-                  <div class="text-caption">{{activeLesson.description}}</div>
+                  <div :class="`text-caption satellite-description ${(expandDescription) ? '': 'max-two-lines'}`" @click="expandDescription = !expandDescription">
+                    {{activeLesson.description}}
+                  </div>
+                  <div @click="expandDescription = !expandDescription">
+                    <b v-if="expandDescription">Свернуть</b>
+                    <b v-else>Показать ещё</b>
+                  </div>
               </q-card-section>
               <q-card-section class="q-pt-none">
                 <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
@@ -108,9 +114,11 @@ const dialog = ref(false)
 const activeIndex = ref(0)
 const activeLesson = ref({})
 const transitionTrigger = ref(false)
+const expandDescription = ref(false)
 
 const change = (index) => {
   dialog.value = false
+  expandDescription.value = false
   activeLesson.value = lesson.active.satellites?.list[index]
   setTimeout(() => {
     dialog.value = true
@@ -163,3 +171,7 @@ onBeforeRouteLeave((to, from, next) => {
   }, 250)
 })
 </script>
+<style lang="scss">
+.satellite-description{
+}
+</style>
