@@ -47,9 +47,9 @@
                   <div :class="`text-caption satellite-description ${(expandDescription) ? '': 'max-two-lines'}`" @click="expandDescription = !expandDescription">
                     {{activeLesson.description}}
                   </div>
-                  <div @click="expandDescription = !expandDescription">
-                    <b v-if="expandDescription">Свернуть</b>
-                    <b v-else>Показать ещё</b>
+                  <div class="text-caption" @click="expandDescription = !expandDescription">
+                    <b v-if="expandDescription">Свернуть <q-icon name="keyboard_arrow_up"></q-icon></b>
+                    <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
                   </div>
               </q-card-section>
               <q-card-section class="q-pt-none">

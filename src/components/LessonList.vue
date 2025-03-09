@@ -1,5 +1,5 @@
 <template>
-  <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" @load="onLoad" reverse class="relative-position q-pb-md" style="z-index: 1;padding-top: 50px">
+  <q-infinite-scroll ref="infiniteList" scroll-taget="scroll-area" @load="onLoad" reverse class="relative-position q-pb-md" style="z-index: 1;">
         <template v-slot:loading>
             <div class="row justify-center q-my-md">
             <q-spinner color="primary" name="dots" size="40px" />
@@ -30,14 +30,18 @@
             flat
           >
             <q-card-section>
-              <div class="text-h6">
-                <b>{{ lesson.course_section.title }}</b>
+              <div class="text-subtitle1">
+                <b>Система "{{ lesson.course_section.title }}"</b>
               </div>
-              <div class="text-caption">
-                {{ lesson.course_section.description }}
+              <div :class="`text-caption satellite-description ${(lesson.course_section.expandDescription) ? '': 'max-two-lines'}`" @click="lesson.course_section.expandDescription = !lesson.course_section.expandDescription">
+                {{lesson.course_section.description}}
+              </div>
+              <div class="text-caption" @click="lesson.course_section.expandDescription = !lesson.course_section.expandDescription">
+                <b v-if="lesson.course_section.expandDescription">Свернуть <q-icon name="keyboard_arrow_up"></q-icon></b>
+                <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
               </div>
             </q-card-section>
-            <q-separator color="white" />
+            <q-separator style="border-bottom: 2px dashed white; opacity: 0.25;" />
           </q-card>
         </div>
       </transition>
@@ -97,7 +101,7 @@
                 style="top: 100%"
               >
                 <div class="text-caption">
-                  <span>Изучено:</span>
+                  <span>Изучено: </span>
                   <b
                     :class="
                       lesson.progress > 0 && lesson.progress < 100
@@ -189,7 +193,7 @@ const composeList = () => {
     if (checkGroup(lesson.list[i] && lesson.list[i].course_section)) {
       lesson.list[i].is_initial = true;
       lessonList.value.unshift({
-        ...{ course_section: lesson.list[i].course_section },
+        ...{ course_section: { ...lesson.list[i].course_section, ...{expandDescription: false} } },
         ...{ type: "group" },
       });
     }

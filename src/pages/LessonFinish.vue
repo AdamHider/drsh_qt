@@ -2,7 +2,10 @@
   <q-page-wrapper>
     <q-page class="text-center full-width finish-page" style="padding-top: 50px;">
         <q-card class="transparent text-white no-shadow full-width" style="position: relative; z-index: 1;">
-            <q-card-section class="lesson-image">
+            <q-card-section class="q-pb-none">
+                <div class="text-h5"><b>{{ lesson.active.title }}</b></div>
+            </q-card-section>
+            <q-card-section class="lesson-image q-pt-none">
                 <transition
                     appear
                     enter-active-class="animated fadeInUp animation-slow"
@@ -13,9 +16,6 @@
                     no-spinner
                   />
                 </transition>
-            </q-card-section>
-            <q-card-section class="absolute-top">
-                <div class="text-h5"><b>{{ lesson.active.title }}</b></div>
             </q-card-section>
         </q-card>
 
@@ -40,8 +40,8 @@
                 <div v-else class="text-h5"><b>Победа!</b></div>
                 <div class="text-h6">
                   <b v-if="lesson.active.exercise.data.totals.reward_level >= 1">Неплохой результат</b>
-                  <b v-if="lesson.active.exercise.data.totals.reward_level >= 2">Хороший результат</b>
-                  <b v-if="lesson.active.exercise.data.totals.reward_level == 3">Отличный результат</b>
+                  <b v-else-if="lesson.active.exercise.data.totals.reward_level >= 2">Хороший результат</b>
+                  <b v-else-if="lesson.active.exercise.data.totals.reward_level == 3">Отличный результат</b>
                 </div>
             </q-card-section>
             <q-card-section v-else class="q-pb-sm q-pt-sm text-negative">

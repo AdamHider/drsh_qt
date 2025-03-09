@@ -5,13 +5,7 @@
       <q-toolbar-title></q-toolbar-title>
       <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
-    <q-page style="padding-top: 50px; padding-bottom: 35px;"  class="items-end full-height full-width text-center" >
-      <q-scroll-area class="absolute-top absolute-left full-width full-height"
-        :content-style="{
-          display: 'flex',
-          justifyContent: 'end',
-          flexDirection: 'column', paddingBottom: '48px'}"
-        style="z-index: 10;">
+    <q-page style="padding-top: 50px; padding-bottom: 48px;"  class="items-end full-height full-width text-center" >
 
         <LessonList v-if="course.active?.id" :disable="dialog.active"/>
         <q-card flat class="transparent">
@@ -29,8 +23,6 @@
           <QuestListWidget active-only/>
         </q-page-sticky>
 
-        <q-scroll-observer @scroll="onScroll" />
-      </q-scroll-area>
     </q-page>
   </q-page-wrapper>
 </template>

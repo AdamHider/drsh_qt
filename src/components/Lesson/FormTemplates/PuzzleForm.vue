@@ -9,9 +9,8 @@
             :class="`q-lesson-field bg-grey-2 ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
           >
             <q-chip
-              size="16px"
               :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
-              style="pointer-events: none" >
+              style="pointer-events: none; font-size: inherit" >
               <b>{{ input.value.text }}</b>
             </q-chip>
           </div>
@@ -74,7 +73,6 @@ const { lesson } = useLesson()
 
 const currentIndex = ref(null)
 const currentValue = ref('')
-const selectMode = ref(false)
 
 const formData = reactive({
   fields: []
@@ -102,21 +100,25 @@ const matchEnd = (evt) => {
   }
 }
 const matchStart = (index) => {
+  if(index === null) return
   currentIndex.value = index
   currentValue.value = formData.fields[currentIndex.value].value.text
 }
 const selectVariant = (text, variantIndex) => {
+  if(formData.fields[currentIndex.value].options[variantIndex].count > 0){
+    clearVariant()
+    return
+  }
   currentValue.value += text
   formData.fields[currentIndex.value].value.text = currentValue.value
   if(!formData.fields[currentIndex.value].options[variantIndex].count) formData.fields[currentIndex.value].options[variantIndex].count = 0
   formData.fields[currentIndex.value].options[variantIndex].count++
-  console.log(formData.fields[currentIndex.value])
 }
-const clearVariant = (text) => {
+const clearVariant = () => {
   const lastCharacter = currentValue.value.slice(-1);
   currentValue.value = currentValue.value.substring(0, currentValue.value.length - 1);
   formData.fields[currentIndex.value].value.text = currentValue.value
-  const variantIndex = formData.fields[currentIndex.value].options.findIndex((variant) => variant.text == lastCharacter)
+  const variantIndex = formData.fields[currentIndex.value].options.findIndex((variant) => variant.text == lastCharacter && variant.count > 0)
   formData.fields[currentIndex.value].options[variantIndex].count--
 }
 
@@ -130,10 +132,9 @@ watch(formData.fields, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
 })
 </script>
-<style scoped lang="scss">
+<style  lang="scss">
 .q-lesson-field {
   display: inline-block;
-  min-width: 60px;
   vertical-align: middle;
   overflow: hidden;
   margin: 0 5px;

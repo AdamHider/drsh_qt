@@ -7,7 +7,7 @@
             :src="`${CONFIG.API_HOST}/${data.data.image}`"
           />
         </q-card-section>
-        <q-card-section vertical :class="`q-pa-none ${(!data.data.is_form) ? 'flex flex-center text-center' : ''}`">
+        <q-card-section vertical :class="`q-pa-none text-center ${(!data.data.is_form) ? 'flex flex-center text-center' : ''}`">
           <div v-if="!data.data.is_form" class="text-h6">
             <b v-html="data.data.text"></b>
             <span v-if="data.data.audio_link" >
@@ -29,7 +29,7 @@
               />
             </span>
           </div>
-          <div v-else v-html="data.data.text"></div>
+          <div v-else class="text-bold text-h6" v-html="data.data.text"></div>
         </q-card-section>
     </q-card>
   </div>
