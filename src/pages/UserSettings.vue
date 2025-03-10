@@ -21,6 +21,33 @@
                 </q-item-section>
             </q-item>
         </q-card-section>
+        <q-card-section>
+          <q-form
+            ref="form"
+            v-model="formData.valid"
+            @submit.prevent="validate()"
+            autocomplete="off"
+            class="full-width q-py-sm"
+          >
+            <q-select
+              filled
+              v-model="formData.fields.writingMode.value"
+              emit-value
+              :options="[
+                {
+                  label: 'Латиница',
+                  value: 'lat'
+                },
+                {
+                  label: 'Кириллица',
+                  value: 'cyr'
+                }
+              ]"
+              map-options
+              label="Режим письма"
+            />
+          </q-form>
+        </q-card-section>
         <q-card-actions>
             <q-btn
                 class="full-width"
@@ -38,10 +65,41 @@
 <script setup >
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
+import { reactive } from 'vue'
 
 const { user, signOut } = useUserStore()
 const router = useRouter()
 
+const formData = reactive({
+  valid: true,
+  fields: {
+    writingMode: {
+      value: user.active.data.settings.writingMode.value,
+      rules: [
+        v => !!v || 'Нужно ввести имя',
+        v => v.length > 3 || 'Имя должно быть минимум 3 символа',
+        v => !(/[^A-Za-zА-Яа-я0-9\_ ]/.test(v)) || 'Только буквы и цифры'
+      ],
+      errors: '',
+      isError: false,
+      required: true
+    },
+  }
+})
+const saveChanges = async function () {
+  formData.valid = await form.value.validate()
+  if (formData.valid) {
+    const data = {
+      name: formData.fields.phone.value
+    }
+    const saved = await saveItem(data)
+    if (!saved.error) {
+      return router.go(-1)
+    } else {
+      formData.fields[saved.data].errors = saved.message
+    }
+  }
+}
 const exitUser = async function () {
   await signOut()
   return router.push('/authorization')

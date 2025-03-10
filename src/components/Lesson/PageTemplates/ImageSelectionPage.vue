@@ -9,7 +9,7 @@
         </q-card-section>
         <q-card-section vertical :class="`q-pa-none text-center ${(!data.data.is_form) ? 'flex flex-center text-center' : ''}`">
           <div v-if="!data.data.is_form" class="text-h6">
-            <b v-html="data.data.text"></b>
+            <b v-html="transliterateHTML(data.data.text)"></b>
             <span v-if="data.data.audio_link" >
               <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == data.data.audio_link && lessonAudio.is_playing"
                 flat
@@ -39,12 +39,14 @@
 import { reactive, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
+import { useTransliterate } from '../../../composables/useTransliterate'
 import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['onRendered'])
 
 const { lesson } = useLesson()
 const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
+const { transliterateHTML } = useTransliterate()
 
 const data = reactive({
   data: []

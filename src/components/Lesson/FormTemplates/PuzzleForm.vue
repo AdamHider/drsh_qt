@@ -10,8 +10,10 @@
           >
             <q-chip
               :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
+
               style="pointer-events: none; font-size: inherit" >
-              <b>{{ input.value.text }}</b>
+              <b v-if="input.value.text.length > 0">{{ input.value.text }}</b>
+              <b v-else>_</b>
             </q-chip>
           </div>
         </Teleport>
@@ -138,6 +140,7 @@ watch(formData.fields, (newValue, oldValue) => {
   vertical-align: middle;
   overflow: hidden;
   margin: 0 5px;
+  min-width: 40px;
   border-radius: 11px;
   transition: 0.3s all ease;
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
@@ -175,6 +178,10 @@ watch(formData.fields, (newValue, oldValue) => {
     }
   }
 
+  .q-lesson-field-value{
+    padding: 0.8em 0.6em;
+    height: 1.5em;
+  }
 }
 .q-lesson-field-value{
   border-radius: 9px;

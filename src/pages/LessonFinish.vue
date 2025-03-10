@@ -75,6 +75,25 @@
                 </div>
               </div>
             </q-card-section>
+            <q-card-section class="q-pb-sm q-pt-sm">
+              <div class="q-pa-sm bg-grey-3 rounded-sm">
+                <div class="text-subtitle2"><b>Вы разблокировали:</b></div>
+                <q-list>
+                  <q-item clickable v-ripple class="text-left"  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`" >
+                    <q-item-section avatar>
+                        <q-img :src="nextLesson.image"/>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label><b>{{ nextLesson.title }}</b></q-item-label>
+                      <q-item-label caption lines="2">{{ nextLesson.description }}</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                      <q-btn size="12px" flat dense round icon="chevron_right" />
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+            </q-card-section>
             <q-card-actions class="justify-center q-pa-md">
               <q-btn
                 push
