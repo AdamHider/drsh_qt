@@ -56,6 +56,7 @@ const countdown = () => {
   if (resource.value.restoration.nextRestoration >= 0) {
     setTimeout(async () => {
       if(!resource.value.restoration) return
+      if (cancelCountdown.value) return
       resource.value.restoration.nextRestoration -= 1
       timerCount.value = secondsFormat(resource.value.restoration.nextRestoration)
       if (resource.value.restoration.nextRestoration == 0) getItem()
@@ -72,8 +73,8 @@ const secondsFormat = (timeLeft) => {
 const dialog = ref(false)
 
 onActivated(() => {
+  cancelCountdown.value = false
   if (!resource.value.restoration) return
-  if (cancelCountdown.value) return
   percentageCount.value = (resource.value.restoration.restorationTime - resource.value.restoration.nextRestoration) * 100 / resource.value.restoration.restorationTime
   timerCount.value = secondsFormat(resource.value.restoration.nextRestoration)
   cancelCountdown.value = false

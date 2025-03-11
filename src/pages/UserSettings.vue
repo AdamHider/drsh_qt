@@ -22,6 +22,7 @@
             </q-item>
         </q-card-section>
         <q-card-section>
+          <div class="text-subtitle1"><b>Режим письменности</b></div>
           <q-form
             ref="form"
             v-model="formData.valid"
@@ -29,23 +30,26 @@
             autocomplete="off"
             class="full-width q-py-sm"
           >
-            <q-select
-              filled
-              v-model="formData.fields.writingMode.value"
-              emit-value
-              :options="[
-                {
-                  label: 'Латиница',
-                  value: 'lat'
-                },
-                {
-                  label: 'Кириллица',
-                  value: 'cyr'
-                }
-              ]"
-              map-options
-              label="Режим письма"
-            />
+          <q-list>
+            <q-item tag="label" v-ripple class="q-px-none">
+              <q-item-section avatar>
+                <q-radio v-model="formData.fields.writingMode.value" val="lat" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Латиница</q-item-label>
+                <q-item-label caption>Весь крымскотатарский текст будет написан на латинской графике</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item tag="label" v-ripple dense class="q-px-none">
+              <q-item-section avatar>
+                <q-radio v-model="formData.fields.writingMode.value" val="cyr" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Кириллица</q-item-label>
+                <q-item-label caption>Весь крымскотатарский текст будет написан на кириллической графике</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
           </q-form>
         </q-card-section>
         <q-card-actions>
@@ -65,10 +69,11 @@
 <script setup >
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 
-const { user, signOut } = useUserStore()
+const { user, signOut, saveItemSetting } = useUserStore()
 const router = useRouter()
+const form = ref(null)
 
 const formData = reactive({
   valid: true,
@@ -86,17 +91,12 @@ const formData = reactive({
     },
   }
 })
-const saveChanges = async function () {
+const saveSetting = async function (code, value) {
   formData.valid = await form.value.validate()
   if (formData.valid) {
-    const data = {
-      name: formData.fields.phone.value
-    }
-    const saved = await saveItem(data)
-    if (!saved.error) {
-      return router.go(-1)
-    } else {
-      formData.fields[saved.data].errors = saved.message
+    const saved = await saveItemSetting({code, value})
+    if (saved.error) {
+      formData.fields[code].errors = saved.message
     }
   }
 }

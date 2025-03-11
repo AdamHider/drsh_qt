@@ -22,8 +22,8 @@
                       show-value
                       font-size="10px"
                       class="q-ma-md"
-                      :color="(achievementItem.progress.percentage/100) >= 1 ? 'positive' : 'primary'"
-                      :value="(achievementItem.progress.percentage/100)"
+                      :color="(achievementItem.progress.percentage) >= 1 ? 'positive' : 'primary'"
+                      :value="(achievementItem.progress.percentage)"
                       size="110px"
                       :thickness="0.2"
                       track-color="grey-3"

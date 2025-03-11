@@ -79,7 +79,9 @@
               <div class="q-pa-sm bg-grey-3 rounded-sm">
                 <div class="text-subtitle2"><b>Вы разблокировали:</b></div>
                 <q-list>
-                  <q-item clickable v-ripple class="text-left"  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`" >
+                  <q-item clickable v-ripple class="text-left"  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`"
+                    :to="(nextLesson.parent_id) ? `/redirect-lesson-startup-${nextLesson.id}-${nextLesson.parent_id}` : `/lesson-startup-${nextLesson.id}`"
+                  >
                     <q-item-section avatar>
                         <q-img :src="nextLesson.image"/>
                     </q-item-section>

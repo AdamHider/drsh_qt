@@ -12,7 +12,6 @@ export function transliterate(input, mode) {
     var result_array = [];
     var string_to_be_transliterated = '';
     var tmp_tag = '';
-    console.log(input)
     for(var i = 0; i < input.length; i++){
         if(current_pointer_mode == 'tag_closed'){
             if(input[i] == '<'){

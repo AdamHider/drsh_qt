@@ -6,7 +6,7 @@
             <q-card-section>
               <q-item >
                 <q-item-section avatar>
-                    <q-img :src="notification.image" size="60px"/>
+                    <q-img :src="notification.image" width="60px"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label class="text-subtitle1"><b>{{ notification.title }}</b></q-item-label>

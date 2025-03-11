@@ -13,7 +13,6 @@
                 fit="cover"
                 class="rounded-borders"
                 :src="achievementItem.image"
-                :style="`height: ${props.slideHeight}px; background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)`"
                 >
               </q-img>
             </q-card-section>

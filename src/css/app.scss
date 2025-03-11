@@ -224,7 +224,8 @@ a{
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.12), inset 0px -1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1);
   border-bottom: 4px solid rgba(0, 0, 0, 0.15);
 }
-.q-field.q-input.q-field--standout{
+.q-field.q-input.q-field--standout,
+.q-field.q-select.q-field--standout{
   &.q-field--highlighted {
     .q-field__control{
       box-shadow: none;
