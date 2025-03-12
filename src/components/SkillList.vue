@@ -16,7 +16,7 @@
                   :skill="skill"
                   @click="openModal(skill)"
                   size="60px"
-                  style="z-index: 10; width: 165px;"
+                  style="z-index: 10; min-width: 165px; max-width: 180px;"
                   :color="props.color"
                 />
                 <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
@@ -64,7 +64,7 @@
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.is_purchasable" color="primary" class="full-width text-bold" icon="file_upload" label="Upgrade" @click="claimSkill(currentSkill.id)"/>
+            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)"/>
             <q-btn v-else color="gray" flat class="full-width text-bold" label="Недостаточно ресурсов"/>
           </div>
           <div v-if="currentSkill.is_gained" class="full-width">
@@ -212,14 +212,14 @@ onBeforeRouteLeave((to, from) => {
 }
 .relation-2-0-0-1{
   @include angle_top_right;
-  top: calc(-2px + 25%);
+  top: calc(0px + 25%);
   height: 11%;
   &:before{ @include angle_bottom_left; top: 100%; }
   &:after{ top: calc(-6px + 200%); }
 }
 .relation-2-1-0-1{
   @include angle_bottom_right;
-  bottom: calc(-2px + 25%);
+  bottom: calc(0px + 25%);
   height: 11%;
   &:before{ @include angle_top_left; bottom: 100%; }
   &:after{ bottom: calc(-6px + 200%); }

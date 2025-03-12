@@ -33,7 +33,9 @@ const settings = ref([])
 
 onActivated(() => {
   settings.value = []
-  if(props.settings.resourceGainModifier.percentage != 0) settings.value.push(props.settings.resourceGainModifier)
+  if(props.settings.cobaltGainModifier.percentage != 0) settings.value.push(props.settings.cobaltGainModifier)
+  if(props.settings.experienceGainModifier.percentage != 0) settings.value.push(props.settings.experienceGainModifier)
+  if(props.settings.scienceGainModifier.percentage != 0) settings.value.push(props.settings.scienceGainModifier)
   if(props.settings.energyRestorationTime.percentage != 0) settings.value.push(props.settings.energyRestorationTime)
   if(props.settings.energyMaxValue.percentage != 0) settings.value.push(props.settings.energyMaxValue)
 })
