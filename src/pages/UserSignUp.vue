@@ -192,7 +192,7 @@ const formData = reactive({
       value: '',
       rules: [
         v => !!v || 'Нужно ввести имя',
-        v => v.length > 3 || 'Имя должно быть минимум 3 символа',
+        v => v.length > 3 || 'Имя должно быть длиннее 3 символов',
         v => !(/[^A-Za-zА-Яа-я0-9\_ ]/.test(v)) || 'Только буквы и цифры'
       ],
       errors: '',
@@ -223,7 +223,7 @@ const formData = reactive({
       rules: [
         v => !!v || '',,
         v => (/^[0-9]{4,}$/.test(v)) || '',
-        v => (v === formData.fields.password.value) || 'Your passwords are different'
+        v => (v === formData.fields.password.value) || 'Пароль отличается'
       ],
       reveal: false,
       required: true

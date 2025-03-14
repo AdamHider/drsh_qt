@@ -26,7 +26,7 @@
       </q-card>
 
         <q-page-sticky
-            class="fixed full-width full-height"
+            :class="`fixed full-width full-height background-space ${(isDark) ? 'dark': ''}`"
             :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
             >
             <q-img
@@ -52,7 +52,7 @@
                     <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
                   </div>
               </q-card-section>
-              <q-card-section class="q-pt-none">
+              <q-card-section class="q-py-none" v-if="activeLesson.is_blocked === false">
                 <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
               </q-card-section>
               <q-card-actions class="text-right justify-end q-pa-md" v-if="!activeLesson.is_blocked">
@@ -100,7 +100,7 @@ import LessonSatelliteSlider from '../components/LessonSatelliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import LessonProgressBar from '../components/LessonProgressBar.vue'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { ref, onActivated } from 'vue'
+import { ref, onActivated, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 
@@ -115,6 +115,7 @@ const activeIndex = ref(0)
 const activeLesson = ref({})
 const transitionTrigger = ref(false)
 const expandDescription = ref(false)
+const isDark = ref(false)
 
 const change = (index) => {
   dialog.value = false
@@ -149,6 +150,7 @@ const redo = async (lessonId) => {
 }
 
 onActivated(async () => {
+  isDark.value = false
   dialog.value = false
   await getItem(route.params.lesson_id)
   transitionTrigger.value = true
@@ -166,12 +168,23 @@ onActivated(async () => {
 
 onBeforeRouteLeave((to, from, next) => {
   transitionTrigger.value = false
+  isDark.value = false
   setTimeout(() => {
     next()
   }, 250)
 })
+watch(() => activeLesson.value, () => {
+  isDark.value = activeLesson.value.is_blocked
+})
+
 </script>
 <style lang="scss">
 .satellite-description{
+}
+.background-space{
+  transition: 0.5s all ease;
+}
+.background-space.dark{
+  filter: brightness(0.5) grayscale(1);
 }
 </style>

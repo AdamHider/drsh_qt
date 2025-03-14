@@ -6,7 +6,7 @@
         <div class="clouds-container">
         </div>
       </div>
-      <q-app-header class="transparent text-white rounded-b-md " >
+      <q-app-header class="transparent text-white rounded-b-md" reveal>
           <q-toolbar-title></q-toolbar-title>
           <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
       </q-app-header>
@@ -78,14 +78,6 @@
                   </div>
               </q-card-section>
               <q-card-section class="q-py-none q-pt-sm">
-                  <div class="text-subtitle1"><b>Активные эффекты</b></div>
-              </q-card-section>
-              <q-card-section class="q-pa-none">
-                  <div class="q-py-sm">
-                    <UserSettingSlider :settings="user.active?.data.settings"/>
-                  </div>
-              </q-card-section>
-              <q-card-section class="q-py-none q-pt-sm">
                   <div class="text-subtitle1"><b>Ресурсы</b></div>
               </q-card-section>
               <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
@@ -104,10 +96,17 @@
                       </div>
                   </div>
               </q-card-section>
+              <q-card-section class="q-py-none q-pt-sm">
+                  <div class="text-subtitle1"><b>Активные эффекты</b></div>
+              </q-card-section>
+              <q-card-section class="q-pa-none q-pb-sm">
+                  <UserSettingSlider :settings="user.active?.data.settings"/>
+              </q-card-section>
               <q-card-section class="q-py-none flex justify-between items-center q-pt-sm">
                   <div class="text-subtitle1"><b>Достижения</b></div>
                   <router-link to="/achievements">Показать все</router-link>
               </q-card-section>
+              <q-card-section class="q-pa-none q-pb-sm">
                   <AchievementSlider
                       :slidesPerView=2.4
                       :centerAligned="false"
@@ -116,6 +115,7 @@
                       :navigation="false"
                       captionMode="full"
                   />
+              </q-card-section>
           </q-card>
           </transition>
       </q-page>

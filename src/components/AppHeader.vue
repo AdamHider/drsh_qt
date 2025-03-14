@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { ref, onActivated } from 'vue'
+import { ref, onActivated, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
 const props = defineProps({
@@ -20,6 +20,7 @@ const props = defineProps({
 const header = ref(null)
 let revealOffset = 0
 const onScroll = (event) => {
+  if(event.delta.top < -100) return
   if (event.position.top > 0) {
     if (props.reveal) {
       header.value.$el.classList.add('header-sticky')
@@ -45,6 +46,10 @@ defineExpose({
   onScroll
 })
 onActivated(() => {
+  revealOffset = 0
+  header.value.$el.classList.remove('header-reveal')
+})
+onMounted(() => {
   revealOffset = 0
   header.value.$el.classList.remove('header-reveal')
 })

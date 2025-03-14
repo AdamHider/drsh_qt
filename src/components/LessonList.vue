@@ -281,7 +281,7 @@ watch( () => course.active?.id, async () => {
     filter: drop-shadow(0px 0px 15px #35adf4);
   }
   &.is-blocked {
-    /*filter: grayscale(1) brightness(0.9);*/
+    filter: grayscale(1) brightness(0.9);
     &:before {
       opacity: 0.3;
     }

@@ -30,7 +30,7 @@
       <swiper-slide v-for="(satelliteItem, index) in lesson.active.satellites?.list" :key="index" ref
         :class="`text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'} ${(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'lesson-finished' : 'lesson'} ${(satelliteItem.is_blocked === true) ? 'is-blocked' : ''}`"
         >
-        <q-card flat class="transparent q-ma-sm">
+        <q-card flat class="transparent q-ma-sm" :style="(!satelliteItem.parent_id) ? 'width: 200%; margin-top: -50%;' : ''">
             <q-card-section class="transparent no-shadow text-center q-pa-none satellite-image" style="min-height: 100px">
                 <q-img
                     :src="satelliteItem.image"
@@ -39,19 +39,17 @@
                 </q-img>
             </q-card-section>
             <q-card-section class="text-center text-white q-pa-none">
-              <div v-if="satelliteItem.parent_id" >
-                <q-chip dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
-                  :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
-                  <b>{{ satelliteItem.title }}</b>
+              <div :style="(!satelliteItem.parent_id) ? 'position: absolute; transform: translate3d(100%, -50%, 0px) rotate(22deg); transform-origin: top;' : ''">
+                <q-chip dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'"
+                  text-color="white" class="q-pa-xs q-px-sm">
+                  <q-icon v-if="satelliteItem.is_blocked" name="lock"/>
+                  <q-icon v-else-if="(satelliteItem.exercise && satelliteItem.exercise?.finished_at)" name="done"/>
+                  <q-icon v-else-if="(satelliteItem.exercise && !satelliteItem.exercise?.finished_at)" name="hourglass_top"/>
+                  <q-icon v-else-if="!satelliteItem.exercise" name="stop"/>
+                  <b> {{ satelliteItem.title }}</b>
                 </q-chip>
-                <div class="text-caption">Спутник</div>
-              </div>
-              <div v-else style="position: absolute; transform: translate3d(110%, 165%, 0px) rotate(25deg); transform-origin: top;">
-                <q-chip dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'" text-color="white" class="q-pa-xs q-px-sm"
-                  :icon="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'done' : (satelliteItem.exercise) ? 'hourglass_top' : 'stop'">
-                  <b>{{ satelliteItem.title }}</b>
-                </q-chip>
-                <div class="text-caption">Планета</div>
+                <div class="text-caption" v-if="satelliteItem.parent_id">Спутник</div>
+                <div class="text-caption" v-else>Планета</div>
               </div>
             </q-card-section>
         </q-card>
@@ -94,7 +92,7 @@ const onSwiper = (swiper) => {
   swiperEl.value = swiper
 }
 onMounted(() => {
-  swiperEl.value.slideTo(activeSlide.value)
+  if(swiperEl.value) swiperEl.value.slideTo(activeSlide.value)
 })
 watch(() => activeSlide.value, () => {
   swiperEl.value.slideTo(activeSlide.value)
@@ -103,7 +101,7 @@ watch(() => activeSlide.value, () => {
 <style scoped lang="scss">
 
 .is-blocked{
-  /*filter: grayscale(1) brightness(0.9);*/
+  filter: grayscale(1) brightness(0.9);
 }
 .swiper.swiper-creative{
   overflow: visible;
@@ -142,10 +140,7 @@ watch(() => activeSlide.value, () => {
       border-color: #00c3ff;
     }
     .q-img{
-
       filter: drop-shadow(0px 0px 7px #35adf4);
-      scale: 2;
-      transform: translateX(24%);
     }
   }
   .satellite-image{

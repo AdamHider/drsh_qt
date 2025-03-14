@@ -1,6 +1,6 @@
 <template>
   <q-page-container>
-    <q-app-header class=" rounded-b-md " reveal>
+    <q-app-header class="rounded-b-md" reveal>
         <q-toolbar-title><b>Исследования</b></q-toolbar-title>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 35px;" class="bg-white">
