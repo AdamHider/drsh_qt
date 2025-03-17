@@ -185,6 +185,6 @@ watch(() => route.params.step, async (currentValue, oldValue) => {
     return false
   }
   formData.step = route.params.step * 1
-  form.value.validate()
+  formData.valid = await form.value.validate()
 })
 </script>

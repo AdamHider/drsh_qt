@@ -297,10 +297,13 @@ watch(() => route.params.step, async (currentValue, oldValue) => {
     return false
   }
   formData.step = route.params.step * 1
+  console.log(formData.fields[steps[formData.step]])
   if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]]?.reveal === false) {
     formData.fields[steps[formData.step]].value = ''
   }
-  if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]].value === '') formData.valid = false
+  if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]].value === '') return formData.valid = false
+
+  formData.valid = await form.value.validate()
 })
 
 </script>

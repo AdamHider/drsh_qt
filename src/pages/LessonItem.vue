@@ -23,11 +23,11 @@
           <div class="text-h6">Close lesson</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          Are you sure? You can back to it whenever you want though
+          Вы уверены? Вы можете вернуться к планете в любое время.
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat class="col" label="Cancel" color="grey" v-close-popup />
-          <q-btn push class="col" color="primary" label="Continue" @click="closeLesson" />
+          <q-btn flat class="col" label="Отмена" color="grey" v-close-popup />
+          <q-btn push class="col" color="primary" label="Выйти" @click="closeLesson" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -97,7 +97,6 @@ const onAnswerSaved = async () => {
 const onDialogOpened = async (status) => {
   dialogOpened.value = status
 }
-
 const closeLesson = () => {
   closeConfirmed.value = true
   router.go(-1)
