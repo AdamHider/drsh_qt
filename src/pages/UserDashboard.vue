@@ -1,8 +1,6 @@
 <template>
   <q-page-container>
       <div class="page-background">
-        <div class="planet-container">
-        </div>
         <div class="clouds-container">
         </div>
       </div>
@@ -143,25 +141,8 @@ onActivated(async () => {
 
 </script>
 <style scoped>
-.page-background{
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: url("https://mektepium-app.local/image/backgrounds/space1.png");
-}
-.page-background .planet-container{
-    position: absolute;
-    background-image: url("https://mektepium-app.local/image/planets/home/planet1.png");
-    width: 100%;
-    height: 100%;
-    background-size: 450px;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 2;
-}
 
 .page-background .clouds-container{
-  background: linear-gradient(to top, #250346, #0000) !important;
   height: 25%;
   z-index: 3;
   position: absolute;
