@@ -13,10 +13,25 @@
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 @use "sass:map";
 
+/*
 
 $primary   : #1976D2;
 $secondary : #26A69A;
 $accent    : #9C27B0;
+
+$secondary : #f08700; //Tangerine
+
+
+$primary   : #0F4DA8;
+
+$secondary : #FFA900;
+*/
+
+
+$primary   : #560CC8;
+$primary-light: #733ACD;
+$secondary : #FF9900;
+$accent    : #FFC700;
 
 $dark      : #1D1D1D;
 $dark-page : #121212;

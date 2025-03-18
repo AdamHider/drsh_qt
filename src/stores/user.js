@@ -120,6 +120,9 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   function checkUsername (params) {
     return api.user.checkUsername(params)
   }
+  function checkUsernameAuth (params) {
+    return api.user.checkUsernameAuth(params)
+  }
   function checkEmail (params) {
     return api.user.checkEmail(params)
   }
@@ -141,6 +144,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     saveItemSetting,
     savePassword,
     checkUsername,
+    checkUsernameAuth,
     checkEmail,
     generateUsername
   }

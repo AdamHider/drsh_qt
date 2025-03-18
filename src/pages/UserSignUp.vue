@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="transparent text-white">
-        <q-btn flat round dense icon="arrow_back" v-on:click="$router.go(-1);" v:slot="back-button"></q-btn>
+        <q-btn flat round dense icon="arrow_back" @click="formData.step--" v:slot="back-button"></q-btn>
         <q-toolbar-title></q-toolbar-title>
     </q-app-header>
     <q-page class="flex justify-center items-end full-height full-width text-center" style="padding-top: 50px">
@@ -12,7 +12,6 @@
         @submit.prevent="validate()"
         autocomplete="off"
         class="full-width full-height column justify-end">
-
           <q-card v-if="formData.step == 1" class="ful-width rounded-b-0">
             <q-card-section>
               <div class="text-h6"><b>Создание нового героя</b></div>
@@ -57,7 +56,7 @@
                   push
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Вперёд!"/>
+                  label="Продолжить"/>
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 3" class="ful-width rounded-b-0">
@@ -94,21 +93,30 @@
                   push
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Вперёд!"/>
+                  label="Продолжить"/>
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 4" class="ful-width rounded-b-0">
             <q-card-section>
-              <div class="text-h6"><b>Придумайте пин-код</b></div>
+              <div class="text-h6"><b>Придумайте пароль</b></div>
               <div class="text-grey">Он нужен для того, чтобы в любой момент продолжить путешествие</div>
             </q-card-section>
             <q-card-section>
-              <q-pin-field
-                :modelValue="formData.fields.password.value"
+              <q-input
+                standout
+                v-model="formData.fields.password.value"
                 :rules="formData.fields.password.rules"
-                v-on:update:onUpdate="formData.fields.password.value = $event"/>
+                :type="formData.fields.password.reveal ? 'text' : 'password'"
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="formData.fields.password.reveal ? 'visibility' : 'visibility_off'"
+                    class="cursor-pointer"
+                    @click="formData.fields.password.reveal = !formData.fields.password.reveal"
+                  />
+                </template>
+              </q-input>
             </q-card-section>
-            <q-separator/>
             <q-card-actions vertical>
               <q-btn
                   push
@@ -121,17 +129,25 @@
           </q-card>
           <q-card v-else-if="formData.step == 5" class="ful-width rounded-b-0">
             <q-card-section>
-              <div class="text-h6"><b>Повторите пин-код</b></div>
+              <div class="text-h6"><b>Повторите пароль</b></div>
               <div class="text-grey">И убедитесь, что помните его</div>
             </q-card-section>
             <q-card-section>
-              <q-pin-field
-                modelValue="formData.fields.passwordConfirm.value"
+              <q-input
+                standout
+                v-model="formData.fields.passwordConfirm.value"
                 :rules="formData.fields.passwordConfirm.rules"
-                v-on:update:onUpdate="formData.fields.passwordConfirm.value = $event"
-              />
+                :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="formData.fields.passwordConfirm.reveal ? 'visibility' : 'visibility_off'"
+                    class="cursor-pointer"
+                    @click="formData.fields.passwordConfirm.reveal = !formData.fields.passwordConfirm.reveal"
+                  />
+                </template>
+              </q-input>
             </q-card-section>
-            <q-separator />
             <q-card-actions vertical>
               <q-btn
                   push
@@ -150,7 +166,7 @@
     <q-dialog v-model="termsDialog">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Terms Of Use</div>
+          <div class="text-h6"><b>Правила пользования</b></div>
         </q-card-section>
         <q-card-section class="q-pt-none">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -172,7 +188,7 @@
 import { useUserStore } from '../stores/user'
 import PinField from 'components/PinField.vue'
 import AppMainStorySlider from 'components/AppMainStorySlider.vue'
-import { reactive, ref, watch, onActivated } from 'vue'
+import { reactive, ref, watch, onActivated, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 const { user, signUp, signIn, generateUsername } = useUserStore()
@@ -183,8 +199,9 @@ const mainStoryDialog = ref(false)
 const buttonLoading = ref(false)
 const termsDialog = ref(false)
 const form = ref(null)
+
 const formData = reactive({
-  step: route.params.step * 1,
+  step: 1,
   passwordIsPin: true,
   valid: false,
   fields: {
@@ -212,8 +229,8 @@ const formData = reactive({
     password: {
       value: '',
       rules: [
-        v => !!v || '',
-        v => (/^[0-9]{4,}$/.test(v)) || ''
+        v => !!v || 'Нужно придумать пароль',
+        v => v.length > 3 || 'Пароль должен быть не менее 4 символов'
       ],
       reveal: false,
       required: true
@@ -221,24 +238,18 @@ const formData = reactive({
     passwordConfirm: {
       value: '',
       rules: [
-        v => !!v || '',,
-        v => (/^[0-9]{4,}$/.test(v)) || '',
-        v => (v === formData.fields.password.value) || 'Пароль отличается'
+        v => !!v || 'Нужно подтвердить пароль',
+        v => v.length > 3 || 'Пароль должен быть не менее 4 символов',
+        v => v === formData.fields.password.value || 'Пароли не совпадают'
       ],
       reveal: false,
       required: true
-    },
-    terms: {
-      value: false,
-      rules: [
-        v => !!v
-      ]
     }
   }
 })
 
 const steps = [
-  '', '', 'name', 'gender', 'password', 'passwordConfirm', 'terms'
+  '', '', 'name', 'gender', 'password', 'passwordConfirm'
 ]
 const validate = async function () {
   formData.valid = await form.value.validate()
@@ -264,10 +275,24 @@ const validate = async function () {
     return
   }
   if (formData.valid) formData.step++
-  return router.push('/authorization/sign-up/step' + formData.step)
 }
 onActivated(() => {
-  if(formData.step == 1) mainStoryDialog.value = true
+  formData.fields.name.value = "";
+  formData.fields.username.value = "";
+  formData.fields.gender.value = "";
+  formData.fields.password.value = "";
+  formData.fields.passwordConfirm.value = "";
+  formData.step = 1
+  mainStoryDialog.value = true
+})
+onMounted(() => {
+  formData.fields.name.value = "";
+  formData.fields.username.value = "";
+  formData.fields.gender.value = "";
+  formData.fields.password.value = "";
+  formData.fields.passwordConfirm.value = "";
+  formData.step = 1
+  mainStoryDialog.value = true
 })
 watch(formData.fields, async (currentValue, oldValue) => {
   formData.valid = await form.value.validate()
@@ -275,8 +300,7 @@ watch(formData.fields, async (currentValue, oldValue) => {
 watch(() => formData.fields.name.value, async (currentValue, oldValue) => {
   setTimeout( async () => {
     if(!formData.valid || formData.fields.name.value == '') {
-      formData.fields.username.value = ''
-      return false;
+      return formData.fields.username.value = ''
     }
     const generateUsernameResponse = await generateUsername({ name: currentValue })
     if (!generateUsernameResponse.error) {
@@ -284,26 +308,14 @@ watch(() => formData.fields.name.value, async (currentValue, oldValue) => {
     }
   }, 100)
 })
-watch(() => formData.fields.password.value, async (currentValue, oldValue) => {
-  if (currentValue.length === 4) setTimeout(() => { validate()}, 100)
-})
-watch(() => formData.fields.passwordConfirm.value, async (currentValue, oldValue) => {
-  if (currentValue.length === 4) validate()
-})
-watch(() => route.params.step, async (currentValue, oldValue) => {
-  if(route.name !== 'sign-up') return
-  if (!formData.valid && route.params.step > formData.step) {
-    router.go(-1)
-    return false
-  }
-  formData.step = route.params.step * 1
-  console.log(formData.fields[steps[formData.step]])
-  if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]]?.reveal === false) {
-    formData.fields[steps[formData.step]].value = ''
-  }
+watch(() => formData.step, async (currentValue, oldValue) => {
+  if(formData.step <= 0) router.go(-1);
   if (formData.fields[steps[formData.step]] && formData.fields[steps[formData.step]].value === '') return formData.valid = false
-
-  formData.valid = await form.value.validate()
+  setTimeout(async () => {
+    if(form.value){
+      formData.valid = await form.value.validate()
+    }
+  }, 0)
 })
 
 </script>

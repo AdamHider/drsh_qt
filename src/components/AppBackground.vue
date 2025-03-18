@@ -1,6 +1,7 @@
 <template>
     <div class="app-background">
         <div class="app-background-color"></div>
+        <div class="app-background-color-2"></div>
         <div class="app-background-image-far"></div>
         <div class="app-background-image"></div>
     </div>
@@ -23,6 +24,21 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(to right top, #290f53, #3f2899, #1356b0, #2295d9);
+    background: linear-gradient(to right top, #29b1a4, #015d6f, #011b39);
+    background-size: 200%;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-repeat: no-repeat;
+    -webkit-animation: 8s linear 0s infinite  backgroundGradientMovement;
+    animation: 8s linear 0s infinite  backgroundGradientMovement;
+}
+.app-background .app-background-color-2{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(#072f5952, transparent);
     background-size: 200%;
     background-position-x: 0%;
     background-position-y: 0%;

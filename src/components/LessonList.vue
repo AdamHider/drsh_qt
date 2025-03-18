@@ -302,8 +302,8 @@ watch( () => course.active?.id, async () => {
 }
 .satellite-item img {
   position: absolute;
-  -webkit-animation: 32s linear 0s infinite satelitePlanetRotate;
-  animation: 32s linear 0s infinite satelitePlanetRotate;
+  -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
+  animation: 16s linear 0s infinite satelitePlanetRotate;
 }
 @keyframes sateliteRotate {
   0% {

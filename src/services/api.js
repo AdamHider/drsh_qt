@@ -154,6 +154,9 @@ export class Api extends ApiService{
         checkUsername: (params) => {
             return this.post('user', 'checkUsername', params);
         },
+        checkUsernameAuth: (params) => {
+            return this.post('user', 'checkUsernameAuth', params);
+        },
         checkEmail: (params) => {
             return this.post('user', 'checkEmail', params);
         },

@@ -90,6 +90,9 @@ a{
 .bg-white-transparent{
     background: $white-transparent2;
 }
+.bg-primary-light{
+  background: $primary-light;
+}
 .animation-delay-symbolic{
 
     animation-delay: 100ms
@@ -175,8 +178,8 @@ a{
   border-radius: $button-border-radius;
   padding-bottom: 4px !important;
   padding-top: 0px !important;
-  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.27);
-  font-weight: bold;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.37);
+  font-weight: 800;
 }
 .q-btn--push::before{
   border-bottom-width: 4px;
@@ -234,6 +237,9 @@ a{
         color: $dark;
       }
     }
+    .q-field__append{
+      color: $dark;
+    }
   }
   .q-field__control{
     border: 2px solid rgba(0, 0, 0, 0.15);
@@ -243,6 +249,11 @@ a{
     }
     input{
       font-weight: bold;
+      &:-webkit-autofill,
+      &:-webkit-autofill:focus {
+        border-radius: 10px;
+        background-clip: content-box !important;
+      }
     }
   }
 }

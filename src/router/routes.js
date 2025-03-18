@@ -129,10 +129,6 @@ const routes = [
       },
       {
         path: 'authorization/sign-in',
-        redirect: 'authorization/sign-in/step1'
-      },
-      {
-        path: 'authorization/sign-in/step:step',
         name: 'sign-in',
         component: () => import('pages/UserSignIn.vue'),
         meta: { noBottomBar: true },
@@ -140,10 +136,6 @@ const routes = [
       },
       {
         path: 'authorization/sign-up',
-        redirect: 'authorization/sign-up/step1'
-      },
-      {
-        path: 'authorization/sign-up/step:step',
         name: 'sign-up',
         component: () => import('pages/UserSignUp.vue'),
         beforeEnter: checkIfSigned
