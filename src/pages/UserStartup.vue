@@ -18,7 +18,7 @@
                   <q-card-section class="q-pb-xl">
                     <div style="max-width: 200px;">
                       <q-btn push color="primary" @click="signIn()" class="full-width q-my-sm">Продолжить</q-btn>
-                      <q-btn push @click="signUp()"  class="full-width bg-primary-light q-my-sm">Новая игра</q-btn>
+                      <q-btn push color="secondary" @click="signUp()"  class="full-width  q-my-sm">Новая игра</q-btn>
                       <q-btn push color="primary" @click="closeDialog = true;" class="q-my-sm">Выйти из игры</q-btn>
                     </div>
                   </q-card-section>

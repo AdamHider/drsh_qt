@@ -24,7 +24,7 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(to right top, #290f53, #3f2899, #1356b0, #2295d9);
-    background: linear-gradient(to right top, #29b1a4, #015d6f, #011b39);
+    background: linear-gradient(to right top, #499ffb, #4a3b9a, #1d0840);
     background-size: 200%;
     background-position-x: 0%;
     background-position-y: 0%;

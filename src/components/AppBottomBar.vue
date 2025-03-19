@@ -9,16 +9,20 @@
     class="bg-white rounded-t-md text-primary"
     style="z-index: 10; box-shadow: 0px 0px 0px 1px lightgray"
   >
-    <q-tabs>
-      <q-route-tab icon="map" :to="`${routes.course.link}`" exact replace>
+    <q-tabs indicator-color="transparent">
+      <q-route-tab  :to="`${routes.course.link}`" exact replace>
+        <q-img :src="`/images/icons/rocket${(routes.course.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
         <q-badge v-if="routes.course.is_updated" color="red" rounded floating />
       </q-route-tab>
-      <q-route-tab icon="biotech" :to="routes.skills.link" exact replace>
+      <q-route-tab :to="routes.skills.link" exact replace>
+        <q-img :src="`/images/icons/rocket${(routes.skills.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
         <q-badge v-if="routes.skills.is_updated" color="red" rounded floating />
       </q-route-tab>
-      <q-route-tab icon="stacked_line_chart" :to="routes.leaderboard.link" exact replace>
+      <q-route-tab  :to="routes.leaderboard.link" exact replace>
+        <q-img :src="`/images/icons/galaxy${(routes.leaderboard.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
       </q-route-tab>
-      <q-route-tab icon="person_outline" :to="routes.user.link" exact replace>
+      <q-route-tab :to="routes.user.link" exact replace>
+        <q-img :src="`/images/icons/rocket${(routes.user.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
         <q-badge v-if="routes.user.is_updated" color="red" rounded floating />
       </q-route-tab>
     </q-tabs>
@@ -29,7 +33,7 @@
 <script setup>
 import { useNavigationHistory } from '../composables/useNavigationHistory'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
-import { watch, ref } from 'vue'
+import { watch, ref, onMounted } from 'vue'
 import { useNotification } from '../composables/useNotification'
 
 const { notifications } = useNotification()
@@ -39,18 +43,25 @@ const route = useRoute();
 const isRootPage = ref(false);
 const bottomBarEnabled = ref(false);
 
-
-isRootPage.value = route.fullPath.split('/').length === 2
-bottomBarEnabled.value = route.meta.bottomBarEnabled === true
+onMounted(() => {
+  checkActive()
+})
 
 watch(route, (currentValue, oldValue) => {
-  isRootPage.value = currentValue.fullPath.split('/').length === 2
-  bottomBarEnabled.value = currentValue.meta.bottomBarEnabled === true
+  checkActive()
+});
+const checkActive = () => {
+  isRootPage.value = route.fullPath.split('/').length === 2
+  bottomBarEnabled.value = route.meta.bottomBarEnabled === true
   const routeLinks = Object.keys(routes)
   for(var i in routeLinks){
-    if(routes[routeLinks[i]].link == currentValue.fullPath) routes[routeLinks[i]].is_updated = false
+    routes[routeLinks[i]].is_active = false
+    if(routes[routeLinks[i]].link == route.fullPath){
+      routes[routeLinks[i]].is_updated = false
+      routes[routeLinks[i]].is_active = true
+    }
   }
-});
+}
 watch(() => notifications.value.level, () => {
   routes.user.is_updated = true
 })
