@@ -33,17 +33,8 @@ export function useNavigationHistory () {
   async function getSkillsDataHash () {
     const hashResponse = await api.skill.getList()
   }
-  async function getQuestsDataHash () {
-    const questResponse = await api.quest.getList({active_only:	true, limit:	8, offset:	0})
-    const dataHash = api.lastRequestDataHash
-    if(dataHash !== routes.quests.hash){
-      routes.quests.hash = dataHash
-      routes.quests.is_updated = true
-    }
-  }
   return {
     watchRoute,
-    getQuestsDataHash,
     getSkillsDataHash,
     routes
   }
