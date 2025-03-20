@@ -24,7 +24,7 @@
               <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px" color="white" clickable @click.stop="selectVariant(option.text)">
                 <b>{{ option.text }}</b>
               </q-chip>
-              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="orange" text-color="white">
+              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
                 <b>{{ option.text }}</b>
               </q-chip>
             </div>
@@ -123,7 +123,7 @@ watch(formData.fields, (newValue, oldValue) => {
     background: $grey-4 !important;
     box-shadow: inset 0px 0px 0px 2px rgba(25, 118, 210, 0.5);
     .q-lesson-field-value{
-      background: $orange !important;
+      background: $secondary !important;
       color: white !important;
     }
   }

@@ -55,6 +55,46 @@
               <q-card-section class="q-py-none" v-if="activeLesson.is_blocked === false">
                 <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
               </q-card-section>
+              <q-card-section class="q-pt-sm" v-else-if="activeLesson.unblock">
+                <div class="text-subtitle1"><b>Для разблокировки необходимо:</b></div>
+                <div v-if="activeLesson.unblock?.lessons?.length > 0">
+                  <q-list>
+                    <q-item clickable v-ripple class="text-left q-px-none"  v-for="(unblockLesson, unblockLessonIndex) in activeLesson.unblock.lessons" :key="`unblockLessonIndex-${unblockLessonIndex}`"
+                      :to="(unblockLesson.parent_id) ? `/redirect-lesson-startup-${unblockLesson.id}-${unblockLesson.parent_id}` : `/lesson-startup-${unblockLesson.id}`">
+                      <q-item-section avatar>
+                          <q-img :src="unblockLesson.image"/>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label caption lines="1" class="text-white"><b>Изучить планету</b></q-item-label>
+                        <q-item-label><b>"{{ unblockLesson.title }}"</b></q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                        <q-btn size="12px" flat dense round icon="chevron_right" />
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+                <div v-if="activeLesson.unblock?.skills?.length > 0">
+                  <q-list>
+                    <q-item clickable v-ripple class="text-left q-px-none"  v-for="(unblockSkill, unblockSkillIndex) in activeLesson.unblock.skills" :key="`unblockLessonIndex-${unblockSkillIndex}`"
+                      :to="`/skills`">
+                      <q-item-section avatar>
+                          <q-img :src="unblockSkill.image"/>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label caption lines="1" class="text-white"><b>Исследовать технологию</b></q-item-label>
+                        <q-item-label><b> "{{ unblockSkill.title }}"</b></q-item-label>
+                      </q-item-section>
+                      <q-item-section side>
+                        <q-btn size="12px" flat dense round icon="chevron_right" />
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
+              </q-card-section>
+              <q-card-section v-else>
+                <div class="text-subtitle1 text-center"><b>Заблокировано</b></div>
+              </q-card-section>
               <q-card-actions class="text-right justify-end q-pa-md" v-if="!activeLesson.is_blocked">
                 <q-btn v-if="activeLesson.exercise?.finished_at"
                   push
@@ -77,14 +117,6 @@
                   class="full-width"
                   :resources="activeLesson.cost ?? {}"
                   @click="start(activeLesson.id)"></q-spend-button>
-              </q-card-actions>
-              <q-card-actions class="text-right justify-end q-pa-md" v-else>
-                <q-btn
-                  push
-                  label="Заблокировано"
-                  icon="lock"
-                  color="grey-8"
-                  class="full-width"/>
               </q-card-actions>
             </q-card>
           </transition>

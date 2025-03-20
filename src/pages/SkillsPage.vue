@@ -19,7 +19,6 @@ import { useUserStore } from '../stores/user'
 import { useNavigationHistory } from '../composables/useNavigationHistory'
 
 const { getItem } = useUserStore()
-const { getQuestsDataHash } = useNavigationHistory()
 
 const skills = ref([])
 const error = ref(false)
@@ -36,7 +35,6 @@ const load = async function (filter) {
 const reload = async function () {
   await getItem()
   load()
-  getQuestsDataHash()
 }
 onActivated(() => {
   load()
