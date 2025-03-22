@@ -9,20 +9,20 @@
     class="bg-white rounded-t-md text-primary"
     style="z-index: 10; box-shadow: 0px 0px 0px 1px lightgray"
   >
-    <q-tabs indicator-color="transparent">
+    <q-tabs >
       <q-route-tab  :to="`${routes.course.link}`" exact replace>
-        <q-img :src="`/images/icons/rocket${(routes.course.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
+        <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
         <q-badge v-if="routes.course.is_updated" color="red" rounded floating />
       </q-route-tab>
       <q-route-tab :to="routes.skills.link" exact replace>
-        <q-img :src="`/images/icons/rocket${(routes.skills.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
+        <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
         <q-badge v-if="routes.skills.is_updated" color="red" rounded floating />
       </q-route-tab>
       <q-route-tab  :to="routes.leaderboard.link" exact replace>
-        <q-img :src="`/images/icons/galaxy${(routes.leaderboard.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
+        <q-img :src="`/icons/leaderboard${(routes.leaderboard.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
       </q-route-tab>
       <q-route-tab :to="routes.user.link" exact replace>
-        <q-img :src="`/images/icons/rocket${(routes.user.is_active) ? '_active' : ''}.png`" width="24px"></q-img>
+        <q-img :src="`/icons/account${(routes.user.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
         <q-badge v-if="routes.user.is_updated" color="red" rounded floating />
       </q-route-tab>
     </q-tabs>
