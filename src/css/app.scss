@@ -142,21 +142,25 @@ a{
   border: 4px solid transparent;
 }
 
-.bg-gradient-red    { background: $gradient-red; }
-.bg-gradient-blue   { background: $gradient-blue; }
-.bg-gradient-green  { background: $gradient-green; }
-.bg-gradient-purple { background: $gradient-purple; }
-.bg-gradient-orange { background: $gradient-orange; }
-.bg-gradient-indigo { background: $gradient-indigo; }
+.bg-gradient-primary  { background: $gradient-primary; }
+.bg-gradient-secondary{ background: $gradient-secondary; }
+.bg-gradient-red      { background: $gradient-red; }
+.bg-gradient-blue     { background: $gradient-blue; }
+.bg-gradient-green    { background: $gradient-green; }
+.bg-gradient-purple   { background: $gradient-purple; }
+.bg-gradient-orange   { background: $gradient-orange; }
+.bg-gradient-indigo   { background: $gradient-indigo; }
 .bg-gradient-light-blue   { background: $gradient-light-blue; }
 
 
-.bg-light-gradient-red    { background: $light-gradient-red; }
-.bg-light-gradient-green  { background: $light-gradient-green; }
-.bg-light-gradient-blue   { background: $light-gradient-blue; }
-.bg-light-gradient-purple { background: $light-gradient-purple; }
-.bg-light-gradient-orange { background: $light-gradient-orange; }
-.bg-light-gradient-indigo { background: $light-gradient-indigo; }
+.bg-light-gradient-primary  { background: $light-gradient-primary; }
+.bg-light-gradient-secondary{ background: $light-gradient-secondary; }
+.bg-light-gradient-red      { background: $light-gradient-red; }
+.bg-light-gradient-green    { background: $light-gradient-green; }
+.bg-light-gradient-blue     { background: $light-gradient-blue; }
+.bg-light-gradient-purple   { background: $light-gradient-purple; }
+.bg-light-gradient-orange   { background: $light-gradient-orange; }
+.bg-light-gradient-indigo   { background: $light-gradient-indigo; }
 .bg-light-gradient-light-blue   { background: $light-gradient-light-blue; }
 
 .bg-light-gradient-orange-to-top { background: $light-gradient-orange-to-top; }

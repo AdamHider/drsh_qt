@@ -29,8 +29,9 @@ $secondary : #FFA900;
 
 
 $primary   : #5d06e9;
-$primary-light: #733ACD;
+$primary-light: #8f50f6;
 $secondary : #ff8c00;
+$secondary-light : #ffaa43;
 $accent    : #FFC700;
 
 $dark      : #1D1D1D;
@@ -55,6 +56,8 @@ $huge-border-radius : 20px;
 $button-border-radius  : 12px;
 
 
+$gradient-primary: linear-gradient(to top right, $primary, $primary-light);
+$gradient-secondary: linear-gradient(to top right, $secondary, $secondary-light);
 $gradient-positive: linear-gradient(to top right, #1c9137, #21BA45);
 $gradient-blue: linear-gradient(to top right, #1970bb, #1e88e5);
 $gradient-green: linear-gradient(to top right, #1c9137, #21BA45);
@@ -64,6 +67,8 @@ $gradient-red: linear-gradient(to top right, #c2382e, #f44336);
 $gradient-light-blue: linear-gradient(to top right, #0386c2, #03a9f4);
 $gradient-indigo: linear-gradient(to top right, #2e3a81, #3f51b5);
 
+$light-gradient-primary: linear-gradient(to top right, #1c9137, #21BA45);
+$light-gradient-secondary: linear-gradient(to top right, #1c9137, #21BA45);
 $light-gradient-positive: linear-gradient(to top right, #21BA45, #31e65b);
 $light-gradient-green: linear-gradient(to top right, #21BA45, #31e65b);
 $light-gradient-blue: linear-gradient(to top right, #1e88e5, #439ceb);

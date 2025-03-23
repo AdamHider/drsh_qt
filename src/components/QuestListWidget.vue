@@ -51,17 +51,14 @@
     </q-dialog>
     <q-dialog v-model="assignedQuestDialog" position="bottom" persistent>
       <q-card class="bg-white  full-width" style="overflow: visible;">
-        <q-card-section :class="`bg-gradient-${assignedQuest.group.color} text-white row no-wrap q-pa-none`">
-          <div class="col-4"></div>
+        <img :src="assignedQuest.pages[assignedQuestActivePage].image" style="width: 50%; left: 0; bottom: 90%; z-index: -1;" class="absolute">
+        <q-card-section :class="`bg-gradient-${assignedQuest.group.color} text-white row no-wrap q-pa-none q-rounded`">
           <div class="col q-pa-sm">
               <q-item-label class="text-subtitle1"><b>{{ assignedQuest.group.title }}</b></q-item-label>
           </div>
         </q-card-section>
-        <q-card-section v-if="assignedQuest.pages[assignedQuestActivePage]" class="row q-pa-none no-wrap" >
-          <div class="relative-position col-4">
-            <img :src="assignedQuest.pages[assignedQuestActivePage].image" style="width: 130%; left: -30%;" class="absolute-bottom q-mx-sm ">
-          </div>
-          <div class="col q-pa-sm">
+        <q-card-section v-if="assignedQuest.pages && assignedQuest.pages[assignedQuestActivePage]" class="q-pa-none" >
+          <div class="q-pa-sm">
             <div class="q-pb-sm">
               <div class="text-subtitle2"><b>{{ assignedQuest.pages[assignedQuestActivePage].title }}</b></div>
               <div class="text-caption">{{ assignedQuest.pages[assignedQuestActivePage].description }}</div>
