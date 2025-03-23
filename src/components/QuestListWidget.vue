@@ -54,13 +54,14 @@
         <img :src="assignedQuest.pages[assignedQuestActivePage].image" style="width: 50%; left: 0; bottom: 90%; z-index: -1;" class="absolute">
         <q-card-section :class="`bg-gradient-${assignedQuest.group.color} text-white row no-wrap q-pa-none q-rounded`">
           <div class="col q-pa-sm">
-              <q-item-label class="text-subtitle1"><b>{{ assignedQuest.group.title }}</b></q-item-label>
+              <q-item-label class="text-subtitle1 text-center"><b>Новое задание!</b></q-item-label>
           </div>
         </q-card-section>
         <q-card-section v-if="assignedQuest.pages && assignedQuest.pages[assignedQuestActivePage]" class="q-pa-none" >
           <div class="q-pa-sm">
             <div class="q-pb-sm">
-              <div class="text-subtitle2"><b>{{ assignedQuest.pages[assignedQuestActivePage].title }}</b></div>
+              <q-item-label class="text-subtitle2"><b>{{ assignedQuest.group.title }}</b></q-item-label>
+              <div class="text-subtitle1"><b>{{ assignedQuest.pages[assignedQuestActivePage].title }}</b></div>
               <div class="text-caption">{{ assignedQuest.pages[assignedQuestActivePage].description }}</div>
             </div>
             <div class="full-width q-pb-sm q-mb-sm rounded-sm bg-grey-2" v-if="!assignedQuest.pages[assignedQuestActivePage+1]">
