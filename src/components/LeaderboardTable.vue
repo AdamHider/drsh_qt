@@ -10,7 +10,7 @@
     <q-card-section v-if="leaderboardData.data.length > 0 " class="q-py-sm relative-position">
       <q-inner-loading :showing="isLoading"/>
       <q-list separator >
-        <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" :class="`q-my-sm q-px-none text-left ${(row.is_active == 1) ? 'bg-secondary' : ''}`">
+        <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" :class="`q-my-sm q-px-none text-left `">
             <q-item-section avatar class="text-center">
               <q-avatar size="40px">
                 <b>{{ row.place }}</b>
