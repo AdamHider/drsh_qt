@@ -57,7 +57,7 @@
           leave-active-class="animated fadeOutDown">
           <img :src="assignedQuest.pages[assignedQuestActivePage].image" style="width: 50%; z-index: -1; margin-bottom: -5%;">
         </transition>
-        <q-card class="bg-white  full-width" style="overflow: visible;">
+        <q-card class="bg-white rounded-b-0 full-width" style="overflow: visible;">
           <q-card-section class="text-white row no-wrap q-pa-none">
             <div :class="`col q-pa-sm rounded-t bg-gradient-${assignedQuest.group.color}`">
                 <div class="text-subtitle1 text-center"><b>{{ assignedQuest.group.title }}</b></div>

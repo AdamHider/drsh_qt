@@ -60,7 +60,7 @@
                 <div v-if="activeLesson.unblock?.lessons?.length > 0">
                   <q-list>
                     <q-item clickable v-ripple class="text-left q-px-none"  v-for="(unblockLesson, unblockLessonIndex) in activeLesson.unblock.lessons" :key="`unblockLessonIndex-${unblockLessonIndex}`"
-                      :to="(unblockLesson.parent_id) ? `/redirect-lesson-startup-${unblockLesson.id}-${unblockLesson.parent_id}` : `/lesson-startup-${unblockLesson.id}`">
+                      @click="goToSattelite(unblockLesson)">
                       <q-item-section avatar>
                           <q-img :src="unblockLesson.image"/>
                       </q-item-section>
@@ -140,7 +140,7 @@ const $q = useQuasar()
 const router = useRouter()
 const route = useRoute()
 const { user } = useUserStore()
-const { lesson, getItem, getSatelliteList } = useLesson()
+const { lesson, getItem, getSatelliteList, setTarget, getTarget } = useLesson()
 const { createItem, redoItem } = useExercise()
 const dialog = ref(false)
 const activeIndex = ref(0)
@@ -181,7 +181,10 @@ const redo = async (lessonId) => {
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
 
-onActivated(async () => {
+onActivated( () => {
+  load()
+})
+const load = async () => {
   isDark.value = false
   dialog.value = false
   await getItem(route.params.lesson_id)
@@ -192,22 +195,46 @@ onActivated(async () => {
   }
   await getSatelliteList()
   activeIndex.value = 0;
-  if(route.params.prev_lesson_id){
-    activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == route.params.prev_lesson_id)
+  if(lesson.target){
+    activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == lesson.target)
+    if(activeIndex.value == -1){
+      activeIndex.value = 0;
+      setTarget(null);
+    }
   }
   change(activeIndex.value)
-})
-
+}
+const goToSattelite = (unblockLesson) => {
+  if(unblockLesson.parent_id) {
+    if(unblockLesson.parent_id == route.params.lesson_id) {
+      activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == unblockLesson.id)
+      change(activeIndex.value)
+    } else {
+      setTarget(unblockLesson.id)
+      router.replace(`lesson-startup-${unblockLesson.parent_id}`)
+    }
+  } else {
+    setTarget(unblockLesson.id)
+    router.replace(`lesson-startup-${unblockLesson.id}`)
+  }
+}
 onBeforeRouteLeave((to, from, next) => {
   transitionTrigger.value = false
   isDark.value = false
   setTimeout(() => {
+    setTarget(null)
     next()
   }, 250)
 })
 watch(() => activeLesson.value, () => {
+  if(!activeLesson.value) return
   isDark.value = activeLesson.value.is_blocked
+  activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == activeLesson.value.id)
 })
+watch(() => route.params.lesson_id, () => {
+  load()
+})
+
 
 </script>
 <style lang="scss">

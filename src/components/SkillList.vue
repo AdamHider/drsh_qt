@@ -27,7 +27,7 @@
     </div>
     <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" full-width position="bottom">
       <q-card :class="`q-pt-sm rounded-b-0 skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
-        <q-img width="90px" :src="currentSkill.image" no-spinner/>
+        <q-img width="120px" :src="currentSkill.image" no-spinner/>
         <q-card-section>
           <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
           <div class="text-caption">{{ currentSkill.description }}</div>
@@ -65,7 +65,7 @@
               </div>
             </div>
             <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)"/>
-            <q-btn v-else color="gray" flat class="full-width text-bold" label="Недостаточно ресурсов"/>
+            <q-btn v-else color="gray" flat class="full-width text-bold q-mt-sm" label="Недостаточно ресурсов"/>
           </div>
           <div v-if="currentSkill.is_gained" class="full-width">
             <q-btn color="white" icon="check" flat class="full-width text-bold" label="Исследовано"/>

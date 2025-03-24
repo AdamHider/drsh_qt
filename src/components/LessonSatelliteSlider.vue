@@ -61,7 +61,7 @@
 import { useLesson } from '../composables/useLesson'
 import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { ref, watch, toRefs, onMounted } from 'vue'
+import { ref, watch, toRefs, onMounted, onActivated } from 'vue'
 import { EffectCreative } from 'swiper/modules';
 import 'swiper/css/effect-creative';
 import 'swiper/css'

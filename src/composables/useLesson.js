@@ -1,11 +1,12 @@
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { api } from '../services/index'
 
 const lesson = reactive({
   active: {},
   list: [],
   limit: 10,
-  offset: 0
+  offset: 0,
+  target: null
 })
 
 export function useLesson () {
@@ -49,6 +50,12 @@ export function useLesson () {
     lesson.active.page = exerciseAnswerResponse
     return exerciseAnswerResponse
   }
+  function setTarget (lessonId) {
+    lesson.target = lessonId
+  }
+  function getTarget () {
+    return lesson.target
+  }
 
   return {
     getItem,
@@ -57,6 +64,8 @@ export function useLesson () {
     getSatelliteList,
     getPage,
     saveAnswer,
+    setTarget,
+    getTarget,
     lesson
   }
 }

@@ -30,5 +30,8 @@ $glow: 0px 0px 5px -1px $blue;
 
 .skill-item.is_blocked { filter: grayscale(1); }
 .skill-item.is_gained { background: $gradient-positive !important; color: white; text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.27); }
-.skill-item.is_available { background: $gradient-light-blue !important; color: white; text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.27);}
+.skill-item.is_available {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.12), inset 0px -1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 0px 0px 2px $positive;
+  border-bottom: 4px solid $positive;
+}
 </style>
