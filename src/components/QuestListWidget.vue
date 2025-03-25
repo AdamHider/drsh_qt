@@ -6,7 +6,7 @@
         size="sm"
         :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm push`" >
         <div style="width: 40px">
-          <img :src="questItem.group.image_avatar" width="40px" class="absolute-bottom q-mx-sm q-mb-xs">
+          <img :src="questItem.group.image_avatar" height="45px" class="absolute-bottom q-ml-sm q-mb-xs">
         </div>
         <q-icon class="q-py-xs q-px-sm" name="chevron_right" size="24px"></q-icon>
         <q-badge v-if="!questItem.is_completed" floating color="warning" class="q-pa-xs">
@@ -51,12 +51,16 @@
     </q-dialog>
     <q-dialog v-model="assignedQuestDialog" position="bottom" persistent>
       <div class="full-width column">
-        <transition
-          appear
-          enter-active-class="animated fadeInUp"
-          leave-active-class="animated fadeOutDown">
-          <img :src="assignedQuest.pages[assignedQuestActivePage].image" style="width: 50%; z-index: -1; margin-bottom: -5%;">
-        </transition>
+        <div class="row">
+          <div class="col-6">
+            <transition
+              appear
+              enter-active-class="animated fadeInUp"
+              leave-active-class="animated fadeOutDown">
+              <img v-if="assignedQuestDialog" :src="assignedQuest.pages[assignedQuestActivePage].image" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;">
+            </transition>
+          </div>
+        </div>
         <q-card class="bg-white rounded-b-0 full-width" style="overflow: visible;">
           <q-card-section class="text-white row no-wrap q-pa-none">
             <div :class="`col q-pa-sm rounded-t bg-gradient-${assignedQuest.group.color}`">
@@ -94,13 +98,17 @@
       </div>
     </q-dialog>
     <q-dialog v-model="activeQuestDialog" position="bottom">
-      <div class="full-width column">
-        <transition
-          appear
-          enter-active-class="animated fadeInUp"
-          leave-active-class="animated fadeOutDown">
-          <img v-if="activeQuestDialog" :src="activeQuest.group.image_full" style="width: 50%; z-index: -1;margin-bottom: -5%;">
-        </transition>
+      <div class="full-width column" style="overflow: visible">
+        <div class="row">
+          <div class="col-6 text-right">
+            <transition
+              appear
+              enter-active-class="animated fadeInUp"
+              leave-active-class="animated fadeOutDown">
+              <img v-if="activeQuestDialog" :src="activeQuest.group.image_full" style="height: 270px; z-index: -1; margin-bottom: -20px; float: right;">
+            </transition>
+          </div>
+        </div>
         <q-card class="bg-white  full-width rounded-b-0" style="overflow: visible;">
           <q-card-section class="text-white row no-wrap q-pa-none">
             <div :class="`col q-pa-sm rounded-t bg-gradient-${activeQuest.group.color}`">

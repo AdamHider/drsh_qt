@@ -67,7 +67,7 @@ $gradient-red: linear-gradient(to top right, #c2382e, #f44336);
 $gradient-light-blue: linear-gradient(to top right, #0386c2, #03a9f4);
 $gradient-indigo: linear-gradient(to top right, #2e3a81, #3f51b5);
 
-$light-gradient-primary: linear-gradient(to top right, #1c9137, #21BA45);
+$light-gradient-primary: linear-gradient(to top right, $primary, $primary-light);
 $light-gradient-secondary: linear-gradient(to top right, #1c9137, #21BA45);
 $light-gradient-positive: linear-gradient(to top right, #21BA45, #31e65b);
 $light-gradient-green: linear-gradient(to top right, #21BA45, #31e65b);
@@ -82,6 +82,7 @@ $light-gradient-indigo: linear-gradient(to top right, #3f51b5, #5f72e2);
 $light-gradient-orange-to-top: linear-gradient(to top, #ff9800, #ffb03a);
 $light-gradient-orange-to-right: linear-gradient(to right, #ff9800, #ffb03a);
 $light-gradient-positive-to-right: linear-gradient(to right, #21BA45, #31e65b);
+$light-gradient-primary-to-right: linear-gradient(to right, $primary, $primary-light);
 $light-gradient-blue-to-right: linear-gradient(to right, #1e88e5, #439ceb);
 
 

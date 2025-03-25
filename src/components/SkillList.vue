@@ -7,7 +7,7 @@
               <div class="text-subtitle1"><b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
               <div class="text-subtitle2"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(0)}}%</b></div>
             </div>
-            <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="20px" color="blue"/>
+            <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="20px" color="primary"/>
           </div>
           <div>
             <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
@@ -16,7 +16,7 @@
                   :skill="skill"
                   @click="openModal(skill)"
                   size="60px"
-                  style="z-index: 10; min-width: 165px; max-width: 180px;"
+                  style="z-index: 10; min-width: 165px; max-width: 60px;"
                   :color="props.color"
                 />
                 <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
