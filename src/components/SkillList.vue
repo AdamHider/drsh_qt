@@ -2,7 +2,7 @@
   <div>
     <div class="justify-center">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block">
-          <div class="q-pa-md q-mt-sm">
+          <div class="q-pa-md">
             <div class="row justify-between q-mb-sm">
               <div class="text-subtitle1"><b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
               <div class="text-subtitle2"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(0)}}%</b></div>
@@ -50,7 +50,7 @@
               <div class="text-center text-subtitle1"><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
                 <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
-                  <q-item :class="`${(resource.quantity > resource.quantity_cost) ? `bg-light-gradient-${resource?.color} text-white` : 'bg-grey-4 text-red'} text-left rounded-borders`" >
+                  <q-item :class="`${(resource.quantity > resource.quantity_cost) ? `bg-light-gradient-${resource?.color} text-white` : 'bg-grey-4 text-red'} text-left rounded-sl q-item--push`" >
                       <q-item-section avatar style="min-width: unset;">
                           <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075 );"/>
                       </q-item-section>
@@ -64,7 +64,7 @@
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)"/>
+            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)"/>
             <q-btn v-else color="gray" flat class="full-width text-bold q-mt-sm" label="Недостаточно ресурсов"/>
           </div>
           <div v-if="currentSkill.is_gained" class="full-width">
@@ -95,7 +95,7 @@
 
 <script setup>
 import { api } from '../services/index'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
@@ -117,14 +117,13 @@ const props = defineProps({
   activeOnly: Boolean
 })
 
-const emit = defineEmits(['onClaim'])
+const emit = defineEmits(['onClaim', 'onModalOpen'])
 
 const openModal = function (skill) {
   if (!skill.id) return
   currentSkill.value = skill
   claimDialog.value = true
 }
-
 const claimSkill = async function (skillId) {
   const skillRewardResponse = await api.skill.claimSkill({ skill_id: skillId })
   if (skillRewardResponse.error) {
@@ -134,6 +133,9 @@ const claimSkill = async function (skillId) {
     claimDialog.value = false
   }
 }
+watch(() => claimDialog.value, () => {
+  emit('onModalOpen', claimDialog.value)
+})
 onBeforeRouteLeave((to, from) => {
   if (claimDialog.value) {
     claimDialog.value = false

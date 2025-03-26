@@ -1,8 +1,7 @@
 <template>
   <q-page-container>
       <div class="page-background">
-        <div class="clouds-container">
-        </div>
+        <div class="clouds-container"></div>
       </div>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
           <q-toolbar-title></q-toolbar-title>

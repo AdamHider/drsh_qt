@@ -1,7 +1,7 @@
 <template>
       <q-item :dense="props.dense"
-        :class="`relative bg-light-gradient-${resource?.color} text-white rounded-borders ${(props.dense) ? 'q-py-xs q-pl-sm': ''} ${(transparent) ? 'bg-dark-transparent' : ''} ${(props.push) ? 'q-push': ''}`" >
-          <q-item-section avatar  style="z-index: 1">
+        :class="`relative bg-light-gradient-${resource?.color} text-white rounded-sl ${(props.dense) ? 'q-py-xs q-pl-sm': ''} ${(transparent) ? 'bg-dark-transparent' : ''} ${(props.push) ? 'q-push': ''} ${props.class ?? ''}`" >
+          <q-item-section avatar  style="z-index: 1"  :style="`min-width: ${props.size}`">
               <q-img :width="props.size" :src="resource?.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 )"/>
           </q-item-section>
           <q-item-section style="z-index: 1">
@@ -94,5 +94,6 @@ watch(() => resource.value?.restoration, () => {
 .q-avatar {
   box-shadow: 0px 0px 0px 3px $grey-3;
 }
+
 </style>
 

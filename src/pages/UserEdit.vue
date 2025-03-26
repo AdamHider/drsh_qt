@@ -54,7 +54,7 @@
               </q-item>
             </q-list>
           </q-card>
-          <q-btn class="full-width q-ma-sm" color="dark" to="edit/password" push>Изменить пароль</q-btn>
+          <q-btn class="full-width q-ma-sm q-mb-lg" color="dark" to="edit/password" push>Изменить пароль</q-btn>
           <q-input
             v-model="formData.fields.email.value"
             :rules="formData.fields.email.rules"

@@ -100,19 +100,19 @@
                   push
                   label="Заново"
                   icon="replay"
-                  color="gradient-orange"
+                  color="secondary"
                   class="full-width"
                   @click="redo(activeLesson.id)"/>
                 <q-btn v-else-if="activeLesson.exercise?.id"
                   push
                   label="Продолжить"
                   icon-right="play_arrow"
-                  color="gradient-green"
+                  color="positive"
                   class="q-px-md full-width"
                   @click="open(activeLesson.id)"/>
                 <q-spend-button v-else
                   push
-                  color="gradient-blue"
+                  color="primary"
                   icon-right="play_arrow"
                   class="full-width"
                   :resources="activeLesson.cost ?? {}"

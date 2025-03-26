@@ -4,8 +4,8 @@
       <q-btn v-for="(questItem, index) in quests" :key="index" push dense
         @click="activeQuestDialog = true; activeQuest = questItem"
         size="sm"
-        :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm push`" >
-        <div style="width: 40px">
+        :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed) ? ' q-btn-blinking' : ''}`" >
+        <div style="width: 40px" >
           <img :src="questItem.group.image_avatar" height="45px" class="absolute-bottom q-ml-sm q-mb-xs">
         </div>
         <q-icon class="q-py-xs q-px-sm" name="chevron_right" size="24px"></q-icon>
@@ -29,7 +29,7 @@
             <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
             <div class="row q-gutter-sm items-center justify-center">
               <div v-for="(resource, resourceIndex) in activeQuest.reward" :key="`resource-${resourceIndex}`" >
-                <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
+                <q-item :class="`rounded-sl q-item--push text-left bg-light-gradient-${resource?.color} text-white`" >
                     <q-item-section avatar style="min-width: unset;">
                         <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
                     </q-item-section>
@@ -77,7 +77,7 @@
                 <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
                 <div class="row q-gutter-sm items-center justify-center">
                   <div v-for="(resource, resourceIndex) in assignedQuest.reward" :key="`resource-${resourceIndex}`" >
-                    <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
+                    <q-item :class="`rounded-sl q-item--push text-left bg-light-gradient-${resource?.color} text-white`" >
                         <q-item-section avatar style="min-width: unset;">
                             <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
                         </q-item-section>
@@ -148,7 +148,7 @@
               <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
               <div class="row q-gutter-sm items-center justify-center">
                 <div v-for="(resource, resourceIndex) in activeQuest.reward" :key="`resource-${resourceIndex}`" >
-                  <q-item dense :class="`text-left rounded-borders  bg-light-gradient-${resource?.color} text-white`" >
+                  <q-item :class="`rounded-sl q-item--push text-left bg-light-gradient-${resource?.color} text-white`" >
                       <q-item-section avatar style="min-width: unset;">
                           <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
                       </q-item-section>

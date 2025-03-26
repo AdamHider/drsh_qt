@@ -44,6 +44,9 @@ a{
 .rounded-sm{
     border-radius: $small-border-radius;
 }
+.rounded-sl{
+    border-radius: $normal-border-radius;
+}
 .rounded-md{
     border-radius: $generic-border-radius;
 }
@@ -131,7 +134,7 @@ a{
 .border-between > div:not(:last-child){
   border-right: 1px solid lightgray;
 }
-.q-item{
+.q-item:not(.q-item--dense){
   min-height: 40px;
 }
 .q-card.dark{
@@ -280,3 +283,50 @@ a{
   width: 10%;
 }
 */
+
+/* ANIMATIONS */
+.q-item-blinking{
+  overflow: hidden;
+  --delay: 0s;
+  &:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .2;
+    animation: blinkitem 4s ease infinite  var(--delay);
+    background: linear-gradient(45deg, transparent 40%, white 40%, white 55%, transparent 55%);
+    background-position-x: 150%;
+    border-radius: inherit;
+    background-repeat: no-repeat;
+    background-size: 200%;
+  }
+}
+.q-btn-blinking{
+  --delay: 0s;
+  &:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .2;
+    background: linear-gradient(45deg, transparent 40%, white 40%, white 60%, transparent 60%);
+    background-position-x: 150%;
+    border-radius: inherit;
+    background-repeat: no-repeat;
+    background-size: 200%;
+    animation: blinkitem 3s ease infinite  var(--delay);
+  }
+}
+@keyframes blinkitem {
+  0% {
+    background-position-x: 150%;
+  }
+  40%, 100% {
+    background-position-x: -150%;
+  }
+}
