@@ -20,9 +20,9 @@
     </div>
     <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale" @hide="reload()">
       <q-card class="bg-white text-center" style="width: 300px">
-        <q-card-section>
-          <div v-if="!claimError" class="text-h6">Задание выполнено!</div>
-          <div v-else class="text-h6">Упс...</div>
+        <q-card-section class="q-pb-none">
+          <div v-if="!claimError" class="text-h6"><b>Задание выполнено!</b></div>
+          <div v-else class="text-h6"><b>Упс...</b></div>
         </q-card-section>
         <q-card-section v-if="!claimError">
           <div class="full-width q-pb-sm rounded-sm bg-grey-2">

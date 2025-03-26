@@ -37,6 +37,13 @@ export function useNotification () {
         notifications.value.skill = {};
       }
     });
+    evtSource.addEventListener('quest', (event) => {
+      if(event.data){
+        notifications.value.skill = JSON.parse(event.data);
+      } else {
+        notifications.value.skill = {};
+      }
+    });
     evtSource.addEventListener('tick', (event) => {
       console.log(event.data)
     });

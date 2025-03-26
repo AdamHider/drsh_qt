@@ -50,7 +50,7 @@
               <div class="text-center text-subtitle1"><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
                 <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
-                  <q-item :class="`${(resource.quantity > resource.quantity_cost) ? `bg-light-gradient-${resource?.color} text-white` : 'bg-grey-4 text-red'} text-left rounded-sl q-item--push`" >
+                  <q-item :class="`${(resource.quantity >= resource.quantity_cost) ? `bg-light-gradient-${resource?.color} text-white` : 'bg-grey-4 text-red'} text-left rounded-sl q-item--push`" >
                       <q-item-section avatar style="min-width: unset;">
                           <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075 );"/>
                       </q-item-section>
@@ -85,7 +85,6 @@
                 </q-item-section>
               </q-item>
             </q-list>
-
           </div>
         </q-card-actions>
       </q-card>
