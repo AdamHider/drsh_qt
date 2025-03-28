@@ -6,9 +6,10 @@ const notifications = ref({
   skill: {}
 })
 
+var evtSource = null;
+
 export function useNotification () {
   var url = api.baseUrl+'SSE';
-  var evtSource = null;
 
   function initSSE () {
 
@@ -39,9 +40,16 @@ export function useNotification () {
     });
     evtSource.addEventListener('quest', (event) => {
       if(event.data){
-        notifications.value.skill = JSON.parse(event.data);
+        notifications.value.quest = JSON.parse(event.data);
       } else {
-        notifications.value.skill = {};
+        notifications.value.quest = {};
+      }
+    });
+    evtSource.addEventListener('invitation', (event) => {
+      if(event.data){
+        notifications.value.invitation = JSON.parse(event.data);
+      } else {
+        notifications.value.invitation = {};
       }
     });
     evtSource.addEventListener('tick', (event) => {

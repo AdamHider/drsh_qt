@@ -72,4 +72,14 @@ watch(() => notifications.value.skill, () => {
   notificationList.value.push(notifications.value.skill)
   composeList()
 })
+watch(() => notifications.value.quest, () => {
+  notificationList.value.push(notifications.value.quest)
+  composeList()
+})
+watch(() => notifications.value.invitation, () => {
+  notificationList.value.push(notifications.value.invitation)
+  composeList()
+})
+
+
 </script>

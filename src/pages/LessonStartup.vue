@@ -195,11 +195,12 @@ const load = async () => {
   }
   await getSatelliteList()
   activeIndex.value = 0;
+
   if(lesson.target){
     activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == lesson.target)
     if(activeIndex.value == -1){
       activeIndex.value = 0;
-      setTarget(null);
+      //setTarget(null);
     }
   }
   change(activeIndex.value)
@@ -232,7 +233,7 @@ watch(() => activeLesson.value, () => {
   activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == activeLesson.value.id)
 })
 watch(() => route.params.lesson_id, () => {
-  load()
+  if(route.name == 'lesson-startup') load()
 })
 
 

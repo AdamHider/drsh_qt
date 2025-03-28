@@ -3,8 +3,10 @@ import { api } from '../services/index'
 import Storage from '../utils/storage'
 import { computed, reactive } from 'vue'
 import { useAppMessage } from '../composables/useAppMessage'
+import { useNotification } from '../composables/useNotification'
 
 const { showMessage } = useAppMessage()
+const { initSSE, closeSSE } = useNotification()
 
 const userDefault = {
   active: {
@@ -48,6 +50,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     if (!result.error) {
       const userResponse = await api.user.getItem()
       update({ authorization: authKey, data: userResponse })
+      initSSE()
       showMessage('You have signed successfully!')
     }
     return result
@@ -72,6 +75,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   async function signOut () {
     await api.auth.signOut()
     update(null)
+    closeSSE()
     return true
   }
   async function signUp (credentials) {

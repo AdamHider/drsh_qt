@@ -30,12 +30,8 @@ export function useNavigationHistory () {
     const currentRoot = (route.fullPath.split('/')[1])
     routes[currentRoot] = route.fullPath
   }
-  async function getSkillsDataHash () {
-    const hashResponse = await api.skill.getList()
-  }
   return {
     watchRoute,
-    getSkillsDataHash,
     routes
   }
 }

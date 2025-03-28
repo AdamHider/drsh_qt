@@ -8,7 +8,7 @@
       <q-form
         ref="form"
         v-model="formData.valid"
-        @submit.prevent="validate()"
+        @submit.prevent="null"
         autocomplete="off"
         class="full-width">
         <q-card v-if="formData.step == 1" class="rounded-b-0">
@@ -24,6 +24,7 @@
               :error-messages="formData.fields.username.errors"
               :error="formData.fields.username.isError"
               @update:model-value="clearErrors()"
+              v-on:keyup.enter="checkUsernameValue()"
               placeholder="Введите логин..."
               bottom-slots
               required
@@ -37,7 +38,6 @@
                 push
                 :disabled="!formData.valid"
                 @click="checkUsernameValue()"
-                v-on:keyup.enter="checkUsernameValue()"
                 color="primary"
                 label="Продолжить"/>
           </q-card-actions>
@@ -55,6 +55,7 @@
                 :type="formData.fields.password.reveal ? 'text' : 'password'"
                 :error-messages="formData.fields.password.errors"
                 :error="formData.fields.password.isError"
+                v-on:keyup.enter="validate()"
                 @update:model-value="clearErrors()"
                 bottom-slots
               >
@@ -75,7 +76,6 @@
                 push
                 :disabled="!formData.valid"
                 @click="validate()"
-                v-on:keyup.enter="validate()"
                 color="primary"
                 label="Войти"/>
           </q-card-actions>
@@ -160,6 +160,8 @@ const formData = reactive({
 })
 
 const validate = async function () {
+
+  console.log('validate')
   formData.valid = await form.value.validate()
   if (formData.step === 2) {
     buttonLoading.value = true
@@ -196,6 +198,7 @@ const clearErrors = function () {
   formData.fields.password.errors = null;
 }
 const checkUsernameValue = async function() {
+  console.log('checkUsernameValue')
   const checkUsernameResponse = await checkUsernameAuth({ username: formData.fields.username.value })
   if (checkUsernameResponse.error) {
     formData.valid = false
@@ -235,7 +238,7 @@ watch(() => formData.step, async (currentValue, oldValue) => {
   if(formData.step <= 0) router.go(-1);
   setTimeout(async () => {
     if(form.value){
-      formData.valid = await form.value.validate()
+      //formData.valid = await form.value.validate()
     }
   }, 0)
 })
