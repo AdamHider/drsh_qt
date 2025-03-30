@@ -157,7 +157,7 @@ const routes = [
       },
       {
         path: 'authorization/sign-up-:inviter_hash',
-        name: 'sign-up',
+        name: 'sign-up-invited',
         component: () => import('pages/UserSignUp.vue'),
         beforeEnter: checkIfSigned
       },
