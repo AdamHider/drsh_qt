@@ -63,6 +63,21 @@ const routes = [
         }
       },
       {
+        path: 'notifications',
+        name: 'notifications',
+        component: () => import('pages/NotificationsPage.vue'),
+        meta: {
+          level: 1,
+          requiresAuth: true,
+          bottomBarEnabled: true,
+          transition: 'slide-out',
+          transitionConfig: {
+            course: 'slide-right',
+            leaderboard: 'slide-right'
+          }
+        }
+      },
+      {
         path: 'user',
         name: 'user',
         component: () => import('pages/UserDashboard.vue'),
@@ -141,6 +156,12 @@ const routes = [
         beforeEnter: checkIfSigned
       },
       {
+        path: 'authorization/sign-up-:inviter_hash',
+        name: 'sign-up',
+        component: () => import('pages/UserSignUp.vue'),
+        beforeEnter: checkIfSigned
+      },
+      {
         path: 'lesson-startup-:lesson_id',
         name: 'lesson-startup',
         component: () => import('pages/LessonStartup.vue'),
@@ -157,8 +178,15 @@ const routes = [
         path: 'character-select',
         component: () => import('pages/CharacterSelect.vue'),
         beforeEnter: checkIfCharacterSelected,
-        meta: {
-          pageTitle: 'CharacterSelect'
+      },
+      {
+        path: 'user-invitation-:inviter_hash',
+        component: () => import('pages/UserInvitation.vue'),
+        beforeEnter: (to, from) => {
+          const { user } = useUserStore()
+          if (!user.active.data.id) {
+            return { path: `/authorization/sign-up-${to.params.inviter_hash}` }
+          }
         }
       }
     ]

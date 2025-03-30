@@ -186,6 +186,7 @@ const claimError = ref(false)
 const reloadTrigger = ref(false)
 const quests = ref([])
 const assignedQuest = ref({})
+const assignedQuests = ref([])
 const assignedQuestActivePage = ref(0)
 const assignedQuestDialog = ref(false)
 const activeQuest = ref({})
@@ -207,9 +208,9 @@ const load = async function () {
 }
 
 const checkInactive = function () {
-  const inactiveQuests = quests.value.filter((quest) => { return quest.status == 'created'})
-  if(inactiveQuests.length > 0){
-    assignedQuest.value = inactiveQuests[0]
+  assignedQuests.value = quests.value.filter((quest) => { return quest.status == 'created'})
+  if(assignedQuests.value.length > 0){
+    assignedQuest.value = assignedQuests.value[0]
     assignedQuestDialog.value = true
   }
 }
@@ -220,6 +221,11 @@ const startQuest = async function (questId) {
     assignedQuestDialog.value = false
     assignedQuest.value = {}
     assignedQuestActivePage.value = 0
+    assignedQuests.value.shift()
+    if(assignedQuests.value.length > 0){
+      assignedQuest.value = assignedQuests.value[0]
+      assignedQuestDialog.value = true
+    }
   }
 }
 

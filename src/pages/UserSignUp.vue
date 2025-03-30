@@ -262,6 +262,9 @@ const validate = async function () {
       passwordConfirm: formData.fields.passwordConfirm.value,
       gender: formData.fields.gender.value,
     }
+    if(route.params.inviter_hash){
+      data.inviter_hash = route.params.inviter_hash
+    }
     const authResponse = await signUp(data)
     if (!authResponse.error) {
       const logged = await signIn(authResponse.auth_key)

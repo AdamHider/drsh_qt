@@ -75,7 +75,7 @@ const signUp = () => {
   closeConfirmed.value = true
   return router.push('/authorization/sign-up')
 }
-watch(() => user, (newValue, oldValue) => {
+watch(user, (newValue, oldValue) => {
   if (newValue.id) return router.push('/user')
 })
 onBeforeRouteLeave((to, from) => {

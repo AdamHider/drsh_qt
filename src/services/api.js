@@ -162,7 +162,10 @@ export class Api extends ApiService{
         },
         generateUsername: (params) => {
             return this.post('user', 'generateUsername', params);
-        }
+        },
+        getItemInvitation: (params) => {
+            return this.post('user', 'getItemInvitation', params);
+        },
     }
     auth = {
         signUp: (params) =>  {

@@ -5,6 +5,7 @@
       </div>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
           <q-toolbar-title></q-toolbar-title>
+          <q-btn flat round dense icon="person_add" class="q-mr-sm" @click="inviteDialog = true"/>
           <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
       </q-app-header>
       <q-page style="padding-top: 50px; padding-bottom: 35px;" class="text-center flex column full-width">
@@ -116,6 +117,28 @@
           </q-card>
           </transition>
       </q-page>
+      <q-dialog v-model="inviteDialog">
+        <q-card v-if="userInvitation">
+          <q-img src="" />
+          <q-card-section>
+            <div class="items-center text-center">
+              <div class="text-subtitle1"><b>Пригласи друзей с выгодой!</b></div>
+              <div class="text-caption">Друзья, которые присоединятся к нам по этой ссылке принесут вам драгоценный <b class="text-red-7">рубидий</b>!</div>
+              <div class="text-caption">Для этого приглашённым друзьям нужно только выполнить задание <b class="text-primary">"Час расплаты"</b>!</div>
+            </div>
+          </q-card-section>
+          <q-card-section class="q-pt-none">
+            <div class="text-caption text-grey">
+              По вашему приглашению присоединились: {{ userInvitation.count }}
+            </div>
+          </q-card-section>
+          <q-card-actions>
+            <q-btn v-if="!userInvitationCopied" class="full-width" push color="primary" icon="content_copy" label="Скопировать ссылку" @click="copyInvitationLink()"/>
+            <q-btn v-else class="full-width" push color="primary" label="Скопировано" icon="check" disabled/>
+            <q-btn v-close-popup class="full-width q-my-sm" flat color="primary"><b>Закрыть</b></q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
   </q-page-container>
 </template>
 
@@ -125,10 +148,15 @@ import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingSlider from '../components/UserSettingSlider.vue'
 import { useRoute } from 'vue-router'
-import { onMounted, onActivated } from 'vue'
+import { ref, watch, onMounted, onActivated } from 'vue'
+import { copyToClipboard } from 'quasar'
 
-const { user, getItem } = useUserStore()
+const { user, getItem, getItemInvitation } = useUserStore()
 const route = useRoute()
+
+const inviteDialog = ref(false)
+const userInvitation = ref({})
+const userInvitationCopied = ref(false)
 
 onMounted(async () => {
   await getItem()
@@ -136,6 +164,19 @@ onMounted(async () => {
 
 onActivated(async () => {
   await getItem()
+})
+const copyInvitationLink = () => {
+  const link = `http://localhost:9000/user-invitation-${userInvitation.value.hash}`
+  copyToClipboard(link)
+  userInvitationCopied.value = true
+}
+watch(() => inviteDialog.value, async () => {
+  if(inviteDialog.value == false) return
+  const userInvitationResponse = await getItemInvitation()
+  if(!userInvitationResponse.error){
+    userInvitation.value = userInvitationResponse
+  }
+  userInvitationCopied.value = false
 })
 
 </script>
@@ -151,7 +192,7 @@ onActivated(async () => {
 .user-card::before{
     content: "";
     position: absolute;
-    background-image: url("https://mektepium-app.local/image/backgrounds/clouds2.png");
+    background-image: url("/images/clouds.png");
     width: 100%;
     height: 100%;
     background-size: 150%;
