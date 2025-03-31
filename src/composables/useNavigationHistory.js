@@ -17,6 +17,11 @@ const routes = reactive({
     is_updated: false,
     hash: ''
   },
+  notifications: {
+    link: '/notifications',
+    is_updated: false,
+    hash: ''
+  },
   user: {
     link: '/user',
     is_updated: false,

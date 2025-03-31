@@ -47,7 +47,6 @@ defineExpose({
   onScroll
 })
 watch(() => props.showForce, () => {
-  console.log(props.showForce)
   if(!props.showForce){
     revealOffset = 200
     setTimeout(() => {header.value.$el.classList.add('header-reveal')}, 100)

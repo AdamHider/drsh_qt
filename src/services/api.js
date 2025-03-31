@@ -17,7 +17,6 @@ export class ApiService {
     let headers = {
         "Content-Type": "application/json"
     };
-    if(method == 'uploadItem') headers = {}
     if(localStorage['x-sid']) headers['x-sid'] = localStorage['x-sid'];
     return headers;
   }
@@ -28,7 +27,6 @@ export class ApiService {
     const resource = this.setResource(context, method);
     const headers = this.setHeaders(context, method);
     let data = JSON.stringify(params);
-    if(method == 'uploadItem') data = params
     await fetch(resource, {
         method: 'POST', // or 'PUT'
         headers: headers,
@@ -60,6 +58,11 @@ export class Api extends ApiService{
             return this.post('achievement', 'getList', params)
         }
     }
+    notifications = {
+        getList: (params) => {
+            return this.post('notification', 'getList', params)
+        }
+    }
     quest = {
         getList: (params) => {
             return this.post('quest', 'getList', params)
@@ -71,14 +74,6 @@ export class Api extends ApiService{
           return this.post('quest', 'startItem', params)
         }
     }
-    homework = {
-        getItem: (params) => {
-            return this.post('homework', 'getItem', params)
-        },
-        getList: (params) => {
-            return this.post('homework', 'getList', params)
-        }
-    }
     character = {
         linkItem: (params) => {
             return this.post('character', 'linkItem', params)
@@ -87,7 +82,6 @@ export class Api extends ApiService{
             return this.post('character', 'getList', params)
         }
     }
-
     skill = {
         getItem: (params) => {
             return this.post('skill', 'getItem', params)
@@ -181,10 +175,5 @@ export class Api extends ApiService{
         signIn: (params) => {
             return this.post('auth', 'signIn', params);
         },
-    }
-    image = {
-        upload: (params) =>  {
-          return this.post('image', 'uploadItem', params)
-        }
     }
 }

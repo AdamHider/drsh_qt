@@ -107,6 +107,7 @@
                 v-model="formData.fields.password.value"
                 :rules="formData.fields.password.rules"
                 :type="formData.fields.password.reveal ? 'text' : 'password'"
+                placeholder="Введите пароль..."
               >
                 <template v-slot:append>
                   <q-icon
@@ -138,6 +139,7 @@
                 v-model="formData.fields.passwordConfirm.value"
                 :rules="formData.fields.passwordConfirm.rules"
                 :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
+                placeholder="Повторите пароль..."
               >
                 <template v-slot:append>
                   <q-icon

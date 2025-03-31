@@ -11,19 +11,23 @@
   >
     <q-tabs >
       <q-route-tab  :to="`${routes.course.link}`" exact replace>
-        <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
-        <q-badge v-if="routes.course.is_updated" color="red" rounded floating />
+        <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+        <q-badge v-show="routes.course.is_updated" color="red" rounded floating />
       </q-route-tab>
       <q-route-tab :to="routes.skills.link" exact replace>
-        <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
-        <q-badge v-if="routes.skills.is_updated" color="red" rounded floating />
+        <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+        <q-badge v-show="routes.skills.is_updated" color="red" rounded floating />
       </q-route-tab>
       <q-route-tab  :to="routes.leaderboard.link" exact replace>
-        <q-img :src="`/icons/leaderboard${(routes.leaderboard.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
+        <q-img :src="`/icons/leaderboard${(routes.leaderboard.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+      </q-route-tab>
+      <q-route-tab :to="routes.notifications.link" exact replace>
+        <q-img :src="`/icons/notifications${(routes.notifications.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+        <q-badge v-show="routes.notifications.is_updated" color="red" rounded floating />
       </q-route-tab>
       <q-route-tab :to="routes.user.link" exact replace>
-        <q-img :src="`/icons/account${(routes.user.is_active) ? '_active' : ''}.svg`" width="32px"></q-img>
-        <q-badge v-if="routes.user.is_updated" color="red" rounded floating />
+        <q-img :src="`/icons/account${(routes.user.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+        <q-badge v-show="routes.user.is_updated" color="red" rounded floating />
       </q-route-tab>
     </q-tabs>
   </q-page-sticky>
@@ -65,5 +69,18 @@ const checkActive = () => {
 watch(() => notifications.value.level, () => {
   routes.user.is_updated = true
 })
+watch(() => notifications.value.notifications, () => {
+  routes.notifications.is_updated = true
+})
+watch(() => notifications.value.skills, () => {
+  routes.skills.is_updated = true
+})
+watch(() => notifications.value.quests, () => {
+  routes.course.is_updated = true
+})
 </script>
-
+<style scoped>
+.q-tab{
+  padding: 0 12px;
+}
+</style>

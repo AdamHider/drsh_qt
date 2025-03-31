@@ -163,7 +163,7 @@
           <q-card-actions class="justify-center">
             <q-btn color="grey" push label="Закрыть" v-close-popup/>
             <q-btn v-if="activeQuest.is_completed" color="positive" push label="Завершить" icon-right="done" @click="claimReward(activeQuest.id)"/>
-            <q-btn v-else-if="activeQuest.href" color="primary" push label="Перейти" icon-right="chevron_right" :to="`${activeQuest.href}`"/>
+            <q-btn v-else-if="activeQuest.target.id" color="primary" push label="Перейти" icon-right="chevron_right" @click="goToQuestTarget(activeQuest.target)"/>
           </q-card-actions>
         </q-card>
       </div>
@@ -174,10 +174,12 @@
 <script setup>
 import { api } from '../services/index'
 import { ref, onMounted, onActivated } from 'vue'
-import { onBeforeRouteLeave } from 'vue-router'
+import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useNavigationHistory } from '../composables/useNavigationHistory'
+import { useLesson } from '../composables/useLesson'
 
-const { routes } = useNavigationHistory()
+const { lesson, setTarget } = useLesson()
+const  router = useRouter()
 
 const error = ref(false)
 const claimDialog = ref(false)
@@ -196,7 +198,7 @@ const props = defineProps({
   activeOnly: Boolean
 })
 
-const load = async function () {
+const load = async () => {
   const questListResponse = await api.quest.getList({ mode: props.mode, active_only: props.activeOnly })
   if (questListResponse.error) {
     error.value = questListResponse
@@ -207,7 +209,7 @@ const load = async function () {
   checkInactive()
 }
 
-const checkInactive = function () {
+const checkInactive = () => {
   assignedQuests.value = quests.value.filter((quest) => { return quest.status == 'created'})
   if(assignedQuests.value.length > 0){
     assignedQuest.value = assignedQuests.value[0]
@@ -215,7 +217,17 @@ const checkInactive = function () {
   }
 }
 
-const startQuest = async function (questId) {
+const goToQuestTarget = (questTarget) => {
+  if(questTarget.code == 'lesson'){
+    setTarget(questTarget.id)
+    if(questTarget.parent_id) return router.push(`lesson-startup-${questTarget.parent_id}`)
+    router.push(`lesson-startup-${questTarget.id}`)
+  } else if (questTarget.code == 'skill') {
+    router.push(`skills`)
+  }
+}
+
+const startQuest = async (questId) => {
   const questStartedResponse = await api.quest.startItem({ quest_id: questId })
   if(questStartedResponse){
     assignedQuestDialog.value = false
@@ -229,7 +241,7 @@ const startQuest = async function (questId) {
   }
 }
 
-const claimReward = async function (questId) {
+const claimReward = async (questId) => {
   const questRewardResponse = await api.quest.claimReward({ quest_id: questId })
   reloadTrigger.value = !reloadTrigger.value
   claimDialog.value = true
@@ -242,7 +254,7 @@ const claimReward = async function (questId) {
   }
 }
 
-const reload = async function () {
+const reload = async () => {
   claimDialog.value = false
   activeQuestDialog.value = false
   activeQuest.value = {}

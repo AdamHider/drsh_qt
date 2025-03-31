@@ -160,8 +160,6 @@ const formData = reactive({
 })
 
 const validate = async function () {
-
-  console.log('validate')
   formData.valid = await form.value.validate()
   if (formData.step === 2) {
     buttonLoading.value = true
@@ -198,7 +196,6 @@ const clearErrors = function () {
   formData.fields.password.errors = null;
 }
 const checkUsernameValue = async function() {
-  console.log('checkUsernameValue')
   const checkUsernameResponse = await checkUsernameAuth({ username: formData.fields.username.value })
   if (checkUsernameResponse.error) {
     formData.valid = false

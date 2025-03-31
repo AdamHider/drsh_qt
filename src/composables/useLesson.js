@@ -19,9 +19,9 @@ export function useLesson () {
     try {
       const lessonListResponse = await api.lesson.getList({ limit: lesson.limit, offset: lesson.offset })
       if (lesson.offset > 0) {
-        lesson.list = lessonListResponse.reverse().concat(lesson.list)
+        lesson.list = lessonListResponse.concat(lesson.list)
       } else {
-        lesson.list = lessonListResponse.reverse()
+        lesson.list = lessonListResponse
       }
       return lessonListResponse.length === 0
     } catch (e) {

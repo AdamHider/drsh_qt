@@ -26,7 +26,7 @@
           enter-active-class="animated fadeInUp animation-delay-2"
           leave-active-class="animated zoomOut">
           <q-card flat class="relative text-center text-dark rounded-b-0 q-pt-sm" style="z-index: 1;" v-if="transitionTrigger">
-            <q-card-section class="flex justify-center items-end q-pb-none absolute full-width" v-if="lesson.active.exercise.data.totals.difference > 0" style="top: -100px; z-index: 1">
+            <q-card-section class="flex justify-center items-end q-pb-none absolute full-width" v-if="lesson.active.exercise.data.totals.difference > 0 && false" style="top: -100px; z-index: 1">
                 <q-avatar size="90px" :class="`star-item`"><img :src="(lesson.active.exercise.data.totals.reward_level >= 1) ? '/images/star_21.png' : '/images/star_21_inactive.png'"></q-avatar>
                 <q-avatar size="90px" :class="`star-item q-mb-md`"><img :src="(lesson.active.exercise.data.totals.reward_level == 3) ? '/images/star_23.png' : '/images/star_23_inactive.png'"></q-avatar>
                 <q-avatar size="90px" :class="`star-item`"><img :src="(lesson.active.exercise.data.totals.reward_level >= 2) ? '/images/star_22.png' : '/images/star_22_inactive.png'"></q-avatar>
@@ -79,18 +79,13 @@
               <div class="q-pa-sm bg-grey-3 rounded-sm">
                 <div class="text-subtitle2"><b>Вы разблокировали:</b></div>
                 <q-list>
-                  <q-item clickable v-ripple class="text-left"  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`"
-                    :to="(nextLesson.parent_id) ? `/lesson-startup-${nextLesson.parent_id}` : `/lesson-startup-${nextLesson.id}`"
-                  >
+                  <q-item class="text-left"  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`">
                     <q-item-section avatar>
                         <q-img :src="nextLesson.image"/>
                     </q-item-section>
                     <q-item-section>
                       <q-item-label><b>{{ nextLesson.title }}</b></q-item-label>
                       <q-item-label caption lines="2">{{ nextLesson.description }}</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                      <q-btn size="12px" flat dense round icon="chevron_right" />
                     </q-item-section>
                   </q-item>
                 </q-list>

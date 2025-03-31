@@ -60,7 +60,7 @@ const showNotification = () => {
 
 const openNotification = (link) => {
   dialog.value = false
-  router.push(link)
+  if(link) router.push(link)
 }
 
 watch(() => notifications.value.achievement, () => {

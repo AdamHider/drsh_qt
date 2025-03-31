@@ -9,11 +9,13 @@ const notifications = ref({
 var evtSource = null;
 
 export function useNotification () {
-  var url = api.baseUrl+'SSE';
+  var url = '';
 
   function initSSE () {
 
-    if(localStorage['x-sid']) url += '/'+localStorage['x-sid'];
+    if(!localStorage['x-sid']) return
+
+    url = api.baseUrl+'SSE/'+localStorage['x-sid'];
 
     evtSource = new EventSource(url, { withCredentials: true });
 
