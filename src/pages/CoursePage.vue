@@ -6,14 +6,7 @@
       <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 48px;"  class="items-end full-height full-width text-center" >
-
         <LessonList v-if="course.active?.id" :disable="dialog.active"/>
-        <q-card flat class="transparent">
-          <q-card-section v-if="course.active?.id" class="text-white" >
-            <div class="text-subtitle"><b>{{course.active?.title}}</b></div>
-            <div class="text-caption">{{course.active?.description}}</div>
-          </q-card-section>
-        </q-card>
 
         <q-page-sticky position="bottom" style="margin-bottom: 20px;">
           <q-img :src="`/images/dershane/robot/rocket.png`" width="50px"/>
@@ -42,7 +35,6 @@ const route = useRoute()
 
 const dialog = reactive({ active: false })
 const header = ref(null)
-const onScroll = function (event) { header.value.onScroll(event) }
 
 const { course, getItem } = useCourse()
 

@@ -1,15 +1,13 @@
 <template>
       <q-item :dense="props.dense"
-        :class="`relative bg-light-gradient-${resource?.color} text-white rounded-sl ${(props.dense) ? 'q-py-xs q-pl-sm': ''} ${(transparent) ? 'bg-dark-transparent' : ''} ${(props.push) ? 'q-push': ''} ${props.class ?? ''}`" >
+        :class="`relative bg-light-gradient-${resource?.color} text-white ${(props.dense) ? 'q-py-xs q-pl-sm rounded-sl': 'rounded-md'} ${(transparent) ? 'bg-dark-transparent' : ''} ${(props.push) ? 'q-push': ''} ${props.class ?? ''}`" >
           <q-item-section avatar  style="z-index: 1"  :style="`min-width: ${props.size}`">
               <q-img :width="props.size" :src="resource?.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 )"/>
           </q-item-section>
           <q-item-section style="z-index: 1">
               <q-item-label :class="`${(props.dense) ? '' : 'text-h7'}`">
-                <b>
-                  {{resource?.quantity}}
-                  <span v-if="resource.is_restorable">{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</span>
-                </b>
+                  <span class=""><b>{{resource?.quantity}}</b></span>
+                  <span v-if="resource.is_restorable"><b>{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</b></span>
               </q-item-label>
               <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{resource?.title}}</b></q-item-label>
           </q-item-section>
@@ -17,14 +15,15 @@
             size="24px"
             :color="resource?.color"
             :value="percentageCount/100"
-            :class="`rounded-borders absolute-top full-width full-height ${(transparent) ? 'bg-dark-transparent' : ''}`" />
+            :class="`rounded-borders absolute-top rounded-sl full-width full-height`" style="background-color: rgba(0, 0, 0, 0.2)"/>
           <div v-if="resource.is_restorable && resource.restoration?.nextRestoration > 0" class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
             <q-chip
               dense
               size="10px"
               text-color="white"
+              color="dark"
               class="q-ma-none"
-              style="max-width: none; background-color: #00000082"
+              :style="`max-width: none; background-color: ${(transparent) ? '#0000006c' : ''}`"
             >
               <b>{{ timerCount }}</b>
             </q-chip>

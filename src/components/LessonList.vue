@@ -1,10 +1,20 @@
 <template>
-  <div class="relative-position q-pb-md" style="z-index: 1;" ref="scrollAreaRef">
+  <div class="relative-position" style="z-index: 1;" ref="scrollAreaRef">
+    <q-card class="transparent text-white q-mb-md" flat>
+      <q-card-section>
+        <div class="text-subtitle1">
+          <b>Новые миры</b>
+        </div>
+        <div>
+          Уже очень скоро
+        </div>
+      </q-card-section>
+    </q-card>
+    <q-separator class="section-separator" style="margin: 24px 0 48px; border-bottom: 2px dashed white; opacity: 0.25;" />
     <div v-for="(courseSection, courseSectionsIndex) in courseSections" :key="`courseSectionsIndex-${courseSectionsIndex}`"
         v-intersection="onIntersection"
-        :courseSectionId="courseSection.data.id"
-        :groupBackground="courseSection.data.background_image"
-        :groupGradient="courseSection.data.background_gradient"
+        :groupKey="courseSectionsIndex"
+        class="section-block"
     >
       <div
         v-for="lesson in courseSection.list" :key="lesson.id"
@@ -56,7 +66,7 @@
           </transition>
         </div>
       </div>
-      <q-card class="transparent text-white" flat>
+      <q-card class="transparent text-white q-mb-md" flat>
         <q-card-section>
           <div class="text-subtitle1">
             <b>Система "{{ courseSection.title }}"</b>
@@ -70,20 +80,16 @@
           </div>
         </q-card-section>
       </q-card>
-      <q-separator style="border-bottom: 2px dashed white; opacity: 0.25;" />
+      <q-separator class="section-separator" style="border-bottom: 2px dashed white; opacity: 0.25;" />
     </div>
   </div>
-  <q-page-sticky
-    class="fixed full-width full-height"
-    :style="`background: ${groupGradient}; transform: none`"
-  >
+  <q-page-sticky class="fixed full-width full-height">
     <q-img
-      :src="groupBackground"
+      :src="activeCourseSection.background_image"
       class="absolute-top absolute-left full-width full-height"
       no-spinner
     />
   </q-page-sticky>
-
   <q-dialog
     v-model="lockDialog"
     transition-show="scale"
@@ -114,9 +120,8 @@ const { course } = useCourse();
 const router = useRouter();
 
 const groupBackground = ref(null);
-const groupGradient = ref(null);
+const activeCourseSection = ref({})
 const selectedLesson = ref(0);
-const currentCourseSectionId = ref(0);
 const transitionTrigger = ref(false);
 const inView = ref({});
 const lockDialog = ref(false);
@@ -138,11 +143,7 @@ const composeList = () => {
 
   const courseSectionsRaw = lesson.list.reduce((result, obj) => {
     result[obj.course_section_id] = result[obj.course_section_id] || {
-        title: obj.course_section.title,
-        description: obj.course_section.description,
-        data: obj.course_section,
-        expandDescription: false,
-        list: []
+        ... obj.course_section, ...{ expandDescription: false, list: [] }
       };
       result[obj.course_section_id].list.push(obj);
       return result;
@@ -155,13 +156,6 @@ const composeList = () => {
     courseSections.value.push(couseSection)
   }
 };
-const checkGroup = (courseSection) => {
-  if (courseSection.id != currentCourseSectionId.value) {
-    currentCourseSectionId.value = courseSection.id;
-    return true;
-  }
-  return false;
-};
 const openLesson = (lessonId) => {
   transitionTrigger.value = false;
   selectedLesson.value = lessonId;
@@ -170,15 +164,15 @@ const openLesson = (lessonId) => {
   }, 250);
 };
 const onIntersection = (entry) => {
+  const groupIndex = entry.target.attributes.groupKey?.value
   if(entry.isIntersecting){
-    inView.value[entry.target.attributes.courseSectionId?.value] = true;
-    groupBackground.value = entry.target.attributes.groupBackground?.value;
-    groupGradient.value = entry.target.attributes.groupGradient?.value;
+    inView.value[groupIndex] = true;
   } else {
-    inView.value[entry.target.attributes.courseSectionId?.value] = false;
+    inView.value[groupIndex] = false;
   }
-  console.log(inView.value)
-  console.log(entry)
+  for(var i in inView.value){
+    if(inView.value[i]) activeCourseSection.value = courseSections.value[i];
+  }
 };
 onMounted(async () => {
   transitionTrigger.value = true;
@@ -187,7 +181,6 @@ onMounted(async () => {
 });
 onActivated(async () => {
   if (lesson.list.length > 0) {
-    currentCourseSectionId.value = 0;
     transitionTrigger.value = true;
     selectedLesson.value = 0;
   }
@@ -198,10 +191,21 @@ watch( () => course.active?.id, async () => {
 });
 </script>
 <style scoped lang="scss">
+.section-block{
+  .section-separator{
+    display: none;
+  }
+  &:not(:last-child){
+    .section-separator{
+      margin-bottom: 48px;
+      display: block;
+    }
+  }
+}
 .planet-block {
   position: relative;
   &.is-initial {
-    margin-bottom: 2em;
+    margin-bottom: 3em;
   }
   &:not(.is-initial) {
     &:before {
