@@ -35,7 +35,7 @@
                   {{ user.active?.data.username }}
                 </div>
               </q-card-section>
-              <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
+              <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto" ref="userLevel">
                 <q-progress-bar :value="user.active.data.level?.percentage" size="25px" color="positive"/>
                 <div class="row q-ma-sm ">
                     <div class="col text-left">
@@ -47,7 +47,7 @@
                 </div>
               </q-card-section>
 
-              <q-card-section class="q-pa-none" v-if="user.active?.data.statistics">
+              <q-card-section class="q-pa-none" v-if="user.active?.data.statistics" ref="userStatistic">
                   <div class="q-pa-sm row items-start border-between">
                       <div class="col-4">
                         <q-item class="rounded-borders text-center">
@@ -84,10 +84,10 @@
                           <UserResourceBar :resource="user.active?.data.resources.energy" size="38px" push/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.cobalt" size="38px" push/>
+                          <UserResourceBar :resource="user.active?.data.resources.terralit" size="38px" push/>
                       </div>
                       <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.rubidium" size="38px" push/>
+                          <UserResourceBar :resource="user.active?.data.resources.isonit" size="38px" badge-link="/market" with-badge push/>
                       </div>
                       <div class="col-6 q-pa-sm">
                           <UserResourceBar :resource="user.active?.data.resources.science" size="38px" push/>
@@ -139,6 +139,7 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
+      <UserTutorialDialog :elements="{userLevel, userStatistic}"/>
   </q-page-container>
 </template>
 
@@ -147,6 +148,7 @@ import { useUserStore } from '../stores/user'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingSlider from '../components/UserSettingSlider.vue'
+import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 import { useRoute } from 'vue-router'
 import { ref, watch, onMounted, onActivated } from 'vue'
 import { copyToClipboard } from 'quasar'
@@ -157,6 +159,9 @@ const route = useRoute()
 const inviteDialog = ref(false)
 const userInvitation = ref({})
 const userInvitationCopied = ref(false)
+
+const userStatistic = ref(null)
+const userLevel = ref(null)
 
 onMounted(async () => {
   await getItem()

@@ -188,7 +188,12 @@ const routes = [
             return { path: `/authorization/sign-up-${to.params.inviter_hash}` }
           }
         }
-      }
+      },
+      {
+        path: 'market',
+        component: () => import('pages/MarketPage.vue'),
+        meta: { noBottomBar: true },
+      },
     ]
   },
 

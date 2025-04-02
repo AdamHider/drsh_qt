@@ -28,6 +28,14 @@
               <b>{{ timerCount }}</b>
             </q-chip>
           </div>
+          <div v-if="props.withBadge">
+            <div v-if="props.dense" class="absolute" style="right: -12px">
+              <q-btn dense round push size="10px" icon="add" color="isonit" :to="props.badgeLink"/>
+            </div>
+            <div v-else class="absolute" style="top: -8px; right: -8px">
+              <q-btn dense round push icon="add" color="isonit" :to="props.badgeLink"/>
+            </div>
+          </div>
       </q-item>
 </template>
 
@@ -43,7 +51,9 @@ const props = defineProps({
   push: Boolean,
   noCaption: Boolean,
   dense: Boolean,
-  transparent: Boolean
+  transparent: Boolean,
+  withBadge: Boolean,
+  badgeLink: String
 })
 const resource = toRefs(props).resource
 

@@ -42,7 +42,7 @@ const settings = ref([])
 
 onActivated(() => {
   settings.value = []
-  if(props.settings.cobaltGainModifier.status != 'neutral') settings.value.push(props.settings.cobaltGainModifier)
+  if(props.settings.terralitGainModifier.status != 'neutral') settings.value.push(props.settings.terralitGainModifier)
   if(props.settings.experienceGainModifier.status != 'neutral') settings.value.push(props.settings.experienceGainModifier)
   if(props.settings.scienceGainModifier.status != 'neutral') settings.value.push(props.settings.scienceGainModifier)
   if(props.settings.energyRestorationTime.status != 'neutral') settings.value.push(props.settings.energyRestorationTime)
