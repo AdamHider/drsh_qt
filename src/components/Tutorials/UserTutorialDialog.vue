@@ -1,166 +1,118 @@
 <template>
   <div>
-    <q-dialog v-model="tutorialDialog" position="bottom" seamless>
-      <div class="full-width column" v-if="tutorialPages[assignedQuestActivePage].type == 'dialog'">
+    <q-dialog v-model="tutorialDialog" position="bottom" persistent>
+      <div class="full-width column">
         <div class="row">
           <div class="col-6">
             <transition
               appear
               enter-active-class="animated fadeInUp"
               leave-active-class="animated fadeOutDown">
-              <img v-if="tutorialDialog" :src="tutorialPages[assignedQuestActivePage].image" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;">
+              <img src="/images/characters/quest_character_full.png" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;"/>
             </transition>
           </div>
         </div>
         <q-card class="bg-white rounded-b-0 full-width" style="overflow: visible;">
-          <q-card-section v-if="tutorialPages && tutorialPages[assignedQuestActivePage]" class="q-pa-none" >
-            <div class="q-pa-sm">
-              <div class="q-pb-sm">
-                <div class="text-subtitle1"><b>{{ tutorialPages[assignedQuestActivePage].title }}</b></div>
-                <div class="text-caption">{{ tutorialPages[assignedQuestActivePage].description }}</div>
+          <q-card-section v-if="tutorialPageIndex == 0">
+              <div class="q-pb-md">
+                <div class="text-subtitle1"><b>Привет капитан!</b></div>
+                <div class="text-caption">Меня зовут Робото и я твой главный помощник!</div>
               </div>
               <div class="flex justify-end q-gutter-sm">
-                <q-btn v-if="!tutorialPages[assignedQuestActivePage+1]" push :label="tutorialPages[assignedQuestActivePage].answer" color="primary"  v-close-popup/>
-                <q-btn v-else push :label="tutorialPages[assignedQuestActivePage].answer" color="primary" @click="assignedQuestActivePage++"/>
+                <q-btn push label="Привет, Робото!" color="primary" @click="tutorialPageIndex++"/>
               </div>
-            </div>
+          </q-card-section>
+          <q-card-section v-if="tutorialPageIndex == 1">
+              <div class="q-pb-md">
+                <div class="text-subtitle1"><b>Спасение галактики - сложная задача</b></div>
+                <div class="text-caption">Поэтому я должен ознакомить тебя с основами освоения космоса!</div>
+              </div>
+              <div class="flex justify-center q-gutter-sm">
+                <q-btn  push label="Не нужно" color="grey"  v-close-popup/>
+                <q-btn push label="Конечно, давай" color="primary" @click="tutorialPageIndex++"/>
+              </div>
+          </q-card-section>
+          <q-card-section v-if="tutorialPageIndex == 2">
+              <div class="q-pb-md">
+                <div class="text-subtitle1"><b>Отлично!</b></div>
+                <div class="text-caption">Это не займёт много времени.</div>
+              </div>
+              <div class="flex justify-end q-gutter-sm">
+                <q-btn  push label="Вперёд" color="primary" @click="startTutorial"/>
+              </div>
           </q-card-section>
         </q-card>
       </div>
     </q-dialog>
-    <div class="highlight-area" v-if="tutorialDialog"
-      :style="`width: ${hightlightAreaBox.width}px; height: ${hightlightAreaBox.height}px; top: ${hightlightAreaBox.top}px; left: ${hightlightAreaBox.left}px; `"
-    >
-      <div v-if="tutorialPages[assignedQuestActivePage].type == 'tooltip'"
-        :class="`highlight-tooltip ${(tutorialPages[assignedQuestActivePage].tooltipPosition == 'upper') ? 'upper' : 'lower'}`">
-        <q-card class="bg-white bg-white q-ma-md" style="min-width: 250px;">
-          <q-card-section v-if="tutorialPages && tutorialPages[assignedQuestActivePage]" class="q-pa-none" >
-            <div class="q-pa-sm">
-              <div class="q-pb-sm">
-                <div class="text-subtitle1"><b>{{ tutorialPages[assignedQuestActivePage].title }}</b></div>
-                <div class="text-caption">{{ tutorialPages[assignedQuestActivePage].description }}</div>
+    <q-dialog v-model="tutorialEndDialog" position="bottom" persistent>
+      <div class="full-width column">
+        <div class="row">
+          <div class="col-6">
+            <transition
+              appear
+              enter-active-class="animated fadeInUp"
+              leave-active-class="animated fadeOutDown">
+              <img src="/images/characters/quest_character_full.png" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;"/>
+            </transition>
+          </div>
+        </div>
+        <q-card class="bg-white rounded-b-0 full-width" style="overflow: visible;">
+          <q-card-section>
+              <div class="q-pb-md">
+                <div class="text-subtitle1"><b>Теперь пора к звёздам!</b></div>
+                <div class="text-caption">Пришло время переходить к спасению галактики! На звёздной карте для тебя есть задания!</div>
               </div>
-              <div class="flex justify-end q-gutter-sm">
-                <q-btn v-if="!tutorialPages[assignedQuestActivePage+1]" push :label="tutorialPages[assignedQuestActivePage].answer" color="primary" @click="tutorialDialog = false"/>
-                <q-btn v-else push :label="tutorialPages[assignedQuestActivePage].answer" color="primary" @click="assignedQuestActivePage++"/>
+              <div class="flex justify-center q-gutter-sm">
+                <q-btn push label="Позже" color="grey" @click="finishTutorial(false)"/>
+                <q-btn push label="Вперёд!" color="primary" @click="finishTutorial(true)"/>
               </div>
-            </div>
           </q-card-section>
         </q-card>
       </div>
-    </div>
+    </q-dialog>
   </div>
 </template>
 
 <script setup>
-import { api } from '../../services/index'
 import { ref, onMounted, onActivated, watch } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
-import { useLesson } from '../../composables/useLesson'
+import { useTutorial } from '../../composables/useTutorial'
+import { useRouter } from "vue-router";
 
-const { lesson, setTarget } = useLesson()
+const { tutorial, setStatus, setIndex } = useTutorial()
+const router = useRouter();
 
-const claimDialog = ref(false)
-const tutorialPages = ref([
-  {
-    image: '/images/characters/quest_character_full.png',
-    type: 'dialog',
-    title: 'User level here',
-    description: 'User level here',
-    answer: 'Next',
-    element: 'userLevel',
-    tooltipPosition: 'lower'
-  },
-  {
-    title: 'User level here',
-    type: 'tooltip',
-    description: 'User level here',
-    answer: 'Next',
-    element: 'userLevel',
-    tooltipPosition: 'lower'
-  },
-  {
-    title: 'User statistics here',
-    type: 'tooltip',
-    description: 'User level here',
-    answer: 'Next',
-    element: 'userStatistic',
-    tooltipPosition: 'upper'
-  }
-])
-const assignedQuestActivePage = ref(0)
+const tutorialPageIndex = ref(0)
 const tutorialDialog = ref(false)
-const hightlightAreaBox = ref({
-  width: 0,
-  height: 0,
-  top: 0,
-  left: 0
-})
+const tutorialEndDialog = ref(false)
 
-const props = defineProps({
-  elements: Object
-})
-
-onBeforeRouteLeave((to, from) => {
-  if (claimDialog.value) {
-    return false
-  }
-  return true
-})
-const getElementCoord = (elementRef) => {
-  if(elementRef) {
-    var offset = elementRef.$el.getBoundingClientRect()
-    hightlightAreaBox.value.top = offset.top
-    hightlightAreaBox.value.left = offset.left
-    hightlightAreaBox.value.width = offset.width
-    if(tutorialPages.value[assignedQuestActivePage.value].type == 'tooltip'){
-      hightlightAreaBox.value.height = offset.height
-    }
-  }
+const startTutorial = () => {
+  setStatus(true)
+  setIndex(0)
+  tutorialDialog.value = false
 }
-const renderPage = () => {
-  if(tutorialPages.value[assignedQuestActivePage.value].element){
-    const elementRef = tutorialPages.value[assignedQuestActivePage.value].element
-    if(props.elements[elementRef]) getElementCoord(props.elements[elementRef])
+const finishTutorial = (forward) => {
+  tutorialDialog.value = false
+  tutorialEndDialog.value = false
+  setStatus(false)
+  if(forward){
+    router.push('/courses')
   }
+
 }
 
-watch(() => assignedQuestActivePage.value, () => {
-  renderPage()
+watch(() => tutorial.tutorialEnd, () => {
+  if(tutorial.tutorialEnd)  tutorialEndDialog.value = true
 })
 onMounted(() => {
+  setStatus(false)
+  tutorialPageIndex.value = 0
+  setIndex(0)
   tutorialDialog.value = true
-  setTimeout(() => {
-    renderPage()
-  }, 1000)
 })
 onActivated(() => {
+  setStatus(false)
+  tutorialPageIndex.value = 0
+  setIndex(0)
   tutorialDialog.value = true
-  setTimeout(() => {
-    renderPage()
-  }, 1000)
 })
 </script>
-<style scoped lang="scss">
-.highlight-area{
-  position: fixed;
-  top: 300px;
-  left: 200px;
-  box-shadow: 0px 0px 0px 5000px #00000075;
-  border-radius: 15px;
-  z-index: 2000;
-  transition: 0.3s all ease;
-  .highlight-tooltip{
-    position: absolute;
-    &.upper{
-      bottom: 100%;
-    }
-    &.lower{
-      top: 100%;
-    }
-  }
-}
-.q-dialog__backdrop{
-  background: transparent !important;
-}
-</style>

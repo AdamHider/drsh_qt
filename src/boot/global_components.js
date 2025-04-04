@@ -5,7 +5,7 @@ import AppInfiniteList from '../components/AppInfiniteList.vue'
 import AppSpendButton from '../components/AppSpendButton.vue'
 import PinField from '../components/PinField.vue'
 import AppProgressBar from '../components/AppProgressBar.vue'
-import VueApexCharts from 'vue3-apexcharts'
+import AppTutorialItem from '../components/AppTutorialItem.vue'
 
 // we globally register our component with Vue
 export default ({ app }) => {
@@ -16,5 +16,5 @@ export default ({ app }) => {
   app.component('q-spend-button', AppSpendButton)
   app.component('q-pin-field', PinField)
   app.component('q-progress-bar', AppProgressBar)
-  app.use(VueApexCharts)
+  app.component('q-tutorial-item', AppTutorialItem)
 }

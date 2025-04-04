@@ -9,22 +9,34 @@
     class="bg-white rounded-t-md text-primary"
     style="z-index: 10; box-shadow: 0px 0px 0px 1px lightgray"
   >
-    <q-tabs >
-      <q-route-tab  :to="`${routes.course.link}`" exact replace>
-        <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
-        <q-badge v-show="routes.course.is_updated" color="red" rounded floating />
-      </q-route-tab>
-      <q-route-tab :to="routes.skills.link" exact replace>
-        <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
-        <q-badge v-show="routes.skills.is_updated" color="red" rounded floating />
-      </q-route-tab>
-      <q-route-tab  :to="routes.leaderboard.link" exact replace>
-        <q-img :src="`/icons/leaderboard${(routes.leaderboard.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
-      </q-route-tab>
-      <q-route-tab :to="routes.notifications.link" exact replace>
-        <q-img :src="`/icons/notifications${(routes.notifications.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
-        <q-badge v-show="routes.notifications.is_updated" color="red" rounded floating />
-      </q-route-tab>
+    <q-tabs content-class="allow-overflow">
+      <div class="relative-position">
+        <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры и выполнять задания по спасению галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
+        <q-route-tab  :to="`${routes.course.link}`" exact replace>
+          <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+          <q-badge v-show="routes.course.is_updated" color="red" rounded floating />
+        </q-route-tab>
+      </div>
+      <div class="relative-position">
+        <q-tutorial-item title="Технологии" description="На этой странице отображаются технологии, помогающие в освоении космоса." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
+        <q-route-tab :to="routes.skills.link" exact replace>
+          <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+          <q-badge v-show="routes.skills.is_updated" color="red" rounded floating />
+        </q-route-tab>
+      </div>
+      <div class="relative-position">
+        <q-tutorial-item title="Рейтинг" description="На этой странице можно увидеть свой рейтинг среди других исследователей." :index="7" :positionFixed="{bottom: 50, left: 0}"/>
+        <q-route-tab  :to="routes.leaderboard.link" exact replace>
+          <q-img :src="`/icons/leaderboard${(routes.leaderboard.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+        </q-route-tab>
+      </div>
+      <div class="relative-position">
+        <q-tutorial-item title="Уведомления" description="На этой странице виден список уведомлений." :index="6" :positionFixed="{bottom: 50, left: 0}"/>
+        <q-route-tab :to="routes.notifications.link" exact replace style="opacity: 1;">
+          <q-img :src="`/icons/notifications${(routes.notifications.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+          <q-badge v-show="routes.notifications.is_updated" color="red" rounded floating />
+        </q-route-tab>
+      </div>
       <q-route-tab :to="routes.user.link" exact replace>
         <q-img :src="`/icons/account${(routes.user.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
         <q-badge v-show="routes.user.is_updated" color="red" rounded floating />

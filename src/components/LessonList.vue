@@ -83,6 +83,7 @@
       <q-separator class="section-separator" style="border-bottom: 2px dashed white; opacity: 0.25;" />
     </div>
   </div>
+    <div ref="bottomPoint" class="bottomPoint"></div>
   <q-page-sticky class="fixed full-width full-height">
     <q-img
       :src="activeCourseSection.background_image"
@@ -119,7 +120,7 @@ const { lesson, getList, getListUpdates } = useLesson();
 const { course } = useCourse();
 const router = useRouter();
 
-const groupBackground = ref(null);
+const bottomPoint = ref(null);
 const activeCourseSection = ref({})
 const selectedLesson = ref(0);
 const transitionTrigger = ref(false);
@@ -178,6 +179,9 @@ onMounted(async () => {
   transitionTrigger.value = true;
   selectedLesson.value = 0;
   onLoad()
+  setTimeout(() => {
+    bottomPoint.value.scrollIntoView()
+  }, 250);
 });
 onActivated(async () => {
   if (lesson.list.length > 0) {
@@ -197,7 +201,6 @@ watch( () => course.active?.id, async () => {
   }
   &:not(:last-child){
     .section-separator{
-      margin-bottom: 48px;
       display: block;
     }
   }

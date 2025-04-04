@@ -5,8 +5,12 @@
       </div>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
           <q-toolbar-title></q-toolbar-title>
-          <q-btn flat round dense icon="person_add" class="q-mr-sm" @click="inviteDialog = true"/>
-          <q-btn flat round dense icon="settings" class="q-mr-sm"  to="/user/settings"/>
+          <div class="relative-position q-mr-sm">
+            <q-btn flat round dense icon="person_add" @click="inviteDialog = true"/>
+            <q-tutorial-item title="Пригласить друзей" description="Здесь можно пригласить друзей и получить большой подарок за каждого." :index="5" position="bottom" positionInline="right"/>
+          </div>
+          <q-btn flat round dense icon="settings" class="q-mr-sm" to="/user/settings">
+          </q-btn>
       </q-app-header>
       <q-page style="padding-top: 50px; padding-bottom: 35px;" class="text-center flex column full-width">
           <transition
@@ -28,14 +32,15 @@
             appear
             enter-active-class="animated fadeInUpBig"
             leave-active-class="animated fadeOutDownBig">
-          <q-card flat square class="relative text-left q-pt-md q-pb-md col full-width no-shadow user-card">
+          <q-card flat square class="relative text-left q-pt-md q-pb-lg col full-width no-shadow user-card">
               <q-card-section class="text-center q-pa-none">
                 <div class="text-h6"><b>{{ user.active?.data.name }}</b></div>
                 <div class="text-caption">
                   {{ user.active?.data.username }}
                 </div>
               </q-card-section>
-              <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto" ref="userLevel">
+              <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
+                <q-tutorial-item title="Уровень" description="Здесь отображается твой текущий уровень." :index="0"/>
                 <q-progress-bar :value="user.active.data.level?.percentage" size="25px" color="positive"/>
                 <div class="row q-ma-sm ">
                     <div class="col text-left">
@@ -46,8 +51,8 @@
                     </div>
                 </div>
               </q-card-section>
-
-              <q-card-section class="q-pa-none" v-if="user.active?.data.statistics" ref="userStatistic">
+              <q-card-section class="q-pa-none" v-if="user.active?.data.statistics">
+                  <q-tutorial-item title="Базовая статистика" description="Количество исследованных планет, изученных технологий и количество набранных баллов." :index="1"/>
                   <div class="q-pa-sm row items-start border-between">
                       <div class="col-4">
                         <q-item class="rounded-borders text-center">
@@ -75,45 +80,54 @@
                       </div>
                   </div>
               </q-card-section>
-              <q-card-section class="q-py-none q-pt-sm">
-                  <div class="text-subtitle1"><b>Ресурсы</b></div>
-              </q-card-section>
-              <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
-                  <div class="q-pa-sm row items-start">
-                      <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.energy" size="38px" push/>
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.terralit" size="38px" push/>
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.isonit" size="38px" badge-link="/market" with-badge push/>
-                      </div>
-                      <div class="col-6 q-pa-sm">
-                          <UserResourceBar :resource="user.active?.data.resources.science" size="38px" push/>
-                      </div>
-                  </div>
-              </q-card-section>
-              <q-card-section class="q-py-none q-pt-sm">
-                  <div class="text-subtitle1"><b>Активные эффекты</b></div>
-              </q-card-section>
-              <q-card-section class="q-pa-none q-pb-sm">
-                  <UserSettingSlider :settings="user.active?.data.settings"/>
-              </q-card-section>
-              <q-card-section class="q-py-none flex justify-between items-center q-pt-sm">
-                  <div class="text-subtitle1"><b>Достижения</b></div>
-                  <router-link to="/achievements">Показать все</router-link>
-              </q-card-section>
-              <q-card-section class="q-pa-none q-pb-sm">
-                  <AchievementSlider
-                      :slidesPerView=2.4
-                      :centerAligned="false"
-                      :withButton="false"
-                      slideHeight="100"
-                      :navigation="false"
-                      captionMode="full"
-                  />
-              </q-card-section>
+              <div class="relative-position">
+                <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
+                <q-card-section class="q-py-none q-pt-sm">
+                    <div class="text-subtitle1"><b>Ресурсы</b></div>
+                </q-card-section>
+                <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
+                    <div class="q-pa-sm row items-start">
+                        <div class="col-6 q-pa-sm">
+                            <UserResourceBar :resource="user.active?.data.resources.energy" size="38px" push/>
+                        </div>
+                        <div class="col-6 q-pa-sm">
+                            <UserResourceBar :resource="user.active?.data.resources.terralit" size="38px" push/>
+                        </div>
+                        <div class="col-6 q-pa-sm">
+                            <UserResourceBar :resource="user.active?.data.resources.isonit" size="38px" badge-link="/market" with-badge push/>
+                        </div>
+                        <div class="col-6 q-pa-sm">
+                            <UserResourceBar :resource="user.active?.data.resources.science" size="38px" push/>
+                        </div>
+                    </div>
+                </q-card-section>
+              </div>
+              <div class="relative-position">
+                <q-tutorial-item title="Эффекты" description="Здесь отображаются эффекты, которые помогают или мешают исследованию галактики." :index="3" position="top"/>
+                <q-card-section class="q-py-none q-pt-sm">
+                    <div class="text-subtitle1"><b>Активные эффекты</b></div>
+                </q-card-section>
+                <q-card-section class="q-pa-none q-pb-sm">
+                    <UserSettingSlider :settings="user.active?.data.settings"/>
+                </q-card-section>
+              </div>
+              <div class="relative-position">
+                <q-tutorial-item title="Достижения" description="Здесь будут отображаться заработанные достижения." :index="4" position="top"/>
+                <q-card-section class="q-py-none flex justify-between items-center q-pt-sm">
+                    <div class="text-subtitle1"><b>Достижения</b></div>
+                    <router-link to="/achievements">Показать все</router-link>
+                </q-card-section>
+                <q-card-section class="q-pa-none q-pb-sm">
+                    <AchievementSlider
+                        :slidesPerView=2.4
+                        :centerAligned="false"
+                        :withButton="false"
+                        slideHeight="100"
+                        :navigation="false"
+                        captionMode="full"
+                    />
+                </q-card-section>
+              </div>
           </q-card>
           </transition>
       </q-page>
@@ -139,7 +153,7 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-      <UserTutorialDialog :elements="{userLevel, userStatistic}"/>
+      <UserTutorialDialog/>
   </q-page-container>
 </template>
 
@@ -149,6 +163,7 @@ import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingSlider from '../components/UserSettingSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
+
 import { useRoute } from 'vue-router'
 import { ref, watch, onMounted, onActivated } from 'vue'
 import { copyToClipboard } from 'quasar'
