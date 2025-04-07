@@ -8,13 +8,11 @@
             @blur="matchEnd"
             :class="`q-lesson-field bg-grey-2 ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
           >
-            <q-chip
+            <div
               :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
-
               style="pointer-events: none; font-size: inherit" >
-              <b v-if="input.value.text.length > 0">{{ input.value.text }}</b>
-              <b v-else>_</b>
-            </q-chip>
+              <q-chip v-for="text in input.value.array" :key="`${text}`">{{ text }}</q-chip>
+            </div>
           </div>
         </Teleport>
     </div>
@@ -79,6 +77,7 @@ const { lesson } = useLesson()
 
 const currentIndex = ref(null)
 const currentValue = ref('')
+const currentValueArray = ref([])
 
 const formData = reactive({
   fields: []
@@ -89,11 +88,13 @@ const renderFields = () => {
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
     let value = {
-      text: ''
+      text: '',
+      array: []
     }
     let options = field.variants
     if (field.answer) {
       value.text = field.answer.value
+      value.array = field.answer.value.split(',')
       value.is_finished = true
     }
     formData.fields.push({ value, options, index: field.index, answer: field.answer })
@@ -117,7 +118,9 @@ const selectVariant = (text, variantIndex) => {
     return
   }
   currentValue.value += text
+  currentValueArray.value.push(text)
   formData.fields[currentIndex.value].value.text = currentValue.value
+  formData.fields[currentIndex.value].value.array = currentValueArray.value
   if(!formData.fields[currentIndex.value].options[variantIndex].count) formData.fields[currentIndex.value].options[variantIndex].count = 0
   formData.fields[currentIndex.value].options[variantIndex].count++
 }
