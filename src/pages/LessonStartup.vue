@@ -51,10 +51,10 @@
                   <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
                 </div>
             </q-card-section>
-            <q-card-section class="q-py-none" v-if="activeLesson.is_blocked === false">
+            <q-card-section class="q-py-none" v-if="activeLesson?.is_blocked === false">
               <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
             </q-card-section>
-            <q-card-section class="q-pt-sm" v-else-if="activeLesson.unblock">
+            <q-card-section class="q-pt-sm" v-else-if="activeLesson?.unblock">
               <div class="text-subtitle1"><b>Для разблокировки необходимо:</b></div>
               <div v-if="activeLesson.unblock?.lessons?.length > 0">
                 <q-list>
@@ -73,7 +73,7 @@
                   </q-item>
                 </q-list>
               </div>
-              <div v-if="activeLesson.unblock?.skills?.length > 0">
+              <div v-if="activeLesson?.unblock?.skills?.length > 0">
                 <q-list>
                   <q-item clickable v-ripple class="text-left q-px-none"  v-for="(unblockSkill, unblockSkillIndex) in activeLesson.unblock.skills" :key="`unblockLessonIndex-${unblockSkillIndex}`"
                     :to="`/skills`">
