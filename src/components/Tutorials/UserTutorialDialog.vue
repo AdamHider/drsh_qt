@@ -107,12 +107,12 @@ onMounted(() => {
   setStatus(false)
   tutorialPageIndex.value = 0
   setIndex(0)
-  tutorialDialog.value = true
+  //tutorialDialog.value = true
 })
 onActivated(() => {
   setStatus(false)
   tutorialPageIndex.value = 0
   setIndex(0)
-  tutorialDialog.value = true
+  //tutorialDialog.value = true
 })
 </script>
