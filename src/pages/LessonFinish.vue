@@ -75,7 +75,7 @@
                 </div>
               </div>
             </q-card-section>
-            <q-card-section class="q-pb-sm q-pt-sm">
+            <q-card-section class="q-pb-sm q-pt-sm" v-if="lesson.active.next_lessons.length > 0">
               <div class="q-pa-sm bg-grey-3 rounded-sm">
                 <div class="text-subtitle2"><b>Вы разблокировали:</b></div>
                 <q-list>

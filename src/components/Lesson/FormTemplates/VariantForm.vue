@@ -159,7 +159,7 @@ watch(formData.fields, (newValue, oldValue) => {
 
   .q-lesson-field-value{
     padding: 0.8em 0.6em;
-    height: 1.5em;
+    height: auto;
   }
 
 }

@@ -1,38 +1,53 @@
 <template>
-    <div class="full-width q-pa-md chat-container" :style="`align-self: end; padding-top: 50px;  padding-bottom: ${(lesson.active.page?.answers?.is_finished) ? 30 : 120}px`" >
-      <transition v-for="(replica, index) in replicaList.list" :key="index"
-        appear
-        :enter-active-class="(!replica.rendered) ? `animated fadeInUp animation-delay-${replica.sortIndex}` : ''"
-      >
-          <q-chat-message
-            :sent="replica.type !== 'question'"
-            text-color="white"
-            :bg-color="(replica.type !== 'question') ? 'positive' : 'primary' "
-          >
-            <template v-slot:avatar v-if="replica.type === 'question'">
-              <img
-                class="q-message-avatar q-message-avatar--received"
-                src="https://cdn.quasar.dev/img/avatar2.jpg"
-                style="min-width: 40px; width: 40px; height: 40px"
-              >
-            </template>
-            <div class="q-px-sm relative-position">
-              <span v-html="replica.text"></span>
-              <q-chip v-if="replica.type !== 'question'" class="absolute" style="bottom: -2em; left: -2em; width: 2em; min-width: 2em; padding: 0.3em;">
-                {{ replica.reaction }}
-              </q-chip>
-            </div>
-          </q-chat-message>
-      </transition>
+    <div class="full-width q-pa-md chat-container" :style="`align-self: end; padding-top: 50px; `" >
 
-      <q-chat-message
-        v-if="isTyping"
-        name="Jane"
-        avatar="https://cdn.quasar.dev/img/avatar5.jpg"
-        bg-color="amber"
-      >
-        <q-spinner-dots size="2rem" />
-      </q-chat-message>
+      <q-list class="q-mb-md">
+        <div v-for="(replica, index) in replicaList.list" :key="index">
+          <transition
+            appear
+            :enter-active-class="(!replica.rendered) ? `animated fadeInUp animation-delay-${replica.sortIndex}` : ''"
+          >
+            <q-item v-show="replica.is_shown">
+              <q-item-section avatar >
+                <q-avatar>
+                  <img :src="`${CONFIG.API_HOST}/${(replica?.image) ? replica?.image : 'image/placeholder.jpg'}`">
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label lines="1"><b>{{ replica.name }}</b></q-item-label>
+                <q-item-label style="white-space: break-spaces;"><div v-html="replica.text"></div></q-item-label>
+              </q-item-section>
+              <q-item-section v-if="replica.audio_link" side>
+                <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"
+                  flat
+                  class="play-audio"
+                  :data-audio="replica.audio_link"
+                  @click="pauseAudio()"
+                  icon="pause"
+                />
+                <q-btn  v-else
+                  class="play-audio"
+                  :data-audio="replica.audio_link"
+                  @click="playAudio(replica.audio_link)"
+                  icon="play_arrow"
+                />
+              </q-item-section>
+            </q-item>
+          </transition>
+        </div>
+
+        <q-item v-if="isTyping">
+          <q-item-section avatar >
+            <q-avatar>
+              <img :src="`https://cdn.quasar.dev/img/avatar5.jpg`">
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label lines="1"><b>Amet</b></q-item-label>
+            <q-item-label style="white-space: break-spaces;"><q-spinner-dots size="2rem" /></q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </div>
 </template>
 
@@ -48,50 +63,38 @@ const emits = defineEmits(['onRendered'])
 const replicaList = reactive({
   list: []
 })
-const funnyEmojis = ['😀', '😉', '😊', '😎', '😍', '🙂', '👍']
-const sadEmojis = ['😟', '😞', '😥', '😨', '😩']
+const inputList = ref([])
+
 
 const currentAnswerIndex = ref(0)
-const isTyping = ref(true)
-
-const markRendered = function () {
-  replicaList.list.reverse()
-  const replicasReversed = replicaList.list
-  for (const i in replicasReversed) {
-    if (replicasReversed[i].type === 'answer') {
-      replicasReversed[i].rendered = false
-      break
-    }
-    replicasReversed[i].rendered = false
-  }
-
-  replicasReversed.reverse()
-  replicaList.list = replicasReversed
-}
-
-const setSortIndex = function () {
-  let sortIndex = 1
-  for (const i in replicaList.list) {
-    replicaList.list[i].sortIndex = 1
-    if (!replicaList.list[i].rendered) {
-      replicaList.list[i].sortIndex = sortIndex
-      sortIndex++
-    }
-  }
-}
+const isTyping = ref(false)
+const activeInput = ref(0)
 
 const renderData = () => {
   replicaList.list = []
+  var isShown = true;
+  var inputIndex = 0;
+  var isAnswered = false;
   for (const i in lesson.active.page.data.replica_list) {
     if (lesson.active.page.data.replica_list[i].text.indexOf('input') > -1) {
       const inputs = lesson.active.page.data.replica_list[i].text.match(/{{input[0-9]+}}/g)
       for (const k in inputs) {
-        const inputIndex = inputs[k].match(/[0-9]+/g)[0]
+        inputIndex = inputs[k].match(/[0-9]+/g)[0]
+        isAnswered = lesson.active.page.fields.find((element) => element.index == inputIndex && element.answer)
+        lesson.active.page.data.replica_list[i].input_index = inputIndex
+        lesson.active.page.data.replica_list[i].is_answered = isAnswered
         lesson.active.page.data.replica_list[i].text = lesson.active.page.data.replica_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
       }
     }
+    lesson.active.page.data.replica_list[i].sortIndex = i
+    lesson.active.page.data.replica_list[i].is_shown = isShown
+    if(lesson.active.page.data.replica_list[i].input_index !== undefined && !lesson.active.page.data.replica_list[i].is_answered){
+      activeInput.value = lesson.active.page.data.replica_list[i].input_index
+      isShown = false
+    }
     replicaList.list.push(lesson.active.page.data.replica_list[i])
   }
+  console.log(inputList.value)
 }
 
 renderData()
@@ -107,6 +110,7 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
   renderData()
   setTimeout(() => {
     window.scrollTo(0, document.body.scrollHeight)
+    isTyping.value = false
   }, 100)
 })
 

@@ -18,7 +18,7 @@
     </q-card>
     <q-toolbar
         class="q-pa-sm"
-        v-if="lesson.active.page && (lesson.active.page?.header?.page_template !== 'chat')">
+        v-if="lesson.active.page ">
         <q-btn
             v-if="lesson.active.page?.actions?.main == 'next'"
             push
