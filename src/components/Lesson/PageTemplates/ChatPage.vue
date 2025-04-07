@@ -81,58 +81,17 @@ const setSortIndex = function () {
 }
 
 const renderData = () => {
-  if (!lesson.active.page) return
   replicaList.list = []
   for (const i in lesson.active.page.data.replica_list) {
-    const replica = lesson.active.page.data.replica_list[i]
-    replica.rendered = true
-    if (replica.type === 'answer') {
-      if (!lesson.active.page.answers.answers || !lesson.active.page.answers.answers[currentAnswerIndex.value]) {
-        break
-      } else {
-        var answer = lesson.active.page.answers.answers[currentAnswerIndex.value]
-        if (answer.is_correct) {
-          replica.text = answer.value
-          replica.reaction = funnyEmojis[currentAnswerIndex.value]
-        } else {
-          replica.text = answer.value
-          replica.reaction = sadEmojis[currentAnswerIndex.value]
-        }
-        if (answer.tmp_answer !== '') {
-          replicaList.list.push({
-            rendered: true,
-            type: 'answer',
-            reaction: sadEmojis[currentAnswerIndex.value],
-            text: answer.tmp_answer
-          })
-          replicaList.list.push({
-            rendered: true,
-            type: 'question',
-            text: 'I dont understand'
-          })
-          if (answer.is_temp) {
-            break
-          }
-        }
-      }
-      currentAnswerIndex.value++
-    }
-    replicaList.list.push(replica)
-
-    if (replica.type === 'answer') {
-      if (answer && answer.tmp_answer && !answer.is_correct) {
-        replicaList.list.push({
-          rendered: true,
-          type: 'question',
-          reaction: replica.reaction,
-          text: 'Okay'
-        })
+    if (lesson.active.page.data.replica_list[i].text.indexOf('input') > -1) {
+      const inputs = lesson.active.page.data.replica_list[i].text.match(/{{input[0-9]+}}/g)
+      for (const k in inputs) {
+        const inputIndex = inputs[k].match(/[0-9]+/g)[0]
+        lesson.active.page.data.replica_list[i].text = lesson.active.page.data.replica_list[i].text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
       }
     }
+    replicaList.list.push(lesson.active.page.data.replica_list[i])
   }
-  markRendered()
-  setSortIndex()
-  isTyping.value = false
 }
 
 renderData()

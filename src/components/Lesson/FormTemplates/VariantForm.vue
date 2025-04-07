@@ -17,40 +17,44 @@
           </div>
         </Teleport>
     </div>
-    <q-card v-if="!lesson.active.page?.answer?.quantity" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
-        <q-card-section v-if="currentIndex !== null">
+    <div v-if="currentIndex !== null">
+      <q-card v-if="!formData.fields[currentIndex].answer" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+          <q-card-section>
+            <div class="flex justify-center wrap">
+              <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
+                <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px" color="white" clickable @click.stop="selectVariant(option.text)">
+                  <b>{{ option.text }}</b>
+                </q-chip>
+                <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
+                  <b>{{ option.text }}</b>
+                </q-chip>
+              </div>
+            </div>
+          </q-card-section>
+      </q-card>
+      <q-card v-else flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+        <q-card-section>
           <div class="flex justify-center wrap">
             <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
-              <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px" color="white" clickable @click.stop="selectVariant(option.text)">
+              <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value rounded-xs" size="18px"
+                :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'white'"
+                :text-color="(formData.fields[currentIndex].answer.answer == option.text) ? 'white' : 'dark'">
                 <b>{{ option.text }}</b>
               </q-chip>
-              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
+              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" icon="done"
+                :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'negative'"
+                text-color="white">
                 <b>{{ option.text }}</b>
               </q-chip>
             </div>
           </div>
         </q-card-section>
-        <q-card-section v-else class="text-center">
-          <div class="text-h6">Выберите поле</div>
-          <div class="text-subtitle2">И здесь появятся варианты ответа</div>
-        </q-card-section>
-    </q-card>
-    <q-card v-else flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
-      <q-card-section v-if="currentIndex !== null">
-        <div class="flex justify-center wrap">
-          <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
-            <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value rounded-xs" size="18px"
-              :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'white'"
-              :text-color="(formData.fields[currentIndex].answer.answer == option.text) ? 'white' : 'dark'">
-              <b>{{ option.text }}</b>
-            </q-chip>
-            <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" icon="done"
-              :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'negative'"
-              text-color="white">
-              <b>{{ option.text }}</b>
-            </q-chip>
-          </div>
-        </div>
+      </q-card>
+    </div>
+    <q-card v-else-if="!lesson.active.page?.answer?.is_finished" flat class="text-dark">
+      <q-card-section class="text-center">
+        <div class="text-h6">Выберите поле</div>
+        <div class="text-subtitle2">И здесь появятся варианты ответа</div>
       </q-card-section>
     </q-card>
   </div>
@@ -80,6 +84,7 @@ const renderFields = () => {
     let options = field.variants
     if (field.answer) {
       value.text = field.answer.value
+      value.is_finished = true
     }
     formData.fields.push({ value, options, index: field.index, answer: field.answer })
   }
