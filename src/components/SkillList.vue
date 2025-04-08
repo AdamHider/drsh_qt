@@ -50,17 +50,7 @@
               <div class="text-center text-subtitle1"><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
                 <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
-                  <q-item :class="`${(resource.quantity >= resource.quantity_cost) ? `bg-light-gradient-${resource?.color} text-white` : 'bg-grey-4 text-red'} text-left rounded-sl q-item--push`" >
-                      <q-item-section avatar style="min-width: unset;">
-                          <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075 );"/>
-                      </q-item-section>
-                      <q-item-section>
-                          <q-item-label>
-                            <span class="text-subtitle2"><b>{{resource.quantity}}</b></span>
-                            <span class="text-caption"><b>/{{ resource.quantity_cost }}</b></span>
-                          </q-item-label>
-                      </q-item-section>
-                  </q-item>
+                  <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                 </div>
               </div>
             </div>
@@ -99,12 +89,12 @@ import { onBeforeRouteLeave } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
 import SkillItem from '../components/SkillItem.vue'
+import UserResourceBar from '../components/UserResourceBar.vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
-
 
 const claimDialog = ref(false)
 const claimError = ref(false)

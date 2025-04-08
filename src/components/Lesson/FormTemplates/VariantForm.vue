@@ -6,7 +6,7 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field bg-grey-2 ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
+            :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
           >
             <q-chip
               :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
@@ -36,12 +36,12 @@
         <q-card-section>
           <div class="flex justify-center wrap">
             <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
-              <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value rounded-xs" size="18px"
+              <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value rounded-xs" size="16px"
                 :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'white'"
                 :text-color="(formData.fields[currentIndex].answer.answer == option.text) ? 'white' : 'dark'">
                 <b>{{ option.text }}</b>
               </q-chip>
-              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" icon="done"
+              <q-chip v-else class="q-lesson-field-value rounded-sm" size="16px" icon="done"
                 :color="(formData.fields[currentIndex].answer.answer == option.text) ? 'positive' : 'negative'"
                 text-color="white">
                 <b>{{ option.text }}</b>
@@ -113,65 +113,30 @@ watch(formData.fields, (newValue, oldValue) => {
   emits('update-answer', formData.fields)
 })
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .q-lesson-field {
   display: inline-block;
-  vertical-align: middle;
-  overflow: hidden;
-  margin: 0 5px;
   min-width: 35px;
-  border-radius: 11px;
-  transition: 0.3s all ease;
-  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
-  font-weight: initial;
+  border-bottom: 2px solid lightgray;
+  box-shadow: none;
+  border-radius: 0;
+  &.is-inactive:not(.is-answered):before{
+    top: 100%;
+    height: 2px;
+    background: $primary;
+    animation: pulseBottomLessonField 1.5s infinite;
+  }
+  &.is-answered{
+    background: none !important;
+    box-shadow: none !important;
+  }
   &.q-active{
-    background: $grey-4 !important;
-    box-shadow: inset 0px 0px 0px 2px rgba(25, 118, 210, 0.5);
-    .q-lesson-field-value{
-      background: $secondary !important;
-      color: white !important;
-    }
+    background: none !important;
+    box-shadow: none !important;
+    border-color: $primary;
   }
-  &.is-correct{
-    box-shadow: inset 0px 0px 0px 2px rgba(25, 210, 65, 0.5);
-    background: $green-3 !important;
-    &.q-active .q-lesson-field-value{
-      background: $green-7 !important;
-      color: white !important;
-    }
-    .q-lesson-field-value{
-      background: $positive !important;
-      color: white !important;
-    }
-  }
-  &.is-incorrect{
-    box-shadow: inset 0px 0px 0px 2px rgba(210, 25, 25, 0.5);
-    background: $red-3 !important;
-    &.q-active .q-lesson-field-value{
-      background: $red-7 !important;
-      color: white !important;
-    }
-    .q-lesson-field-value{
-      background: $negative !important;
-      color: white !important;
-    }
-  }
-
   .q-lesson-field-value{
-    padding: 0.8em 0.6em;
-    height: auto;
-  }
-
-}
-.q-lesson-field-value{
-  border-radius: 9px;
-  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
-  border-bottom: 3px solid rgba(0, 0, 0, 0.15);
-  &.disabled {
-    opacity: 0 !important;
-  }
-  .q-chip__content{
-    justify-content: center;
+    margin: 0;
   }
 }
 </style>

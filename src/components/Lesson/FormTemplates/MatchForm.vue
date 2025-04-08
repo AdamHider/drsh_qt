@@ -7,7 +7,7 @@
               @focus="matchStart(index)"
               @blur="matchEnd"
               :ref="el => { fieldsRefs[index] = el }"
-              :class="`q-lesson-field bg-grey-3 ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
+              :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
             >
               <q-chip
                 :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
@@ -138,59 +138,28 @@ watch(formData.fields, (newValue, oldValue) => {
 .q-lesson-field {
   display: inline-block;
   min-width: 35px;
-  vertical-align: middle;
+  border-bottom: 2px solid lightgray;
+  box-shadow: none;
   overflow: hidden;
-  margin: 0 5px;
-  border-radius: 11px;
-  transition: 0.3s all ease;
-  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
-  font-weight: initial;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  &.is-inactive:not(.is-answered):before{
+    top: 100%;
+    height: 2px;
+    background: $primary;
+    animation: pulseBottomLessonField 1.5s infinite;
+  }
+  &.is-answered{
+    background: none !important;
+    box-shadow: none !important;
+  }
   &.q-active{
-    background: $grey-4 !important;
-    box-shadow: inset 0px 0px 0px 2px rgba(25, 118, 210, 0.5);
-    .q-lesson-field-value{
-      background: $secondary !important;
-      color: white !important;
-    }
-  }
-  &.is-correct{
-    box-shadow: inset 0px 0px 0px 2px rgba(25, 210, 65, 0.5);
-    background: $green-3 !important;
-    &.q-active .q-lesson-field-value{
-      background: $green-7 !important;
-      color: white !important;
-    }
-    .q-lesson-field-value{
-      background: $positive !important;
-      color: white !important;
-    }
-  }
-  &.is-incorrect{
-    box-shadow: inset 0px 0px 0px 2px rgba(210, 25, 25, 0.5);
-    background: $red-3 !important;
-    &.q-active .q-lesson-field-value{
-      background: $red-7 !important;
-      color: white !important;
-    }
-    .q-lesson-field-value{
-      background: $negative !important;
-      color: white !important;
-    }
+    background: none !important;
+    box-shadow: none !important;
+    border-color: $primary;
   }
   .q-lesson-field-value{
-    padding: 0.8em 0.6em;
-    height: 1.5em;
-  }
-}
-.q-lesson-field-value{
-  border-radius: 9px;
-  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
-  border-bottom: 3px solid rgba(0, 0, 0, 0.15);
-  &.disabled {
-    opacity: 0 !important;
-  }
-  .q-chip__content{
-    justify-content: center;
+    margin: 0;
   }
 }
 </style>

@@ -29,14 +29,7 @@
             <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
             <div class="row q-gutter-sm items-center justify-center">
               <div v-for="(resource, resourceIndex) in activeQuest.reward" :key="`resource-${resourceIndex}`" >
-                <q-item :class="`rounded-sl q-item--push text-left bg-light-gradient-${resource?.color} text-white`" >
-                    <q-item-section avatar style="min-width: unset;">
-                        <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                    </q-item-section>
-                    <q-item-section>
-                        <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                    </q-item-section>
-                </q-item>
+                  <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
               </div>
             </div>
           </div>
@@ -77,14 +70,7 @@
                 <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
                 <div class="row q-gutter-sm items-center justify-center">
                   <div v-for="(resource, resourceIndex) in assignedQuest.reward" :key="`resource-${resourceIndex}`" >
-                    <q-item :class="`rounded-sl q-item--push text-left bg-light-gradient-${resource?.color} text-white`" >
-                        <q-item-section avatar style="min-width: unset;">
-                            <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                        </q-item-section>
-                    </q-item>
+                    <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                   </div>
                 </div>
               </div>
@@ -148,14 +134,7 @@
               <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
               <div class="row q-gutter-sm items-center justify-center">
                 <div v-for="(resource, resourceIndex) in activeQuest.reward" :key="`resource-${resourceIndex}`" >
-                  <q-item :class="`rounded-sl q-item--push text-left bg-light-gradient-${resource?.color} text-white`" >
-                      <q-item-section avatar style="min-width: unset;">
-                          <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                      </q-item-section>
-                      <q-item-section>
-                          <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                      </q-item-section>
-                  </q-item>
+                  <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                 </div>
               </div>
             </div>
@@ -177,6 +156,7 @@ import { ref, onMounted, onActivated } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { useNavigationHistory } from '../composables/useNavigationHistory'
 import { useLesson } from '../composables/useLesson'
+import UserResourceBar from '../components/UserResourceBar.vue'
 
 const { lesson, setTarget } = useLesson()
 const  router = useRouter()

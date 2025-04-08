@@ -64,6 +64,9 @@ a{
     padding: 0 !important;
 }
 
+.border-t-sm{
+    border-top: 1px solid;
+}
 .border-sm{
     border-width: 1px;
     border-style: solid;
@@ -301,6 +304,105 @@ a{
   width: 10%;
 }
 */
+
+
+.q-lesson-field {
+  position: relative;
+  vertical-align: middle;
+  border-radius: 11px;
+  margin: 0 5px;
+  transition: 0.3s all ease;
+  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
+  font-weight: initial;
+  &.is-inactive:not(.is-answered):before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 0 0 $primary;
+    border-radius: 11px;
+    animation: pulseLessonField 1.5s infinite;
+  }
+  &.q-active{
+    background: $grey-4 !important;
+    box-shadow: inset 0px 0px 0px 2px rgba(111, 25, 210, 0.5);
+    .q-lesson-field-value{
+      background: $secondary !important;
+      color: white !important;
+    }
+  }
+  &.is-correct{
+    box-shadow: inset 0px 0px 0px 2px rgba(25, 210, 65, 0.5);
+    background: $green-3 !important;
+    &.q-active .q-lesson-field-value{
+      background: $green-7 !important;
+      color: white !important;
+    }
+    .q-lesson-field-value{
+      background: $positive !important;
+      color: white !important;
+    }
+  }
+  &.is-incorrect{
+    box-shadow: inset 0px 0px 0px 2px rgba(210, 25, 25, 0.5);
+    background: $red-3 !important;
+    &.q-active .q-lesson-field-value{
+      background: $red-7 !important;
+      color: white !important;
+    }
+    .q-lesson-field-value{
+      background: $negative !important;
+      color: white !important;
+    }
+  }
+  .q-lesson-field-value{
+    padding: 0.8em 0.6em;
+    height: 1.5em;
+  }
+}
+.q-lesson-field-value{
+  border-radius: 9px;
+  box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
+  border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+  margin: 2px;
+  &.disabled {
+    opacity: 0 !important;
+  }
+  .q-chip__content{
+    justify-content: center;
+  }
+}
+@keyframes pulseLessonField {
+  0% {
+    box-shadow: inset 0 0 0 2px $primary;
+    opacity: 1;
+  }
+  70% {
+    box-shadow: inset 0 0 0 2px $primary;
+    opacity: 0;
+  }
+    100% {
+    box-shadow: inset 0 0 0 2px $primary;
+    opacity: 0;
+  }
+}
+@keyframes pulseBottomLessonField {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
+  }
+    100% {
+    opacity: 0;
+  }
+}
+
+
+
+
 
 /* ANIMATIONS */
 .q-item-blinking{

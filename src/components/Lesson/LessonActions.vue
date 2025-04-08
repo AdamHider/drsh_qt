@@ -18,7 +18,7 @@
     </q-card>
     <q-toolbar
         class="q-pa-sm"
-        v-if="lesson.active.page ">
+        v-if="lesson.active.page && (lesson.active.page?.header?.page_template !== 'chat' || lesson.active.page?.actions?.main == 'finish')">
         <q-btn
             v-if="lesson.active.page?.actions?.main == 'next'"
             push
@@ -29,7 +29,7 @@
             @click="next"
         ></q-btn>
         <q-btn
-            v-if="lesson.active.page?.actions?.main == 'confirm'"
+            v-if="lesson.active.page?.actions?.main == 'confirm' "
             push
             :loading="isLoading"
             style="flex: 2"

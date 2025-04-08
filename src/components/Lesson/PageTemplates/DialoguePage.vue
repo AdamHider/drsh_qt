@@ -10,7 +10,7 @@
         <LessonAudioPlayer/>
     </q-card>
     <q-list class="q-mb-md">
-      <q-item  v-for="(replica, index) in replicaList.list" :key="index" >
+      <q-item  v-for="(replica, index) in replicaList.list" :key="index" class="q-px-sm">
         <q-item-section avatar >
           <q-avatar>
             <img :src="`${CONFIG.API_HOST}/${(replica?.image) ? replica?.image : 'image/placeholder.jpg'}`">
