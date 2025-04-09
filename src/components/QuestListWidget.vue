@@ -248,9 +248,6 @@ onBeforeRouteLeave((to, from) => {
   return true
 })
 
-onMounted(() => {
-  load()
-})
 onActivated(() => {
   load()
 })

@@ -114,6 +114,9 @@ export class Api extends ApiService{
         getSatellites: (params) => {
             return this.post('lesson', 'getSatellites', params)
         },
+        getDailyList: (params) => {
+            return this.post('lesson', 'getDailyList', params)
+        },
         getPage: (params) => {
             return this.post('lesson', 'getPage', params)
         }

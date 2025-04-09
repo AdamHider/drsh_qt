@@ -15,6 +15,9 @@
         <q-page-sticky position="top-left" style="z-index: 100" :offset="[0, 50]">
           <QuestListWidget active-only/>
         </q-page-sticky>
+        <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[0, 50]">
+          <DailyLessonListWidget/>
+        </q-page-sticky>
 
     </q-page>
   </q-page-wrapper>
@@ -25,6 +28,7 @@ import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import QuestListWidget from '../components/QuestListWidget.vue'
+import DailyLessonListWidget from '../components/DailyLessonListWidget.vue'
 import { ref, reactive, watch, onActivated, onDeactivated } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'

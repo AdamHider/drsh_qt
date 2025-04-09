@@ -4,8 +4,7 @@ import { api } from '../services/index'
 const lesson = reactive({
   active: {},
   list: [],
-  limit: 10,
-  offset: 0,
+  dailyList: [],
   target: null
 })
 
@@ -14,31 +13,24 @@ export function useLesson () {
     const lessonResponse = await api.lesson.getItem({ lesson_id: lessonId })
     lesson.active = lessonResponse
   }
-  async function getList (index) {
-    lesson.offset = lesson.limit * (index - 1)
+  async function getList () {
     try {
-      const lessonListResponse = await api.lesson.getList({ limit: lesson.limit, offset: lesson.offset })
-      if (lesson.offset > 0) {
-        lesson.list = lessonListResponse.concat(lesson.list)
-      } else {
-        lesson.list = lessonListResponse
-      }
-      return lessonListResponse.length === 0
+      const lessonListResponse = await api.lesson.getList({})
+      lesson.list = lessonListResponse
     } catch (e) {
       console.log(e)
       throw new Error('Courses are null: ' + e)
-    }
-  }
-  async function getListUpdates () {
-    const lessonListResponse = await api.lesson.getList({ limit: lesson.list.length, offset: 0 })
-    if (!lessonListResponse.error) {
-      lesson.list = lessonListResponse.reverse()
     }
   }
   async function getSatelliteList () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
     lesson.active.satellites = lessonResponse
     lesson.active.satellites.list.push(lesson.active)
+  }
+  async function getDailyList () {
+    const dailyLessonResponse = await api.lesson.getDailyList({ lesson_id: lesson.active.id })
+    lesson.dailyList = dailyLessonResponse
+    return dailyLessonResponse
   }
   async function getPage (action) {
     const lessonPageResponse = await api.lesson.getPage({ lesson_id: lesson.active.id, action })
@@ -60,8 +52,8 @@ export function useLesson () {
   return {
     getItem,
     getList,
-    getListUpdates,
     getSatelliteList,
+    getDailyList,
     getPage,
     saveAnswer,
     setTarget,

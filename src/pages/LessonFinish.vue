@@ -58,7 +58,7 @@
                   <b :class="(lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum) ? 'text-positive' : 'text-negative'">{{ currentPoints }}</b>
                 </div>
             </q-card-section>
-            <q-card-section class="q-pb-sm q-pt-sm">
+            <q-card-section v-if="lesson.active.exercise.data.totals.reward" class="q-pb-sm q-pt-sm">
               <div class="q-pa-sm bg-grey-3 rounded-sm">
                 <div class="text-center text-subtitle2"><b>Награда: </b></div>
                 <div class="row justify-center q-gutter-sm q-py-sm">

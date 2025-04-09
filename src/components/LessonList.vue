@@ -116,7 +116,7 @@ import { ref, onActivated, onMounted, toRef, watch } from "vue";
 import { useCourse } from "../composables/useCourse";
 import { useRouter } from "vue-router";
 
-const { lesson, getList, getListUpdates } = useLesson();
+const { lesson, getList } = useLesson();
 const { course } = useCourse();
 const router = useRouter();
 
@@ -134,14 +134,14 @@ const props = defineProps({
 const disable = toRef(props, "disable");
 const lessonList = ref([]);
 
-const onLoad = async function () {
-  await getList(1)
+const load = async function () {
+  await getList()
   composeList()
 
 }
 const composeList = () => {
   lessonList.value = [];
-
+  var result = []
   const courseSectionsRaw = lesson.list.reduce((result, obj) => {
     result[obj.course_section_id] = result[obj.course_section_id] || {
         ... obj.course_section, ...{ expandDescription: false, list: [] }
@@ -150,12 +150,15 @@ const composeList = () => {
       return result;
   }, {})
   const courseSectionIds = Object.keys(courseSectionsRaw).reverse()
+
   for(var i in courseSectionIds){
     var couseSection = courseSectionsRaw[courseSectionIds[i]]
     couseSection.list[0].is_initial = true
     couseSection.list = couseSection.list.reverse()
-    courseSections.value.push(couseSection)
+    result.push(couseSection)
+
   }
+  courseSections.value = result
 };
 const openLesson = (lessonId) => {
   transitionTrigger.value = false;
@@ -178,7 +181,7 @@ const onIntersection = (entry) => {
 onMounted(async () => {
   transitionTrigger.value = true;
   selectedLesson.value = 0;
-  onLoad()
+  load()
   setTimeout(() => {
     bottomPoint.value.scrollIntoView()
   }, 250);
@@ -188,10 +191,10 @@ onActivated(async () => {
     transitionTrigger.value = true;
     selectedLesson.value = 0;
   }
-  onLoad()
+  load()
 });
 watch( () => course.active?.id, async () => {
-  onLoad()
+  load()
 });
 </script>
 <style scoped lang="scss">
