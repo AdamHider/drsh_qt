@@ -15,7 +15,7 @@
         <q-page-sticky position="top-left" style="z-index: 100" :offset="[0, 50]">
           <QuestListWidget active-only/>
         </q-page-sticky>
-        <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[0, 50]">
+        <q-page-sticky position="bottom-right" style="z-index: 100" :offset="[10, 150]">
           <DailyLessonListWidget/>
         </q-page-sticky>
 
