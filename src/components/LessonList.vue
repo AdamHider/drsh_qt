@@ -183,7 +183,7 @@ onMounted(async () => {
   selectedLesson.value = 0;
   load()
   setTimeout(() => {
-    bottomPoint.value.scrollIntoView()
+    if(bottomPoint.value) bottomPoint.value.scrollIntoView()
   }, 250);
 });
 onActivated(async () => {

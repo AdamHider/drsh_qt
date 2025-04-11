@@ -1,5 +1,5 @@
 <template>
-    <div class="full-width q-pa-sm" :style="`padding-top: 50px;`" >
+    <div class="full-width q-pa-sm self-end" :style="`padding-top: 50px;`" >
 
       <q-list>
         <div v-for="(replica, index) in replicaList.list" :key="index">

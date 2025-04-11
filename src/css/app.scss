@@ -63,6 +63,9 @@ a{
 .q-pa-none-important{
     padding: 0 !important;
 }
+.q-flat, .q-flat:before, .q-flat:after{
+  box-shadow: none;
+}
 
 .border-t-sm{
     border-top: 1px solid;
@@ -197,13 +200,15 @@ a{
   padding: 4px 16px;
 }
 .q-btn--push{
-  line-height: 1em;
-  min-height: 3em;
-  border-radius: $button-border-radius;
   padding-bottom: 4px !important;
   padding-top: 0px !important;
   text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.37);
   font-weight: 800;
+}
+.q-btn--push:not(.q-btn--rounded){
+  line-height: 1em;
+  min-height: 3em;
+  border-radius: $button-border-radius;
 }
 .q-btn--push::before{
   border-bottom-width: 4px;

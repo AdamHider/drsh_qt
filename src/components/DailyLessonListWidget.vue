@@ -1,10 +1,26 @@
 <template>
-  <div class="column q-gutter-md">
-    <q-btn v-for="(lesson, lessonIndex) in quests" :key="`lessonIndex-${lessonIndex}`"
-      class="" :to="`/lesson-startup-${lesson.id}`" round>
-      <q-avatar size="60px" class="daily-lesson-avatar" :style="`background-image: url('${lesson.course_section.background_image}'); background-size: cover;`" >
-        <img :src="lesson.image" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
+  <div class="column q-gutter-md" v-if="lessons.length > 0">
+    <q-btn class="q-flat" round>
+      <q-avatar size="60px" class="daily-lesson-avatar">
+        <img src="/images/daily_lexis.jpg" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
       </q-avatar>
+      <q-badge floating rounded color="red"><b>{{ lessons.length }}</b></q-badge>
+      <q-menu anchor="top middle" self="bottom middle"
+
+        transition-show="jump-up"
+        transition-hide="jump-down"
+        class="bg-transparent q-flat" fit>
+        <div class="row no-wrap q-pa-md">
+          <div class="column q-gutter-md">
+          <q-btn v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`"
+            class="" :to="`/lesson-startup-${lesson.id}`" round>
+            <q-avatar size="60px" class="daily-lesson-avatar" :style="`background-image: url('${lesson.course_section.background_image}'); background-size: cover;`" >
+              <img :src="lesson.image" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
+            </q-avatar>
+          </q-btn>
+        </div>
+        </div>
+      </q-menu>
     </q-btn>
   </div>
 </template>
@@ -18,8 +34,9 @@ const { lesson, getDailyList  } = useLesson()
 const  router = useRouter()
 
 const error = ref(false)
-const claimDialog = ref(false)
-const quests = ref([])
+const fabButton = ref(false)
+
+const lessons = ref([])
 
 const props = defineProps({
   activeOnly: Boolean
@@ -29,18 +46,11 @@ const load = async () => {
   const questListResponse = await getDailyList()
   if (questListResponse.error) {
     error.value = questListResponse
-    quests.value = []
+    lessons.value = []
     return false;
   }
-  quests.value = lesson.dailyList
+  lessons.value = lesson.dailyList
 }
-
-onBeforeRouteLeave((to, from) => {
-  if (claimDialog.value) {
-    return false
-  }
-  return true
-})
 
 onActivated(() => {
   load()
