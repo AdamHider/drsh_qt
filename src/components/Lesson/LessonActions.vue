@@ -52,10 +52,10 @@
     <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Вернуться назад?</div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          You are going to the previous page. You realy want to?
+          <div class="text-h6"><b>Вернуться назад?</b></div>
+          <div>Вернуться на предыдущую страницу?</div>
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
           <q-btn push class="col" flat label="Cancel" v-close-popup />
@@ -67,7 +67,7 @@
       <q-card class="bg-white text-center" style="width: 300px">
         <q-card-section>
           <div class="text-h6"><b>Подтвердить ответ?</b></div>
-          <div class="">Некоторые поля остались незаполненными. Советуем заполнить их хотя-бы случайными ответами.</div>
+          <div>Некоторые поля остались незаполненными. Советуем заполнить их хотя-бы случайными ответами.</div>
         </q-card-section>
         <q-card-actions align="around">
           <q-btn push class="col" flat label="Отмена" v-close-popup />

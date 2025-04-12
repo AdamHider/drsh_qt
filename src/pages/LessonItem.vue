@@ -20,14 +20,12 @@
     <q-dialog v-model="closeDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
         <q-card-section>
-          <div class="text-h6">Close lesson</div>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          Вы уверены? Вы можете вернуться к планете в любое время.
+          <div class="text-h6"><b>Покинуть планету?</b></div>
+          <div>Можно будет вернуться к планете в любое время.</div>
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat class="col" label="Отмена" color="grey" v-close-popup />
-          <q-btn push class="col" color="primary" label="Выйти" @click="closeLesson" />
+          <q-btn flat class="col" color="grey" v-close-popup><b>Нет</b></q-btn>
+          <q-btn push class="col" color="primary" @click="closeLesson"><b>Да</b></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -43,7 +41,7 @@ import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
-const { lesson, getItem, getPage, saveAnswer } = useLesson()
+const { lesson, getItem, getPage, saveAnswer, setTarget } = useLesson()
 
 const pageAnswers = ref({})
 const rendered = ref(false)
@@ -107,6 +105,7 @@ onBeforeRouteLeave((to, from) => {
     return false
   }
   closeDialog.value = false
+  setTarget(lesson.active.id)
   return true
 })
 </script>

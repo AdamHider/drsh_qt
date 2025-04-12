@@ -7,16 +7,36 @@
               @focus="matchStart(index)"
               clickable
               @blur="matchEnd"
-              :class="`q-lesson-field q-pa-xs flex text-subtitle2 ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+              :class="`q-lesson-field q-pa-xs flex text-subtitle2 ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
             >
               <q-item-section>
-                <div v-if="!formData.fields[index].answer && (input.value.text == '' || input.value.text == false)">
+                <div v-if="!input.answer && (input.value.text == '' || input.value.text == false)">
                   <div class="text-caption q-px-sm text-grey-8"><b>Напиши сообщение...</b></div>
                 </div>
                 <div class="flex chip-container" v-else >
-
                   <div v-if="input.value.textFormatted" class="q-lesson-field-value-flat cursor-pointer">
                     <b>{{ input.value.textFormatted }}</b>
+                    <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
+                    <q-dialog v-model="input.modal" position="right">
+                      <q-card flat class="relative-position allow-overflow rounded-r-0">
+                        <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/quest_character_full.png"/>
+                        <q-card-section>
+                          <div>
+                            <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Твой ответ: </b></div>
+                            <div class="flex items-center wrap" v-if="!input.answer.is_correct">
+                              <b class="text-negative">{{ formatAnswer(input.answer.value.split('|')) }}</b>
+                            </div>
+                          </div>
+                          <q-separator v-if="!input.answer.is_correct" class="q-my-sm"/>
+                          <div>
+                            <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Правильный ответ: </b></div>
+                            <div class="flex items-center wrap">
+                              <b class="text-positive">{{ formatAnswer(input.answer.answer.split('|')) }}</b>
+                            </div>
+                          </div>
+                        </q-card-section>
+                      </q-card>
+                    </q-dialog>
                   </div>
                   <div v-else>
                     <q-chip v-for="text in input.value.array" :key="`${text}`"
@@ -25,10 +45,9 @@
                       <b>{{ text }}</b>
                     </q-chip>
                   </div>
-
                 </div>
               </q-item-section>
-              <q-item-section side v-if="!formData.fields[index].answer">
+              <q-item-section side v-if="!input.answer">
                 <q-spinner v-if="buttonIsLoading" class="q-mr-sm" color="primary" size="2em"/>
                 <q-icon v-else class="q-mr-sm cursor-pointer" round  push
                   :color="(input.value.text == '' || input.value.text == false) ? 'grey-6' : 'primary'" name="send"
@@ -54,19 +73,6 @@
                 <q-icon name="keyboard_backspace"></q-icon>
               </q-chip>
             </div>
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-card v-else class="text-dark q-ma-sm" @mousedown.prevent="matchStart(currentIndex)">
-        <q-card-section>
-          <div class="flex items-center wrap" v-if="!formData.fields[currentIndex].answer.is_correct">
-            <div class="text-subtitle1 text-center q-mr-sm"><b>Ваш ответ: </b></div>
-            <b class="text-negative">{{ formatAnswer(formData.fields[currentIndex].answer.value.split('|')) }}</b>
-          </div>
-          <q-separator v-if="!formData.fields[currentIndex].answer.is_correct" class="q-my-sm"/>
-          <div class="flex items-center wrap">
-            <div class="text-subtitle1 text-center q-mr-sm"><b>Правильный ответ: </b></div>
-            <b class="text-positive">{{ formatAnswer(formData.fields[currentIndex].answer.answer.split('|')) }}</b>
           </div>
         </q-card-section>
       </q-card>

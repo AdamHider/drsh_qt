@@ -17,36 +17,50 @@
                 <b v-else>_</b>
               </q-chip>
             </div>
+            <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
+            <q-dialog v-model="input.modal" position="right">
+              <q-card flat class="relative-position allow-overflow rounded-r-0">
+                <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/quest_character_full.png"/>
+                  <q-card-section>
+                    <div>
+                      <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Ваш ответ: </b></div>
+                      <div class="flex wrap items-center">
+                        <div v-for="(option, optionIndex) in input.answer.value.split('|')" :key="optionIndex">
+                          <q-chip class="q-lesson-field-value rounded-xs" size="16px"
+                            color="negative"
+                            text-color="white">
+                            <b>{{ option }}</b>
+                          </q-chip>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Правильный ответ: </b></div>
+                      <div class="flex items-center wrap">
+                        <div v-for="(option, optionIndex) in input.answer.answer.split('|')" :key="optionIndex">
+                          <q-chip class="q-lesson-field-value rounded-xs" size="16px"
+                            color="positive"
+                            text-color="white">
+                            <b>{{ option }}</b>
+                          </q-chip>
+                        </div>
+                      </div>
+                    </div>
+                  </q-card-section>
+                </q-card>
+            </q-dialog>
           </Teleport>
       </div>
-      <q-card v-if="!lesson.active.page?.answer?.is_finished" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
-          <q-card-section >
-            <div class="flex justify-center wrap">
-              <div v-for="(option, optionIndex) in lesson.active.page.data.match_variants" :key="optionIndex">
-                <q-chip v-if="option.answer !== formData.fields[currentIndex]?.value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px"
-                  :color="(option.selected) ? 'grey-3' : 'white'"
-                  clickable @click.stop="selectVariant(option.answer)">
-                  <b>{{ option.answer }}</b>
-                </q-chip>
-                <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
-                  <b>{{ option.answer }}</b>
-                </q-chip>
-              </div>
-            </div>
-          </q-card-section>
-      </q-card>
-      <q-card v-else flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
-        <q-card-section v-if="currentIndex !== null">
+      <q-card v-if="currentIndex !== null && !formData.fields[currentIndex].answer" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+        <q-card-section >
           <div class="flex justify-center wrap">
             <div v-for="(option, optionIndex) in lesson.active.page.data.match_variants" :key="optionIndex">
-              <q-chip v-if="formData.fields[currentIndex] && option.answer !== formData.fields[currentIndex]?.value?.text" class="q-lesson-field-value rounded-xs" size="18px"
-                :color="(formData.fields[currentIndex].answer.answer == option.answer) ? 'positive' : 'white'"
-                :text-color="(formData.fields[currentIndex].answer.answer == option.answer) ? 'white' : 'dark'">
+              <q-chip v-if="option.answer !== formData.fields[currentIndex]?.value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px"
+                :color="(option.selected) ? 'grey-3' : 'white'"
+                clickable @click.stop="selectVariant(option.answer)">
                 <b>{{ option.answer }}</b>
               </q-chip>
-              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" icon="done"
-                :color="(formData.fields[currentIndex]?.answer?.answer == option.answer) ? 'positive' : 'negative'"
-                text-color="white">
+              <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
                 <b>{{ option.answer }}</b>
               </q-chip>
             </div>

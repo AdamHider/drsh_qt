@@ -6,19 +6,50 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
           >
-              
               <q-chip v-for="text in input.value.array" :key="`${text}`"
                 :class="`q-lesson-field-value text-center rounded-xs bg-white ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
                 style="pointer-events: none; font-size: inherit">
                 <b>{{ text }}</b>
               </q-chip>
           </div>
+          <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
+          <q-dialog v-model="input.modal" position="right">
+            <q-card flat class="relative-position allow-overflow rounded-r-0">
+              <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/quest_character_full.png"/>
+                <q-card-section>
+                  <div>
+                    <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Ваш ответ: </b></div>
+                    <div class="flex wrap items-center">
+                      <div v-for="(option, optionIndex) in input.answer.value.split('|')" :key="optionIndex">
+                        <q-chip class="q-lesson-field-value rounded-xs" size="16px"
+                          color="negative"
+                          text-color="white">
+                          <b>{{ option }}</b>
+                        </q-chip>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Правильный ответ: </b></div>
+                    <div class="flex items-center wrap">
+                      <div v-for="(option, optionIndex) in input.answer.answer.split('|')" :key="optionIndex">
+                        <q-chip class="q-lesson-field-value rounded-xs" size="16px"
+                          color="positive"
+                          text-color="white">
+                          <b>{{ option }}</b>
+                        </q-chip>
+                      </div>
+                    </div>
+                  </div>
+                </q-card-section>
+              </q-card>
+            </q-dialog>
         </Teleport>
     </div>
-    <div v-if="currentIndex !== null">
-      <q-card v-if="!formData.fields[currentIndex].answer" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+    <div v-if="currentIndex !== null && !formData.fields[currentIndex].answer">
+      <q-card flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
         <q-card-section>
           <div class="flex justify-center wrap">
             <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
@@ -32,31 +63,6 @@
             <div :style="(currentValue.length > 0) ? '' : 'pointer-events: none'">
               <q-chip class="q-lesson-field-value rounded-sm" size="18px" :clickable="!clearDisabled" @click.stop="clearVariant()" :color="(currentValue.length == 0) ? 'red-5' : 'negative'" text-color="white">
                 <q-icon name="keyboard_backspace"></q-icon>
-              </q-chip>
-            </div>
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-card v-else  class="text-dark q-ma-sm" @mousedown.prevent="matchStart(currentIndex)">
-        <q-card-section>
-
-          <div class="flex wrap items-center" v-if="!formData.fields[currentIndex].answer.is_correct">
-            <div class="text-subtitle1 text-center q-mr-sm"><b>Ваш ответ: </b></div>
-            <div v-for="(option, optionIndex) in formData.fields[currentIndex].answer.value.split('|')" :key="optionIndex">
-              <q-chip class="q-lesson-field-value rounded-xs" size="16px"
-                color="negative"
-                text-color="white">
-                <b>{{ option }}</b>
-              </q-chip>
-            </div>
-          </div>
-          <div class="flex items-center wrap">
-            <div class="text-subtitle1 text-center q-mr-sm"><b>Правильный ответ: </b></div>
-            <div v-for="(option, optionIndex) in formData.fields[currentIndex].answer.answer.split('|')" :key="optionIndex">
-              <q-chip class="q-lesson-field-value rounded-xs" size="16px"
-                color="positive"
-                text-color="white">
-                <b>{{ option }}</b>
               </q-chip>
             </div>
           </div>

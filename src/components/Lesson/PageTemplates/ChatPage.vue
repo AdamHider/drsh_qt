@@ -1,5 +1,5 @@
 <template>
-    <div class="full-width q-pa-sm self-end" :style="`padding-top: 50px;`" >
+     <div class="full-width q-pa-sm self-end" :style="`padding-top: 50px;`" >
 
       <q-list>
         <div v-for="(replica, index) in replicaList.list" :key="index">
@@ -19,7 +19,7 @@
                   <q-item-label style="white-space: break-spaces;"><div v-html="replica.text"></div></q-item-label>
                 </q-item-section>
                 <q-item-section v-if="replica.audio_link" side>
-                  <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"
+                  <q-btn v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"
                     flat
                     class="play-audio"
                     :data-audio="replica.audio_link"

@@ -1,6 +1,6 @@
 <template>
   <q-page-wrapper>
-    <q-page class="text-center full-width finish-page" style="padding-top: 50px;">
+    <q-page :class="`text-center full-width finish-page ${(lesson.active.exercise.data.totals.reward_level > 0 || lesson.active.exercise.data.totals.is_maximum) ? 'congrats' : ''}`" style="padding-top: 50px;">
         <q-card class="transparent text-white no-shadow full-width" style="position: relative; z-index: 1;">
             <q-card-section class="q-pb-none">
                 <div class="text-h5"><b>{{ lesson.active.title }}</b></div>
@@ -234,7 +234,7 @@ $box-shadow2: ();
     -ms-transform: $settings;
 }
 
-.finish-page:after {
+.finish-page.congrats:after {
   content: "";
   position: absolute;
   z-index: 1;
