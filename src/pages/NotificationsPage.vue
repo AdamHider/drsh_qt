@@ -7,7 +7,7 @@
         <q-list v-if="notifications.length > 0" class="q-my-md"  >
           <q-item v-for="(notification, notificationIndex) in notifications" :key="`notificationIndex-${notificationIndex}`" :to="notification.link" class="q-mb-sm">
             <q-item-section avatar>
-                <q-img :src="notification.data.image" width="60px"/>
+                <q-img :src="notification.data.image" width="60px" no-spinner/>
             </q-item-section>
             <q-item-section>
               <q-item-label caption>{{ notification.time_ago	}}</q-item-label>

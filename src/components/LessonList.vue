@@ -17,21 +17,21 @@
         class="section-block"
     >
       <div
-        v-for="lesson in courseSection.list" :key="lesson.id"
-        :class="`${lesson.type !== 'group' ? 'planet-block' : ''}  row q-px-sm ${lesson.order % 2 ? 'justify-end' : 'justify-start'} ${lesson.is_blocked === true ? 'is-blocked' : ''} ${lesson.is_initial ? 'is-initial' : ''}`"
+        v-for="(courseSectionItem, courseSectionIndex) in courseSection.list" :key="`courseSectionIndex${courseSectionIndex}`"
+        :class="`planet-block row q-px-sm ${courseSectionIndex % 2 ? 'justify-end' : 'justify-start'} ${courseSectionItem.is_blocked === true ? 'is-blocked' : ''} ${courseSectionItem.is_initial ? 'is-initial' : ''}`"
       >
         <div :class="`col-6`" style="position: relative; z-index: 10">
           <transition
             appear
             enter-active-class="animated zoomIn"
-            :leave-active-class="selectedLesson !== lesson.id ? 'animated planetBounceInactive' : 'animated planetBounceActive'"
+            :leave-active-class="selectedLesson !== courseSectionItem.id ? 'animated planetBounceInactive' : 'animated planetBounceActive'"
           >
             <div v-if="transitionTrigger">
-              <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`" @click="openLesson(lesson.id)">
+              <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`" @click="openLesson(courseSectionItem.id)">
                 <q-card-section class="text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto">
-                  <div v-if="lesson.satellites?.preview_list" class="satellite-list">
+                  <div v-if="courseSectionItem.satellites?.preview_list" class="satellite-list">
                     <div
-                      v-for="(satellite, index) in lesson.satellites.preview_list" :key="index"
+                      v-for="(satellite, index) in courseSectionItem.satellites.preview_list" :key="index"
                       class="transparent satellite-item nopadding"
                       :style="{
                         animationDelay: `-${satellite.delay}s`,
@@ -49,16 +49,16 @@
                       />
                     </div>
                   </div>
-                  <q-img :src="lesson.image" class="planet-image" loading="lazy" no-spinner> </q-img>
+                  <q-img :src="courseSectionItem.image" class="planet-image" loading="lazy" no-spinner> </q-img>
                 </q-card-section>
                 <q-card-section class="text-center text-white q-pa-none absolute full-width"  style="top: 100%">
                   <div class="text-caption">
                     <span>Изучено: </span>
-                    <b :class="lesson.progress > 0 && lesson.progress < 100 ? 'text-warning' : ''">{{ lesson.progress }}%</b>
+                    <b :class="courseSectionItem.progress > 0 && courseSectionItem.progress < 100 ? 'text-warning' : ''">{{ courseSectionItem.progress }}%</b>
                   </div>
                   <div class="text-bold">
-                    <q-icon v-if="lesson.is_blocked === true" name="lock"></q-icon>
-                    {{ lesson.title }}
+                    <q-icon v-if="courseSectionItem.is_blocked === true" name="lock"></q-icon>
+                    {{ courseSectionItem.title }}
                   </div>
                 </q-card-section>
               </q-card>
@@ -83,31 +83,10 @@
       <q-separator class="section-separator" style="border-bottom: 2px dashed white; opacity: 0.25;" />
     </div>
   </div>
-    <div ref="bottomPoint" class="bottomPoint"></div>
-  <q-page-sticky class="fixed full-width full-height">
-    <q-img
-      :src="activeCourseSection.background_image"
-      class="absolute-top absolute-left full-width full-height"
-      no-spinner
-    />
+    <div ref="bottomPoint" class="bottomPoint" style="margin-top: 60px;"></div>
+  <q-page-sticky class="fixed full-width full-height" >
+    <q-img :src="activeCourseSection.background_image" class="absolute-top absolute-left full-width full-height" no-spinner/>
   </q-page-sticky>
-  <q-dialog
-    v-model="lockDialog"
-    transition-show="scale"
-    transition-hide="scale"
-  >
-    <q-card class="bg-white text-center" style="width: 300px">
-      <q-card-section>
-        <div class="text-h6">Пока недоступно</div>
-      </q-card-section>
-      <q-card-section class="q-pt-none">
-        Сначала исследуйте предыдущую планету
-      </q-card-section>
-      <q-card-actions align="center" class="bg-white text-teal">
-        <q-btn push class="col" color="primary" label="Понятно" v-close-popup />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
 </template>
 
 <script setup>

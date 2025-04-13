@@ -4,10 +4,10 @@
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block">
           <div class="q-pa-md">
             <div class="row justify-between q-mb-sm">
-              <div class="text-subtitle1"><b>{{subcategory.title}} </b> <b class="text-blue">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
+              <div class="text-subtitle1"><b>{{subcategory.title}} </b> <b class="text-primary">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
               <div class="text-subtitle2"><b>{{(subcategory.gained_total/subcategory.total*100).toFixed(0)}}%</b></div>
             </div>
-            <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="20px" color="primary"/>
+            <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="22px" color="primary"/>
           </div>
           <div>
             <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >

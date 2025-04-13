@@ -1,21 +1,20 @@
 <template>
   <div class="column q-gutter-md" v-if="lessons.length > 0">
-    <q-btn class="q-flat" round push color="secondary">
+    <q-btn class="bg-gradient-primary" round push>
       <q-avatar size="60px" class="daily-lesson-avatar">
-        <img src="/images/daily_lexis.jpg" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
+        <img src="/images/icons/radar.png" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
       </q-avatar>
-      <q-badge floating rounded color="negative" style="width: 20px; height: 20px;"><b>{{ lessons.length }}</b></q-badge>
+      <q-badge floating rounded color="secondary" style="width: 20px; height: 20px;"><b>{{ lessons.length }}</b></q-badge>
       <q-menu anchor="top middle" self="bottom middle"
         transition-show="jump-up"
         transition-hide="jump-down"
         class="bg-transparent q-flat allow-overflow" fit>
-
         <div class="row no-wrap justify-center q-py-md q-px-sm">
           <div class="column q-gutter-md">
           <q-btn v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`"
-            class="" :to="`/lesson-startup-${lesson.id}`" round>
-            <q-avatar size="50px" class="daily-lesson-avatar" :style="`background-image: url('${lesson.course_section.background_image}'); background-size: cover;`" >
-              <img :src="lesson.image" height="50px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
+            class="bg-secondary" :to="`/lesson-startup-${lesson.id}`" round push>
+            <q-avatar size="57px" class="daily-lesson-avatar lesson" :style="`background-image: url('${lesson.course_section.background_image}'); background-size: cover;`" >
+              <q-img :src="lesson.image" width="45px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" />
             </q-avatar>
           </q-btn>
         </div>
@@ -59,8 +58,9 @@ onActivated(() => {
 </script>
 <style scoped lang="scss">
 .daily-lesson-avatar{
-  box-shadow: inset 0 0 0 2px $yellow;
-  animation: pulseSignalShadow 0.75s ease infinite alternate;
+  &.lesson{
+    box-shadow: inset 0 0 0 2px $yellow;
+  }
   &:before{
     content: "";
     position: absolute;
