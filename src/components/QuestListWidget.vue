@@ -42,46 +42,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="assignedQuestDialog" position="bottom" persistent>
-      <div class="full-width column">
-        <div class="row">
-          <div class="col-6">
-            <transition
-              appear
-              enter-active-class="animated fadeInUp"
-              leave-active-class="animated fadeOutDown">
-              <img v-if="assignedQuestDialog" :src="assignedQuest.pages[assignedQuestActivePage].image" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;">
-            </transition>
-          </div>
-        </div>
-        <q-card class="bg-white rounded-b-0 full-width" style="overflow: visible;">
-          <q-card-section class="text-white row no-wrap q-pa-none">
-            <div :class="`col q-pa-sm rounded-t bg-gradient-${assignedQuest.group.color}`">
-                <div class="text-subtitle1 text-center"><b>{{ assignedQuest.group.title }}</b></div>
-            </div>
-          </q-card-section>
-          <q-card-section v-if="assignedQuest.pages && assignedQuest.pages[assignedQuestActivePage]" class="q-pa-none" >
-            <div class="q-pa-sm">
-              <div class="q-pb-sm">
-                <div class="text-subtitle1"><b>{{ assignedQuest.pages[assignedQuestActivePage].title }}</b></div>
-                <div class="text-caption">{{ assignedQuest.pages[assignedQuestActivePage].description }}</div>
-              </div>
-              <div class="full-width q-pb-sm q-mb-sm rounded-sm bg-grey-2" v-if="!assignedQuest.pages[assignedQuestActivePage+1]">
-                <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
-                <div class="row q-gutter-sm items-center justify-center">
-                  <div v-for="(resource, resourceIndex) in assignedQuest.reward" :key="`resource-${resourceIndex}`" >
-                    <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
-                  </div>
-                </div>
-              </div>
-              <div class="flex justify-end q-gutter-sm">
-                <q-btn v-if="!assignedQuest.pages[assignedQuestActivePage+1]" push :label="assignedQuest.pages[assignedQuestActivePage].answer" color="primary" @click="startQuest(assignedQuest.id)"/>
-                <q-btn v-else push :label="assignedQuest.pages[assignedQuestActivePage].answer" color="primary" @click="assignedQuestActivePage++" />
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
+    <q-dialog v-model="assignedQuestDialog" position="bottom" persistent backdrop-filter="blur(4px)">
+      <QuestDialogue :replicas="assignedQuest.pages" :reward="assignedQuest.reward"/>
     </q-dialog>
     <q-dialog v-model="activeQuestDialog" position="bottom">
       <div class="full-width column" style="overflow: visible">
@@ -154,11 +116,12 @@
 import { api } from '../services/index'
 import { ref, onMounted, onActivated } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
-import { useNavigationHistory } from '../composables/useNavigationHistory'
 import { useLesson } from '../composables/useLesson'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import QuestDialogue from '../components/QuestDialogue.vue'
 
-const { lesson, setTarget } = useLesson()
+
+const { setTarget } = useLesson()
 const  router = useRouter()
 
 const error = ref(false)
@@ -169,7 +132,6 @@ const reloadTrigger = ref(false)
 const quests = ref([])
 const assignedQuest = ref({})
 const assignedQuests = ref([])
-const assignedQuestActivePage = ref(0)
 const assignedQuestDialog = ref(false)
 const activeQuest = ref({})
 const activeQuestDialog = ref(false)
@@ -204,20 +166,6 @@ const goToQuestTarget = (questTarget) => {
     router.push(`lesson-startup-${questTarget.id}`)
   } else if (questTarget.code == 'skill') {
     router.push(`skills`)
-  }
-}
-
-const startQuest = async (questId) => {
-  const questStartedResponse = await api.quest.startItem({ quest_id: questId })
-  if(questStartedResponse){
-    assignedQuestDialog.value = false
-    assignedQuest.value = {}
-    assignedQuestActivePage.value = 0
-    assignedQuests.value.shift()
-    if(assignedQuests.value.length > 0){
-      assignedQuest.value = assignedQuests.value[0]
-      assignedQuestDialog.value = true
-    }
   }
 }
 
