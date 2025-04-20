@@ -43,7 +43,7 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="assignedQuestDialog" position="bottom" persistent backdrop-filter="blur(4px)">
-      <QuestDialogue :replicas="assignedQuest.pages" :reward="assignedQuest.reward"/>
+      <QuestDialogue :replicas="assignedQuest.pages" :reward="assignedQuest.reward" @onStarted="startQuest(assignedQuest.id)"/>
     </q-dialog>
     <q-dialog v-model="activeQuestDialog" position="bottom">
       <div class="full-width column" style="overflow: visible">
@@ -156,6 +156,20 @@ const checkInactive = () => {
   if(assignedQuests.value.length > 0){
     assignedQuest.value = assignedQuests.value[0]
     assignedQuestDialog.value = true
+  }
+}
+
+const startQuest = async (questId) => {
+  const questStartedResponse = await api.quest.startItem({ quest_id: questId })
+  if(questStartedResponse){
+    assignedQuestDialog.value = false
+    assignedQuest.value = {}
+    assignedQuestActivePage.value = 0
+    assignedQuests.value.shift()
+    if(assignedQuests.value.length > 0){
+      assignedQuest.value = assignedQuests.value[0]
+      assignedQuestDialog.value = true
+    }
   }
 }
 

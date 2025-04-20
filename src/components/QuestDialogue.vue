@@ -56,19 +56,10 @@ const props = defineProps({
   replicas: Array,
   reward: Array
 })
+const emits = defineEmits(['onStarted'])
 
-const startQuest = async (questId) => {
-  const questStartedResponse = await api.quest.startItem({ quest_id: questId })
-  if(questStartedResponse){
-    assignedQuestDialog.value = false
-    assignedQuest.value = {}
-    assignedQuestActivePage.value = 0
-    assignedQuests.value.shift()
-    if(assignedQuests.value.length > 0){
-      assignedQuest.value = assignedQuests.value[0]
-      assignedQuestDialog.value = true
-    }
-  }
+const startQuest = async () => {
+  emits('onStarted')
 }
 const nextReplica = () => {
   assignedQuestActivePage.value++
