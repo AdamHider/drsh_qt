@@ -42,8 +42,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="assignedQuestDialog" position="bottom" persistent backdrop-filter="blur(4px)">
-      <QuestDialogue :replicas="assignedQuest.pages" :reward="assignedQuest.reward" @onStarted="startQuest(assignedQuest.id)"/>
+    <q-dialog v-model="assignedQuestDialog" maximized persistent backdrop-filter="blur(4px)">
+      <QuestDialogue :replicas="assignedQuest.pages" :reward="assignedQuest.reward" :group="assignedQuest.group" @onStarted="startQuest(assignedQuest.id)"/>
     </q-dialog>
     <q-dialog v-model="activeQuestDialog" position="bottom">
       <div class="full-width column" style="overflow: visible">
@@ -130,9 +130,11 @@ const claimRewards = ref({})
 const claimError = ref(false)
 const reloadTrigger = ref(false)
 const quests = ref([])
+
 const assignedQuest = ref({})
 const assignedQuests = ref([])
 const assignedQuestDialog = ref(false)
+
 const activeQuest = ref({})
 const activeQuestDialog = ref(false)
 
@@ -164,11 +166,13 @@ const startQuest = async (questId) => {
   if(questStartedResponse){
     assignedQuestDialog.value = false
     assignedQuest.value = {}
-    assignedQuestActivePage.value = 0
     assignedQuests.value.shift()
     if(assignedQuests.value.length > 0){
-      assignedQuest.value = assignedQuests.value[0]
-      assignedQuestDialog.value = true
+      setTimeout(() => {
+        assignedQuest.value = assignedQuests.value[0]
+        assignedQuestDialog.value = true
+      }, 1000)
+
     }
   }
 }
