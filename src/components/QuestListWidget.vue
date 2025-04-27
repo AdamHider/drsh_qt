@@ -2,7 +2,7 @@
   <div>
     <div class="flex column">
       <q-btn v-for="(questItem, index) in quests" :key="index" push dense
-        @click="activeQuestDialog = true; activeQuest = questItem"
+        @click="showQuest(questItem.id)"
         size="sm"
         :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed) ? ' q-btn-blinking' : ''}`" >
         <div style="width: 40px" >
@@ -24,7 +24,7 @@
           <div v-if="!claimError" class="text-h6"><b>Задание выполнено!</b></div>
           <div v-else class="text-h6"><b>Упс...</b></div>
         </q-card-section>
-        <q-card-section v-if="!claimError">
+        <q-card-section>
           <div class="full-width q-pb-sm rounded-sm bg-grey-2">
             <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
             <div class="row q-gutter-sm items-center justify-center">
@@ -34,80 +34,19 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-section v-else>
-          Something went wrong.
-        </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
           <q-btn class="full-width" push label="Отлично" color="positive" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="assignedQuestDialog" maximized persistent backdrop-filter="blur(4px)">
-      <QuestDialogue :replicas="assignedQuest.pages" :reward="assignedQuest.reward" :group="assignedQuest.group" @onStarted="startQuest(assignedQuest.id)"/>
-    </q-dialog>
-    <q-dialog v-model="activeQuestDialog" position="bottom">
-      <div class="full-width column" style="overflow: visible">
-        <div class="row">
-          <div class="col-6 text-right">
-            <transition
-              appear
-              enter-active-class="animated fadeInUp"
-              leave-active-class="animated fadeOutDown">
-              <img v-if="activeQuestDialog" :src="activeQuest.group.image_full" style="height: 270px; z-index: -1; margin-bottom: -20px; float: right;">
-            </transition>
-          </div>
-        </div>
-        <q-card class="bg-white  full-width rounded-b-0" style="overflow: visible;">
-          <q-card-section class="text-white row no-wrap q-pa-none">
-            <div :class="`col q-pa-sm rounded-t bg-gradient-${activeQuest.group.color}`">
-                <div class="text-subtitle1 text-center"><b>{{ activeQuest.group.title }}</b></div>
-            </div>
-          </q-card-section>
-          <q-card-section class="q-pb-none q-pt-sm">
-            <q-item class="q-pa-none">
-              <q-item-section class="text-left q-pb-sm">
-                <div class="row q-my-sm justify-between items-end" >
-                  <div>
-                    <q-item-label class="text-subtitle2"><b>{{ activeQuest.title }}</b></q-item-label>
-                    <q-chip
-                        v-if="activeQuest.time_left_humanized"
-                        dense
-                        class="q-px-sm q-ma-none"
-                        style="font-size: 13px"
-                        :color="((activeQuest.time_left <= 3) ? 'red' : 'orange')"
-                        icon="sports_score"
-                        text-color="white">
-                        <b>{{ activeQuest.time_left_humanized }}</b>
-                    </q-chip>
-                  </div>
-                  <div class="col text-right self-end">
-                      <span class="text-subtitle2"><b>{{activeQuest.progress}}</b></span>
-                      <span class="text-caption"><b>/{{ activeQuest.value }}</b></span>
-                  </div>
-                </div>
-                <q-progress-bar :value="activeQuest.progress/activeQuest.value*100" size="25px" :color="(activeQuest.progress >= activeQuest.value) ? 'positive' : 'orange'"/>
-
-              </q-item-section>
-            </q-item>
-          </q-card-section>
-          <q-separator/>
-          <q-card-section class="q-pa-sm ">
-            <div class="full-width q-pb-sm rounded-sm bg-grey-2">
-              <div class="text-center text-subtitle2 q-pa-xs"><b>Награда: </b></div>
-              <div class="row q-gutter-sm items-center justify-center">
-                <div v-for="(resource, resourceIndex) in activeQuest.reward" :key="`resource-${resourceIndex}`" >
-                  <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
-                </div>
-              </div>
-            </div>
-          </q-card-section>
-          <q-card-actions class="justify-center">
-            <q-btn color="grey" push label="Закрыть" v-close-popup/>
-            <q-btn v-if="activeQuest.is_completed" color="positive" push label="Завершить" icon-right="done" @click="claimReward(activeQuest.id)"/>
-            <q-btn v-else-if="activeQuest.target.id" color="primary" push label="Перейти" icon-right="chevron_right" @click="goToQuestTarget(activeQuest.target)"/>
-          </q-card-actions>
-        </q-card>
-      </div>
+    <q-dialog v-model="activeQuestDialog" maximized persistent backdrop-filter="blur(4px)">
+      <QuestItem
+        :quest="activeQuest"
+        :mode="(activeQuest.is_completed) ? 'finish' : (activeQuest.status == 'created') ? 'start' : 'active'"
+        :expanded="activeQuest.status == 'active' && !activeQuest.is_completed"
+        @onStart="startQuest(activeQuest.id)"
+        @onClaim="claimReward(activeQuest.id)"
+        @onClose="activeQuestDialog = false"/>
     </q-dialog>
   </div>
 </template>
@@ -115,28 +54,26 @@
 <script setup>
 import { api } from '../services/index'
 import { ref, onMounted, onActivated } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
-import { useLesson } from '../composables/useLesson'
+import { onBeforeRouteLeave } from 'vue-router'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import QuestDialogue from '../components/QuestDialogue.vue'
+import QuestItem from '../components/QuestItem.vue'
 
 
-const { setTarget } = useLesson()
-const  router = useRouter()
 
 const error = ref(false)
 const claimDialog = ref(false)
-const claimRewards = ref({})
 const claimError = ref(false)
 const reloadTrigger = ref(false)
 const quests = ref([])
 
-const assignedQuest = ref({})
-const assignedQuests = ref([])
-const assignedQuestDialog = ref(false)
+const createdQuests = ref([])
+const createdQuestDialog = ref(false)
 
 const activeQuest = ref({})
+const activeQuestMode = ref('created')
 const activeQuestDialog = ref(false)
+
+const finishedQuestDialog = ref(false)
 
 const props = defineProps({
   activeOnly: Boolean
@@ -150,53 +87,42 @@ const load = async () => {
     return false;
   }
   quests.value = questListResponse
-  checkInactive()
 }
 
 const checkInactive = () => {
-  assignedQuests.value = quests.value.filter((quest) => { return quest.status == 'created'})
-  if(assignedQuests.value.length > 0){
-    assignedQuest.value = assignedQuests.value[0]
-    assignedQuestDialog.value = true
+  createdQuests.value = quests.value.filter((quest) => { return quest.status == 'created' && quest.group.is_primary})
+  if(createdQuests.value.length > 0){
+    activeQuest.value = createdQuests.value[0]
+    createdQuestDialog.value = true
   }
 }
 
 const startQuest = async (questId) => {
   const questStartedResponse = await api.quest.startItem({ quest_id: questId })
   if(questStartedResponse){
-    assignedQuestDialog.value = false
-    assignedQuest.value = {}
-    assignedQuests.value.shift()
-    if(assignedQuests.value.length > 0){
-      setTimeout(() => {
-        assignedQuest.value = assignedQuests.value[0]
-        assignedQuestDialog.value = true
-      }, 1000)
-
-    }
+    await load()
+    activeQuest.value = quests.value.find((quest) => { return quest.id == questId})
   }
 }
 
-const goToQuestTarget = (questTarget) => {
-  if(questTarget.code == 'lesson'){
-    setTarget(questTarget.id)
-    if(questTarget.parent_id) return router.push(`lesson-startup-${questTarget.parent_id}`)
-    router.push(`lesson-startup-${questTarget.id}`)
-  } else if (questTarget.code == 'skill') {
-    router.push(`skills`)
-  }
-}
+const showQuest = (questId) => {
+  const quest = quests.value.find((quest) => { return quest.id == questId});
+  activeQuest.value =  quest
+  if(!quest.is_completed){
 
+  } else {
+    finishedQuestDialog.value = true
+  }
+  activeQuestDialog.value = true
+}
 const claimReward = async (questId) => {
   const questRewardResponse = await api.quest.claimReward({ quest_id: questId })
   reloadTrigger.value = !reloadTrigger.value
   claimDialog.value = true
+  activeQuestDialog.value = false
   claimError.value = false
   if (questRewardResponse.error) {
     claimError.value = true
-    claimRewards.value = false
-  } else {
-    claimRewards.value = questRewardResponse
   }
 }
 
@@ -216,6 +142,7 @@ onBeforeRouteLeave((to, from) => {
 
 onActivated(() => {
   load()
+  checkInactive()
 })
 
 </script>
