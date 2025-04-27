@@ -40,9 +40,9 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="activeQuestDialog" maximized persistent backdrop-filter="blur(4px)">
-      <QuestItem
+      <QuestItem v-if="activeQuest"
         :quest="activeQuest"
-        :mode="(activeQuest.is_completed) ? 'finish' : (activeQuest.status == 'created') ? 'start' : 'active'"
+        :mode="(activeQuest.is_completed && activeQuest.status == 'active') ? 'finish' : (activeQuest.status == 'created') ? 'start' : 'active'"
         :expanded="activeQuest.status == 'active' && !activeQuest.is_completed"
         @onStart="startQuest(activeQuest.id)"
         @onClaim="claimReward(activeQuest.id)"
@@ -90,10 +90,10 @@ const load = async () => {
 }
 
 const checkInactive = () => {
-  createdQuests.value = quests.value.filter((quest) => { return quest.status == 'created' && quest.group.is_primary})
-  if(createdQuests.value.length > 0){
-    activeQuest.value = createdQuests.value[0]
-    createdQuestDialog.value = true
+  const quest = quests.value.find((quest) => { return quest.status == 'created' && quest.group.is_primary})
+  if(quest){
+    activeQuest.value = quest
+    activeQuestDialog.value = true
   }
 }
 
@@ -108,11 +108,6 @@ const startQuest = async (questId) => {
 const showQuest = (questId) => {
   const quest = quests.value.find((quest) => { return quest.id == questId});
   activeQuest.value =  quest
-  if(!quest.is_completed){
-
-  } else {
-    finishedQuestDialog.value = true
-  }
   activeQuestDialog.value = true
 }
 const claimReward = async (questId) => {
@@ -130,7 +125,8 @@ const reload = async () => {
   claimDialog.value = false
   activeQuestDialog.value = false
   activeQuest.value = {}
-  load()
+  await load()
+  checkInactive()
 }
 
 onBeforeRouteLeave((to, from) => {
@@ -140,8 +136,8 @@ onBeforeRouteLeave((to, from) => {
   return true
 })
 
-onActivated(() => {
-  load()
+onActivated(async () => {
+  await load()
   checkInactive()
 })
 

@@ -35,7 +35,7 @@
           spinner-color="white"
           />
       </q-page-sticky>
-      <q-page-sticky class="fixed full-width text-white" expand style="z-index: 1;">
+      <q-page-sticky v-if="activeLesson" class="fixed full-width text-white" expand style="z-index: 1;">
         <transition
           appear
           enter-active-class="animated fadeInUp"

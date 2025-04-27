@@ -61,7 +61,7 @@
                       <span class="text-caption"><b>/{{ props.quest.value }}</b></span>
                   </div>
                 </div>
-                <q-progress-bar :value="props.quest.progress/props.quest.value*100" size="25px" :color="(props.quest.progress >= props.quest.value) ? 'positive' : 'orange'"/>
+                <q-progress-bar :value="props.quest.progress/props.quest.value*100" size="25px" dark :color="(props.quest.progress >= props.quest.value) ? 'positive' : 'orange'"/>
               </q-item-section>
             </q-item>
             <div class="text-center">
@@ -85,8 +85,8 @@
         <q-btn push class="col-auto bg-dark q-ma-xs" @click="onClose()" icon="arrow_back"/>
         <div v-if="isLastReplica" class="col">
           <q-btn v-if="props.mode == 'active' && props.quest.target.id" push class="bg-gradient-primary  full-width q-ma-xs" @click="goToQuestTarget()" icon-right="navigate_next"><b>Перейти к цели</b></q-btn>
-          <q-btn v-else-if="props.mode == 'start'" push class="full-width bg-gradient-primary" @click="onStart()"><b >Начать задание</b></q-btn>
-          <q-btn v-else-if="props.mode == 'finish'" push class="full-width bg-gradient-primary" @click="onClaim()"><b >Завершить задание</b></q-btn>
+          <q-btn v-else-if="props.mode == 'start'" push class="full-width bg-gradient-primary q-ma-xs" @click="onStart()"><b >Начать задание</b></q-btn>
+          <q-btn v-else-if="props.mode == 'finish'" push class="full-width bg-gradient-primary q-ma-xs" @click="onClaim()"><b >Завершить задание</b></q-btn>
         </div>
         <q-btn push  v-else class="bg-gradient-primary col full-width q-ma-xs" @click="nextReplica()" icon-right="navigate_next" :disabled="nextDisabled"><b>Далее</b></q-btn>
         <q-btn v-if="!isLastReplica" push class="bg-dark col-auto q-ma-xs" @click="skipAll()" icon-right="last_page"><b></b></q-btn>
@@ -134,9 +134,10 @@ const onClose = () => {
 }
 
 const renderReplicaList = () => {
+  isLastReplica.value = false
   activePage.value = 0
   replicaList.value = []
-  if(props.quest.is_completed){
+  if(props.quest.is_completed && props.quest.status == 'active'){
     replicaMode.value = 'outro'
   }
   if(props.expanded){
