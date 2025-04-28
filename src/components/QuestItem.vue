@@ -81,8 +81,8 @@
       </div>
     </q-card-section>
     <div class="absolute-bottom q-pa-sm text-white" style="z-index: 100">
-      <div class="row">
-        <q-btn push class="col-auto bg-dark q-ma-xs" @click="onClose()" icon="arrow_back"/>
+      <div class="row justify-center">
+        <q-btn push class="col-auto bg-dark q-ma-xs" @click="onClose()" icon="close"/>
         <div v-if="isLastReplica" class="col">
           <q-btn v-if="props.mode == 'active' && props.quest.target.id" push class="bg-gradient-primary  full-width q-ma-xs" @click="goToQuestTarget()" icon-right="navigate_next"><b>Перейти к цели</b></q-btn>
           <q-btn v-else-if="props.mode == 'start'" push class="full-width bg-gradient-primary q-ma-xs" @click="onStart()"><b >Начать задание</b></q-btn>
