@@ -41,6 +41,9 @@ a{
     text-decoration: none;
     color: $primary;
 }
+.rounded-none{
+  border-radius: 0 !important;
+}
 .rounded-xs{
   border-radius: $extra-small-border-radius;
 }
@@ -457,4 +460,16 @@ a{
   40%, 100% {
     background-position-x: -150%;
   }
+}
+
+.q-btn-shaking{
+  animation: shakeItem 4s ease infinite  var(--delay);
+}
+
+@keyframes shakeItem {
+  0% { transform: translateX(0px); }
+  2% { transform: translateX(5px); }
+  5% { transform: translateX(0px); }
+  7% { transform: translateX(5px); }
+  10%, 100% { transform: translateX(0px); }
 }

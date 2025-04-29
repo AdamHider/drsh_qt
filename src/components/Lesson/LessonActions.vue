@@ -1,5 +1,5 @@
 <template>
-    <q-card v-if="lesson.active.page?.answer?.is_finished" flat class="bg-white text-dark ">
+    <q-card v-if="lesson.active.page?.answer?.is_finished" flat class="bg-white text-dark border-t-sm rounded-none" style="border-color: lightgray">
         <q-card-section class="text-center">
             <div class="text-h5 vertical-middle">
               <b v-if="answerPercentage == 100">Отлично!</b>
@@ -49,20 +49,6 @@
         ></q-btn>
     </q-toolbar>
 
-    <q-dialog v-model="backDialog"  transition-show="scale" transition-hide="scale">
-      <q-card class="bg-white" style="width: 300px">
-        <q-card-section>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <div class="text-h6"><b>Вернуться назад?</b></div>
-          <div>Вернуться на предыдущую страницу?</div>
-        </q-card-section>
-        <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn push class="col" flat label="Cancel" v-close-popup />
-          <q-btn push class="col" color="primary" label="Continue" @click="back" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
     <q-dialog v-model="confirmDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white text-center" style="width: 300px">
         <q-card-section>
@@ -70,8 +56,8 @@
           <div>Некоторые поля остались незаполненными. Советуем заполнить их хотя-бы случайными ответами.</div>
         </q-card-section>
         <q-card-actions align="around">
-          <q-btn push class="col" flat label="Отмена" v-close-popup />
-          <q-btn push class="col" color="primary"  label="Продолжить" @click="confirm" v-close-popup />
+          <q-btn flat class="col" color="grey" v-close-popup><b>Отмена</b></q-btn>
+          <q-btn push class="col" color="primary" @click="confirm" v-close-popup><b>Продолжить</b></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>

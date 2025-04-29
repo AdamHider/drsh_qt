@@ -68,6 +68,7 @@
               <q-btn-toggle
                 v-model="formData.fields.gender.value"
                 :rules="formData.fields.gender.rules"
+                class="rounded-sm"
                 push
                 :text-color="(formData.fields.gender.value == 'male') ? 'red-4' : 'blue-4'"
                 :toggle-color="(formData.fields.gender.value == 'male') ? 'blue' : 'red'"

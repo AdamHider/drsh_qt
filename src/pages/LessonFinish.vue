@@ -37,7 +37,7 @@
             </q-card-section>
             <q-card-section v-else-if="lesson.active.exercise.data.totals.reward_level > 0 || lesson.active.exercise.data.totals.is_maximum" class="q-pb-sm q-pt-sm text-positive">
                 <div v-if="lesson.active.exercise.data.totals.is_maximum" class="text-h5"><b>Лучше некуда!</b></div>
-                <div v-else class="text-h5"><b>Победа!</b></div>
+                <div v-else class="text-h5"><b>Успех!</b></div>
                 <div class="text-h6">
                   <b v-if="lesson.active.exercise.data.totals.reward_level >= 1">Неплохой результат</b>
                   <b v-else-if="lesson.active.exercise.data.totals.reward_level >= 2">Хороший результат</b>
@@ -45,7 +45,7 @@
                 </div>
             </q-card-section>
             <q-card-section v-else class="q-pb-sm q-pt-sm text-negative">
-                <div class="text-h5"><b>Поражение!</b></div>
+                <div class="text-h5"><b>Плохо!</b></div>
                 <div class="text-h6"><b>Ты можешь лучше</b></div>
             </q-card-section>
             <q-card-section class="q-pb-sm q-pt-sm">
@@ -54,30 +54,23 @@
                   <b>{{ previousPoints }}</b>
                 </div>
                 <div class="text-subtitle1">
-                  <b>Ваш результат: </b>
+                  <b>Твой результат: </b>
                   <b :class="(lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum) ? 'text-positive' : 'text-negative'">{{ currentPoints }}</b>
                 </div>
             </q-card-section>
             <q-card-section v-if="lesson.active.exercise.data.totals.reward" class="q-pb-sm q-pt-sm">
               <div class="q-pa-sm bg-grey-3 rounded-sm">
-                <div class="text-center text-subtitle2"><b>Награда: </b></div>
-                <div class="row justify-center q-gutter-sm q-py-sm">
-                  <div v-for="(resource, resourceIndex) in lesson.active.exercise.data.totals.reward" :key="resourceIndex" >
-                    <q-item :class="`text-left rounded-borders bg-light-gradient-${resource?.color} text-white`" >
-                          <q-item-section avatar style="min-width: unset;">
-                              <q-img width="25px" :src="resource.image" style="filter: drop-shadow(1px 3px 3px #00000075)"/>
-                          </q-item-section>
-                          <q-item-section>
-                              <q-item-label><b>{{resource.quantity}}</b></q-item-label>
-                          </q-item-section>
-                      </q-item>
+                <div class="text-center text-subtitle2 q-pt-none q-pb-sm"><b>Награда: </b></div>
+                <div class="row q-gutter-sm items-center justify-center">
+                  <div v-for="(resource, resourceIndex) in lesson.active.exercise.data.totals.reward" :key="`resource-${resourceIndex}`" >
+                      <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                   </div>
                 </div>
               </div>
             </q-card-section>
-            <q-card-section class="q-pb-sm q-pt-sm" v-if="lesson.active.next_lessons.length > 0">
+            <q-card-section class="q-pb-sm q-pt-sm"  v-if="lesson.active.next_lessons.length > 0">
               <div class="q-pa-sm bg-grey-3 rounded-sm">
-                <div class="text-subtitle2"><b>Вы разблокировали:</b></div>
+                <div class="text-subtitle2"><b>Разблокировано:</b></div>
                 <q-list>
                   <q-item class="text-left"  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`">
                     <q-item-section avatar>
@@ -129,6 +122,7 @@ import { useLesson } from '../composables/useLesson'
 import { useExercise } from '../composables/useExercise'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
+import UserResourceBar from '../components/UserResourceBar.vue'
 
 const route = useRoute()
 const router = useRouter()

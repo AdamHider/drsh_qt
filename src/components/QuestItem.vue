@@ -11,7 +11,7 @@
             <transition
               appear
               :enter-active-class="`animated ${(replica.is_user) ? 'fadeInRight' : 'fadeInLeft'}`"
-              :leave-active-class="`animated fadeOutDown ${(replica.is_user) ? 'fadeOutRight' : 'fadeOutLeft'}`">
+              :leave-active-class="`animated ${(replica.is_user) ? 'fadeOutRight' : 'fadeOutLeft'}`">
 
               <q-item v-if="replica.is_user" class="q-px-sm">
                 <q-item-section>
@@ -82,7 +82,6 @@
     </q-card-section>
     <div class="absolute-bottom q-pa-sm text-white" style="z-index: 100">
       <div class="row justify-center">
-        <q-btn push class="col-auto bg-dark q-ma-xs" @click="onClose()" icon="close"/>
         <div v-if="isLastReplica" class="col">
           <q-btn v-if="props.mode == 'active' && props.quest.target.id" push class="bg-gradient-primary  full-width q-ma-xs" @click="goToQuestTarget()" icon-right="navigate_next"><b>Перейти к цели</b></q-btn>
           <q-btn v-else-if="props.mode == 'start'" push class="full-width bg-gradient-primary q-ma-xs" @click="onStart()"><b >Начать задание</b></q-btn>
@@ -92,6 +91,9 @@
         <q-btn v-if="!isLastReplica" push class="bg-dark col-auto q-ma-xs" @click="skipAll()" icon-right="last_page"><b></b></q-btn>
       </div>
     </div>
+    <q-page-sticky position="top-right" :offset="[16,16]">
+      <q-btn push class="col-auto q-ma-xs" color="negative" @click="onClose()" icon="close"/>
+    </q-page-sticky>
   </q-card>
 </template>
 

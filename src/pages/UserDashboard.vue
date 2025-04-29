@@ -134,7 +134,7 @@
           <q-card-section>
             <div class="items-center text-center">
               <div class="text-subtitle1"><b>Пригласи друзей с выгодой!</b></div>
-              <div class="text-caption">Друзья, которые присоединятся к нам по этой ссылке принесут вам драгоценный <b class="text-red-7">рубидий</b>!</div>
+              <div class="text-caption">Друзья, которые присоединятся к нам по этой ссылке принесут вам драгоценный <b class="text-green">изонит</b>!</div>
               <div class="text-caption">Для этого приглашённым друзьям нужно только выполнить задание <b class="text-primary">"Час расплаты"</b>!</div>
             </div>
           </q-card-section>

@@ -1,22 +1,27 @@
 <template>
   <div>
     <div class="flex column">
+      <TransitionGroup
+        appear
+        :enter-active-class="`animated fadeInLeft`"
+        :leave-active-class="`animated fadeOutLeft`">
       <q-btn v-for="(questItem, index) in quests" :key="index" push dense
         @click="showQuest(questItem.id)"
         size="sm"
-        :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed) ? ' q-btn-blinking' : ''}`" >
-        <div style="width: 40px" >
-          <img :src="questItem.group.image_avatar" height="45px" class="absolute-bottom q-ml-sm q-mb-xs">
-        </div>
-        <q-icon class="q-py-xs q-px-sm" name="chevron_right" size="24px"></q-icon>
-        <q-badge v-if="!questItem.is_completed" floating color="warning" class="q-pa-xs">
-          <q-icon name="priority_high" size="14px"></q-icon>
-        </q-badge>
-        <q-badge v-else floating color="positive" class="q-pa-xs">
-          <q-icon name="done" size="14px"></q-icon>
-        </q-badge>
+        :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed || questItem.status == 'created') ? ' q-btn-blinking q-btn-shaking' : ''}`" >
 
+          <div style="width: 40px" >
+            <img :src="questItem.group.image_avatar" height="45px" class="absolute-bottom q-ml-sm q-mb-xs">
+          </div>
+          <q-icon class="q-py-xs q-px-sm" name="chevron_right" size="24px"></q-icon>
+          <q-badge v-if="!questItem.is_completed && questItem.status !== 'active'" floating color="warning" class="q-pa-xs" style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
+            <q-icon name="priority_high" size="14px"></q-icon>
+          </q-badge>
+          <q-badge v-else-if="questItem.is_completed" floating color="positive" class="q-pa-xs"  style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
+            <q-icon name="done" size="14px"></q-icon>
+          </q-badge>
       </q-btn>
+      </TransitionGroup>
     </div>
     <q-dialog v-model="claimDialog"  transition-show="scale" transition-hide="scale" @hide="reload()">
       <q-card class="bg-white text-center" style="width: 300px">
@@ -34,7 +39,7 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-actions align="center" class="bg-white text-teal">
+        <q-card-actions align="center" class="bg-white q-px-md q-pb-md text-teal">
           <q-btn class="full-width" push label="Отлично" color="positive" v-close-popup />
         </q-card-actions>
       </q-card>
@@ -102,6 +107,7 @@ const startQuest = async (questId) => {
   if(questStartedResponse){
     await load()
     activeQuest.value = quests.value.find((quest) => { return quest.id == questId})
+    activeQuestDialog.value = false
   }
 }
 
