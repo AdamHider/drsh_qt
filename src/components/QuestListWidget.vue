@@ -44,7 +44,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="activeQuestDialog" maximized persistent backdrop-filter="blur(4px)">
+    <q-dialog v-model="activeQuestDialog" transition-show="fade" transition-hide="fade" maximized persistent backdrop-filter="blur(4px)">
       <QuestItem v-if="activeQuest"
         :quest="activeQuest"
         :mode="(activeQuest.is_completed && activeQuest.status == 'active') ? 'finish' : (activeQuest.status == 'created') ? 'start' : 'active'"

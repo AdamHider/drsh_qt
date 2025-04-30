@@ -93,10 +93,13 @@
 import { useLesson } from "../composables/useLesson";
 import { ref, onActivated, onMounted, toRef, watch } from "vue";
 import { useCourse } from "../composables/useCourse";
+import { useLoader } from '../composables/useLoader'
 import { useRouter } from "vue-router";
 
 const { lesson, getList } = useLesson();
 const { course } = useCourse();
+const { showLoader, hideLoader } = useLoader()
+
 const router = useRouter();
 
 const bottomPoint = ref(null);
@@ -116,7 +119,7 @@ const lessonList = ref([]);
 const load = async function () {
   await getList()
   composeList()
-
+  hideLoader()
 }
 const composeList = () => {
   lessonList.value = [];
@@ -140,11 +143,8 @@ const composeList = () => {
   courseSections.value = result
 };
 const openLesson = (lessonId) => {
-  transitionTrigger.value = false;
-  selectedLesson.value = lessonId;
-  setTimeout(() => {
-    router.push(`/lesson-startup-${selectedLesson.value}`);
-  }, 250);
+  showLoader()
+  router.push(`/lesson-startup-${lessonId}`);
 };
 const onIntersection = (entry) => {
   const groupIndex = entry.target.attributes.groupKey?.value
@@ -160,7 +160,7 @@ const onIntersection = (entry) => {
 onMounted(async () => {
   transitionTrigger.value = true;
   selectedLesson.value = 0;
-  load()
+  await load()
   setTimeout(() => {
     if(bottomPoint.value) bottomPoint.value.scrollIntoView()
   }, 250);
@@ -171,6 +171,7 @@ onActivated(async () => {
     selectedLesson.value = 0;
   }
   load()
+  console.log('activated')
 });
 watch( () => course.active?.id, async () => {
   load()

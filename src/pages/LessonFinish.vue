@@ -1,15 +1,21 @@
 <template>
   <q-page-wrapper>
-    <q-page :class="`text-center full-width finish-page ${(lesson.active.exercise.data.totals.reward_level > 0 || lesson.active.exercise.data.totals.is_maximum) ? 'congrats' : ''}`" style="padding-top: 50px;">
+    <q-page :class="`text-center full-width finish-page `" style="padding-top: 50px;">
         <q-card class="transparent text-white no-shadow full-width" style="position: relative; z-index: 1;">
             <q-card-section class="q-pb-none">
                 <div class="text-h5"><b>{{ lesson.active.title }}</b></div>
             </q-card-section>
-            <q-card-section class="lesson-image q-pt-none">
+            <q-card-section class="lesson-image q-pt-none relative-position">
                 <transition
-                    appear
-                    enter-active-class="animated fadeInUp animation-slow"
-                    leave-active-class="animated rubberBand  animation-delay-1" >
+                  appear
+                  enter-active-class="animated fadeIn animation-slow animation-delay-2"
+                  leave-active-class="animated fadeOut  animation-delay-1">
+                  <q-img v-if="transitionTrigger" class="bg-rays" src="/images/rays.png"/>
+                </transition>
+                <transition
+                  appear
+                  enter-active-class="animated fadeInUp animation-slow"
+                  leave-active-class="animated rubberBand  animation-delay-1">
                   <q-img
                     v-if="transitionTrigger"
                     :src="lesson.active.image"
@@ -18,48 +24,45 @@
                 </transition>
             </q-card-section>
         </q-card>
-
-    </q-page>
-    <q-footer expand position="bottom" class="bg-transparent">
-      <transition
+        <transition
           appear
           enter-active-class="animated fadeInUp animation-delay-2"
           leave-active-class="animated zoomOut">
-          <q-card flat class="relative text-center text-dark rounded-b-0 q-pt-sm" style="z-index: 1;" v-if="transitionTrigger">
-            <q-card-section class="flex justify-center items-end q-pb-none absolute full-width" v-if="lesson.active.exercise.data.totals.difference > 0 && false" style="top: -100px; z-index: 1">
-                <q-avatar size="90px" :class="`star-item`"><img :src="(lesson.active.exercise.data.totals.reward_level >= 1) ? '/images/star_21.png' : '/images/star_21_inactive.png'"></q-avatar>
-                <q-avatar size="90px" :class="`star-item q-mb-md`"><img :src="(lesson.active.exercise.data.totals.reward_level == 3) ? '/images/star_23.png' : '/images/star_23_inactive.png'"></q-avatar>
-                <q-avatar size="90px" :class="`star-item`"><img :src="(lesson.active.exercise.data.totals.reward_level >= 2) ? '/images/star_22.png' : '/images/star_22_inactive.png'"></q-avatar>
-            </q-card-section>
-            <q-card-section v-if="lesson.active.exercise.data.totals.difference == 0" class="q-pb-sm q-pt-sm text-orange">
-                <div class="text-h5"><b>Ничья!</b></div>
-                <div class="text-h6"><b>Ни лучше, ни хуже</b></div>
-            </q-card-section>
-            <q-card-section v-else-if="lesson.active.exercise.data.totals.reward_level > 0 || lesson.active.exercise.data.totals.is_maximum" class="q-pb-sm q-pt-sm text-positive">
-                <div v-if="lesson.active.exercise.data.totals.is_maximum" class="text-h5"><b>Лучше некуда!</b></div>
-                <div v-else class="text-h5"><b>Успех!</b></div>
-                <div class="text-h6">
-                  <b v-if="lesson.active.exercise.data.totals.reward_level >= 1">Неплохой результат</b>
-                  <b v-else-if="lesson.active.exercise.data.totals.reward_level >= 2">Хороший результат</b>
-                  <b v-else-if="lesson.active.exercise.data.totals.reward_level == 3">Отличный результат</b>
-                </div>
-            </q-card-section>
-            <q-card-section v-else class="q-pb-sm q-pt-sm text-negative">
-                <div class="text-h5"><b>Плохо!</b></div>
-                <div class="text-h6"><b>Ты можешь лучше</b></div>
+          <q-card flat class="position-relative text-center text-dark rounded-none q-pt-sm lesson-finish-card" style="z-index: 1; margin-top: -50px;" v-if="transitionTrigger">
+            <q-card-section class="q-pb-none q-pt-sm text-positive"  style="margin-top: -100px; z-index: 1">
+              <q-img v-if="lesson.active.exercise.data.totals.reward_level >= 1" src="/images/lesson_finish_not_bad.png"/>
+              <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 2" src="/images/lesson_finish_not_bad.png"/>
+              <q-img v-else-if="lesson.active.exercise.data.totals.reward_level == 3" src="/images/lesson_finish_not_bad.png"/>
+              <q-img v-else src="/images/lesson_finish_fail.png"/>
             </q-card-section>
             <q-card-section class="q-pb-sm q-pt-sm">
-                <div class="text-subtitle2" v-if="lesson.active.exercise.data.totals.difference !== 0">
-                  <b>Предыдущий результат: </b>
-                  <b>{{ previousPoints }}</b>
-                </div>
-                <div class="text-subtitle1">
-                  <b>Твой результат: </b>
-                  <b :class="(lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum) ? 'text-positive' : 'text-negative'">{{ currentPoints }}</b>
-                </div>
+              <q-list  separator class="q-pa-xs text-left bg-grey-3 rounded-sm">
+                <q-item  v-if="lesson.active.exercise.data.totals.difference !== 0">
+                  <q-item-section>
+                    <b>Предыдущий результат: </b>
+                  </q-item-section>
+                  <q-item-section side>
+                    <b>{{ previousPoints }}</b>
+                  </q-item-section>
+                </q-item>
+                <q-item >
+                  <q-item-section>
+                    <b>Твой результат: </b>
+                  </q-item-section>
+                  <q-item-section side>
+                    <div v-if="lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum">
+                      <q-avatar class="q-mr-xs" size="sm" color="green-2"><q-icon size="xs" color="positive" name="keyboard_double_arrow_up"></q-icon></q-avatar>
+                      <b class="text-positive" style="vertical-align: middle">{{ currentPoints }}</b>
+                    </div>
+                    <div v-else>
+
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
             </q-card-section>
             <q-card-section v-if="lesson.active.exercise.data.totals.reward" class="q-pb-sm q-pt-sm">
-              <div class="q-pa-sm bg-grey-3 rounded-sm">
+              <div class="q-pa-sm q-pb-md bg-grey-3 rounded-sm">
                 <div class="text-center text-subtitle2 q-pt-none q-pb-sm"><b>Награда: </b></div>
                 <div class="row q-gutter-sm items-center justify-center">
                   <div v-for="(resource, resourceIndex) in lesson.active.exercise.data.totals.reward" :key="`resource-${resourceIndex}`" >
@@ -102,7 +105,8 @@
             </q-card-actions>
           </q-card>
         </transition>
-    </q-footer>
+    </q-page>
+
     <q-page-sticky
         class="fixed full-width full-height"
         :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
@@ -161,118 +165,36 @@ onMounted(async () => {
 </script>
 <style lang="scss">
 
-$particles: 50;
-$width: 300;
-$height: 300;
-
-$box-shadow: ();
-$box-shadow2: ();
-@for $i from 0 through $particles {
-  $box-shadow: $box-shadow,
-               random($width)-$width / 2 + px
-               random($height)-$height / 1.2 + px
-               $warning;
-  $box-shadow2: $box-shadow2, 0 0 #fff
+.lesson-finish-card::before{
+    content: "";
+    position: absolute;
+    background-image: url("/images/clouds.png");
+    width: 100%;
+    height: 100%;
+    background-size: 150%;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    bottom: 100%;
+    left: 0;
 }
-@mixin keyframes ($animationName) {
-    @-webkit-keyframes #{$animationName} {
-        @content;
-    }
-
-    @-moz-keyframes #{$animationName} {
-        @content;
-    }
-
-    @-o-keyframes #{$animationName} {
-        @content;
-    }
-
-    @-ms-keyframes #{$animationName} {
-        @content;
-    }
-
-    @keyframes #{$animationName} {
-        @content;
-    }
-}
-
-@mixin animation-delay ($settings) {
-    -moz-animation-delay: $settings;
-    -webkit-animation-delay: $settings;
-    -o-animation-delay: $settings;
-    -ms-animation-delay: $settings;
-    animation-delay: $settings;
-}
-
-@mixin animation-duration ($settings) {
-    -moz-animation-duration: $settings;
-    -webkit-animation-duration: $settings;
-    -o-animation-duration: $settings;
-    -ms-animation-duration: $settings;
-    animation-duration: $settings;
-}
-
-@mixin animation ($settings) {
-    -moz-animation: $settings;
-    -webkit-animation: $settings;
-    -o-animation: $settings;
-    -ms-animation: $settings;
-    animation: $settings;
-}
-
-@mixin transform ($settings) {
-    transform: $settings;
-    -moz-transform: $settings;
-    -webkit-transform: $settings;
-    -o-transform: $settings;
-    -ms-transform: $settings;
-}
-
-.finish-page.congrats:after {
-  content: "";
+.bg-rays{
   position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  box-shadow: $box-shadow2;
-  @include animation((1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards));
-  @include animation-delay((1.25s, 1.25s, 1.25s));
-  @include animation-duration((1.25s, 1.25s, 6.25s));
+  width: 150%;
+  height: 150%;
+  left: -25%;
+  top: -25%;
+  opacity: 0.7;
+  animation: rotateRays 25s linear infinite, blinkRays 4s ease;
 }
-@include keyframes(bang) {
-  to {
-    box-shadow:$box-shadow;
-  }
+
+@keyframes rotateRays {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
-@include keyframes(gravity)  {
-  to {
-    @include transform(translateY(200px));
-    opacity: 0;
-  }
+@keyframes blinkRays {
+  0% { opacity: 0; }
+  50% { opacity: 0; }
+  100% { opacity: 0.7; }
 }
-@include keyframes(position) {
-  0%, 19.9% {
-    margin-top: 10vh;
-    margin-left: 40vw;
-  }
-  20%, 39.9% {
-    margin-top: 50vh;
-    margin-left: 30vw;
-  }
-  40%, 59.9% {
-    margin-top: 20vh;
-    margin-left: 70vw
-  }
-  60%, 79.9% {
-    margin-top: 30vh;
-    margin-left: 20vw;
-  }
-  80%, 99.9% {
-    margin-top: 30vh;
-    margin-left: 80vw;
-  }
-}
+
 </style>

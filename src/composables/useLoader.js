@@ -11,7 +11,7 @@ export function useLoader () {
     console.log('hideLoader')
     setTimeout(()=>{
       loader.status = false
-    }, 1500)
+    }, 500)
 
   }
 

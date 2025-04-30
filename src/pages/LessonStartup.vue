@@ -134,6 +134,7 @@ import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, onActivated, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
+import { useLoader } from '../composables/useLoader'
 
 const $q = useQuasar()
 const router = useRouter()
@@ -141,6 +142,8 @@ const route = useRoute()
 const { user } = useUserStore()
 const { lesson, getItem, getSatelliteList, setTarget } = useLesson()
 const { createItem, redoItem } = useExercise()
+const { showLoader, hideLoader } = useLoader()
+
 const dialog = ref(false)
 const activeIndex = ref(0)
 const activeLesson = ref({})
@@ -180,8 +183,9 @@ const redo = async (lessonId) => {
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
 
-onActivated( () => {
-  load()
+onActivated( async () => {
+  await load()
+  hideLoader()
 })
 const load = async () => {
   isDark.value = false
