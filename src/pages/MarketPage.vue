@@ -21,74 +21,44 @@
       </q-card>
       <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1;">
           <q-card-section>
-            <div class="row q-gutter-md q-pb-sm">
-              <div class="col">
-                <q-card class="text-left q-push text-white" style="background-image: url('/images/market/card_background.jpg'); background-size: cover;">
+            <div class="row q-pb-sm">
+              <div :class="`col col-${12/marketOffer.priority} q-pa-sm q-mt-sm`" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOfferIndex-${marketOfferIndex}`">
+                <q-card v-if="marketOffer.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover;`">
                   <q-card-section horizontal class="q-pa-sm items-center">
-                    <q-img src="/images/market/zumrut_pack2.png" width="50%"  style="margin-top: -50px"/>
+                    <q-img :src="marketOffer.image" width="50%"  style="margin-top: -50px"/>
                     <q-card-section class="q-pt-none">
-                      <div class="text-h6"><b>Премиум!</b></div>
-                      <div class="text-caption"><b>Драгоценный бум</b></div>
+                      <div class="text-h6"><b>{{ marketOffer.title }}</b></div>
+                      <div class="text-caption"><b>{{ marketOffer.description }}</b></div>
                     </q-card-section>
                   </q-card-section>
-                  <q-card-section class="q-pt-none">
-                    <div class="flex q-gutter-sm justify-center">
-                      <UserResourceBar :resource="{
-                          quantity: 10,
-                          image: 'https://cdn-icons-png.flaticon.com/128/4858/4858971.png',
-                          color: 'red'
-                        }" dense no-caption size="24px" push/>
-                      <UserResourceBar :resource="{
-                          quantity: 100,
-                          image: 'https://cdn-icons-png.flaticon.com/128/4858/4858971.png',
-                          color: 'indigo'
-                        }" dense no-caption size="24px" push/>
+                  <q-card-section class="q-pa-none">
+                    <div class="row q-gutter-sm items-center justify-center">
+                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" >
+                          <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
+                      </div>
                     </div>
                   </q-card-section>
-                  <q-card-actions class="q-pt-none">
-                    <q-btn class="full-width q-item-blinking" push color="primary">100$</q-btn>
+                  <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
+                    <q-btn class="q-item-blinking full-width" push color="primary">{{ marketOffer.price }} руб.</q-btn>
                   </q-card-actions>
                 </q-card>
-              </div>
-            </div>
-            <div class="row q-gutter-md q-py-sm">
-              <div class="col">
-                <q-card class="text-center">
-                  <q-card-section class="q-pa-sm">
-                      <q-img src="https://cdn.quasar.dev/img/mountains.jpg"/>
+                <q-card v-else-if="marketOffer.priority == 2" class="q-push q-mt-sm text-center">
+                  <q-card-section class="q-pb-none q-px-none">
+                    <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px"/>
                   </q-card-section>
-                  <q-card-section class="q-pa-sm">
-                    <div class="text-subtitle2"><b>Our Changing Planet</b></div>
-                    <div class="flex q-gutter-sm justify-center">
-                      <UserResourceBar :resource="{
-                          quantity: 10,
-                          image: 'https://cdn-icons-png.flaticon.com/128/4858/4858971.png',
-                          color: 'red'
-                        }" dense no-caption size="24px" push/>
+                  <q-card-section class="q-pa-sm q-pt-none">
+                    <div class="text-subtitle1"><b>{{ marketOffer.title }}</b></div>
+                    <div class="text-caption"><b>{{ marketOffer.description }}</b></div>
+                  </q-card-section>
+                  <q-card-section class="q-pa-none">
+                    <div class="row q-gutter-sm items-center justify-center">
+                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" >
+                          <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
+                      </div>
                     </div>
                   </q-card-section>
-                  <q-card-actions class="q-pt-none">
-                    <q-btn class="full-width q-item-blinking" push color="primary">100$</q-btn>
-                  </q-card-actions>
-                </q-card>
-              </div>
-              <div class="col">
-                <q-card class="text-center">
-                  <q-card-section class="q-pa-sm">
-                      <q-img src="https://cdn.quasar.dev/img/mountains.jpg"/>
-                  </q-card-section>
-                  <q-card-section class="q-pa-sm">
-                    <div class="text-subtitle2"><b>Our Changing Planet</b></div>
-                    <div class="flex q-gutter-sm justify-center">
-                      <UserResourceBar :resource="{
-                          quantity: 10,
-                          image: 'https://cdn-icons-png.flaticon.com/128/4858/4858971.png',
-                          color: 'red'
-                        }" dense no-caption size="24px" push/>
-                    </div>
-                  </q-card-section>
-                  <q-card-actions class="q-pt-none">
-                    <q-btn class="full-width q-item-blinking" push color="primary">100$</q-btn>
+                  <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
+                    <q-btn class="q-item-blinking full-width" push color="primary">{{ marketOffer.price }} RUB</q-btn>
                   </q-card-actions>
                 </q-card>
               </div>
@@ -107,18 +77,18 @@ import UserResourceBar from '../components/UserResourceBar.vue'
 
 const { user, getItem } = useUserStore()
 
-const skills = ref([])
+const marketOffers = ref([])
 const error = ref(false)
 const headerShowForce = ref(false)
 
 const load = async function (filter) {
-  const skillListResponse = await api.skill.getList({ mode: 'by_user' })
-  if (skillListResponse.error) {
-    error.value = skillListResponse
-    skills.value = []
+  const marketOfferListResponse = await api.market_offer.getList({})
+  if (marketOfferListResponse.error) {
+    error.value = marketOfferListResponse
+    marketOffers.value = []
     return []
   }
-  skills.value = skillListResponse
+  marketOffers.value = marketOfferListResponse
 }
 const reload = async function () {
   await getItem()

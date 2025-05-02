@@ -179,4 +179,9 @@ export class Api extends ApiService{
             return this.post('auth', 'signIn', params);
         },
     }
+    market_offer = {
+      getList: (params) => {
+          return this.post('marketOffer', 'getList', params)
+      }
+    }
 }
