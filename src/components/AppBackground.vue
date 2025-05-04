@@ -11,14 +11,18 @@
 
 <style>
 .app-background{
-  position: fixed;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 .app-background.app-background-visible{
     display: block !important;
 
 }
 .app-background .app-background-color{
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -33,7 +37,7 @@
     animation: 8s linear 0s infinite  backgroundGradientMovement;
 }
 .app-background .app-background-color-2{
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -63,7 +67,7 @@
     animation: 8s linear 0s infinite  backgroundPatternMovement;
 }*/
 .app-background .app-background-image{
-    position: fixed;
+    position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;
@@ -79,7 +83,7 @@
 }
 
 .app-background .app-background-image-far{
-    position: fixed;
+    position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;

@@ -5,21 +5,15 @@
           <div class="full-width flex" >
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size" class="absolute" color="grey-2">
-                <img :src="(starsLevel >= 1) ? '/images/star_21.png' : '/images/star_21_inactive.png'">
-              </q-avatar>
+                <img :src="(starsLevel >= 1) ? '/images/star.png' : '/images/star_inactive.png'"  :width="props.size" style="filter: drop-shadow(0px 2px 3px #000000a1);">
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size" class="absolute" color="grey-2">
-                <img :src="(starsLevel >= 2) ? '/images/star_22.png' : '/images/star_22_inactive.png'">
-              </q-avatar>
+                <img :src="(starsLevel >= 2) ? '/images/star.png' : '/images/star_inactive.png'" :width="props.size" style="filter: drop-shadow(0px 2px 3px #000000a1);">
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-              <q-avatar :size="props.size" class="absolute" color="grey-2">
-                <img :src="(starsLevel == 3) ? '/images/star_23.png' : '/images/star_23_inactive.png'">
-              </q-avatar>
+                <img :src="(starsLevel == 3) ? '/images/star.png' : '/images/star_inactive.png'" :width="props.size" style="filter: drop-shadow(0px 2px 3px #000000a1);">
             </span>
           </div>
           <q-progress-bar :dark="props.dark" :value="value" :backfaceValue="backfaceValue" :size="props.size" :color="color"/>
@@ -47,7 +41,7 @@
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
             <q-item dense clickable v-ripple :class="(starsLevel >= 1) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                  <img src="/images/star_21.png" width="40px">
+                  <img src="/images/star_1x.png" width="30px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -60,7 +54,7 @@
 
             <q-item dense clickable v-ripple :class="(starsLevel >= 2) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                  <img src="/images/star_22.png" width="40px">
+                  <img src="/images/star_2x.png" width="30px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -73,7 +67,7 @@
 
             <q-item dense clickable v-ripple :class="(starsLevel == 3) ? 'bg-amber-1' : ''">
               <q-item-section avatar>
-                  <img src="/images/star_23.png" width="40px">
+                  <img src="/images/star_3x.png" width="30px">
               </q-item-section>
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
@@ -173,9 +167,6 @@ onMounted(() => {
 }
 .lesson-progress.progress-dark{
   --border-color: white;
-  .star-item-delimiter .q-avatar:not(.active){
-    box-shadow: 0 0 0 3px #e0e0e038;
-  }
 }
 .star-item{
   margin: 0 1px;
@@ -193,24 +184,12 @@ onMounted(() => {
 }
 .star-item-delimiter{
   width: 0px;
-  &:before{
-  }
-  .q-avatar{
+  img{
+    position: absolute;
     z-index: 10;
     top: 0px;
     left: -15px;
-    box-shadow: 0 0 0 2px #ffaa2c;
-    background: white !important;
-    &:not(.active) {
-      box-shadow: 0 0 0 2px #e0e0e0 ;
-    }
-  }
-}
-.is-finished{
-  .star-item-delimiter{
-    .q-avatar{
-      box-shadow: 0 0 0 2px #22bc46;
-    }
+    overflow: visible;
   }
 }
 

@@ -1,5 +1,7 @@
 <template>
-  <AppBackground/>
+  <div class="fixed-full">
+    <AppBackground/>
+  </div>
   <q-layout view="hHh LpR fFf">
       <router-view v-slot="{ Component }">
         <keep-alive :exclude="['LessonItem', 'LessonFinish']">

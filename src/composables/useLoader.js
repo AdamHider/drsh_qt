@@ -8,7 +8,7 @@ export function useLoader () {
     loader.status = true
   }
   function hideLoader () {
-    console.log('hideLoader')
+    if(loader.status == false) return
     setTimeout(()=>{
       loader.status = false
     }, 500)

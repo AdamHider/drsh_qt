@@ -19,52 +19,60 @@
             </div>
           </q-card-section>
       </q-card>
-      <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1;">
-          <q-card-section>
+      <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
+          <AppBackground/>
+          <q-card-section style=" margin-top: -50px;">
             <div class="row q-pb-sm">
               <div :class="`col col-${12/marketOffer.priority} q-pa-sm q-mt-sm`" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOfferIndex-${marketOfferIndex}`">
-                <q-card v-if="marketOffer.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover;`">
+                <q-card v-if="marketOffer.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover; margin-top: 40px;`">
                   <q-card-section horizontal class="q-pa-sm items-center">
-                    <q-img :src="marketOffer.image" width="50%"  style="margin-top: -50px"/>
+                    <q-img :src="marketOffer.image" width="50%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
                     <q-card-section class="q-pt-none">
                       <div class="text-h6"><b>{{ marketOffer.title }}</b></div>
-                      <div class="text-caption"><b>{{ marketOffer.description }}</b></div>
+                      <div class="text-caption">{{ marketOffer.description }}</div>
                     </q-card-section>
                   </q-card-section>
                   <q-card-section class="q-pa-none">
                     <div class="row q-gutter-sm items-center justify-center">
-                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" >
+                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
                           <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                       </div>
                     </div>
                   </q-card-section>
                   <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
-                    <q-btn class="q-item-blinking full-width" push color="primary">{{ marketOffer.price }} руб.</q-btn>
+                    <q-btn class="q-item-blinking full-width" push color="primary" @click="openBuyDialog()">{{ marketOffer.price }} руб.</q-btn>
                   </q-card-actions>
                 </q-card>
-                <q-card v-else-if="marketOffer.priority == 2" class="q-push q-mt-sm text-center">
+                <q-card v-else-if="marketOffer.priority == 2" class="q-push q-mt-sm text-white text-center" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover;`">
                   <q-card-section class="q-pb-none q-px-none">
-                    <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px"/>
+                    <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
                   </q-card-section>
                   <q-card-section class="q-pa-sm q-pt-none">
                     <div class="text-subtitle1"><b>{{ marketOffer.title }}</b></div>
-                    <div class="text-caption"><b>{{ marketOffer.description }}</b></div>
+                    <div class="text-caption">{{ marketOffer.description }}</div>
                   </q-card-section>
                   <q-card-section class="q-pa-none">
                     <div class="row q-gutter-sm items-center justify-center">
-                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" >
+                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
                           <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                       </div>
                     </div>
                   </q-card-section>
                   <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
-                    <q-btn class="q-item-blinking full-width" push color="primary">{{ marketOffer.price }} RUB</q-btn>
+                    <q-btn class="q-item-blinking full-width" push color="primary" @click="openBuyDialog()">{{ marketOffer.price }} RUB</q-btn>
                   </q-card-actions>
                 </q-card>
               </div>
             </div>
           </q-card-section>
       </q-card>
+      <q-dialog v-model="buyDialog">
+        <q-card>
+          <q-card-section>
+            <div class="text-subtitle1">Buy Dialog</div>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
     </q-page>
   </q-page-container>
 </template>
@@ -74,12 +82,14 @@ import { ref, onActivated, watch } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import AppBackground from 'components/AppBackground.vue'
 
 const { user, getItem } = useUserStore()
 
 const marketOffers = ref([])
 const error = ref(false)
 const headerShowForce = ref(false)
+const buyDialog = ref(false)
 
 const load = async function (filter) {
   const marketOfferListResponse = await api.market_offer.getList({})
@@ -90,9 +100,8 @@ const load = async function (filter) {
   }
   marketOffers.value = marketOfferListResponse
 }
-const reload = async function () {
-  await getItem()
-  load()
+const openBuyDialog = function () {
+  buyDialog.value = true
 }
 onActivated(() => {
   load()

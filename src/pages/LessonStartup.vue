@@ -235,9 +235,6 @@ watch(() => activeLesson.value, () => {
   isDark.value = activeLesson.value.is_blocked
   activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == activeLesson.value.id)
 })
-watch(() => route.params.lesson_id, () => {
-  if(route.name == 'lesson-startup') load()
-})
 
 
 </script>
