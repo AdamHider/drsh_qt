@@ -114,7 +114,7 @@
                 color="primary"
                 icon-right="play_arrow"
                 class="full-width"
-                :resources="activeLesson.cost ?? {}"
+                :resources="activeLesson.cost ?? []"
                 @click="start(activeLesson.id)"></q-spend-button>
             </q-card-actions>
           </q-card>

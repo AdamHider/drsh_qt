@@ -26,7 +26,7 @@
             <span class="text-caption">Изучено: </span>
             <span><b :class="(value > 0 && value < 100) ? 'text-warning': ''">{{(value) ? value : 0}}%</b></span>
           </div>
-          <div>
+          <div v-if="reward">
             <q-btn flat round @click="rewardsDialog = true" :color="(props.dark) ? 'white' : 'primary'" icon="help_outline"/>
           </div>
         </div>
