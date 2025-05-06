@@ -105,7 +105,7 @@
                     <div class="text-subtitle1"><b>Активные эффекты</b></div>
                 </q-card-section>
                 <q-card-section class="q-pa-none q-pb-sm">
-                    <UserSettingSlider :settings="user.active?.data.settings"/>
+                    <UserSettingModifierSlider :modifiers="user.active?.data.modifiers"/>
                 </q-card-section>
               </div>
               <div class="relative-position">
@@ -158,7 +158,7 @@
 import { useUserStore } from '../stores/user'
 import AchievementSlider from '../components/AchievementSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import UserSettingSlider from '../components/UserSettingSlider.vue'
+import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 
 import { useRoute } from 'vue-router'

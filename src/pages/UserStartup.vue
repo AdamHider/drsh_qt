@@ -1,6 +1,6 @@
 <template>
     <q-page-container>
-        <q-page class="flex justify-center items-end  full-width text-center">
+        <q-page :class="`flex justify-center items-end  full-width text-center ${(tapped) ? 'zoomed' : ''}`">
           <q-card flat class="bg-transparent text-white">
               <q-card-section v-if="user.active?.data.id" class="d-flex flex-no-wrap justify-space-between align-center">
                   <h4 class="text-h6">{{user.active?.data.name}}</h4>
@@ -75,11 +75,11 @@ const signUp = () => {
   closeConfirmed.value = true
   return router.push('/authorization/sign-up')
 }
-watch(user, (newValue, oldValue) => {
-  if (newValue.id) return router.push('/user')
+watch(() => user.active.data.id, (newValue, oldValue) => {
+  if (user.active.data.id) return router.push('/user')
 })
 onBeforeRouteLeave((to, from) => {
-  if (!closeConfirmed.value) {
+  if (!closeConfirmed.value && to.fullPath !== '/user') {
     closeDialog.value = true
     return false
   }
@@ -90,8 +90,12 @@ onBeforeRouteLeave((to, from) => {
 <style scoped>
 .q-page{
   background-image: url('/images/splash.jpg');
-  background-size: cover;
+  background-size: auto 100%;
   background-position: center center;
+  transition: 0.3s all ease;
+}
+.q-page.zoomed{
+  background-size: auto 110%;
 }
 .tap-overlay{
   position: fixed;

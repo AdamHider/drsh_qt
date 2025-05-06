@@ -45,8 +45,6 @@ export default route(function (/* { store, ssrContext } */) {
     const fromSplitted = from.fullPath.split('/')
     const toSplitted = to.fullPath.split('/')
 
-    console.log(fromSplitted)
-    console.log(toSplitted)
     const fromRoot = fromSplitted.length == 2
     const toRoot = toSplitted.length == 2
     if (!fromRoot && IsItABackButton && toSplitted[1] !== fromSplitted[1]) {

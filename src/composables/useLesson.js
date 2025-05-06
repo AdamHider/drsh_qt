@@ -18,7 +18,6 @@ export function useLesson () {
       const lessonListResponse = await api.lesson.getList({})
       lesson.list = lessonListResponse
     } catch (e) {
-      console.log(e)
       throw new Error('Courses are null: ' + e)
     }
   }

@@ -169,7 +169,6 @@ const saveChanges = async function () {
     } else {
       formData.fields[saved.data].errors = saved.message
     }
-    console.log(formData.fields[saved.data])
   }
 }
 </script>

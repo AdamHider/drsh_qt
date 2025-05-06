@@ -97,7 +97,6 @@ onMounted(() => {
   emit('update:onUpdate', model.value)
 })
 onDeactivated(() => {
-  console.log('deactivated')
   model.value = props.modelValue
   emit('update:onUpdate', model.value)
 })

@@ -45,7 +45,6 @@ const renderFields = () => {
     }
     formData.fields.push({ value, options, index: field.index, answer: field.answer, label: field.label })
   }
-  console.log(formData.fields)
   emits('update-answer', formData.fields)
 }
 

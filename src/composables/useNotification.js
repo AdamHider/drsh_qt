@@ -55,7 +55,6 @@ export function useNotification () {
       }
     });
     evtSource.addEventListener('tick', (event) => {
-      console.log(event.data)
     });
     evtSource.onerror = (event) => {
       console.error(event)

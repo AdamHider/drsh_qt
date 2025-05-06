@@ -10,7 +10,6 @@ export function useAppMessage () {
   function showMessage (text) {
     message.text = text
     message.visible = true
-    console.log(message)
   }
 
   return {

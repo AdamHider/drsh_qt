@@ -162,7 +162,6 @@ watch(() => formData.fields.email.value, async (currentValue, oldValue) => {
   formData.fields.email.errors = ''
   if (!currentValue || /.+@.+\..+/.test(currentValue) === false) return
   const result = await checkEmail({ email: currentValue })
-  console.log(result.messages)
   if (result.error) {
     formData.fields.email.errors = result.messages.error
     formData.valid = false

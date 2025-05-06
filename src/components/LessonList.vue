@@ -171,7 +171,6 @@ onActivated(async () => {
     selectedLesson.value = 0;
   }
   load()
-  console.log('activated')
 });
 watch( () => course.active?.id, async () => {
   load()

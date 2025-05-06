@@ -66,7 +66,6 @@ const load = async function () {
     return []
   }
   achievements.value = composeList(achievementListResponse)
-  console.log(achievements.value)
 }
 const composeList = function (achievementList) {
   return achievementList.reduce((result, obj) => {
