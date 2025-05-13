@@ -154,7 +154,7 @@ const isDark = ref(false)
 const change = (index) => {
   dialog.value = false
   expandDescription.value = false
-  activeLesson.value = lesson.active.satellites?.list[index]
+  if(lesson.active.satellites) activeLesson.value = lesson.active.satellites[index]
   setTimeout(() => {
     dialog.value = true
   }, 250)
@@ -200,7 +200,7 @@ const load = async () => {
   activeIndex.value = 0;
 
   if(lesson.target){
-    activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == lesson.target)
+    activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == lesson.target)
     if(activeIndex.value == -1){
       activeIndex.value = 0;
       //setTarget(null);
@@ -211,7 +211,7 @@ const load = async () => {
 const goToSattelite = (unblockLesson) => {
   if(unblockLesson.parent_id) {
     if(unblockLesson.parent_id == route.params.lesson_id) {
-      activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == unblockLesson.id)
+      activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == unblockLesson.id)
       change(activeIndex.value)
     } else {
       setTarget(unblockLesson.id)
@@ -233,7 +233,7 @@ onBeforeRouteLeave((to, from, next) => {
 watch(() => activeLesson.value, () => {
   if(!activeLesson.value) return
   isDark.value = activeLesson.value.is_blocked
-  activeIndex.value = lesson.active.satellites?.list.findIndex((item) => item.id == activeLesson.value.id)
+  activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == activeLesson.value.id)
 })
 
 

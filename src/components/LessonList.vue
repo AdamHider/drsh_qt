@@ -29,9 +29,9 @@
             <div v-if="transitionTrigger">
               <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`" @click="openLesson(courseSectionItem.id)">
                 <q-card-section class="text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto">
-                  <div v-if="courseSectionItem.satellites?.preview_list" class="satellite-list">
+                  <div v-if="courseSectionItem.satellites" class="satellite-list">
                     <div
-                      v-for="(satellite, index) in courseSectionItem.satellites.preview_list" :key="index"
+                      v-for="(satellite, index) in courseSectionItem.satellites" :key="index"
                       class="transparent satellite-item nopadding"
                       :style="{
                         animationDelay: `-${satellite.delay}s`,

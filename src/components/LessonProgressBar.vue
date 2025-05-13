@@ -39,7 +39,7 @@
         <q-card class="rounded-b-0">
           <q-list bordered separator>
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
-            <q-item dense clickable v-ripple :class="(starsLevel >= 1) ? 'bg-amber-1' : ''">
+            <q-item dense clickable v-ripple :class="(starsLevel >= 1) ? 'bg-green-1' : ''">
               <q-item-section avatar>
                   <img src="/images/star_1x.png" width="30px">
               </q-item-section>
@@ -50,9 +50,13 @@
                   </div>
                 </div>
               </q-item-section>
+              <q-item-section side >
+                <q-icon v-if="starsLevel >= 1" name="check_circle" color="positive" />
+                <q-icon v-else name="lock" color="grey-5" />
+              </q-item-section>
             </q-item>
 
-            <q-item dense clickable v-ripple :class="(starsLevel >= 2) ? 'bg-amber-1' : ''">
+            <q-item dense clickable v-ripple :class="(starsLevel >= 2) ? 'bg-green-1' : ''">
               <q-item-section avatar>
                   <img src="/images/star_2x.png" width="30px">
               </q-item-section>
@@ -63,9 +67,13 @@
                   </div>
                 </div>
               </q-item-section>
+              <q-item-section side >
+                <q-icon v-if="starsLevel >= 2" name="check_circle" color="positive" />
+                <q-icon v-else name="lock" color="grey-5" />
+              </q-item-section>
             </q-item>
 
-            <q-item dense clickable v-ripple :class="(starsLevel == 3) ? 'bg-amber-1' : ''">
+            <q-item dense clickable v-ripple :class="(starsLevel == 3) ? 'bg-green-1' : ''">
               <q-item-section avatar>
                   <img src="/images/star_3x.png" width="30px">
               </q-item-section>
@@ -75,6 +83,10 @@
                     <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                   </div>
                 </div>
+              </q-item-section>
+              <q-item-section side >
+                <q-icon v-if="starsLevel == 3" name="check_circle" color="positive" />
+                <q-icon v-else name="lock" color="grey-5" />
               </q-item-section>
             </q-item>
           </q-list>

@@ -24,7 +24,7 @@ export function useLesson () {
   async function getSatelliteList () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
     lesson.active.satellites = lessonResponse
-    lesson.active.satellites.list.push(lesson.active)
+    lesson.active.satellites.push(lesson.active)
   }
   async function getDailyList () {
     const dailyLessonResponse = await api.lesson.getDailyList({ lesson_id: lesson.active.id })
