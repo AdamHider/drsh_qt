@@ -11,25 +11,35 @@
             <div class="text-grey text-caption">{{achievementGroup.description}}</div>
           </div>
           <div>
-            <q-list>
-                <q-item v-for="(achievementItem, achievementIndex) in achievementGroup.list" :key="achievementIndex">
-                  <q-item-section>
-                    <q-card class="q-push">
-                      <q-card-section class="q-py-sm">
-                        <div :class="`flex justify-between q-pb-sm ${(achievementItem.progress.current >= achievementItem.progress.target) ? 'items-center' : 'items-end'}`">
-                          <div>
-                            <div class="text-bold">{{achievementItem.title}}</div>
-                            <div class="text-grey text-caption">{{achievementItem.description}}</div>
-                          </div>
-                          <b v-if="achievementItem.progress.current >= achievementItem.progress.target"><q-icon size="25px" color="positive" name="done"></q-icon></b>
-                          <b v-else>{{achievementItem.progress.current}}/{{achievementItem.progress.target}}</b>
-                        </div>
-                        <q-progress-bar :value="achievementItem.progress.percentage" size="25px" color="positive"/>
-                      </q-card-section>
-                    </q-card>
-                  </q-item-section>
-                </q-item>
-              </q-list>
+            <swiper
+                :slides-per-view="2.4"
+                :centeredSlides="false"
+                :navigation="false"
+              >
+                <swiper-slide v-for="(achievementItem, achievementIndex) in achievementGroup.list" :key="achievementIndex">
+                  <div class="text-center">
+                    <q-circular-progress
+                      show-value
+                      font-size="10px"
+                      class="q-ma-md"
+                      :color="(achievementItem.progress.percentage) >= 1 ? 'positive' : 'primary'"
+                      :value="(achievementItem.progress.percentage)"
+                      size="110px"
+                      :thickness="0.2"
+                      track-color="grey-3"
+                    >
+                      <q-avatar size="102px">
+                        <img :src="achievementItem.image">
+                      </q-avatar>
+                    </q-circular-progress>
+                    <div>
+                      <b>{{achievementItem.progress.current}}/{{achievementItem.progress.target}}</b>
+                      <div class="text-bold">{{achievementItem.title}}</div>
+                      <div class="text-grey text-caption">{{achievementItem.description}}</div>
+                    </div>
+                  </div>
+                </swiper-slide>
+              </swiper>
             </div>
         </div>
     </q-page>

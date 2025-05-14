@@ -115,14 +115,7 @@
                     <router-link to="/achievements">Показать все</router-link>
                 </q-card-section>
                 <q-card-section class="q-pa-none q-pb-sm">
-                    <AchievementSlider
-                        :slidesPerView=2.4
-                        :centerAligned="false"
-                        :withButton="false"
-                        slideHeight="100"
-                        :navigation="false"
-                        captionMode="full"
-                    />
+                    <AchievementList/>
                 </q-card-section>
               </div>
           </q-card>
@@ -156,7 +149,7 @@
 
 <script setup>
 import { useUserStore } from '../stores/user'
-import AchievementSlider from '../components/AchievementSlider.vue'
+import AchievementList from '../components/AchievementList.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
