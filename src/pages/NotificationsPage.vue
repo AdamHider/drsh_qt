@@ -5,14 +5,15 @@
     </q-app-header>
     <q-page class="bg-white"  style="padding-top: 50px; padding-bottom: 48px;">
         <q-list v-if="notifications.length > 0" class="q-my-md"  >
-          <q-item v-for="(notification, notificationIndex) in notifications" :key="`notificationIndex-${notificationIndex}`" :to="notification.link" class="q-mb-sm">
-            <q-item-section avatar>
-                <q-img :src="notification.data.image" width="60px" no-spinner/>
-            </q-item-section>
+          <q-item v-for="(notification, notificationIndex) in notifications" :key="`notificationIndex-${notificationIndex}`" :to="notification.link">
             <q-item-section>
-              <q-item-label caption>{{ notification.time_ago	}}</q-item-label>
-              <q-item-label class="text-subtitle1"><b>{{ notification.data.title }}</b></q-item-label>
-              <q-item-label class="text-caption">{{ notification.data.description }}</q-item-label>
+              <q-card class="q-push">
+                <q-card-section>
+                  <q-item-label caption>{{ notification.time_ago	}}</q-item-label>
+                  <q-item-label class="text-subtitle1"><b>{{ notification.data.title }}</b></q-item-label>
+                  <q-item-label class="text-caption">{{ notification.data.description }}</q-item-label>
+                </q-card-section>
+              </q-card>
             </q-item-section>
           </q-item>
         </q-list>

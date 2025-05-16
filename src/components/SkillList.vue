@@ -26,9 +26,12 @@
       </div>
     </div>
     <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" full-width position="bottom" class="overflow-visible">
-      <q-card :class="`q-pt-sm rounded-b-0 skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
-        <q-img width="120px" :src="currentSkill.image" no-spinner/>
-        <q-card-section>
+      <q-card :class="`rounded-b-0 skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
+        <div class="q-pa-sm" style="background: center / contain no-repeat url('/images/rays.png');">
+          <q-img width="150px" :src="currentSkill.image" no-spinner/>
+        </div>
+
+        <q-card-section class="q-pt-none">
           <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
           <div class="text-caption">{{ currentSkill.description }}</div>
         </q-card-section>
@@ -138,6 +141,7 @@ onBeforeRouteLeave((to, from) => {
 .skill-card.is_available { background: $gradient-primary !important; color: white; }
 .skill-card.is_gained { background: $gradient-positive !important; color: white; }
 .skill-card.is_blocked .avatar { filter: grayscale(1); }
+
 
 @mixin line               { height: 0; border-bottom-width: 4px; }
 @mixin angle_top_left     { border-top-width: 4px; border-left-width: 4px; border-top-left-radius: 10px; }
