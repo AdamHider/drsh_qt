@@ -23,7 +23,11 @@ export function useLesson () {
   }
   async function getSatelliteList () {
     const lessonResponse = await api.lesson.getSatellites({ lesson_id: lesson.active.id })
-    lesson.active.satellites = lessonResponse
+    if(lessonResponse.error){
+      lesson.active.satellites = []
+    } else {
+      lesson.active.satellites = lessonResponse
+    }
     lesson.active.satellites.push(lesson.active)
   }
   async function getDailyList () {

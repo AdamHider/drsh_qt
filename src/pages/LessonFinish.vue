@@ -30,9 +30,9 @@
           leave-active-class="animated zoomOut">
           <q-card flat class="position-relative text-center text-dark rounded-none q-pt-sm lesson-finish-card" style="z-index: 1; margin-top: -50px;" v-if="transitionTrigger">
             <q-card-section class="q-pb-none q-pt-sm text-positive"  style="margin-top: -100px; z-index: 1">
-              <q-img v-if="lesson.active.exercise.data.totals.reward_level >= 1" src="/images/lesson_finish_not_bad.png"/>
-              <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 2" src="/images/lesson_finish_not_bad.png"/>
-              <q-img v-else-if="lesson.active.exercise.data.totals.reward_level == 3" src="/images/lesson_finish_not_bad.png"/>
+              <q-img v-if="lesson.active.exercise.data.totals.reward_level == 3" src="/images/lesson_finish_excellent.png"/>
+              <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 2" src="/images/lesson_finish_good.png"/>
+              <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 1" src="/images/lesson_finish_not_bad.png"/>
               <q-img v-else src="/images/lesson_finish_fail.png"/>
             </q-card-section>
             <q-card-section class="q-pb-sm q-pt-sm">
