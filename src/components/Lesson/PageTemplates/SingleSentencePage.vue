@@ -1,15 +1,15 @@
 <template>
   <div class="full-width" style="padding-top: 50px">
-    <q-card v-if="lesson.active.page?.header?.image" class="q-ma-md">
+    <q-card v-if="text.image" class="q-ma-md">
       <q-card-section class="q-pa-none ">
-        <q-img
+          <q-img v-if="text.image"
             class="rounded-borders"
-            cover
-            :src="`${CONFIG.API_HOST}/${lesson.active.page?.header?.image}`" />
+            :src="`${CONFIG.API_HOST}/${text.image}`"
+          />
         </q-card-section>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>
-    <q-list class="q-mb-md">
+    <q-list class="q-mb-md text-center">
       <q-item>
         <q-item-section>
           <q-item-label><div class="text-subtitle1 text-bold" v-html="text.text"></div></q-item-label>
@@ -32,7 +32,8 @@ const { lesson } = useLesson()
 const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
 const text = reactive({
-  text: ''
+  text: '',
+  image: ''
 })
 
 const renderData = () => {
@@ -44,6 +45,8 @@ const renderData = () => {
       text.text = text.text.replace(`{{input${inputIndex}}}`, `<span id="input_${inputIndex}"></span>`)
     }
   }
+  text.image = lesson.active.page.data.image
+  console.log(text.image)
 }
 
 renderData()
