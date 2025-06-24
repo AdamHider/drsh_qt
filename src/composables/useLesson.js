@@ -5,7 +5,7 @@ const lesson = reactive({
   active: {},
   list: [],
   dailyList: [],
-  target: null
+  target: 0
 })
 
 export function useLesson () {

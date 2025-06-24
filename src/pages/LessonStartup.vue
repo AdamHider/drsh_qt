@@ -197,14 +197,10 @@ const load = async () => {
     return
   }
   await getSatelliteList()
-  activeIndex.value = 0;
-
-  if(lesson.target){
-    activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == lesson.target)
-    if(activeIndex.value == -1){
-      activeIndex.value = 0;
-      //setTarget(null);
-    }
+  activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == lesson.target);
+  if(activeIndex.value == -1){
+    activeIndex.value = 0;
+    setTarget(0);
   }
   change(activeIndex.value)
 }
@@ -226,7 +222,7 @@ onBeforeRouteLeave((to, from, next) => {
   transitionTrigger.value = false
   isDark.value = false
   setTimeout(() => {
-    setTarget(null)
+    setTarget(0)
     next()
   }, 250)
 })

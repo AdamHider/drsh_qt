@@ -6,7 +6,7 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            :class="`q-lesson-field q-py-xs ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
           >
             <q-chip
               :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
@@ -67,7 +67,7 @@
     </div>
     <q-card v-else-if="!lesson.active.page?.answer?.is_finished" flat class="text-dark">
       <q-card-section class="text-center">
-        <div class="text-h6">Выберите поле</div>
+        <div class="text-h6 text-bold">Выберите поле</div>
         <div class="text-subtitle2">И здесь появятся варианты ответа</div>
       </q-card-section>
     </q-card>

@@ -87,26 +87,28 @@
                 </q-list>
               </div>
             </q-card-section>
-            <q-card-actions class="justify-center q-pa-md">
-              <q-btn
-                push
-                label="Заново"
-                icon="replay"
-                color="gradient-orange"
-                class="q-px-md q-mr-sm"
-                @click="redo(lesson.active.id)"/>
-              <q-btn
-                push
-                label="Далее"
-                icon-right="chevron_right"
-                color="gradient-green"
-                class="q-px-md q-mr-sm"
-                @click="$router.go(-1)"/>
-            </q-card-actions>
           </q-card>
         </transition>
     </q-page>
 
+    <q-footer expand position="bottom" class="bg-white">
+      <div class="justify-center q-pa-md border-grey border-t-sm flex">
+        <q-btn
+          push
+          label="Заново"
+          icon="replay"
+          color="gradient-orange"
+          class="q-px-md q-mr-sm"
+          @click="redo()"/>
+        <q-btn
+          push
+          label="Далее"
+          icon-right="chevron_right"
+          color="gradient-green"
+          class="q-px-md q-mr-sm"
+          @click="next()"/>
+      </div>
+    </q-footer>
     <q-page-sticky
         class="fixed full-width full-height"
         :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
@@ -130,7 +132,7 @@ import UserResourceBar from '../components/UserResourceBar.vue'
 
 const route = useRoute()
 const router = useRouter()
-const { lesson, getItem } = useLesson()
+const { lesson, getItem, setTarget } = useLesson()
 const { redoItem } = useExercise()
 
 const transitionTrigger = ref(false)
@@ -154,10 +156,16 @@ const load = async () => {
   }
 }
 
-const redo = async (lessonId) => {
-  const exerciseRedoCreated = await redoItem(lessonId)
-  if (!exerciseRedoCreated.error) router.replace(`/lesson-${lessonId}`)
+const redo = async () => {
+  const exerciseRedoCreated = await redoItem(lesson.active.id)
+  if (!exerciseRedoCreated.error) router.replace(`/lesson-${lesson.active.id}`)
 }
+
+const next = async () => {
+  setTarget(lesson.active.id)
+  router.go(-1)
+}
+
 onMounted(async () => {
   await load()
   if(!lesson.active.exercise?.finished_at) router.go(-1)
