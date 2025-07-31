@@ -5,7 +5,7 @@
         <div class="text-subtitle1">
           <b>Новые миры</b>
         </div>
-        <div>
+        <div class="text-caption">
           Уже очень скоро
         </div>
       </q-card-section>
@@ -18,7 +18,7 @@
     >
       <div
         v-for="(courseSectionItem, courseSectionIndex) in courseSection.list" :key="`courseSectionIndex${courseSectionIndex}`"
-        :class="`planet-block row q-px-sm ${courseSectionIndex % 2 ? 'justify-end' : 'justify-start'} ${courseSectionItem.is_blocked === true ? 'is-blocked' : ''} ${courseSectionItem.is_initial ? 'is-initial' : ''}`"
+        :class="`planet-block row q-px-sm q-py-md ${courseSectionIndex % 2 ? 'justify-end' : 'justify-start'} ${courseSectionItem.is_blocked === true ? 'is-blocked' : ''} ${courseSectionItem.is_initial ? 'is-initial' : ''}`"
       >
         <div :class="`col-6`" style="position: relative; z-index: 10">
           <transition
@@ -143,8 +143,12 @@ const composeList = () => {
   courseSections.value = result
 };
 const openLesson = (lessonId) => {
-  showLoader()
-  router.push(`/lesson-startup-${lessonId}`);
+  transitionTrigger.value = false;
+  selectedLesson.value = lessonId;
+  setTimeout(() => {
+    router.push(`/lesson-startup-${selectedLesson.value}`);
+    transitionTrigger.value = true;
+  }, 250);
 };
 const onIntersection = (entry) => {
   const groupIndex = entry.target.attributes.groupKey?.value

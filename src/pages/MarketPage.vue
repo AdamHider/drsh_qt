@@ -1,10 +1,12 @@
 <template>
   <q-page-container>
-    <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce">
+    <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce" contentClass="justify-between">
       <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
-      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
-      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.isonit" dense no-caption size="24px" push/>
+      <div class="flex full-width">
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.isonit" dense no-caption size="24px" push/>
+      </div>
     </q-app-header>
     <q-page class="column justify-center content-start text-center full-width" style="padding-top: 50px;">
       <div class="page-background fixed-top full-width"  style="height: 300px; background-image: url('/images/market/main_background.jpg'); background-size: cover; background-position: bottom;"></div>

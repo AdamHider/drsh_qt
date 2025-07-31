@@ -11,7 +11,7 @@
   >
     <q-tabs content-class="allow-overflow">
       <div class="relative-position">
-        <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры и выполнять задания по спасению галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
+        <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры, солнычные системы и целые галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
         <q-route-tab  :to="`${routes.course.link}`" exact replace>
           <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
           <q-badge v-show="routes.course.is_updated" color="red" rounded floating />

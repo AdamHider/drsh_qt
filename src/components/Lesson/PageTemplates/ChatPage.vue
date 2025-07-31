@@ -100,5 +100,4 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
     window.scrollTo(0, document.body.scrollHeight)
   }, 100)
 })
-
 </script>

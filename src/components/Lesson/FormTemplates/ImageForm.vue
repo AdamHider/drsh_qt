@@ -5,32 +5,15 @@
                 <div class="row justify-between ">
                   <div class="col-6 q-pa-xs" v-for="(image, imageIndex) in formData.fields[index].options" :key="imageIndex">
                     <q-card v-if="!formData.fields[index].answer"
-                      :class="`q-lesson-radio rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
+                      :class="`q-lesson-radio cursor-pointer rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
                       @click="formData.fields[index].value.text = image.text; playAudio(image.audio_link)">
-                      <q-card-section class="q-pa-sm ">
-                        <q-img
-                          v-if="image.image"
-                          :ratio="1"
-                          :data-audio="image.audio_link"
-                          class="rounded-sm play-audio"
-                          :src="`${CONFIG.API_HOST}/${image.image}`"
-                        />
-                      </q-card-section>
-                      <q-card-section class="text-center q-pt-sm text-subtitle1 ">
+                      <q-card-section class="text-center text-subtitle1 ">
                         <b>{{ transliterateHTML(image.text) }}</b>
                       </q-card-section>
                     </q-card>
+
                     <q-card v-else :class="`q-lesson-radio rounded-sm ${(formData.fields[index].answer.answer == image.text) ? 'is-correct' : (formData.fields[index].answer.value == image.text) ? 'is-incorrect' : ''}`">
-                        <q-card-section class="q-pa-sm">
-                          <q-img
-                            v-if="image.image"
-                            :ratio="1"
-                            :data-audio="image.audio_link"
-                            class="rounded-sm"
-                            :src="`${CONFIG.API_HOST}/${image.image}`"
-                          />
-                        </q-card-section>
-                        <q-card-section class="text-center q-pt-sm text-subtitle1">
+                        <q-card-section class="text-center text-subtitle1">
                           <q-icon v-if="formData.fields[index].answer.value == image.text" class="q-mr-sm " name="check" size="20px"></q-icon>
                           <b class="vertical-middle">{{ transliterateHTML(image.text) }}</b>
                         </q-card-section>

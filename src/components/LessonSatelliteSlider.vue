@@ -35,7 +35,7 @@
                 <q-img
                     :src="satelliteItem.image"
                     loading="lazy"
-                    spinner-color="white">
+                    no-spinner>
                 </q-img>
             </q-card-section>
             <q-card-section class="text-center text-white q-pa-none">

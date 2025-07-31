@@ -4,7 +4,7 @@
       <q-card-section class="q-pa-none ">
           <q-img v-if="text.image"
             class="rounded-borders"
-            :src="`${CONFIG.API_HOST}/${text.image}`"
+            :src="text.image"
           />
         </q-card-section>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>

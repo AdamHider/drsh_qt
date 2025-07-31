@@ -4,10 +4,7 @@
         <div>
           <q-card v-if="notification?.id" class="q-ma-sm" style="max-width: 350px" @click="openNotification(notification.link)">
             <q-card-section>
-              <q-item >
-                <q-item-section avatar>
-                    <q-img :src="notification.image" width="60px"/>
-                </q-item-section>
+              <q-item>
                 <q-item-section>
                   <q-item-label class="text-subtitle1"><b>{{ notification.title }}</b></q-item-label>
                   <q-item-label class="text-caption"><b>{{ notification.description }}</b></q-item-label>

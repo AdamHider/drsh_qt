@@ -3,7 +3,7 @@
       <q-dialog v-model="dialog" maximized @hide="onClose" transition-show="slide-up" transition-hide="slide-down">
         <AppBackground/>
         <q-card class="column justify-center text-center bg-transparent text-white">
-          <q-img :src="notification.image" width="150px" class="self-center"/>
+          <q-img src="/images/levelup.png" width="150px" class="self-center"/>
           <q-card-section>
             <div class="text-h6"><b>{{ notification.title }}</b></div>
             <div class="text-subtitle2"><b>{{ notification.description }}</b></div>

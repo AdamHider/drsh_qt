@@ -14,7 +14,8 @@
                   </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left">
-                    <div class="text-h5"><b>{{user.active.data.username}}</b></div>
+                    <div class="text-h5"><b>{{user.active.data.name}}</b></div>
+                    <div class="text-caption">{{user.active.data.username}}</div>
                 </q-item-section>
                 <q-item-section side>
                     <q-btn flat to="/user/edit" icon="edit"/>

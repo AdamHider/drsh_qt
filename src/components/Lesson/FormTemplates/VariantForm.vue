@@ -112,6 +112,11 @@ const matchStart = (index) => {
 }
 const selectVariant = (text) => {
   formData.fields[currentIndex.value].value.text = text
+  if(formData.fields[currentIndex.value+1] && !formData.fields[currentIndex.value+1].answer){
+    currentIndex.value++
+  } else {
+    currentIndex.value = null
+  }
 }
 const clearVariant = (text) => {
   formData.fields[currentIndex.value].value.text = ''
@@ -148,6 +153,7 @@ watch(formData.fields, (newValue, oldValue) => {
     background: none !important;
     box-shadow: none !important;
     border-color: $primary;
+    border-width: 3px;
   }
   .q-lesson-field-value{
     margin: 0;

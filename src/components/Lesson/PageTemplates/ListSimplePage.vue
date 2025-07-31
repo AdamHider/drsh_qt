@@ -5,7 +5,7 @@
         <q-img
             class="rounded-borders"
             cover
-            :src="`${CONFIG.API_HOST}/${lesson.active.page?.header?.image}`" />
+            :src="lesson.active.page?.header?.image" />
         </q-card-section>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>

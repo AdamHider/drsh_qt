@@ -9,7 +9,7 @@
       <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1;">
             <transition
               appear
-              enter-active-class="animated fadeIn animation-delay-2"
+              enter-active-class="animated fadeIn "
               leave-active-class="animated fadeOut">
                 <LessonSatelliteSlider
                     v-if="transitionTrigger"
@@ -68,7 +68,8 @@
                       <q-item-label><b>"{{ unblockLesson.title }}"</b></q-item-label>
                     </q-item-section>
                     <q-item-section side>
-                      <q-btn size="12px" flat dense round icon="chevron_right" />
+                      <q-btn v-if="unblockLesson.unblocked == '1'" size="12px" flat color="positive" dense round icon="check_circle" />
+                      <q-btn v-else size="12px" flat dense round icon="chevron_right" />
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -85,7 +86,8 @@
                       <q-item-label><b> "{{ unblockSkill.title }}"</b></q-item-label>
                     </q-item-section>
                     <q-item-section side>
-                      <q-btn size="12px" flat dense round icon="chevron_right" />
+                      <q-btn v-if="unblockSkill.unblocked == '1'" size="12px" color="positive" flat dense round icon="check_circle" />
+                      <q-btn v-else size="12px" flat dense round icon="chevron_right" />
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -183,10 +185,6 @@ const redo = async (lessonId) => {
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
 
-onActivated( async () => {
-  await load()
-  hideLoader()
-})
 const load = async () => {
   isDark.value = false
   dialog.value = false
@@ -205,17 +203,18 @@ const load = async () => {
   change(activeIndex.value)
 }
 const goToSattelite = (unblockLesson) => {
+  console.log(unblockLesson)
   if(unblockLesson.parent_id) {
     if(unblockLesson.parent_id == route.params.lesson_id) {
       activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == unblockLesson.id)
       change(activeIndex.value)
     } else {
       setTarget(unblockLesson.id)
-      router.replace(`lesson-startup-${unblockLesson.parent_id}`)
+      router.push(`lesson-startup-${unblockLesson.parent_id}`)
     }
   } else {
     setTarget(unblockLesson.id)
-    router.replace(`lesson-startup-${unblockLesson.id}`)
+    router.push(`lesson-startup-${unblockLesson.id}`)
   }
 }
 onBeforeRouteLeave((to, from, next) => {
@@ -230,6 +229,10 @@ watch(() => activeLesson.value, () => {
   if(!activeLesson.value) return
   isDark.value = activeLesson.value.is_blocked
   activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == activeLesson.value.id)
+})
+onActivated(async () =>{
+  await load()
+  hideLoader()
 })
 
 

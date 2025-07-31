@@ -4,7 +4,7 @@
         <q-card-section class="q-pa-sm ">
           <q-img v-if="data.data.image"
             class="rounded-borders"
-            :src="`${CONFIG.API_HOST}/${data.data.image}`"
+            :src="data.data.image"
           />
         </q-card-section>
         <q-card-section vertical :class="`q-pa-none text-center ${(!data.data.is_form) ? 'flex flex-center text-center' : ''}`">
@@ -29,7 +29,10 @@
               />
             </span>
           </div>
-          <div v-else class="text-bold text-h6" v-html="data.data.text"></div>
+          <div v-else class="text-bold text-h6">
+            
+              <div v-html="data.data.text"></div>
+          </div>
         </q-card-section>
     </q-card>
   </div>
@@ -40,7 +43,6 @@ import { reactive, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { useTransliterate } from '../../../composables/useTransliterate'
-import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['onRendered'])
 

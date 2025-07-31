@@ -4,6 +4,9 @@
         <q-toolbar-title><b>Уведомления</b></q-toolbar-title>
     </q-app-header>
     <q-page class="bg-white"  style="padding-top: 50px; padding-bottom: 48px;">
+        <q-inner-loading :showing="notLoaded">
+          <q-spinner-puff size="50px" color="primary" />
+        </q-inner-loading>
         <q-list v-if="notifications.length > 0" class="q-my-md"  >
           <q-item v-for="(notification, notificationIndex) in notifications" :key="`notificationIndex-${notificationIndex}`" :to="notification.link">
             <q-item-section>
@@ -17,7 +20,7 @@
             </q-item-section>
           </q-item>
         </q-list>
-        <div v-else class="text-center q-pa-md">
+        <div v-else-if="!notLoaded" class="text-center q-pa-md">
           <div class="text-subtitle1"><b>Уведомлений пока нет</b></div>
           <div class="text-caption"><b>Но они обязательно появятся</b></div>
         </div>
@@ -37,9 +40,11 @@ import 'swiper/css/scrollbar'
 
 const notifications = ref([])
 const error = ref({})
+const notLoaded = ref(true)
 
 const load = async function () {
   const notificationListResponse = await api.notifications.getList({})
+  notLoaded.value = false
   if (notificationListResponse.error) {
     error.value = notificationListResponse
     return []

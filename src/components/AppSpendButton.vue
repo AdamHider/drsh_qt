@@ -6,10 +6,10 @@
         <q-icon :name="props.iconRight"/>
         <div class="q-ma-xs" style="background-color: #00000038; border-radius: 8px">
           <q-chip  v-for="(resource, index) in props.resources" :key="index"
-            square :text-color="(resource.quantity > resource.quantity_cost) ? 'white' : 'red'"
+            square :text-color="(resource.quantity >= resource.quantity_cost) ? 'white' : 'red'"
             color="transparent"
             class="q-ma-none q-px-xs" >
-            <q-img class="q-mr-sm" width="20px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075 );"/>
+            <q-img class="q-mr-sm" width="20px" :src="resource.image" style="filter: hue-rotate(0deg) drop-shadow(1px 3px 3px #00000075);"/>
             <b>{{ resource.quantity_cost }}</b>
           </q-chip>
         </div>

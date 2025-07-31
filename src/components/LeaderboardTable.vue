@@ -1,5 +1,8 @@
 <template>
-  <q-card flat >
+  <q-card flat style="min-height:300px">
+    <q-inner-loading :showing="notLoaded">
+      <q-spinner-puff size="50px" color="primary" />
+    </q-inner-loading>
     <q-card-section class="q-py-sm text-left">
       <LeaderboardFilter
         :allowed-filters="props.allowedFilters"
@@ -8,7 +11,7 @@
       />
     </q-card-section>
     <q-card-section v-if="leaderboardData.data.length > 0 " class="q-py-sm relative-position">
-      <q-inner-loading :showing="isLoading"/>
+
       <q-list separator >
         <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" :class="`q-my-sm q-px-none text-left `">
             <q-item-section avatar class="text-center">
@@ -37,7 +40,7 @@
         </q-item>
       </q-list>
     </q-card-section>
-    <q-card-section v-else-if="!isLoading" class="q-pa-none">
+    <q-card-section v-else-if="!notLoaded" class="q-pa-none">
       <BannerNotFound
         title="Ooops..."
         description="There is no available statistics"
@@ -62,7 +65,7 @@ const leaderboardData = reactive({
   data: {}
 })
 
-const isLoading = ref(false)
+const notLoaded = ref(true)
 
 const props = defineProps({
   allowedFilters: Array,
@@ -73,10 +76,9 @@ const props = defineProps({
 
 const loadTable = async () => {
   const filter = prepareFilter()
-  isLoading.value = true
   const leaderboardResponse = await getLeaderboard(filter)
   leaderboardData.data = leaderboardResponse
-  isLoading.value = false
+  notLoaded.value = false
 }
 
 const prepareFilter = () => {
@@ -91,11 +93,11 @@ const updateFilter = (filter) => {
 }
 
 onActivated(async () => {
-  if (isLoading.value === true) return
+  if (notLoaded.value === false) return
   loadTable()
 })
 onMounted(async () => {
-  if (isLoading.value === true) return
+  if (notLoaded.value === false) return
   loadTable()
 })
 </script>

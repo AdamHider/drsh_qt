@@ -19,6 +19,9 @@
           </q-card-section>
       </q-card>
       <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1;">
+          <q-inner-loading :showing="notLoaded">
+            <q-spinner-puff size="50px" color="primary" />
+          </q-inner-loading>
           <q-card-section class="q-pa-none">
             <SkillList :list="skills" @onClaim="reload()" @onModalOpen="(value) => {headerShowForce = value}"/>
           </q-card-section>
@@ -39,15 +42,18 @@ const { user, getItem } = useUserStore()
 const skills = ref([])
 const error = ref(false)
 const headerShowForce = ref(false)
+const notLoaded = ref(true)
 
 const load = async function (filter) {
   const skillListResponse = await api.skill.getList({ mode: 'by_user' })
+  notLoaded.value = false
   if (skillListResponse.error) {
     error.value = skillListResponse
     skills.value = []
     return []
   }
   skills.value = skillListResponse
+
 }
 const reload = async function () {
   await getItem()

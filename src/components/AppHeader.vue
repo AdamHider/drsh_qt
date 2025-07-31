@@ -1,6 +1,6 @@
 <template>
     <q-page-sticky :class="`q-app-header ${props.class}`"  ref="header" style="z-index: 100" expand position="top">
-      <q-toolbar :class="`${props.contentClass} justify-center`">
+      <q-toolbar :class="`justify-center ${props.contentClass}`">
         <slot name="back-button"></slot>
         <slot/>
       </q-toolbar>

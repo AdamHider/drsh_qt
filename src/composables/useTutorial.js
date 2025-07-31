@@ -14,6 +14,7 @@ export function useTutorial () {
   function setIndexNext (index) {
     if(tutorial.index == tutorial.total){
       tutorial.tutorialEnd = true
+      localStorage['tutorialEnd'] = true
     }
     tutorial.index++
   }

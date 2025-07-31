@@ -3,12 +3,7 @@
       <q-item clickable v-ripple v-for="(courseItem, index) in course.list" :key="index"  @click="select(courseItem.id)"
         :class="`${(courseItem.is_active) ? 'active' : ''} q-ma-sm rounded-md q-push`"
         :style="`background-image: url(${courseItem.background_image}); background-size: cover;`">
-        <q-item-section avatar>
-          <q-avatar size="60px">
-            <q-img :src="courseItem.image" width="60px" no-spinner/>
-          </q-avatar>
-        </q-item-section>
-        <q-item-section class="text-white">
+        <q-item-section class="text-white q-ma-sm">
           <q-item-label lines="1"><b>{{ courseItem.title }}</b></q-item-label>
           <q-item-label caption lines="2" class="text-white">{{ courseItem.description }}</q-item-label>
           <div class="flex justify-between text-caption q-ma-xs">
@@ -39,7 +34,7 @@ const props = defineProps({
 const emits = defineEmits(['select'])
 
 const { user, getItem } = useUserStore()
-const { course, getList, getActive } = useCourse()
+const { course, getList } = useCourse()
 
 if (user.active?.data.id) {
   getList()

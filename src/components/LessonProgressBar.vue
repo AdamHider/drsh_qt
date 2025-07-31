@@ -5,15 +5,15 @@
           <div class="full-width flex" >
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-                <img :src="(starsLevel >= 1) ? '/images/star.png' : '/images/star_inactive.png'"  :width="props.size" style="filter: drop-shadow(0px 2px 3px #000000a1);">
+                <img :src="(starsLevel >= 1) ? '/images/star.png' : '/images/star_inactive.png'" :width="props.size" :class="(starsLevel >= 1) ? 'gained' : ''">
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-                <img :src="(starsLevel >= 2) ? '/images/star.png' : '/images/star_inactive.png'" :width="props.size" style="filter: drop-shadow(0px 2px 3px #000000a1);">
+                <img :src="(starsLevel >= 2) ? '/images/star.png' : '/images/star_inactive.png'" :width="props.size" :class="(starsLevel >= 2) ? 'gained' : ''">
             </span>
             <span class="star-item"></span>
             <span class="star-item-delimiter relative-position">
-                <img :src="(starsLevel == 3) ? '/images/star.png' : '/images/star_inactive.png'" :width="props.size" style="filter: drop-shadow(0px 2px 3px #000000a1);">
+                <img :src="(starsLevel == 3) ? '/images/star.png' : '/images/star_inactive.png'" :width="props.size" :class="(starsLevel == 3) ? 'gained' : ''">
             </span>
           </div>
           <q-progress-bar :dark="props.dark" :value="value" :backfaceValue="backfaceValue" :size="props.size" :color="color"/>
@@ -202,6 +202,11 @@ onMounted(() => {
     top: 0px;
     left: -15px;
     overflow: visible;
+    scale: 1.1;
+    &.gained{
+      filter: drop-shadow(rgba(0, 0, 0, 0.4) 0px 2px 3px);
+      scale: 1.1;
+    }
   }
 }
 
