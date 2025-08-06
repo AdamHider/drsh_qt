@@ -10,7 +10,7 @@
       <q-markup-table
         flat
         bordered
-        separator="cell"
+        separator="vertical"
       >
         <thead v-if="table.header?.length > 0">
           <tr>
@@ -94,16 +94,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" >
-.q-select.q-select-inline .q-field__control,
-.q-select.q-select-inline .q-field__native {
-  min-height: 18px;
-  padding: 0;
-}
-
-.q-select.correct-answer.q-field--standard .q-field__control::before{
-    border-color: $positive;
-}
-.q-select.wrong-answer.q-field--standard .q-field__control::before{
-    border-color: $negative;
+.q-markup-table tr:not(:last-child) td{
+  border-bottom-width: 1px;
 }
 </style>

@@ -54,11 +54,12 @@
                 <q-card-section class="text-center text-white q-pa-none absolute full-width"  style="top: 100%">
                   <div class="text-caption">
                     <span>Изучено: </span>
-                    <b :class="courseSectionItem.progress > 0 && courseSectionItem.progress < 100 ? 'text-warning' : ''">{{ courseSectionItem.progress }}%</b>
+                    <b :class="courseSectionItem.progress > 0 ? ((courseSectionItem.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ courseSectionItem.progress }}%</b>
                   </div>
                   <div class="text-bold">
-                    <q-icon v-if="courseSectionItem.is_blocked === true" name="lock"></q-icon>
-                    {{ courseSectionItem.title }}
+                    <q-icon v-if="courseSectionItem.is_blocked === true" name="lock"  class="q-mr-xs"></q-icon>
+                    <q-avatar v-if="courseSectionItem.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-mr-xs" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
+                    <span class="vertical-middle">{{ courseSectionItem.title }}</span>
                   </div>
                 </q-card-section>
               </q-card>
@@ -112,8 +113,10 @@ const courseSections = ref([])
 
 const props = defineProps({
   disable: Boolean,
+  reloadTrigger: Boolean
 });
 const disable = toRef(props, "disable");
+const reloadTrigger = toRef(props, "reloadTrigger");
 const lessonList = ref([]);
 
 const load = async function () {
@@ -179,6 +182,9 @@ onActivated(async () => {
 watch( () => course.active?.id, async () => {
   load()
 });
+watch(() => reloadTrigger.value, () => {
+  load()
+})
 </script>
 <style scoped lang="scss">
 .section-block{

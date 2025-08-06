@@ -8,18 +8,42 @@
             :enter-active-class="(!replica.rendered) ? `animated fadeInUp animation-delay-${replica.sortIndex}` : ''"
           >
             <div v-show="replica.is_shown">
-              <q-item class="q-px-sm">
-                <q-item-section avatar v-if="!replica.input_index || replica.is_answered">
-                  <q-avatar>
-                    <img :src="replica?.image">
+              <div v-if="replica.float == 'right'">
+                <q-item class="q-px-sm" v-if="!replica.input_index || replica.is_answered">
+                  <q-item-section >
+                    <q-card class="q-push">
+                      <q-card-section class="q-py-sm">
+                        <div ><b>{{ replica.name }}</b></div>
+                        <div><div v-html="replica.text"></div></div>
+                      </q-card-section>
+                    </q-card>
+                  </q-item-section>
+                  <q-item-section avatar>
+                    <q-avatar size="60px" style="box-shadow: 0px 0px 0px 2px white;">
+                      <q-img :src="replica?.image" style="transform: scaleX(-1);"/>
+                    </q-avatar>
+                  </q-item-section>
+                </q-item>
+                <div v-else>
+                  <div v-html="replica.text"></div>
+                </div>
+              </div>
+              <q-item v-else class="q-px-sm">
+                <q-item-section avatar>
+                  <q-avatar size="60px"  style="box-shadow: 0px 0px 0px 2px white;">
+                    <q-img :src="replica?.image"/>
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label lines="1" v-if="!replica.input_index || replica.is_answered"><b>{{ replica.name }}</b></q-item-label>
-                  <q-item-label style="white-space: break-spaces;"><div v-html="replica.text"></div></q-item-label>
+                  <q-card :class="`q-push`">
+                    <q-card-section class="q-py-sm ">
+                      <div><b>{{ replica.name }}</b></div>
+                      <div><div v-html="replica.text"></div></div>
+                    </q-card-section>
+                  </q-card>
                 </q-item-section>
                 <q-item-section v-if="replica.audio_link" side>
-                  <q-btn v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"
+                  <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == replica.audio_link && lessonAudio.is_playing"
                     flat
                     class="play-audio"
                     :data-audio="replica.audio_link"
@@ -45,7 +69,6 @@
 <script setup>
 import { reactive, ref, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
-import { CONFIG } from '../../../config.js'
 
 const { lesson } = useLesson()
 
@@ -81,7 +104,7 @@ const renderData = () => {
     if(lesson.active.page.data.replica_list[i].input_index !== undefined && !lesson.active.page.data.replica_list[i].is_answered){
       activeInput.value = lesson.active.page.data.replica_list[i].input_index
       isShown = false
-    }
+    }  
     replicaList.list.push(lesson.active.page.data.replica_list[i])
   }
 }

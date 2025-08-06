@@ -24,7 +24,7 @@
                 </q-item-section>
                 <q-item-section avatar>
                   <q-avatar size="60px" style="box-shadow: 0px 0px 0px 2px white;">
-                    <q-img :src="replica?.image"/>
+                    <q-img :src="replica?.image"  style="transform: scaleX(-1);"/>
                   </q-avatar>
                 </q-item-section>
               </q-item>
@@ -139,8 +139,10 @@ const renderReplicaList = () => {
   isLastReplica.value = false
   activePage.value = 0
   replicaList.value = []
-  if(props.quest.is_completed && props.quest.status == 'active'){
+  if(props.quest.is_completed){
     replicaMode.value = 'outro'
+  } else {
+    replicaMode.value = 'intro'
   }
   if(props.expanded){
     replicaList.value = props.quest.data[replicaMode.value].dialogue

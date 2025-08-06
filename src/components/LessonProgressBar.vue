@@ -126,13 +126,14 @@ const backfaceValue = ref(0)
 
 const calculateStarsValue = () => {
   if(props.value >= 40 && props.value < 80) starsLevel.value = 1
-  if(props.value >=80 && props.value < 99) starsLevel.value = 2
-  if(props.value >= 99) starsLevel.value = 3
+  if(props.value >=80 && props.value <= 99) starsLevel.value = 2
+  if(props.value >= 100) starsLevel.value = 3
 }
 const calculateBackface = () => {
   if(exercise.value && exercise.value.data?.totals?.prev_points) {
     backfaceValue.value = exercise.value.data.totals.prev_points / exercise.value.data.totals.total * 100
   }
+  
   if(backfaceValue.value > 100) {backfaceValue.value = 100}
 }
 

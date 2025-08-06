@@ -4,13 +4,23 @@
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" :exercise="lesson.active.exercise" compact/>
     </q-app-header>
-    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 70px;">
-        <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 70px">
+    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 40px;">
+        <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 60px" v-if="lesson.active.page?.header?.title">
             <q-card-section class="q-py-none">
-                <div class="text-subtitle1"><b v-html="lesson.active.page?.header?.title"></b></div>
+                <div class="flex justify-between">
+                  <div class="text-subtitle1"><b>{{ lesson.active.page?.header?.index }}. </b><b v-html="lesson.active.page?.header?.title"></b></div>
+                  <div>
+                    <span class="text-subtitle1 text-bold text-primary">{{ lesson.active.page?.header?.index }}/</span>
+                    <span class="text-subtitle2 text-bold text-grey-8">{{ lesson.active.page?.header?.total_pages }}</span>
+                  </div>
+                </div>
+
                 <div class="text-caption" v-html="lesson.active.page?.header?.subtitle"></div>
             </q-card-section>
         </q-card>
+        <q-page-sticky v-if="lesson.active.page?.header?.note" position="bottom-left">
+          <LessonNote :note="lesson.active.page?.header?.note"/>
+        </q-page-sticky>
         <component :is="PageTemplate" @onRendered="rendered = true"/>
     </q-page>
     <q-footer expand position="bottom" class="bg-white lesson-bottombar ">
@@ -35,6 +45,7 @@
 <script setup>
 import LessonActions from '../components/Lesson/LessonActions.vue'
 import LessonProgressBar from '../components/LessonProgressBar.vue'
+import LessonNote from '../components/LessonNote.vue'
 import { useLesson } from '../composables/useLesson'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
@@ -78,6 +89,7 @@ const onPageChanged = async (action) => {
     return router.go(-1)
   }
   progress.value = pageResponse.progress
+
   pageTemplateTitle.value = lesson.active.page?.header.page_template.charAt(0).toUpperCase() + lesson.active.page?.header.page_template.slice(1)
   if (lesson.active.page?.header.form_template && lesson.active.page?.header.form_template !== 'none' && pageTemplateTitle.value) {
     formTemplateTitle.value = lesson.active.page?.header.form_template.charAt(0).toUpperCase() + lesson.active.page?.header.form_template.slice(1)
@@ -91,6 +103,10 @@ const onAnswerSaved = async () => {
   }
   const exerciseAnswerResponse = await saveAnswer(answers)
   progress.value = exerciseAnswerResponse.progress
+  rendered.value = false
+  setTimeout(() => {
+    rendered.value = true
+  },0)
 }
 const onDialogOpened = async (status) => {
   dialogOpened.value = status

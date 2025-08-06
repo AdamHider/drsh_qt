@@ -6,7 +6,8 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            :class="`q-lesson-field bg-grey-3 q-pa-sm ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            :style="`min-width: ${input.width}px`"
           >
               <q-chip v-for="text in input.value.array" :key="`${text}`"
                 :class="`q-lesson-field-value text-center rounded-xs bg-white ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
@@ -17,7 +18,7 @@
           <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
           <q-dialog v-model="input.modal" position="right">
             <q-card flat class="relative-position allow-overflow rounded-r-0">
-              <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/quest_character_full.png"/>
+              <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/codex_full.png"/>
                 <q-card-section>
                   <div>
                     <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Ваш ответ: </b></div>
@@ -71,7 +72,7 @@
     </div>
     <q-card v-else-if="!lesson.active.page?.answer?.is_finished" flat class="text-dark">
       <q-card-section class="text-center">
-        <div class="text-h6">Выберите поле</div>
+        <div class="text-h6"><b>Выберите поле</b></div>
         <div class="text-subtitle2">И здесь появятся варианты ответа</div>
       </q-card-section>
     </q-card>
@@ -109,9 +110,18 @@ const renderFields = () => {
       value.array = field.answer.value.split('|')
       value.is_finished = true
     }
-    formData.fields.push({ value, options, index: field.index, answer: field.answer })
+    field.width = calculateWidth(field)
+    formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
   }
   emits('update-answer', formData.fields)
+}
+const calculateWidth = (field) => {
+  let length = 0;
+  for(var i in field.variants){
+    length += field.variants[i].text.length
+  }
+  if(length*12 > 200) return 200
+  return length*12;
 }
 const matchEnd = (evt) => {
   if(evt.explicitOriginalTarget.nodeName == '#text' || !evt.explicitOriginalTarget.closest(".q-field")) {
@@ -194,22 +204,9 @@ watch(formData.fields, (newValue, oldValue) => {
   display: inline-block;
   min-width: 60px;
   min-height: 2.3em;
-  border-bottom: 2px solid lightgray;
-  box-shadow: none;
-  border-radius: 0;
-  &.is-inactive:not(.is-answered):before{
-    top: 100%;
-    height: 2px;
-    background: $primary;
-    animation: pulseBottomLessonField 1.5s infinite;
-  }
   &.is-answered{
-    background: none !important;
-    box-shadow: none !important;
   }
   &.q-active{
-    background: none !important;
-    box-shadow: none !important;
     border-color: $primary;
   }
   .q-lesson-field-value{

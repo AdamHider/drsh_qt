@@ -6,14 +6,14 @@
       <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 48px;"  class="items-end full-height full-width text-center" >
-        <LessonList v-if="course.active?.id" :disable="courseDialog"/>
+        <LessonList v-if="course.active?.id" :disable="courseDialog" :reloadTrigger="lessonListReloadTrigger"/>
 
         <q-page-sticky position="bottom" style="margin-bottom: 20px;">
           <q-img :src="`/images/dershane/robot/rocket.png`" width="50px"/>
         </q-page-sticky>
 
         <q-page-sticky position="top-left" style="z-index: 100" :offset="[0, 60]">
-          <QuestListWidget active-only/>
+          <QuestListWidget active-only @onStart="lessonListReload()" @onClaim="lessonListReload()"/>
         </q-page-sticky>
         <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[10, 60]">
           <q-btn class="bg-gradient-primary" round push size="20px" @click="courseDialog = true">
@@ -42,10 +42,19 @@ import { useRoute } from 'vue-router'
 const { user } = useUserStore()
 const route = useRoute()
 
+const lessonListReloadTrigger = ref(false)
+
 const courseDialog = ref(false)
 const header = ref(null)
 
 const { course, getItem } = useCourse()
+
+const lessonListReload = () => {
+  lessonListReloadTrigger.value = true;
+  setTimeout(() => {
+    lessonListReloadTrigger.value = false
+  }, 100)
+}
 
 onActivated(async () => {
   await getItem(route.params.course_id)

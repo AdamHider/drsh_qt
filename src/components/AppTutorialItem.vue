@@ -14,7 +14,7 @@
               <q-item>
                 <q-item-section avatar>
                   <q-avatar>
-                    <img src="/images/characters/quest_character_avatar.png"/>
+                    <img src="/images/characters/codex_avatar.png"/>
                   </q-avatar>
                 </q-item-section>
                 <q-item-section class="text-left text-dark" style="text-transform: initial; white-space: wrap;">

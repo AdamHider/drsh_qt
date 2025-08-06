@@ -24,7 +24,6 @@ import { reactive, watch, onMounted } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
-import { CONFIG } from '../../../config.js'
 
 const emits = defineEmits(['onRendered'])
 
@@ -37,8 +36,8 @@ const text = reactive({
 })
 
 const renderData = () => {
+  text.text = lesson.active.page.data.text
   if (lesson.active.page.data.text.indexOf('input') > -1) {
-    text.text = lesson.active.page.data.text
     const inputs = text.text.match(/{{input[0-9]+}}/g)
     for (const k in inputs) {
       const inputIndex = inputs[k].match(/[0-9]+/g)[0]
@@ -46,7 +45,7 @@ const renderData = () => {
     }
   }
   text.image = lesson.active.page.data.image
-  console.log(text.image)
+  console.log(text)
 }
 
 renderData()

@@ -6,10 +6,11 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field q-py-xs ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            :class="`q-lesson-field bg-grey-3 ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            :style="`width: ${input.width}px`"
           >
             <q-chip
-              :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
+              :class="`q-lesson-field-value bg-white full-width text-center q-ma-none  rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
               style="pointer-events: none; font-size: inherit;" >
               <b v-if="input.value.text">{{ input.value.text }}</b>
               <b v-else>_</b>
@@ -18,7 +19,7 @@
           <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
           <q-dialog v-model="input.modal" position="right">
             <q-card flat class="relative-position allow-overflow rounded-r-0">
-              <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/quest_character_full.png"/>
+              <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/codex_full.png"/>
               <q-card-section>
                 <div>
                   <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Ваш ответ: </b></div>
@@ -82,7 +83,6 @@ const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
 
 const currentIndex = ref(null)
-const selectMode = ref(false)
 
 const formData = reactive({
   fields: []
@@ -100,9 +100,17 @@ const renderFields = () => {
       value.text = field.answer.value
       value.is_finished = true
     }
-    formData.fields.push({ value, options, index: field.index, answer: field.answer })
+    field.width = calculateWidth(field)
+    formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
   }
   emits('update-answer', formData.fields)
+}
+const calculateWidth = (field) => {
+  let length = 0;
+  for(var i in field.variants){
+    if(field.variants[i].text.length >= length) length = field.variants[i].text.length
+  }
+  return length*12;
 }
 const matchEnd = (evt) => {
   if(evt.explicitOriginalTarget.nodeName == '#text' || !evt.explicitOriginalTarget.closest(".q-field")) currentIndex.value = null;
@@ -112,11 +120,6 @@ const matchStart = (index) => {
 }
 const selectVariant = (text) => {
   formData.fields[currentIndex.value].value.text = text
-  if(formData.fields[currentIndex.value+1] && !formData.fields[currentIndex.value+1].answer){
-    currentIndex.value++
-  } else {
-    currentIndex.value = null
-  }
 }
 const clearVariant = (text) => {
   formData.fields[currentIndex.value].value.text = ''
@@ -136,24 +139,17 @@ watch(formData.fields, (newValue, oldValue) => {
 .q-lesson-field {
   display: inline-block;
   min-width: 35px;
-  border-bottom: 2px solid lightgray;
-  box-shadow: none;
-  border-radius: 0;
   &.is-inactive:not(.is-answered):before{
-    top: 100%;
-    height: 2px;
-    background: $primary;
-    animation: pulseBottomLessonField 1.5s infinite;
+    top: 0;
+    height: 100%;
+    box-shadow: inset 0px 0px 0px 2px $primary;
+    animation: pulseBottomLessonField 1.5s infinite alternate;
   }
   &.is-answered{
-    background: none !important;
     box-shadow: none !important;
   }
   &.q-active{
-    background: none !important;
-    box-shadow: none !important;
-    border-color: $primary;
-    border-width: 3px;
+    background: $grey-5 !important;
   }
   .q-lesson-field-value{
     margin: 0;

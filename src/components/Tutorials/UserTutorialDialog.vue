@@ -8,7 +8,7 @@
               appear
               enter-active-class="animated fadeInUp"
               leave-active-class="animated fadeOutDown">
-              <img src="/images/characters/quest_character_full.png" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;"/>
+              <img src="/images/characters/codex_full.png" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;"/>
             </transition>
           </div>
         </div>
@@ -52,7 +52,7 @@
               appear
               enter-active-class="animated fadeInUp"
               leave-active-class="animated fadeOutDown">
-              <img src="/images/characters/quest_character_full.png" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;"/>
+              <img src="/images/characters/codex_full.png" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;"/>
             </transition>
           </div>
         </div>

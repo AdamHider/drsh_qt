@@ -38,7 +38,7 @@
         <q-separator/>
         <q-card-actions >
           <div v-if="currentSkill.is_available" class="full-width">
-            <div v-if="currentSkill.cost" class="q-pa-sm bg-dark-transparent rounded-sm">
+            <div v-if="currentSkill.cost" class="q-pa-sm bg-grey-3 rounded-sm">
               <div class="text-center text-subtitle1"><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
                 <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
@@ -138,7 +138,7 @@ onBeforeRouteLeave((to, from) => {
   flex-direction: column;
   justify-content: center;
 }
-.skill-card.is_available { background: $gradient-primary !important; color: white; }
+/*.skill-card.is_available { background: $gradient-primary !important; color: white; }*/
 .skill-card.is_gained { background: $gradient-positive !important; color: white; }
 .skill-card.is_blocked .avatar { filter: grayscale(1); }
 

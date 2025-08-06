@@ -8,12 +8,6 @@
             <q-card-section class="lesson-image q-pt-none relative-position">
                 <transition
                   appear
-                  enter-active-class="animated fadeIn animation-slow animation-delay-2"
-                  leave-active-class="animated fadeOut  animation-delay-1">
-                  <q-img v-if="transitionTrigger" class="bg-rays" src="/images/rays.png"/>
-                </transition>
-                <transition
-                  appear
                   enter-active-class="animated fadeInUp animation-slow"
                   leave-active-class="animated rubberBand  animation-delay-1">
                   <q-img
@@ -30,14 +24,14 @@
           leave-active-class="animated zoomOut">
           <q-card flat class="position-relative text-center text-dark rounded-none q-pt-sm lesson-finish-card" style="z-index: 1; margin-top: -50px;" v-if="transitionTrigger">
             <q-card-section class="q-pb-none q-pt-sm text-positive"  style="margin-top: -100px; z-index: 1">
-              <q-img v-if="lesson.active.exercise.data.totals.reward_level == 3" src="/images/lesson_finish_excellent.png"/>
+              <q-img v-if="lesson.active.exercise.data.totals.reward_level == 3 || lesson.active.exercise.data.totals.is_maximum" src="/images/lesson_finish_excellent.png"/>
               <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 2" src="/images/lesson_finish_good.png"/>
               <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 1" src="/images/lesson_finish_not_bad.png"/>
               <q-img v-else src="/images/lesson_finish_fail.png"/>
             </q-card-section>
             <q-card-section class="q-pb-sm q-pt-sm">
               <q-list  separator class="q-pa-xs text-left bg-grey-3 rounded-sm">
-                <q-item  v-if="lesson.active.exercise.data.totals.difference !== 0">
+                <q-item  v-if="previousPoints">
                   <q-item-section>
                     <b>Предыдущий результат: </b>
                   </q-item-section>
@@ -47,15 +41,19 @@
                 </q-item>
                 <q-item >
                   <q-item-section>
-                    <b>Твой результат: </b>
+                    <b>Новый результат: </b>
                   </q-item-section>
                   <q-item-section side>
-                    <div v-if="lesson.active.exercise.data.totals.difference > 0 || lesson.active.exercise.data.totals.is_maximum">
+                    <div v-if="lesson.active.exercise.data.totals.difference > 0">
                       <q-avatar class="q-mr-xs" size="sm" color="green-2"><q-icon size="xs" color="positive" name="keyboard_double_arrow_up"></q-icon></q-avatar>
                       <b class="text-positive" style="vertical-align: middle">{{ currentPoints }}</b>
                     </div>
+                    <div v-else-if="lesson.active.exercise.data.totals.difference < 0">
+                      <q-avatar class="q-mr-xs" size="sm" color="red-2"><q-icon size="xs" color="negative" name="keyboard_double_arrow_down"></q-icon></q-avatar>
+                      <b class="text-negative" style="vertical-align: middle">{{ currentPoints }}</b>
+                    </div>
                     <div v-else>
-
+                      <b style="vertical-align: middle">{{ currentPoints }}</b>
                     </div>
                   </q-item-section>
                 </q-item>
@@ -153,6 +151,7 @@ const load = async () => {
   }
   if(lesson.active.exercise?.data.totals.difference == 0) {
     currentPoints.value = lesson.active.exercise?.data.totals.points
+    if(lesson.active.exercise.attempts > 0) previousPoints.value = lesson.active.exercise?.data.totals.points;
   }
 }
 
@@ -191,8 +190,8 @@ onMounted(async () => {
   height: 150%;
   left: -25%;
   top: -25%;
-  opacity: 0.7;
-  animation: rotateRays 25s linear infinite, blinkRays 4s ease;
+  animation: rotateRays 25s linear infinite, blinkRays 2s ease infinite alternate;
+  opacity: 0.5;
 }
 
 @keyframes rotateRays {
@@ -200,9 +199,9 @@ onMounted(async () => {
   100% { transform: rotate(360deg); }
 }
 @keyframes blinkRays {
-  0% { opacity: 0; }
-  50% { opacity: 0; }
-  100% { opacity: 0.7; }
+  0% { opacity: 0.2; }
+  50% { opacity: 0.2; }
+  100% { opacity: 0.5; }
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <q-item flat clickable
-    :class="`q-push q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center
+    :class="`q-push q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center relative-position
       ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available q-item-blinking' : 'is_available' : 'is_blocked'}`">
     <q-item-section avatar>
       <q-avatar :size="props.size" text-color="white">
@@ -8,6 +8,9 @@
       </q-avatar>
       </q-item-section>
     <q-item-section class="q-pt-none text-left"><div  class="text-subtitle2" style=""><b>{{ skill.title }}</b></div></q-item-section>
+    <div class="absolute-top-left q-pa-xs">
+      <q-avatar v-if="skill.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="q-push vertical-middle q-ml-xs" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
+    </div>
   </q-item>
 </template>
 

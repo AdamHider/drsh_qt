@@ -324,7 +324,6 @@ a{
   position: relative;
   vertical-align: middle;
   border-radius: 11px;
-  margin: 0 5px;
   transition: 0.3s all ease;
   box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15);
   font-weight: initial;
@@ -373,7 +372,7 @@ a{
   }
   .q-lesson-field-value{
     padding: 0.8em 0.6em;
-    height: 1.5em;
+    height: 2em;
   }
 }
 .q-lesson-field-value{
@@ -404,7 +403,7 @@ a{
 }
 @keyframes pulseBottomLessonField {
   0% {
-    opacity: 1;
+    opacity: 0.4;
   }
   70% {
     opacity: 0;

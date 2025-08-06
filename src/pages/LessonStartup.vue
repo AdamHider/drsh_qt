@@ -42,7 +42,11 @@
           leave-active-class="animated fadeOutDown">
           <q-card flat class="bg-transparent rounded-b-0 full-width"  v-if="transitionTrigger && dialog">
             <q-card-section class="q-pb-sm">
-                <div class="text-h5"><q-icon v-if="activeLesson.is_blocked === true" name="lock"></q-icon> <b>{{activeLesson.title}}</b></div>
+                <div class="text-h5">
+                  <q-icon v-if="activeLesson.is_blocked === true" name="lock"></q-icon>
+                  <q-avatar v-if="activeLesson.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-mr-xs"  style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
+                  <b>{{activeLesson.title}}</b>
+                </div>
                 <div :class="`text-caption satellite-description ${(expandDescription) ? '': 'max-two-lines'}`" @click="expandDescription = !expandDescription">
                   {{activeLesson.description}}
                 </div>
@@ -68,7 +72,7 @@
                       <q-item-label><b>"{{ unblockLesson.title }}"</b></q-item-label>
                     </q-item-section>
                     <q-item-section side>
-                      <q-btn v-if="unblockLesson.unblocked == '1'" size="12px" flat color="positive" dense round icon="check_circle" />
+                      <q-btn v-if="unblockLesson.unblocked === '1'" size="12px" flat color="positive" dense round icon="check_circle" />
                       <q-btn v-else size="12px" flat dense round icon="chevron_right" />
                     </q-item-section>
                   </q-item>
@@ -169,6 +173,7 @@ const start = async (lessonId) => {
     router.push(`/lesson-${lessonId}`)
     dialog.value = false
   } else {
+    if(exerciseCreated.messages.error == 'not_enough_resources') exerciseCreated.messages.error = 'Недостаточно энергии!'
     $q.notify({
       message: exerciseCreated.messages.error,
       type: 'negative'

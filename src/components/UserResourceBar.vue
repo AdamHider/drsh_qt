@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, watch, toRefs, onActivated, onDeactivated } from 'vue'
+import { ref, watch, toRefs, onActivated, onDeactivated, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 
 const { getItem } = useUserStore()

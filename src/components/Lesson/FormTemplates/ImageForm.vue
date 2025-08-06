@@ -4,20 +4,26 @@
             <Teleport :to="`\#input_${input.index}`">
                 <div class="row justify-between ">
                   <div class="col-6 q-pa-xs" v-for="(image, imageIndex) in formData.fields[index].options" :key="imageIndex">
-                    <q-card v-if="!formData.fields[index].answer"
-                      :class="`q-lesson-radio cursor-pointer rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
-                      @click="formData.fields[index].value.text = image.text; playAudio(image.audio_link)">
-                      <q-card-section class="text-center text-subtitle1 ">
-                        <b>{{ transliterateHTML(image.text) }}</b>
-                      </q-card-section>
-                    </q-card>
-
-                    <q-card v-else :class="`q-lesson-radio rounded-sm ${(formData.fields[index].answer.answer == image.text) ? 'is-correct' : (formData.fields[index].answer.value == image.text) ? 'is-incorrect' : ''}`">
-                        <q-card-section class="text-center text-subtitle1">
-                          <q-icon v-if="formData.fields[index].answer.value == image.text" class="q-mr-sm " name="check" size="20px"></q-icon>
-                          <b class="vertical-middle">{{ transliterateHTML(image.text) }}</b>
+                    <transition appear 
+                    enter-active-class="animated fadeInUp"
+                    leave-active-class="animated fadeOutDown">
+                    <div>
+                      <q-card v-if="!formData.fields[index].answer"
+                        :class="`q-lesson-radio cursor-pointer rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
+                        @click="formData.fields[index].value.text = image.text; playAudio(image.audio_link)">
+                        <q-card-section class="text-center text-subtitle1 ">
+                          <b>{{ transliterateHTML(image.text) }}</b>
                         </q-card-section>
-                    </q-card>
+                      </q-card>
+
+                      <q-card v-else :class="`q-lesson-radio rounded-sm ${(formData.fields[index].answer.answer == image.text) ? 'is-correct' : (formData.fields[index].answer.value == image.text) ? 'is-incorrect' : ''}`">
+                          <q-card-section class="text-center text-subtitle1">
+                            <q-icon v-if="formData.fields[index].answer.value == image.text" class="q-mr-sm " name="check" size="20px"></q-icon>
+                            <b class="vertical-middle">{{ transliterateHTML(image.text) }}</b>
+                          </q-card-section>
+                      </q-card>
+                    </div>
+                  </transition>
                   </div>
                 </div>
             </Teleport>

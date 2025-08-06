@@ -59,7 +59,8 @@ const reload = async function () {
   await getItem()
   load()
 }
-onActivated(() => {
+onActivated(async () => {
+  await getItem()
   load()
 })
 </script>

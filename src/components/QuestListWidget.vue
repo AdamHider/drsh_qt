@@ -9,7 +9,6 @@
         @click="showQuest(questItem.id)"
         size="sm"
         :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed || questItem.status == 'created') ? ' q-btn-blinking q-btn-shaking' : ''}`" >
-
           <div style="width: 40px" >
             <img :src="questItem.group.image_avatar" height="45px" class="absolute-bottom q-ml-sm q-mb-xs">
           </div>
@@ -71,18 +70,13 @@ const claimError = ref(false)
 const reloadTrigger = ref(false)
 const quests = ref([])
 
-const createdQuests = ref([])
-const createdQuestDialog = ref(false)
-
 const activeQuest = ref({})
-const activeQuestMode = ref('created')
 const activeQuestDialog = ref(false)
-
-const finishedQuestDialog = ref(false)
 
 const props = defineProps({
   activeOnly: Boolean
 })
+const emits = defineEmits(['onStart', 'onClaim'])
 
 const load = async () => {
   const questListResponse = await api.quest.getList({ mode: props.mode, active_only: props.activeOnly })
@@ -108,6 +102,7 @@ const startQuest = async (questId) => {
     await load()
     activeQuest.value = quests.value.find((quest) => { return quest.id == questId})
     activeQuestDialog.value = false
+    emits('onStart')
   }
 }
 
@@ -125,6 +120,7 @@ const claimReward = async (questId) => {
   if (questRewardResponse.error) {
     claimError.value = true
   }
+  emits('onClaim')
 }
 
 const reload = async () => {

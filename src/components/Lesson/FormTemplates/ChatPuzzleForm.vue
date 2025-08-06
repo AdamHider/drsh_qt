@@ -2,24 +2,14 @@
   <div v-if="formData.fields.length > 0">
     <div v-for="(input, index) in formData.fields" :key="index">
         <Teleport :to="`\#input_${input.index}`">
-            <div
-              tabindex="-1"
-              @focus="matchStart(index)"
-              clickable
-              @blur="matchEnd"
-              :class="`q-lesson-field q-pa-xs flex text-subtitle2 ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
-            >
-              <q-item-section>
-                <div v-if="!input.answer && (input.value.text == '' || input.value.text == false)">
-                  <div class="text-caption q-px-sm text-grey-8"><b>Напиши сообщение...</b></div>
-                </div>
-                <div class="flex chip-container" v-else >
+              <q-item-section >
+                <div class="flex chip-container">
                   <div v-if="input.value.textFormatted" class="q-lesson-field-value-flat cursor-pointer">
-                    <b>{{ input.value.textFormatted }}</b>
+                    <b :class="`${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'text-positive' : 'text-negative') : ''}`">{{ input.value.textFormatted }}</b>
                     <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
                     <q-dialog v-model="input.modal" position="right">
                       <q-card flat class="relative-position allow-overflow rounded-r-0">
-                        <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/quest_character_full.png"/>
+                        <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/codex_full.png"/>
                         <q-card-section>
                           <div>
                             <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Твой ответ: </b></div>
@@ -38,29 +28,42 @@
                       </q-card>
                     </q-dialog>
                   </div>
-                  <div v-else>
-                    <q-chip v-for="text in input.value.array" :key="`${text}`"
-                      :class="`q-lesson-field-value text-center rounded-xs bg-white ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
-                      style="pointer-events: none; font-size: inherit">
-                      <b>{{ text }}</b>
-                    </q-chip>
-                  </div>
                 </div>
               </q-item-section>
-              <q-item-section side v-if="!input.answer">
-                <q-spinner v-if="buttonIsLoading" class="q-mr-sm" color="primary" size="2em"/>
-                <q-icon v-else class="q-mr-sm cursor-pointer" round  push
-                  :color="(input.value.text == '' || input.value.text == false) ? 'grey-6' : 'primary'" name="send"
-                  @click="(input.value.text == '' || input.value.text == false) ? '' : saveAnswer()" />
-              </q-item-section>
-            </div>
         </Teleport>
     </div>
+    <div
+      tabindex="-1"
+      @focus="matchStart(activeInput.k)"
+      clickable
+      @blur="matchEnd"
+      :class="`q-lesson-field q-pa-xs q-ma-sm flex text-subtitle2`"
+    >
+      <q-item-section>
+        <div v-if="activeInput.value.array.length == 0">
+          <div class="text-caption q-px-sm text-grey-8"><b>Напиши сообщение...</b></div>
+        </div>
+        <div  v-else >
+          <q-chip v-for="text in activeInput.value.array" :key="`${text}`"
+            :class="`q-lesson-field-value text-center rounded-xs bg-white ${(activeInput.value.text == '' || activeInput.value.text == false) ? 'disabled': ''}`"
+            style="pointer-events: none; font-size: inherit">
+            <b>{{ text }}</b>
+          </q-chip>
+        </div>
+      </q-item-section>
+      <q-item-section side >
+        <q-spinner v-if="buttonIsLoading" class="q-mr-sm" color="primary" size="2em"/>
+        <q-icon v-else class="q-mr-sm cursor-pointer"  style="padding: 0 10px;" push
+          :color="(activeInput.value.text == '' || activeInput.value.text == false) ? 'grey-6' : 'primary'" name="send"
+          @mousedown.prevent="(activeInput.value.text == '' || activeInput.value.text == false) ? '' : saveAnswer()"/>
+      </q-item-section>
+    </div>
+
     <div v-if="currentIndex !== null">
-      <q-card v-if="!formData.fields[currentIndex].answer" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
+      <q-card v-if="!activeInput.answer" flat class="text-dark" @mousedown.prevent="matchStart(currentIndex)">
         <q-card-section class="q-pt-none">
           <div class="flex justify-center wrap">
-            <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
+            <div v-for="(option, optionIndex) in activeInput.options" :key="optionIndex">
               <q-chip class="q-lesson-field-value bg-white rounded-xs" size="16px" :clickable="!variantsDisabled" @click.stop="selectVariant(option.text, optionIndex)"
               :color="(option.count > 0) ? 'orange' : 'white'"
               :text-color="(option.count > 0) ? 'white' : ''"
@@ -93,6 +96,7 @@ const currentValueArray = ref([])
 const clearDisabled = ref(false)
 const variantsDisabled = ref(false)
 const buttonIsLoading = ref(false)
+const activeInput = ref(null)
 
 const formData = reactive({
   fields: []
@@ -113,7 +117,9 @@ const renderFields = () => {
       value.textFormatted = formatAnswer(value.array)
       value.is_finished = true
     }
-    formData.fields.push({ value, options, index: field.index, answer: field.answer })
+    var fieldData = { value, options, index: field.index, k, answer: field.answer }
+    if(!activeInput.value && !field.answer) activeInput.value = fieldData
+    formData.fields.push(fieldData)
   }
   emits('update-answer', formData.fields)
 }
@@ -129,6 +135,10 @@ const matchStart = (index) => {
   currentIndex.value = index
   currentValue.value = formData.fields[currentIndex.value].value.text
   currentValueArray.value = formData.fields[currentIndex.value].value.array
+  setTimeout(() => {
+    document.querySelector('.q-scrollarea__container').scrollTo(0, document.body.scrollHeight)
+  }, 0)
+
 }
 const selectVariant = (text, variantIndex) => {
   if(variantsDisabled.value) return
@@ -163,8 +173,9 @@ const saveAnswer = function (e) {
   setTimeout(() => {
     emits('onAnswerSaved')
     buttonIsLoading.value = false
+    activeInput.value = null
+    renderFields()
   }, 500)
-
 }
 
 const removeVariantFromArray = (text) => {
@@ -216,7 +227,6 @@ watch(formData.fields, (newValue, oldValue) => {
 <style scoped lang="scss">
 .q-lesson-field {
   min-height: 4em !important;
-  margin: 0;
   &.q-active:not(.is-answered){
     .chip-container{
       padding: 8px 0;

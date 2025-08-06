@@ -7,7 +7,7 @@
                   <q-item v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
                    tag="label" :class="`q-lesson-radio q-mb-sm rounded-sm ${(formData.fields[index].value.text == variant.text) ? 'q-active' : ''}`"
                   >
-                    <q-item-section avatar>
+                    <q-item-section side>
                       <q-radio
                         dense
                         v-model="formData.fields[index].value.text"
@@ -22,8 +22,8 @@
                 <q-list v-else  >
                   <q-item tag="label"  v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex" v-ripple
                     :class="`q-lesson-radio q-mb-sm rounded-sm ${(formData.fields[index].answer.answer == variant.text) ? 'is-correct' : (formData.fields[index].answer.value == variant.text) ? 'is-incorrect' : ''}`">
-                    <q-item-section avatar>
-                      <q-icon :name="(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'" size="20px"></q-icon>
+                    <q-item-section side>
+                      <q-icon :name="(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'" size="20px" :color="(formData.fields[index].answer.answer !== variant.text) ? 'gray' : 'white'"></q-icon>
                     </q-item-section>
                     <q-item-section>
                       <q-item-label><b>{{ variant.text }}</b></q-item-label>

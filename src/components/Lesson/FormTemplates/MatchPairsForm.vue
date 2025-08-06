@@ -7,11 +7,12 @@
               @focus="matchStart(index)"
               @blur="matchEnd"
               :ref="el => { fieldsRefs[index] = el }"
-              :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
+              :class="`q-lesson-field bg-grey-3 full-width full-height ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
+
             >
               <q-chip
-                :class="`q-lesson-field-value full-width text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
-                size="16px"
+                :class="`q-lesson-field-value full-width full-height text-center q-ma-none bg-white rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
+
                 style="pointer-events: none" >
                 <b v-if="input.value.text">{{ input.value.text }}</b>
                 <b v-else>_</b>
@@ -83,7 +84,6 @@ import { useLesson } from '../../../composables/useLesson'
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
 const currentIndex = ref(null)
-const matchMode = ref(false)
 const fieldsRefs = ref([])
 
 const formData = reactive({
@@ -102,9 +102,18 @@ const renderFields = () => {
       value.text = field.answer.value
       options = []
     }
-    formData.fields.push({ value, options, index: field.index, answer: field.answer })
+    field.width = calculateWidth(field)
+    formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
   }
+  console.log(formData.fields)
   emits('update-answer', formData.fields)
+}
+const calculateWidth = (field) => {
+  let length = 0;
+  for(var i in field.variants){
+    if(field.variants[i].text.length >= length) length = field.variants[i].text.length
+  }
+  return length*12;
 }
 
 const matchEnd = (variantIndex) => {
@@ -156,30 +165,49 @@ watch(formData.fields, (newValue, oldValue) => {
 </script>
 <style scoped lang="scss">
 .q-lesson-field {
-  display: inline-block;
-  min-width: 35px;
-  border-bottom: 2px solid lightgray;
+  display: block;
+  min-width: 60px;
+  height: 100%;
   box-shadow: none;
-  overflow: hidden;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
   &.is-inactive:not(.is-answered):before{
-    top: 100%;
-    height: 2px;
-    background: $primary;
-    animation: pulseBottomLessonField 1.5s infinite;
+    top: 0;
+    height: 100%;
+    box-shadow: inset 0px 0px 0px 2px $primary;
+    animation: pulseBottomLessonField 1.5s infinite alternate;
   }
   &.is-answered{
-    background: none !important;
     box-shadow: none !important;
   }
   &.q-active{
-    background: none !important;
-    box-shadow: none !important;
-    border-color: $primary;
+    background: $grey-5 !important;
+    box-shadow: 0px 2px 0px 3px #d57500;
+    .q-lesson-field-value{
+      box-shadow: 0px 0px 0px 2px #d57500 !important;
+    }
+  }
+  &.is-correct{
+    box-shadow: 0px 2px 0px 3px #1c9f3b;
+    &.q-active .q-lesson-field-value{
+    box-shadow: 0px 0px 0px 2px #1c9f3b !important;
+    }
+  }
+  &.is-incorrect{
+    box-shadow: 0px 2px 0px 3px #910314;
+    &.q-active .q-lesson-field-value{
+      box-shadow: 0px 0px 0px 2px #910314 !important;
+    }
   }
   .q-lesson-field-value{
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
     margin: 0;
+    display: block;
+    height: 100%;
+    padding: 20px 10px;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
 </style>

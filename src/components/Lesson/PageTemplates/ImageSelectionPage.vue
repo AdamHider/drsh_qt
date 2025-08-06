@@ -5,6 +5,7 @@
           <q-img v-if="data.data.image"
             class="rounded-borders"
             :src="data.data.image"
+            no-spinner
           />
         </q-card-section>
         <q-card-section vertical :class="`q-pa-none text-center ${(!data.data.is_form) ? 'flex flex-center text-center' : ''}`">
