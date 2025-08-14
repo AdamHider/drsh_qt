@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width" style="padding-top: 50px">
+  <div class="full-width">
     <q-card v-if="lesson.active.page?.header?.image" class="q-ma-md">
       <q-card-section class="q-pa-none ">
         <q-img

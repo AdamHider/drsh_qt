@@ -3,7 +3,7 @@
     <q-app-header class="transparent text-white rounded-b-md" ref="header">
       <CourseToggle v-bind:dialogOpened="courseDialog" v-on:update:dialogOpened="courseDialog = $event" @onSelect="getItem($event)"/>
       <q-toolbar-title></q-toolbar-title>
-      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
+      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 48px;"  class="items-end full-height full-width text-center" >
         <LessonList v-if="course.active?.id" :disable="courseDialog" :reloadTrigger="lessonListReloadTrigger"/>
@@ -21,7 +21,7 @@
           </q-btn>
         </q-page-sticky>
         <q-page-sticky position="bottom-right" style="z-index: 100" :offset="[10, 60]">
-          <DailyLessonListWidget/>
+          <DailyLessonListWidget :reloadTrigger="lessonListReloadTrigger"/>
         </q-page-sticky>
 
     </q-page>

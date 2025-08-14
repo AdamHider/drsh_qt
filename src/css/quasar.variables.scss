@@ -43,6 +43,7 @@ $info      : #31CCEC;
 $warning   : #F2C037;
 
 
+$primary-dark   : #3c0399;
 // RESOURCES
 
 $energy: #21BA45;
@@ -76,6 +77,8 @@ $gradient-purple: linear-gradient(to top right, #334192, #3f51b5);
 $gradient-red: linear-gradient(to top right, #c2382e, #f44336);
 $gradient-light-blue: linear-gradient(to top right, #0386c2, #03a9f4);
 $gradient-indigo: linear-gradient(to top right, #2e3a81, #3f51b5);
+$gradient-dark-purple: linear-gradient(to top right, #331342, #8c1111);
+$gradient-pink: linear-gradient(to top right, #9b10aa, #df1bf6);
 
 $gradient-terralit: linear-gradient(to top right, #013074, #0045a8);
 $gradient-isonit: linear-gradient(to top right, #025e2a, #008339);
@@ -104,3 +107,8 @@ $light-gradient-primary-to-right: linear-gradient(to right, $primary, $primary-l
 $light-gradient-blue-to-right: linear-gradient(to right, #1e88e5, #439ceb);
 
 
+$dark-gradient-dark-purple: linear-gradient(to top right, #1a0a22, #5a0c0c);
+$dark-gradient-pink: linear-gradient(to top right, #690b74, #a314b3);
+$dark-gradient-blue: linear-gradient(to top right, #104472, #1767ad);
+$dark-gradient-green: linear-gradient(to top right, #0f4e1e, #188a33);
+$dark-gradient-primary: linear-gradient(to top right, $primary-dark, $primary);

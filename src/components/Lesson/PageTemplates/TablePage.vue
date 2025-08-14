@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width content-start" style="padding-top: 50px">
+  <div class="full-width content-start">
     <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md">
         <q-img
             cover
@@ -11,11 +11,12 @@
         flat
         bordered
         separator="vertical"
+        class="q-my-sm"
       >
         <thead v-if="table.header?.length > 0">
-          <tr>
+          <tr class="text-left">
             <th v-for="(th, thIndex) in table.header" :key="thIndex">
-              {{ th.text }}
+              <div style="white-space: wrap;" class="text-subtitle2"><b v-html="th.text"></b></div>
             </th>
           </tr>
         </thead>

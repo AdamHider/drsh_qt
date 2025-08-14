@@ -43,20 +43,39 @@
                   <q-item-section>
                     <b>Новый результат: </b>
                   </q-item-section>
-                  <q-item-section side>
-                    <div v-if="lesson.active.exercise.data.totals.difference > 0">
-                      <q-avatar class="q-mr-xs" size="sm" color="green-2"><q-icon size="xs" color="positive" name="keyboard_double_arrow_up"></q-icon></q-avatar>
-                      <b class="text-positive" style="vertical-align: middle">{{ currentPoints }}</b>
-                    </div>
-                    <div v-else-if="lesson.active.exercise.data.totals.difference < 0">
-                      <q-avatar class="q-mr-xs" size="sm" color="red-2"><q-icon size="xs" color="negative" name="keyboard_double_arrow_down"></q-icon></q-avatar>
-                      <b class="text-negative" style="vertical-align: middle">{{ currentPoints }}</b>
-                    </div>
-                    <div v-else>
-                      <b style="vertical-align: middle">{{ currentPoints }}</b>
-                    </div>
-                  </q-item-section>
                 </q-item>
+                <div>
+                  <q-list class="text-left" dense>
+                    <q-item>
+                      <q-item-section>Баллы:</q-item-section>
+                      <q-item-section class="text-right"><b>+{{ lesson.active.exercise?.data.totals?.points }}</b></q-item-section>
+                    </q-item>
+                    <q-item v-if="lesson.active.exercise?.data.totals?.time_bonus > 0">
+                      <q-item-section>Бонус за время:</q-item-section>
+                      <q-item-section class="text-right">+{{ lesson.active.exercise?.data.totals?.time_bonus }}</q-item-section>
+                    </q-item >
+                    <q-item v-else>
+                      <q-item-section>Бонусы:</q-item-section>
+                      <q-item-section class="text-right">0</q-item-section>
+                    </q-item >
+                    <q-item>
+                      <q-item-section><b>Всего:</b></q-item-section>
+                      <q-item-section class="text-right text-bold">
+                        <div v-if="lesson.active.exercise.data.totals.difference > 0">
+                          <q-avatar class="q-mr-xs" size="sm" color="green-2"><q-icon size="xs" color="positive" name="keyboard_double_arrow_up"></q-icon></q-avatar>
+                          <b class="text-positive" style="vertical-align: middle">{{ currentPoints }}</b>
+                        </div>
+                        <div v-else-if="lesson.active.exercise.data.totals.difference < 0">
+                          <q-avatar class="q-mr-xs" size="sm" color="red-2"><q-icon size="xs" color="negative" name="keyboard_double_arrow_down"></q-icon></q-avatar>
+                          <b class="text-negative" style="vertical-align: middle">{{ currentPoints }}</b>
+                        </div>
+                        <div v-else>
+                          <b style="vertical-align: middle">{{ currentPoints }}</b>
+                        </div>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </div>
               </q-list>
             </q-card-section>
             <q-card-section v-if="lesson.active.exercise.data.totals.reward" class="q-pb-sm q-pt-sm">
@@ -142,16 +161,16 @@ const load = async () => {
   await getItem(route.params.lesson_id)
   transitionTrigger.value = true
   if(lesson.active.exercise?.data.totals.difference > 0) {
-    currentPoints.value = lesson.active.exercise?.data.totals.points;
-    previousPoints.value = lesson.active.exercise?.data.totals.points - lesson.active.exercise?.data.totals.difference;
+    currentPoints.value = lesson.active.exercise?.data.totals.total;
+    previousPoints.value = lesson.active.exercise?.data.totals.total - lesson.active.exercise?.data.totals.difference;
   }
   if(lesson.active.exercise?.data.totals.difference < 0) {
-    currentPoints.value = lesson.active.exercise?.data.totals.points + lesson.active.exercise?.data.totals.difference;
-    previousPoints.value = lesson.active.exercise?.data.totals.points;
+    currentPoints.value = lesson.active.exercise?.data.totals.total + lesson.active.exercise?.data.totals.difference;
+    previousPoints.value = lesson.active.exercise?.data.totals.total;
   }
   if(lesson.active.exercise?.data.totals.difference == 0) {
-    currentPoints.value = lesson.active.exercise?.data.totals.points
-    if(lesson.active.exercise.attempts > 0) previousPoints.value = lesson.active.exercise?.data.totals.points;
+    currentPoints.value = lesson.active.exercise?.data.totals.total
+    if(lesson.active.exercise.attempts > 0) previousPoints.value = lesson.active.exercise?.data.totals.total;
   }
 }
 

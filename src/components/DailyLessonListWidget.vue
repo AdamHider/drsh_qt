@@ -1,23 +1,23 @@
 <template>
   <div class="column q-gutter-md" v-if="lessons.length > 0">
-    <q-btn class="bg-gradient-primary" round push>
+    <q-btn class="bg-gradient-primary" round push @click="dailyLessonDialog = true">
       <q-avatar size="60px" class="daily-lesson-avatar">
         <img src="/images/icons/radar.png" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
       </q-avatar>
-      <q-badge floating rounded color="secondary" style="width: 20px; height: 20px;"><b>{{ lessons.length }}</b></q-badge>
+      <q-badge v-if="unexploredCount > 0" floating rounded color="secondary" style="width: 20px; height: 20px; box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"><b>{{ unexploredCount }}</b></q-badge>
       <q-menu anchor="top middle" self="bottom middle"
         transition-show="jump-up"
         transition-hide="jump-down"
         class="bg-transparent q-flat allow-overflow" fit>
-        <div class="row no-wrap justify-center q-py-md q-px-sm">
-          <div class="column q-gutter-md">
-          <q-btn v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`"
-            class="bg-secondary" :to="`/lesson-startup-${lesson.id}`" round push>
-            <q-avatar size="57px" class="daily-lesson-avatar lesson" :style="`background-image: url('${lesson.course_section.background_image}'); background-size: cover;`" >
-              <q-img :src="lesson.image" width="45px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" />
+        <div v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`" class="text-center q-mb-md ">
+          <router-link :to="`/lesson-startup-${lesson.id}`">
+            <q-avatar clickable v-ripple  :to="`/lesson-startup-${lesson.id}`"
+              :class="`q-push relative-position  ${(lesson.is_explored) ? '' : 'daily-lesson-avatar'}`" size="60px"
+              :style="`background-image: url(${lesson.course_section.background_image}); background-size: cover; background-position: center; height: 64px;`">
+                <q-img :src="lesson.image" width="50px" style="filter: drop-shadow(0px 0px 15px #35adf4);" />
             </q-avatar>
-          </q-btn>
-        </div>
+            <div class="text-white text-caption"><b>{{ lesson.title }}</b></div>
+          </router-link>
         </div>
       </q-menu>
     </q-btn>
@@ -25,21 +25,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onActivated } from 'vue'
-import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { ref, toRef, onActivated, watch } from 'vue'
 import { useLesson } from '../composables/useLesson'
 
 const { lesson, getDailyList  } = useLesson()
-const  router = useRouter()
 
 const error = ref(false)
-const fabButton = ref(false)
 
 const lessons = ref([])
+const dailyLessonDialog = ref(false)
+const unexploredCount = ref(0)
 
 const props = defineProps({
-  activeOnly: Boolean
+  activeOnly: Boolean,
+  reloadTrigger: Boolean
 })
+
+const reloadTrigger = toRef(props, "reloadTrigger");
 
 const load = async () => {
   const questListResponse = await getDailyList()
@@ -49,9 +51,15 @@ const load = async () => {
     return false;
   }
   lessons.value = lesson.dailyList
+  unexploredCount.value = lessons.value.filter(function(item){
+    return !item.is_explored;
+  }).length;
 }
 
 onActivated(() => {
+  load()
+})
+watch(() => reloadTrigger.value, () => {
   load()
 })
 

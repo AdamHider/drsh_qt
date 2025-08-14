@@ -39,7 +39,7 @@
         <q-card class="rounded-b-0">
           <q-list bordered separator>
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
-            <q-item dense clickable v-ripple :class="(starsLevel >= 1) ? 'bg-green-1' : ''">
+            <q-item dense clickable v-ripple :style="(starsLevel == 1) ? '' : 'filter: grayscale(1)'">
               <q-item-section avatar>
                   <img src="/images/star_1x.png" width="30px">
               </q-item-section>
@@ -56,7 +56,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item dense clickable v-ripple :class="(starsLevel >= 2) ? 'bg-green-1' : ''">
+            <q-item dense clickable v-ripple  :style="(starsLevel == 2) ? '' : 'filter: grayscale(1)'">
               <q-item-section avatar>
                   <img src="/images/star_2x.png" width="30px">
               </q-item-section>
@@ -73,7 +73,7 @@
               </q-item-section>
             </q-item>
 
-            <q-item dense clickable v-ripple :class="(starsLevel == 3) ? 'bg-green-1' : ''">
+            <q-item dense clickable v-ripple :style="(starsLevel == 3) ? '' : 'filter: grayscale(1)'">
               <q-item-section avatar>
                   <img src="/images/star_3x.png" width="30px">
               </q-item-section>
@@ -131,9 +131,9 @@ const calculateStarsValue = () => {
 }
 const calculateBackface = () => {
   if(exercise.value && exercise.value.data?.totals?.prev_points) {
-    backfaceValue.value = exercise.value.data.totals.prev_points / exercise.value.data.totals.total * 100
+    backfaceValue.value = exercise.value.data.totals.prev_points / exercise.value.data.totals.max_points * 100
   }
-  
+
   if(backfaceValue.value > 100) {backfaceValue.value = 100}
 }
 

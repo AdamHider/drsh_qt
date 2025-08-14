@@ -1,9 +1,9 @@
 <template>
   <q-page-wrapper>
-    <q-app-header class="transparent text-white rounded-b-md" reveal>
+    <q-app-header class="transparent text-white rounded-b-md q-my-xs" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title></q-toolbar-title>
-        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="28px" transparent/>
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
     </q-app-header>
     <q-page class="full-width" style="padding-top: 50px; overflow: hidden;">
       <q-card class="transparent no-shadow full-width " style="position: relative; z-index: 1;">

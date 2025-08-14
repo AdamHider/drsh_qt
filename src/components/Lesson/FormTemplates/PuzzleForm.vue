@@ -113,6 +113,9 @@ const renderFields = () => {
     field.width = calculateWidth(field)
     formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
   }
+  if(formData.fields.length == 1){
+    matchStart(0)
+  }
   emits('update-answer', formData.fields)
 }
 const calculateWidth = (field) => {

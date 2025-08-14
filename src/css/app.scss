@@ -63,6 +63,10 @@ a{
   border-top-left-radius: $generic-border-radius;
   border-top-right-radius: $generic-border-radius;
 }
+.rounded-r-none{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
 .q-pa-none-important{
     padding: 0 !important;
 }
@@ -172,10 +176,13 @@ a{
 .bg-gradient-orange   { background: $gradient-orange; }
 .bg-gradient-indigo   { background: $gradient-indigo; }
 .bg-gradient-light-blue   { background: $gradient-light-blue; }
+.bg-gradient-dark-purple   { background: $gradient-dark-purple; }
+.bg-gradient-pink   { background: $gradient-pink; }
 
 .bg-gradient-terralit   { background: $gradient-terralit; }
 .bg-gradient-isonit   { background: $gradient-isonit; }
 .bg-gradient-science   { background: $gradient-science; }
+
 
 .bg-light-gradient-primary  { background: $light-gradient-primary; }
 .bg-light-gradient-secondary{ background: $light-gradient-secondary; }
@@ -197,10 +204,17 @@ a{
 .bg-light-gradient-blue-to-right { background: $light-gradient-blue-to-right; }
 .bg-light-gradient-primary-to-right { background: $light-gradient-primary-to-right; }
 
+.bg-dark-gradient-dark-purple   { background: $dark-gradient-dark-purple; }
+.bg-dark-gradient-pink   { background: $dark-gradient-pink; }
+.bg-dark-gradient-blue   { background: $dark-gradient-blue; }
+.bg-dark-gradient-green   { background: $dark-gradient-green; }
+.bg-dark-gradient-primary   { background: $dark-gradient-primary; }
+
 .bg-dark-transparent { background: $dark-transparent; }
 .bg-dark-transparent .q-linear-progress__model { color:  $dark-transparent; }
 
 .bg-dark-transparent-50 { background: $dark-transparent-50; }
+
 
 .q-card__actions .q-btn--rectangle.q-btn--push{
   padding: 4px 16px;
@@ -258,7 +272,15 @@ a{
   border-radius: inherit;
 }
 
+.q-linear-progress__track--light{
+  background: rgba(0, 0, 0, 0.5);
+}
+
 .q-push.q-item{
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 3px 1px -2px rgba(0, 0, 0, 0.12), inset 0px -1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 0px 0px 2px #ffffff21;
+  border-bottom: 4px solid rgba(0, 0, 0, 0.15);
+}
+.q-push.q-avatar{
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 3px 1px -2px rgba(0, 0, 0, 0.12), inset 0px -1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), inset 0px 0px 0px 2px #ffffff21;
   border-bottom: 4px solid rgba(0, 0, 0, 0.15);
 }

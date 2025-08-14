@@ -2,7 +2,7 @@
   <q-card class="bg-transparent full-height column no-wrap justify-end">
     <q-card-section class="overflow-auto" ref="scrollContainer">
       <div style="padding-bottom: 60px;">
-        <div class="q-pa-sm q-mb-md text-white text-center">
+        <div class="q-pa-sm text-white text-center">
           <div class="text-subtitle1"><b>{{ props.quest.title }}</b></div>
           <div class="text-caption">{{ props.quest.data[replicaMode].description }}</div>
         </div>
@@ -17,25 +17,25 @@
                 <q-item-section>
                   <q-card class="q-push q-ml-md">
                     <q-card-section class="q-py-sm">
-                      <div><b>{{ replica.name }}</b></div>
+                      <div><b>{{ user.active.data.name }}</b></div>
                       <div class="text-caption">{{ replica.text }}</div>
                     </q-card-section>
                   </q-card>
                 </q-item-section>
                 <q-item-section avatar>
                   <q-avatar size="60px" style="box-shadow: 0px 0px 0px 2px white;">
-                    <q-img :src="replica?.image"  style="transform: scaleX(-1);"/>
+                    <q-img :src="user.active.data.character.image"  style="transform: scaleX(-1);"/>
                   </q-avatar>
                 </q-item-section>
               </q-item>
               <q-item v-else class="q-px-sm">
                 <q-item-section avatar>
-                  <q-avatar size="60px" :class="`bg-gradient-${props.quest.group.color}`"  style="box-shadow: 0px 0px 0px 2px white;">
+                  <q-avatar size="60px" :class="`bg-dark-gradient-${replica.color}`"  style="box-shadow: 0px 0px 0px 2px white;">
                     <q-img :src="replica?.image"/>
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>
-                  <q-card :class="`q-push bg-gradient-${props.quest.group.color} text-white`">
+                  <q-card :class="`q-push bg-gradient-${replica.color} text-white`">
                     <q-card-section class="q-py-sm  q-mr-md">
                       <div><b>{{ replica.name }}</b></div>
                       <div class="text-caption">{{ replica.text }}</div>
@@ -54,9 +54,9 @@
           <q-separator dark/>
             <q-item class="q-pa-sm">
               <q-item-section class="text-left q-pb-sm">
-                <div class="row q-my-sm justify-between items-end" >
-                  <div class="text-subtitle2"><b>{{ props.quest.description }}</b></div>
-                  <div class="col text-right self-end">
+                <div class="flex q-mb-md q-my-sm justify-between items-end" >
+                  <div class="text-subtitle2 col-10"><b>{{ props.quest.description }}</b></div>
+                  <div class="col-2 text-right self-end">
                       <span class="text-subtitle2"><b>{{props.quest.progress}}</b></span>
                       <span class="text-caption"><b>/{{ props.quest.value }}</b></span>
                   </div>
@@ -160,10 +160,6 @@ const nextReplica = () => {
   let activeReplica = props.quest.data[replicaMode.value].dialogue[activePage.value]
   if(!props.quest.data[replicaMode.value].dialogue[activePage.value + 1]){
     isLastReplica.value = true
-  }
-  if(activeReplica.is_user){
-    activeReplica.image = user.active.data.character.image
-    activeReplica.name = user.active.data.name
   }
   replicaList.value.push(activeReplica)
   nextDisabled.value = true

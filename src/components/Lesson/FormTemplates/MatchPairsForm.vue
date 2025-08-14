@@ -6,6 +6,7 @@
               tabindex="-1"
               @focus="matchStart(index)"
               @blur="matchEnd"
+              @click="(formData.fields[index].answer && !formData.fields[index].answer.is_correct) ? input.modal = true : ''"
               :ref="el => { fieldsRefs[index] = el }"
               :class="`q-lesson-field bg-grey-3 full-width full-height ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
 
@@ -18,7 +19,6 @@
                 <b v-else>_</b>
               </q-chip>
             </div>
-            <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
             <q-dialog v-model="input.modal" position="right">
               <q-card flat class="relative-position allow-overflow rounded-r-0">
                 <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/codex_full.png"/>
@@ -181,7 +181,7 @@ watch(formData.fields, (newValue, oldValue) => {
     box-shadow: none !important;
   }
   &.q-active{
-    background: $grey-5 !important;
+    background: $grey-5;
     box-shadow: 0px 2px 0px 3px #d57500;
     .q-lesson-field-value{
       box-shadow: 0px 0px 0px 2px #d57500 !important;
@@ -190,7 +190,7 @@ watch(formData.fields, (newValue, oldValue) => {
   &.is-correct{
     box-shadow: 0px 2px 0px 3px #1c9f3b;
     &.q-active .q-lesson-field-value{
-    box-shadow: 0px 0px 0px 2px #1c9f3b !important;
+      box-shadow: 0px 0px 0px 2px #1c9f3b !important;
     }
   }
   &.is-incorrect{

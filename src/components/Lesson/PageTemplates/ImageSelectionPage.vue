@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width content-start " style="padding-top: 50px">
+  <div class="full-width content-start ">
     <q-card class="q-ma-sm " flat>
         <q-card-section class="q-pa-sm ">
           <q-img v-if="data.data.image"

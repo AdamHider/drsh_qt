@@ -38,6 +38,7 @@
       clickable
       @blur="matchEnd"
       :class="`q-lesson-field q-pa-xs q-ma-sm flex text-subtitle2`"
+      v-if="activeInput"
     >
       <q-item-section>
         <div v-if="activeInput.value.array.length == 0">

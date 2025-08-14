@@ -21,6 +21,7 @@
         :class="`planet-block row q-px-sm q-py-md ${courseSectionIndex % 2 ? 'justify-end' : 'justify-start'} ${courseSectionItem.is_blocked === true ? 'is-blocked' : ''} ${courseSectionItem.is_initial ? 'is-initial' : ''}`"
       >
         <div :class="`col-6`" style="position: relative; z-index: 10">
+          <div v-if="courseSectionItem.is_quest" id="scrollAnchor"></div>
           <transition
             appear
             enter-active-class="animated zoomIn"
@@ -169,7 +170,8 @@ onMounted(async () => {
   selectedLesson.value = 0;
   await load()
   setTimeout(() => {
-    if(bottomPoint.value) bottomPoint.value.scrollIntoView()
+    if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "center", behavior: "smooth"})
+    else if(bottomPoint.value) bottomPoint.value.scrollIntoView()
   }, 250);
 });
 onActivated(async () => {

@@ -6,7 +6,8 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field bg-grey-3 ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            @click="(formData.fields[index].answer && !formData.fields[index].answer.is_correct) ? input.modal = true : ''"
+            :class="`q-lesson-field ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : 'has-value'} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
             :style="`width: ${input.width}px`"
           >
             <q-chip
@@ -16,7 +17,6 @@
               <b v-else>_</b>
             </q-chip>
           </div>
-          <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
           <q-dialog v-model="input.modal" position="right">
             <q-card flat class="relative-position allow-overflow rounded-r-0">
               <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/codex_full.png"/>
@@ -103,6 +103,9 @@ const renderFields = () => {
     field.width = calculateWidth(field)
     formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
   }
+  if(formData.fields.length == 1){
+    matchStart(0)
+  }
   emits('update-answer', formData.fields)
 }
 const calculateWidth = (field) => {
@@ -110,7 +113,11 @@ const calculateWidth = (field) => {
   for(var i in field.variants){
     if(field.variants[i].text.length >= length) length = field.variants[i].text.length
   }
-  return length*12;
+  let modifier = 11;
+  if(length <= 6){
+    modifier = 15
+  }
+  return length*modifier;
 }
 const matchEnd = (evt) => {
   if(evt.explicitOriginalTarget.nodeName == '#text' || !evt.explicitOriginalTarget.closest(".q-field")) currentIndex.value = null;
@@ -139,17 +146,45 @@ watch(formData.fields, (newValue, oldValue) => {
 .q-lesson-field {
   display: inline-block;
   min-width: 35px;
-  &.is-inactive:not(.is-answered):before{
-    top: 0;
+  box-shadow: none;
+  margin: 2px;
+  &:before{
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
     height: 100%;
-    box-shadow: inset 0px 0px 0px 2px $primary;
-    animation: pulseBottomLessonField 1.5s infinite alternate;
+    border-bottom: 2px dotted #00000083;
+    border-radius: 8px 8px 0 0  !important;
+    box-shadow: none !important;
+    opacity: 1;
+    /*animation: pulseBottomLessonField 1.5s infinite alternate;*/
+    animation:none  !important;
+    transition: 0.3s all ease;
   }
   &.is-answered{
     box-shadow: none !important;
   }
   &.q-active{
-    background: $grey-5 !important;
+    border-color: $primary;
+    background: $grey-3 !important;
+    &:before{
+      top: 4px !important;
+    }
+  }
+  &.has-value{
+    &:before{
+      top: 4px !important;
+      opacity: 0;
+    }
+  }
+  &.is-correct{
+    background: none !important;
+    border: none;
+  }
+  &.is-incorrect{
+    background: none !important;
+    border: none;
   }
   .q-lesson-field-value{
     margin: 0;

@@ -108,8 +108,10 @@ const startQuest = async (questId) => {
 
 const showQuest = (questId) => {
   const quest = quests.value.find((quest) => { return quest.id == questId});
+  
   activeQuest.value =  quest
   activeQuestDialog.value = true
+
 }
 const claimReward = async (questId) => {
   const questRewardResponse = await api.quest.claimReward({ quest_id: questId })

@@ -1,10 +1,10 @@
 <template>
       <q-item :dense="props.dense"
         :class="`relative bg-light-gradient-${resource?.color} text-white ${(props.dense) ? 'q-py-xs q-pl-sm rounded-sl': 'rounded-md'} ${(transparent) ? 'bg-dark-transparent' : ''} ${(props.push) ? 'q-push': ''} ${props.class ?? ''}`" >
-          <q-item-section avatar style="z-index: 1"  :style="`min-width: ${props.size};`">
+          <q-item-section avatar style="z-index: 2"  :style="`min-width: ${props.size};`">
               <q-img :width="props.size" :src="resource?.image" style="filter: drop-shadow(rgba(0, 0, 0, 0.44) 0px 2px 2px); scale: 1.2;"/>
           </q-item-section>
-          <q-item-section style="z-index: 1">
+          <q-item-section style="z-index: 2; text-shadow: 0px 1px 2px #00000094;">
               <q-item-label :class="`${(props.dense) ? '' : 'text-h7'} `">
                   <span class=""><b>{{resource?.quantity}}</b></span>
                   <span v-if="resource.is_restorable"><b>{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</b></span>
@@ -12,23 +12,29 @@
               </q-item-label>
               <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{resource?.title}}</b></q-item-label>
           </q-item-section>
-          <q-linear-progress v-if="resource.is_restorable"
+          <div v-if="resource.is_restorable"
             size="24px"
-            :color="resource?.color"
-            :value="percentageCount/100"
-            :class="`absolute-top ${(props.dense) ? 'q-py-xs q-pl-sm rounded-sl': 'rounded-md'} full-width full-height`" style="background-color: rgba(0, 0, 0, 0.2)"/>
-          <div v-if="resource.is_restorable && resource.restoration?.nextRestoration > 0" class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
-            <q-chip
-              dense
-              size="10px"
-              text-color="white"
-              color="dark"
-              class="q-ma-none"
-              :style="`max-width: none; background-color: ${(transparent) ? '#0000006c' : ''}`"
-            >
-              <b>{{ timerCount }}</b>
-            </q-chip>
+            :class="`absolute-top ${(props.dense) ? 'rounded-sl': 'rounded-md'} full-width overflow-hidden`" style="height: calc(100% - 1px) !important">
+            <div class="absolute-top full-width full-height" style="z-index: 0; background: rgba(0, 0, 0, 0.31)"></div>
+            <div :class="`relative-position ${(props.dense) ? 'q-py-xs q-pl-sm rounded-sm': 'rounded-md'} full-height bg-light-gradient-${resource?.color}`" :style="`width: ${percentageCount}% !important; z-index: 1`"></div>
+
           </div>
+          <transition appear
+            enter-active-class="animated fadeInDown animation-delay-2"
+            leave-active-class="animated fadeOutUp">
+            <div v-if="showCountdown" class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
+              <q-chip
+                dense
+                size="10px"
+                text-color="white"
+                color="dark"
+                class="q-ma-none"
+                :style="`max-width: none; background-color: ${(transparent) ? '#0000006c' : ''}`"
+              >
+                <b>{{ timerCount }}</b>
+              </q-chip>
+            </div>
+          </transition>
           <div v-if="props.withBadge">
             <div v-if="props.dense" class="absolute" style="right: -12px">
               <q-btn dense round push size="10px" icon="add" color="isonit" :to="props.badgeLink"/>
@@ -58,18 +64,25 @@ const props = defineProps({
 })
 const resource = toRefs(props).resource
 
-const cancelCountdown = ref(false)
+const showCountdown = ref(false)
 const timerCount = ref('0:00')
 const percentageCount = ref(100)
+const activeCountdown = ref(false)
+
+const calculateRestoration = () => {
+  if(!resource.value.restoration) return
+  percentageCount.value = (resource.value.restoration.restorationTime - resource.value.restoration.nextRestoration) * 100 / resource.value.restoration.restorationTime
+  timerCount.value = secondsFormat(resource.value.restoration.nextRestoration)
+}
 
 const countdown = () => {
-  if (resource.value.restoration.nextRestoration >= 0) {
+  if (resource.value.restoration?.nextRestoration >= 0) {
     setTimeout(async () => {
-      if(!resource.value.restoration) return
-      if (cancelCountdown.value) return
+      if(!resource.value.restoration || !activeCountdown.value) return
       resource.value.restoration.nextRestoration -= 1
-      timerCount.value = secondsFormat(resource.value.restoration.nextRestoration)
+      calculateRestoration()
       if (resource.value.restoration.nextRestoration == 0) getItem()
+      showCountdown.value = true
       countdown()
     }, 1000)
   }
@@ -80,19 +93,19 @@ const secondsFormat = (timeLeft) => {
   const minutes = parseInt(timeLeft / 60, 10) % 60
   return `${minutes}:${seconds}`
 }
-const dialog = ref(false)
 
-onActivated(() => {
-  cancelCountdown.value = false
+onActivated(async () => {
+  showCountdown.value = false
   if (!resource.value.restoration) return
-  percentageCount.value = (resource.value.restoration.restorationTime - resource.value.restoration.nextRestoration) * 100 / resource.value.restoration.restorationTime
-  timerCount.value = secondsFormat(resource.value.restoration.nextRestoration)
-  cancelCountdown.value = false
+  await getItem()
+  calculateRestoration()
+  if(!activeCountdown.value) activeCountdown.value = true
   countdown()
+
 })
 onDeactivated(() => {
-  cancelCountdown.value = true
-  //countdown()
+  activeCountdown.value = false
+  showCountdown.value = false
 })
 
 watch(() => resource.value?.restoration, () => {

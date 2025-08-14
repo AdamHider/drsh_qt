@@ -4,21 +4,21 @@
             <Teleport :to="`\#input_${input.index}`">
                 <div class="row justify-between ">
                   <div class="col-6 q-pa-xs" v-for="(image, imageIndex) in formData.fields[index].options" :key="imageIndex">
-                    <transition appear 
+                    <transition appear
                     enter-active-class="animated fadeInUp"
                     leave-active-class="animated fadeOutDown">
                     <div>
                       <q-card v-if="!formData.fields[index].answer"
                         :class="`q-lesson-radio cursor-pointer rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
                         @click="formData.fields[index].value.text = image.text; playAudio(image.audio_link)">
-                        <q-card-section class="text-center text-subtitle1 ">
+                        <q-card-section class="flex items-center justify-center text-center text-subtitle1 " style="line-height: 1.2; min-height: 4.4rem;">
                           <b>{{ transliterateHTML(image.text) }}</b>
                         </q-card-section>
                       </q-card>
 
                       <q-card v-else :class="`q-lesson-radio rounded-sm ${(formData.fields[index].answer.answer == image.text) ? 'is-correct' : (formData.fields[index].answer.value == image.text) ? 'is-incorrect' : ''}`">
-                          <q-card-section class="text-center text-subtitle1">
-                            <q-icon v-if="formData.fields[index].answer.value == image.text" class="q-mr-sm " name="check" size="20px"></q-icon>
+                          <q-card-section class="flex items-center justify-center text-center text-subtitle1" style="line-height: 1.2; min-height: 4.4rem;">
+                            <q-icon v-if="formData.fields[index].answer.value == image.text" class="absolute-bottom-right q-ma-sm " name="check" size="20px"></q-icon>
                             <b class="vertical-middle">{{ transliterateHTML(image.text) }}</b>
                           </q-card-section>
                       </q-card>

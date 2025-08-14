@@ -40,8 +40,8 @@ export function useLesson () {
     lesson.active.page = lessonPageResponse
     return lessonPageResponse
   }
-  async function saveAnswer (answers) {
-    const exerciseAnswerResponse = await api.exercise.saveAnswer({ lesson_id: lesson.active.id, data: answers })
+  async function saveAnswer (answers, time) {
+    const exerciseAnswerResponse = await api.exercise.saveAnswer({ lesson_id: lesson.active.id, data: answers, time })
     lesson.active.page = exerciseAnswerResponse
     return exerciseAnswerResponse
   }

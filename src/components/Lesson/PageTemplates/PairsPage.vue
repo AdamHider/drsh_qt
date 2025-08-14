@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width content-start" style="padding-top: 50px">
+  <div class="full-width content-start">
     <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md">
         <q-img
             cover

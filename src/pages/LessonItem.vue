@@ -4,10 +4,10 @@
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" :exercise="lesson.active.exercise" compact/>
     </q-app-header>
-    <q-page class="bg-white flex  full-width full-height lesson-page" style="padding-top: 40px;">
-        <q-card flat class="lesson-header relative text-left full-width absolute" style="top: 60px" v-if="lesson.active.page?.header?.title">
+    <q-page class="bg-white column full-width full-height lesson-page" style="padding-top: 60px;">
+        <q-card flat class="lesson-header relative text-left full-width">
             <q-card-section class="q-py-none">
-                <div class="flex justify-between">
+                <div class="flex no-wrap  justify-between">
                   <div class="text-subtitle1"><b>{{ lesson.active.page?.header?.index }}. </b><b v-html="lesson.active.page?.header?.title"></b></div>
                   <div>
                     <span class="text-subtitle1 text-bold text-primary">{{ lesson.active.page?.header?.index }}/</span>
@@ -96,17 +96,23 @@ const onPageChanged = async (action) => {
   }
 }
 
-const onAnswerSaved = async () => {
+const onAnswerSaved = async (timeBonus = 0) => {
   const answers = {}
   for (const i in pageAnswers.value) {
     answers[i] = pageAnswers.value[i].value
   }
-  const exerciseAnswerResponse = await saveAnswer(answers)
+  const exerciseAnswerResponse = await saveAnswer(answers, timeBonus)
   progress.value = exerciseAnswerResponse.progress
   rendered.value = false
   setTimeout(() => {
     rendered.value = true
   },0)
+  /*
+  setTimeout(() => {
+    document.querySelector('.q-scrollarea__container').scrollTo(0, document.body.scrollHeight)
+  },100)
+*/
+
 }
 const onDialogOpened = async (status) => {
   dialogOpened.value = status

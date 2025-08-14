@@ -1,5 +1,5 @@
 <template>
-     <div class="full-width q-pa-sm self-end" :style="`padding-top: 50px;`" >
+     <div class="full-width q-pa-sm self-end" >
 
       <q-list>
         <div v-for="(replica, index) in replicaList.list" :key="index">
@@ -104,7 +104,7 @@ const renderData = () => {
     if(lesson.active.page.data.replica_list[i].input_index !== undefined && !lesson.active.page.data.replica_list[i].is_answered){
       activeInput.value = lesson.active.page.data.replica_list[i].input_index
       isShown = false
-    }  
+    }
     replicaList.list.push(lesson.active.page.data.replica_list[i])
   }
 }
