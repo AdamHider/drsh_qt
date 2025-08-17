@@ -1,5 +1,5 @@
 <template>
-  <div class="relative-position" style="z-index: 1;" ref="scrollAreaRef">
+  <div class="relative-position" style="z-index: 1;">
     <q-card class="transparent text-white q-mb-md" flat>
       <q-card-section>
         <div class="text-subtitle1">
@@ -85,7 +85,7 @@
       <q-separator class="section-separator" style="border-bottom: 2px dashed white; opacity: 0.25;" />
     </div>
   </div>
-    <div ref="bottomPoint" class="bottomPoint" style="margin-top: 60px;"></div>
+  <div ref="bottomPoint" class="bottomPoint" style="margin-top: 60px;"></div>
   <q-page-sticky class="fixed full-width full-height" >
     <q-img :src="activeCourseSection.background_image" class="absolute-top absolute-left full-width full-height" no-spinner/>
   </q-page-sticky>

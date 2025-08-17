@@ -1,5 +1,5 @@
 <template>
-  <q-page-wrapper>
+  <q-page-container>
     <q-app-header class="bg-white rounded-b-md" contentClass="items-end" reveal>
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" :exercise="lesson.active.exercise" compact/>
@@ -21,7 +21,7 @@
         <q-page-sticky v-if="lesson.active.page?.header?.note" position="bottom-left">
           <LessonNote :note="lesson.active.page?.header?.note"/>
         </q-page-sticky>
-        <component :is="PageTemplate" @onRendered="rendered = true"/>
+        <component :is="PageTemplate" @onRendered="rendered = true" class=" q-desc-px-quart"/>
     </q-page>
     <q-footer expand position="bottom" class="bg-white lesson-bottombar ">
         <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
@@ -39,7 +39,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-  </q-page-wrapper>
+  </q-page-container>
 </template>
 
 <script setup>

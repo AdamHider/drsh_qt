@@ -5,26 +5,31 @@ const routes = reactive({
   course: {
     link: '/courses',
     is_updated: false,
+    label: 'Галактика',
     hash: ''
   },
   skills: {
     link: '/skills',
     is_updated: false,
+    label: 'Технологии',
     hash: ''
   },
   leaderboard: {
     link: '/leaderboard',
     is_updated: false,
+    label: 'Рейтинг',
     hash: ''
   },
   notifications: {
     link: '/notifications',
     is_updated: false,
+    label: 'Уведомления',
     hash: ''
   },
   user: {
     link: '/user',
     is_updated: false,
+    label: 'Профиль',
     hash: ''
   }
 })

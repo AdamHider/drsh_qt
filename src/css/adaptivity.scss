@@ -1,0 +1,36 @@
+/*
+.app-layout{
+    max-width: 700px;
+    margin: 0 auto !important;
+    box-shadow: 0px 0px 10px #00000045;
+  }
+  .q-app-header{
+    max-width: 700px;
+    margin: 0 auto !important;
+  }*/
+
+
+  .desktop .q-desc-px-quart{
+    padding-left: 25%;
+    padding-right: 25%;
+  }
+  .desktop .q-desc-mx-quart{
+    width: 50% !important;
+    margin: 0 auto !important;
+  }
+  .desktop .q-desc-mx-75{
+    width: 75% !important;
+    margin: 0 auto !important;
+  }
+  .desktop .q-page{
+      padding-bottom: 0px !important;
+  }
+  .desktop .satellites.has-orbit:before{
+    display: none;
+  }
+
+  .desktop .q-dialog__inner.fixed-bottom,
+  .desktop .q-dialog__inner.fixed-full {
+    width: 76%;
+    margin-left: 24%;
+  }

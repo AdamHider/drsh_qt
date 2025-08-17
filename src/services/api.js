@@ -182,6 +182,9 @@ export class Api extends ApiService{
     market_offer = {
       getList: (params) => {
           return this.post('marketOffer', 'getList', params)
+      },
+      buyItem: (params) => {
+          return this.post('marketOffer', 'buyItem', params)
       }
     }
 }

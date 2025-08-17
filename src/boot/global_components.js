@@ -7,6 +7,10 @@ import PinField from '../components/PinField.vue'
 import AppProgressBar from '../components/AppProgressBar.vue'
 import AppTutorialItem from '../components/AppTutorialItem.vue'
 
+//Desktop
+import AppBottomBarDesktop from '../components/AppBottomBarDesktop.vue'
+
+
 // we globally register our component with Vue
 export default ({ app }) => {
   app.component('q-app-header', AppHeader)
@@ -17,4 +21,5 @@ export default ({ app }) => {
   app.component('q-pin-field', PinField)
   app.component('q-progress-bar', AppProgressBar)
   app.component('q-tutorial-item', AppTutorialItem)
+  app.component('q-bottom-bar-desktop', AppBottomBarDesktop)
 }

@@ -36,7 +36,7 @@
                   {{ user.active?.data.username }}
                 </div>
               </q-card-section>
-              <q-card-section class="q-pb-none" style="width: 80%; margin: 0 auto">
+              <q-card-section class="q-pb-none " style="width: 80%; margin: 0 auto">
                 <q-tutorial-item title="Уровень" description="Здесь отображается твой текущий уровень." :index="0"/>
                 <q-progress-bar :value="user.active.data.level?.percentage" size="25px" color="positive"/>
                 <div class="row q-ma-sm ">
@@ -122,8 +122,10 @@
           </transition>
       </q-page>
       <q-dialog v-model="inviteDialog">
-        <q-card v-if="userInvitation">
-          <q-img src="" />
+        <q-card v-if="userInvitation" class="relative-position allow-overflow">
+          <div class="absolute full-width text-center" style="bottom: 100%;">
+            <q-img width="200px" src="/images/market/character.png" style="max-width: 100%;"/>
+          </div>
           <q-card-section>
             <div class="items-center text-center">
               <div class="text-subtitle1"><b>Пригласи друзей с выгодой!</b></div>
@@ -201,6 +203,6 @@ watch(() => inviteDialog.value, async () => {
     background-size: 150%;
     background-position: center bottom;
     background-repeat: no-repeat;
-    bottom: 100%;
+    bottom: 99%;
 }
 </style>

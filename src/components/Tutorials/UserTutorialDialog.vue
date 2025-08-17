@@ -76,10 +76,12 @@
 <script setup>
 import { ref, onMounted, onActivated, watch } from 'vue'
 import { useTutorial } from '../../composables/useTutorial'
+import { useUserStore } from '../../stores/user'
 import { useRouter } from "vue-router";
 
 const { tutorial, setStatus, setIndex } = useTutorial()
 const router = useRouter();
+const { user } = useUserStore()
 
 const tutorialPageIndex = ref(0)
 const tutorialDialog = ref(false)

@@ -1,5 +1,5 @@
 <template>
-  <q-page-wrapper>
+  <q-page-container>
     <q-app-header class="transparent text-white rounded-b-md" ref="header">
       <CourseToggle v-bind:dialogOpened="courseDialog" v-on:update:dialogOpened="courseDialog = $event" @onSelect="getItem($event)"/>
       <q-toolbar-title></q-toolbar-title>
@@ -25,7 +25,7 @@
         </q-page-sticky>
 
     </q-page>
-  </q-page-wrapper>
+  </q-page-container>
 </template>
 
 <script setup>

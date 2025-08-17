@@ -2,7 +2,7 @@
   <q-page-container>
     <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce" contentClass="justify-between">
       <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-      <div class="flex full-width">
+      <div class="flex full-width justify-center">
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.isonit" dense no-caption size="24px" push/>
@@ -23,14 +23,14 @@
       </q-card>
       <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
           <AppBackground/>
-          <q-card-section style=" margin-top: -50px;">
+          <q-card-section style=" margin-top: -50px;" class="q-desc-mx-quart">
             <div class="row q-pb-sm">
               <div :class="`col col-${12/marketOffer.priority} q-pa-sm q-mt-sm`" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOfferIndex-${marketOfferIndex}`">
                 <q-card v-if="marketOffer.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover; margin-top: 40px;`">
                   <q-card-section horizontal class="q-pa-sm items-center">
-                    <q-img :src="marketOffer.image" width="50%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
+                    <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px; min-width: 150px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
                     <q-card-section class="q-pt-none">
-                      <div class="text-h6"><b>{{ marketOffer.title }}</b></div>
+                      <div class="text-h7" style="line-height: 1.5;"><b>{{ marketOffer.title }}</b></div>
                       <div class="text-caption">{{ marketOffer.description }}</div>
                     </q-card-section>
                   </q-card-section>
@@ -42,7 +42,12 @@
                     </div>
                   </q-card-section>
                   <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
-                    <q-btn class="q-item-blinking full-width" push color="primary" @click="openBuyDialog()">{{ marketOffer.price }} руб.</q-btn>
+                    <transition  mode="out-in"
+                        enter-active-class="animated zoomIn"
+                        leave-active-class="animated zoomOut">
+                        <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)">{{ marketOffer.price }}₽</q-btn>
+                        <q-btn v-else class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                    </transition>
                   </q-card-actions>
                 </q-card>
                 <q-card v-else-if="marketOffer.priority == 2" class="q-push q-mt-sm text-white text-center" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover;`">
@@ -61,7 +66,12 @@
                     </div>
                   </q-card-section>
                   <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
-                    <q-btn class="q-item-blinking full-width" push color="primary" @click="openBuyDialog()">{{ marketOffer.price }} RUB</q-btn>
+                    <transition  mode="out-in"
+                          enter-active-class="animated zoomIn"
+                          leave-active-class="animated zoomOut">
+                      <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)">{{ marketOffer.price }}₽</q-btn>
+                      <q-btn v-else class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                    </transition>
                   </q-card-actions>
                 </q-card>
               </div>
@@ -93,7 +103,7 @@ const error = ref(false)
 const headerShowForce = ref(false)
 const buyDialog = ref(false)
 
-const load = async function (filter) {
+const load = async (filter) => {
   const marketOfferListResponse = await api.market_offer.getList({})
   if (marketOfferListResponse.error) {
     error.value = marketOfferListResponse
@@ -102,8 +112,18 @@ const load = async function (filter) {
   }
   marketOffers.value = marketOfferListResponse
 }
-const openBuyDialog = function () {
-  buyDialog.value = true
+const openBuyDialog = async (offer_id) => {
+  //buyDialog.value = true
+  const marketOfferBoughtResponse = await api.market_offer.buyItem({offer_id})
+  if (marketOfferBoughtResponse.error) {
+    return;
+  }
+  for(let i in marketOffers.value){
+    if(marketOffers.value[i].id == marketOfferBoughtResponse) marketOffers.value[i].is_bought = true;
+    setTimeout(() => {
+      marketOffers.value[i].is_bought = false;
+    }, 2000)
+  }
 }
 onActivated(() => {
   load()

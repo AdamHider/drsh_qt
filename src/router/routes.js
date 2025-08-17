@@ -1,5 +1,7 @@
 import MainLayout from 'layouts/MainLayout.vue'
+import MainLayoutDesktop from 'layouts/MainLayoutDesktop.vue'
 import CoursePage from 'pages/CoursePage.vue'
+import { Platform } from 'quasar'
 import { useUserStore } from '../stores/user'
 const checkIfSigned = function (to, from) {
   const { user } = useUserStore()
@@ -13,10 +15,21 @@ const checkIfCharacterSelected = function (to, from) {
     return { path: '/user' }
   }
 }
+
+const checkIsMobile = function () {
+  return Platform.is.mobile
+}
+
 const routes = [
   {
     path: '/',
-    component: MainLayout,
+    component: function () {
+      if(checkIsMobile()){
+        return MainLayout
+      }else{
+        return MainLayoutDesktop
+      }
+    }  ,
     redirect: '/user',
     children: [
       {

@@ -24,6 +24,13 @@
         </q-card-section>
         <q-card-section>
           <div class="text-subtitle1"><b>Режим письменности</b></div>
+          <div v-if="formData.fields.writingMode.value == 'lat'" class="text-caption text-orange">
+            <q-icon name="report_problem" color="orange" size="20px"></q-icon>
+            Внимание! Выбрана латиница, но следует иметь в виду, что могут возникать ошибки и неточности. Рекомендуем выбрать кириллицу.
+          </div>
+          <div v-if="formData.fields.writingMode.value == 'cyr'" class="text-caption text-positive">
+            Кириллица - не лучший выбор, но пока это лучшее, из того, что есть.
+          </div>
           <q-form
             ref="form"
             v-model="formData.valid"
@@ -32,6 +39,15 @@
             class="full-width q-py-sm"
           >
           <q-list>
+            <q-item tag="label" v-ripple dense class="q-px-none">
+              <q-item-section avatar>
+                <q-radio v-model="formData.fields.writingMode.value" val="cyr" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)"/>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Кириллица (рекомендовано)</q-item-label>
+                <q-item-label caption>Весь крымскотатарский текст будет написан на кириллической графике</q-item-label>
+              </q-item-section>
+            </q-item>
             <q-item tag="label" v-ripple class="q-px-none">
               <q-item-section avatar>
                 <q-radio v-model="formData.fields.writingMode.value" val="lat" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)"/>
@@ -39,15 +55,6 @@
               <q-item-section>
                 <q-item-label>Латиница</q-item-label>
                 <q-item-label caption>Весь крымскотатарский текст будет написан на латинской графике</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item tag="label" v-ripple dense class="q-px-none">
-              <q-item-section avatar>
-                <q-radio v-model="formData.fields.writingMode.value" val="cyr" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)"/>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Кириллица</q-item-label>
-                <q-item-label caption>Весь крымскотатарский текст будет написан на кириллической графике</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>

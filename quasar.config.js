@@ -21,7 +21,8 @@ export default defineConfig((ctx) => {
     css: [
       'app.scss',
       'font.scss',
-      'page_transitions.scss'
+      'page_transitions.scss',
+      'adaptivity.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras

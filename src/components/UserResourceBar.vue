@@ -16,23 +16,19 @@
             size="24px"
             :class="`absolute-top ${(props.dense) ? 'rounded-sl': 'rounded-md'} full-width overflow-hidden`" style="height: calc(100% - 1px) !important">
             <div class="absolute-top full-width full-height" style="z-index: 0; background: rgba(0, 0, 0, 0.31)"></div>
-            <div :class="`relative-position ${(props.dense) ? 'q-py-xs q-pl-sm rounded-sm': 'rounded-md'} full-height bg-light-gradient-${resource?.color}`" :style="`width: ${percentageCount}% !important; z-index: 1`"></div>
-
+            <div :class="`relative-position ${(props.dense) ? 'q-py-xs rounded-sm': 'rounded-md'} full-height bg-light-gradient-${resource?.color}`" :style="`width: ${percentageCount}% !important; z-index: 1`"></div>
           </div>
           <transition appear
             enter-active-class="animated fadeInDown animation-delay-2"
             leave-active-class="animated fadeOutUp">
-            <div v-if="showCountdown" class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
-              <q-chip
-                dense
-                size="10px"
-                text-color="white"
-                color="dark"
-                class="q-ma-none"
-                :style="`max-width: none; background-color: ${(transparent) ? '#0000006c' : ''}`"
-              >
-                <b>{{ timerCount }}</b>
-              </q-chip>
+            <div v-if="resource.is_restorable && percentageCount < 100">
+              <div  class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
+                <q-chip  dense size="10px" text-color="white" color="dark" class="q-ma-none"
+                  :style="`max-width: none; background-color: ${(transparent) ? '#0000006c' : ''}`">
+                  <span v-if="showCountdown"><b>{{ timerCount }}</b></span>
+                  <span v-else-if="percentageCount < 100"><q-spinner-dots color="white" size="2em" /></span>
+                </q-chip>
+              </div>
             </div>
           </transition>
           <div v-if="props.withBadge">

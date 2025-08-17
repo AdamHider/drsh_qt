@@ -1,9 +1,12 @@
 <template>
   <q-page-container>
-    <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce">
-      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
-      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
-      <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.isonit" dense no-caption size="24px" push  badge-link="/market" with-badge/>
+    <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce" contentClass="justify-between">
+      <div></div>
+      <div class="flex full-width justify-center">
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.isonit" dense no-caption size="24px" push  badge-link="/market" with-badge/>
+      </div>
     </q-app-header>
     <q-page class="column justify-center content-start text-center full-width" style="padding-top: 50px; padding-bottom: 35px;">
       <div class="page-background fixed-top full-width"  style="height: 300px; background-image: url('/images/skills/main_background7.jpg'); background-size: cover;"></div>

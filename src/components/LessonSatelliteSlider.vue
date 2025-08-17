@@ -31,8 +31,6 @@
         :class="`text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'} ${(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'lesson-finished' : 'lesson'} ${(satelliteItem.is_blocked === true) ? 'is-blocked' : ''}`"
         >
         <q-card flat class="transparent q-ma-sm satellite-block" :style="(!satelliteItem.parent_id && lesson.active.satellites?.length > 1) ? 'width: 160%; margin-top: -35%;' : ''">
-
-
             <q-card-section class="transparent no-shadow text-center q-pa-none satellite-image" style="min-height: 100px">
                 <q-img
                     :src="satelliteItem.image"
