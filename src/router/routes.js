@@ -1,7 +1,27 @@
 import MainLayout from 'layouts/MainLayout.vue'
-import MainLayoutDesktop from 'layouts/MainLayoutDesktop.vue'
+
 import CoursePage from 'pages/CoursePage.vue'
-import { Platform } from 'quasar'
+import LeaderboardPage from 'pages/LeaderboardPage.vue'
+import NotificationsPage from 'pages/NotificationsPage.vue'
+import UserDashboard from 'pages/UserDashboard.vue'
+import UserEdit from 'pages/UserEdit.vue'
+import UserEditPassword from 'pages/UserEditPassword.vue'
+
+import UserSettings from 'pages/UserSettings.vue'
+import UserEmailVerification from 'pages/UserEmailVerification.vue'
+
+import AchievementsPage from 'pages/AchievementsPage.vue'
+import SkillsPage from 'pages/SkillsPage.vue'
+import UserStartup from 'pages/UserStartup.vue'
+import UserSignIn from 'pages/UserSignIn.vue'
+import UserSignUp from 'pages/UserSignUp.vue'
+import LessonStartup from 'pages/LessonStartup.vue'
+import LessonFinish from 'pages/LessonFinish.vue'
+import LessonItem from 'pages/LessonItem.vue'
+import UserInvitation from 'pages/UserInvitation.vue'
+import MarketPage from 'pages/MarketPage.vue'
+import ErrorNotFound from 'pages/ErrorNotFound.vue'
+
 import { useUserStore } from '../stores/user'
 const checkIfSigned = function (to, from) {
   const { user } = useUserStore()
@@ -9,31 +29,15 @@ const checkIfSigned = function (to, from) {
     return { path: '/user' }
   }
 }
-const checkIfCharacterSelected = function (to, from) {
-  const { user } = useUserStore()
-  if (user.active.data.id && user.active.data.settings.characterId.value != 0) {
-    return { path: '/user' }
-  }
-}
-
-const checkIsMobile = function () {
-  return Platform.is.mobile
-}
 
 const routes = [
   {
     path: '/',
-    component: function () {
-      if(checkIsMobile()){
-        return MainLayout
-      }else{
-        return MainLayoutDesktop
-      }
-    }  ,
+    component: MainLayout,
     redirect: '/user',
     children: [
       {
-        path: 'course',
+        path: 'courses',
         name: 'course',
         component: CoursePage,
         meta: {
@@ -47,23 +51,9 @@ const routes = [
         }
       },
       {
-        path: 'courses',
-        name: 'course',
-        component: () => import('pages/CoursePage.vue'),
-        meta: {
-          level: 1,
-          requiresAuth: true,
-          bottomBarEnabled: true,
-          transitionConfig: {
-            leaderboard: 'slide-left',
-            user: 'slide-left'
-          }
-        }
-      },
-      {
         path: 'leaderboard',
         name: 'leaderboard',
-        component: () => import('pages/LeaderboardPage.vue'),
+        component: LeaderboardPage,
         meta: {
           level: 1,
           requiresAuth: true,
@@ -78,7 +68,7 @@ const routes = [
       {
         path: 'notifications',
         name: 'notifications',
-        component: () => import('pages/NotificationsPage.vue'),
+        component: NotificationsPage,
         meta: {
           level: 1,
           requiresAuth: true,
@@ -93,7 +83,7 @@ const routes = [
       {
         path: 'user',
         name: 'user',
-        component: () => import('pages/UserDashboard.vue'),
+        component: UserDashboard,
         meta: {
           level: 1,
           requiresAuth: true,
@@ -107,7 +97,7 @@ const routes = [
       },
       {
         path: 'user/edit',
-        component: () => import('pages/UserEdit.vue'),
+        component: UserEdit,
         meta: {
           requiresAuth: true,
           transition: 'slide-in'
@@ -115,7 +105,7 @@ const routes = [
       },
       {
         path: 'user/edit/password',
-        component: () => import('pages/UserEditPassword.vue'),
+        component: UserEditPassword,
         meta: {
           requiresAuth: true,
           transition: 'slide-in'
@@ -123,7 +113,7 @@ const routes = [
       },
       {
         path: 'user/settings',
-        component: () => import('pages/UserSettings.vue'),
+        component: UserSettings,
         meta: {
           level: 2,
           requiresAuth: true,
@@ -132,7 +122,7 @@ const routes = [
       },
       {
         path: '/achievements',
-        component: () => import('pages/AchievementsPage.vue'),
+        component: AchievementsPage,
         meta: {
           level: 2,
           requiresAuth: true,
@@ -141,7 +131,7 @@ const routes = [
       },
       {
         path: '/skills',
-        component: () => import('pages/SkillsPage.vue'),
+        component: SkillsPage,
         meta: {
           requiresAuth: true,
           bottomBarEnabled: true,
@@ -151,50 +141,45 @@ const routes = [
 
       {
         path: 'authorization',
-        component: () => import('pages/UserStartup.vue'),
+        component: UserStartup,
         meta: { noBottomBar: true },
         beforeEnter: checkIfSigned
       },
       {
         path: 'authorization/sign-in',
         name: 'sign-in',
-        component: () => import('pages/UserSignIn.vue'),
+        component: UserSignIn,
         meta: { noBottomBar: true },
         beforeEnter: checkIfSigned
       },
       {
         path: 'authorization/sign-up',
         name: 'sign-up',
-        component: () => import('pages/UserSignUp.vue'),
+        component: UserSignUp,
         beforeEnter: checkIfSigned
       },
       {
         path: 'authorization/sign-up-:inviter_hash',
         name: 'sign-up-invited',
-        component: () => import('pages/UserSignUp.vue'),
+        component: UserSignUp,
         beforeEnter: checkIfSigned
       },
       {
         path: 'lesson-startup-:lesson_id',
         name: 'lesson-startup',
-        component: () => import('pages/LessonStartup.vue'),
+        component: LessonStartup,
       },
       {
         path: 'lesson-finish-:lesson_id',
-        component: () => import('pages/LessonFinish.vue')
+        component: LessonFinish
       },
       {
         path: 'lesson-:lesson_id',
-        component: () => import('src/pages/LessonItem.vue')
-      },
-      {
-        path: 'character-select',
-        component: () => import('pages/CharacterSelect.vue'),
-        beforeEnter: checkIfCharacterSelected,
+        component: LessonItem
       },
       {
         path: 'user-invitation-:inviter_hash',
-        component: () => import('pages/UserInvitation.vue'),
+        component: UserInvitation,
         beforeEnter: (to, from) => {
           const { user } = useUserStore()
           if (!user.active.data.id) {
@@ -203,8 +188,13 @@ const routes = [
         }
       },
       {
+        path: 'email-verification-:verification_hash',
+        component: UserEmailVerification
+      },
+
+      {
         path: 'market',
-        component: () => import('pages/MarketPage.vue'),
+        component: MarketPage,
         meta: { noBottomBar: true },
       },
     ]
@@ -214,7 +204,7 @@ const routes = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
+    component: ErrorNotFound
   }
 ]
 

@@ -10,7 +10,7 @@
         v-model="formData.valid"
         @submit.prevent="null"
         autocomplete="off"
-        class="full-width">
+        class="full-width q-desc-mx-quart">
         <q-card v-if="formData.step == 1" class="rounded-b-0">
           <q-card-section>
               <div class="text-h6"><b>Ваш логин</b></div>
@@ -28,6 +28,7 @@
               placeholder="Введите логин..."
               bottom-slots
               required
+              autofocus
             >
             <template v-slot:error v-if="formData.fields.username.isError">
               <span>{{ formData.fields.username.errors }}</span>
@@ -36,6 +37,7 @@
           <q-card-actions vertical>
             <q-btn
                 push
+                :loading="buttonLoading"
                 :disabled="!formData.valid"
                 @click="checkUsernameValue()"
                 color="primary"
@@ -58,6 +60,7 @@
                 v-on:keyup.enter="validate()"
                 @update:model-value="clearErrors()"
                 bottom-slots
+                autofocus
               >
                 <template v-slot:append>
                   <q-icon
@@ -74,6 +77,7 @@
           <q-card-actions vertical>
             <q-btn
                 push
+                :loading="buttonLoading"
                 :disabled="!formData.valid"
                 @click="validate()"
                 color="primary"
@@ -171,7 +175,7 @@ const validate = async function () {
     if (!authResponse.error) {
       const logged = await signIn(authResponse.auth_key)
       buttonLoading.value = false
-      if (!logged.error) {
+      if (logged && !logged.error) {
         return router.push('/user')
       }
     } else{
@@ -196,8 +200,10 @@ const clearErrors = function () {
   formData.fields.password.errors = null;
 }
 const checkUsernameValue = async function() {
+  buttonLoading.value = true
   const checkUsernameResponse = await checkUsernameAuth({ username: formData.fields.username.value })
-  if (checkUsernameResponse.error) {
+  buttonLoading.value = false
+  if (checkUsernameResponse && checkUsernameResponse.error) {
     formData.valid = false
     formData.fields.username.isError = true
     formData.fields.username.errors = 'Такого героя не существует'

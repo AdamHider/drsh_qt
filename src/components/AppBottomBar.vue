@@ -1,11 +1,11 @@
 <template>
   <transition
-  appear
+    appear
     enter-active-class="animated slideInUp"
     leave-active-class="animated slideOutDown">
   <q-page-sticky
     position="bottom"
-    v-show="bottomBarEnabled"
+    v-if="bottomBarEnabled"
     class="bg-white rounded-t-md text-primary"
     style="z-index: 10; box-shadow: 0px 0px 0px 1px lightgray"
   >

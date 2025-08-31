@@ -45,7 +45,6 @@ const renderData = () => {
     }
   }
   text.image = lesson.active.page.data.image
-  console.log(text)
 }
 
 renderData()

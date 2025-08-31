@@ -105,7 +105,6 @@ const renderFields = () => {
     field.width = calculateWidth(field)
     formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
   }
-  console.log(formData.fields)
   emits('update-answer', formData.fields)
 }
 const calculateWidth = (field) => {

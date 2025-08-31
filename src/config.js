@@ -1,3 +1,3 @@
 export const CONFIG = {
-  API_HOST: 'http://mektepium-app.local'
+  API_HOST: 'https://core.mektepium.com'
 }

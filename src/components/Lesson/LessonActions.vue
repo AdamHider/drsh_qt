@@ -134,6 +134,8 @@ const { lesson } = useLesson()
 
 const next = async () => {
   isLoading.value = true
+  //var audio = new Audio('/audio/button.mp3');
+  //audio.play();
   emits('onPageChanged', 'next')
   extraActions.value = false
 }

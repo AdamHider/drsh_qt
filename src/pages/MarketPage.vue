@@ -22,7 +22,6 @@
           </q-card-section>
       </q-card>
       <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
-          <AppBackground/>
           <q-card-section style=" margin-top: -50px;" class="q-desc-mx-quart">
             <div class="row q-pb-sm">
               <div :class="`col col-${12/marketOffer.priority} q-pa-sm q-mt-sm`" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOfferIndex-${marketOfferIndex}`">
@@ -81,7 +80,8 @@
       <q-dialog v-model="buyDialog">
         <q-card>
           <q-card-section>
-            <div class="text-subtitle1">Buy Dialog</div>
+            <div class="text-subtitle1">Покупка</div>
+            <div class="text-caption">Покупки недоступны в бета-версии</div>
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -113,7 +113,8 @@ const load = async (filter) => {
   marketOffers.value = marketOfferListResponse
 }
 const openBuyDialog = async (offer_id) => {
-  //buyDialog.value = true
+  buyDialog.value = true
+  return;
   const marketOfferBoughtResponse = await api.market_offer.buyItem({offer_id})
   if (marketOfferBoughtResponse.error) {
     return;

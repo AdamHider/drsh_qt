@@ -14,7 +14,7 @@
             <q-avatar clickable v-ripple  :to="`/lesson-startup-${lesson.id}`"
               :class="`q-push relative-position  ${(lesson.is_explored) ? '' : 'daily-lesson-avatar'}`" size="60px"
               :style="`background-image: url(${lesson.course_section.background_image}); background-size: cover; background-position: center; height: 64px;`">
-                <q-img :src="lesson.image" width="50px" style="filter: drop-shadow(0px 0px 15px #35adf4);" />
+                <q-img :src="lesson.image" width="50px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
             </q-avatar>
             <div class="text-white text-caption"><b>{{ lesson.title }}</b></div>
           </router-link>

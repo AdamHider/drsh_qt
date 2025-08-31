@@ -1,7 +1,7 @@
 <template>
-  <q-item flat clickable
+  <q-item v-ripple clickable
     :class="`q-push q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center relative-position
-      ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available q-item-blinking' : 'is_available' : 'is_blocked'}`">
+      ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available q-item-blinking' : 'is_available' : 'is_blocked'} ${props.class}`">
     <q-item-section avatar>
       <q-avatar :size="props.size" text-color="white">
         <q-img class="absolute" :src="skill.image" no-spinner/>
@@ -12,6 +12,7 @@
       <q-avatar v-if="skill.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="q-push vertical-middle q-ml-xs" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
     </div>
   </q-item>
+
 </template>
 
 <script setup>
@@ -20,7 +21,8 @@ import { toRefs } from 'vue'
 const props = defineProps({
   skill: Object,
   size: String,
-  color: String
+  color: String,
+  class: String
 })
 
 const skill = toRefs(props).skill
@@ -45,6 +47,22 @@ $glow: 0px 0px 5px -1px $blue;
   }
   .q-img{
     filter: drop-shadow(0px 0px 5px #ffffff5e);
+  }
+  &:after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: black;
+    transition: 0.3s all ease;
+    opacity: 0;
+    z-index: 0;
+    border-radius: inherit;
+  }
+  &.is-active:after{
+    opacity: 0.2;
   }
 }
 .skill-item.is_blocked {

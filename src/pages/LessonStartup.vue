@@ -1,6 +1,6 @@
 <template>
   <q-page-container>
-    <q-app-header class="transparent text-white rounded-b-md " reveal>
+    <q-app-header class="transparent text-white rounded-b-md q-py-xs" >
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title></q-toolbar-title>
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
@@ -9,8 +9,8 @@
       <q-card class="transparent no-shadow full-width q-desc-mx-quart" style="position: relative; z-index: 1;">
             <transition
               appear
-              enter-active-class="animated fadeIn "
-              leave-active-class="animated fadeOut">
+              enter-active-class="animated fadeInUp "
+              leave-active-class="animated fadeOutDown">
                 <LessonSatelliteSlider
                     v-if="transitionTrigger"
                     :slidesPerView=1.3
@@ -35,6 +35,7 @@
           spinner-color="white"
           />
       </q-page-sticky>
+
       <q-page-sticky v-if="activeLesson" class="fixed full-width text-white q-desc-mx-75" expand style="z-index: 1;">
         <transition
           appear
@@ -56,7 +57,9 @@
                 </div>
             </q-card-section>
             <q-card-section class="q-py-none" v-if="activeLesson?.is_blocked === false">
-              <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
+              <keep-alive>
+                <lesson-progress-bar size="25px" dark :value="activeLesson.progress" :reward="activeLesson.reward" :exercise="activeLesson.exercise"/>
+              </keep-alive>
             </q-card-section>
             <q-card-section class="q-pt-sm" v-else-if="activeLesson?.unblock">
               <div class="text-subtitle1"><b>Для разблокировки необходимо:</b></div>
@@ -107,6 +110,7 @@
                 icon="replay"
                 color="secondary"
                 class="full-width"
+                :loading="buttonLoading"
                 @click="redo(activeLesson.id)"/>
               <q-btn v-else-if="activeLesson.exercise?.id"
                 push
@@ -114,6 +118,7 @@
                 icon-right="play_arrow"
                 color="positive"
                 class="q-px-md full-width"
+                :loading="buttonLoading"
                 @click="open(activeLesson.id)"/>
               <q-spend-button v-else
                 push
@@ -121,6 +126,7 @@
                 icon-right="play_arrow"
                 class="full-width"
                 :resources="activeLesson.cost ?? []"
+                :loading="buttonLoading"
                 @click="start(activeLesson.id)"></q-spend-button>
             </q-card-actions>
           </q-card>
@@ -156,6 +162,7 @@ const activeLesson = ref({})
 const transitionTrigger = ref(false)
 const expandDescription = ref(false)
 const isDark = ref(false)
+const buttonLoading = ref(false)
 
 const change = (index) => {
   dialog.value = false
@@ -167,7 +174,9 @@ const change = (index) => {
 
 }
 const start = async (lessonId) => {
+  buttonLoading.value = true
   const exerciseCreated = await createItem(lessonId)
+  buttonLoading.value = false
   if (!exerciseCreated.error) {
     await useUserStore().getItem()
     router.push(`/lesson-${lessonId}`)
@@ -182,11 +191,14 @@ const start = async (lessonId) => {
 }
 const open = async (lessonId) => {
   dialog.value = false
+  buttonLoading.value = true
   router.push(`/lesson-${lessonId}`)
 }
 const redo = async (lessonId) => {
   dialog.value = false
+  buttonLoading.value = true
   const exerciseRedoCreated = await redoItem(lessonId)
+  buttonLoading.value = false
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
 
@@ -208,7 +220,6 @@ const load = async () => {
   change(activeIndex.value)
 }
 const goToSattelite = (unblockLesson) => {
-  console.log(unblockLesson)
   if(unblockLesson.parent_id) {
     if(unblockLesson.parent_id == route.params.lesson_id) {
       activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == unblockLesson.id)
@@ -237,6 +248,7 @@ watch(() => activeLesson.value, () => {
 })
 onActivated(async () =>{
   await load()
+  buttonLoading.value = false
   hideLoader()
 })
 

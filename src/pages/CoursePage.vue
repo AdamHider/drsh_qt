@@ -1,6 +1,6 @@
 <template>
-  <q-page-container>
-    <q-app-header class="transparent text-white rounded-b-md" ref="header">
+  <q-page-wrapper>
+    <q-app-header class="transparent text-white rounded-b-md q-py-xs" ref="header">
       <CourseToggle v-bind:dialogOpened="courseDialog" v-on:update:dialogOpened="courseDialog = $event" @onSelect="getItem($event)"/>
       <q-toolbar-title></q-toolbar-title>
       <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
@@ -25,7 +25,7 @@
         </q-page-sticky>
 
     </q-page>
-  </q-page-container>
+  </q-page-wrapper>
 </template>
 
 <script setup>

@@ -76,7 +76,6 @@
             </div>
         </div>
         </transition>
-
         <div ref="dialogueBottomPoint" class="dialogueBottomPoint"></div>
       </div>
     </q-card-section>
@@ -84,8 +83,9 @@
       <div class="row justify-center">
         <div v-if="isLastReplica" class="col">
           <q-btn v-if="props.mode == 'active' && props.quest.target.id" push class="bg-gradient-primary  full-width q-ma-xs" @click="goToQuestTarget()" icon-right="navigate_next"><b>Перейти к цели</b></q-btn>
-          <q-btn v-else-if="props.mode == 'start'" push class="full-width bg-gradient-primary q-ma-xs" @click="onStart()"><b >Начать задание</b></q-btn>
-          <q-btn v-else-if="props.mode == 'finish'" push class="full-width bg-gradient-primary q-ma-xs" @click="onClaim()"><b >Завершить задание</b></q-btn>
+          <q-btn v-else-if="props.mode == 'start'" :loading="loading[0]"  push class="full-width bg-gradient-primary q-ma-xs" @click="onStart()"><b >Начать задание</b></q-btn>
+          <q-btn v-else-if="props.mode == 'finish'" push :loading="loading[1]" class="full-width bg-gradient-primary q-ma-xs" @click="onClaim()"><b >Завершить задание</b></q-btn>
+          <q-btn v-else push class="full-width bg-gradient-primary q-ma-xs" @click="onClose()"><b >Закрыть</b></q-btn>
         </div>
         <q-btn push  v-else class="bg-gradient-primary col full-width q-ma-xs" @click="nextReplica()" icon-right="navigate_next" :disabled="nextDisabled"><b>Далее</b></q-btn>
         <q-btn v-if="!isLastReplica" push class="bg-dark col-auto q-ma-xs" @click="skipAll()" icon-right="last_page"><b></b></q-btn>
@@ -114,6 +114,10 @@ const replicaList = ref([])
 const replicaMode = ref('intro')
 const nextDisabled = ref(false)
 
+const loading = ref([
+    false,
+    false
+])
 const dialogueBottomPoint = ref(null);
 
 const props = defineProps({
@@ -126,9 +130,11 @@ const emits = defineEmits(['onStart', 'onClaim', 'onClose'])
 
 
 const onStart = async () => {
+  loading.value[0] = true
   emits('onStart')
 }
 const onClaim = async () => {
+  loading.value[1] = true
   emits('onClaim')
 }
 const onClose = () => {

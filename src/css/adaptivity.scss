@@ -34,3 +34,7 @@
     width: 76%;
     margin-left: 24%;
   }
+  .desktop .q-dialog.full-width-important .q-dialog__inner{
+    width: 100% !important;
+    margin: 0 auto !important;
+  }

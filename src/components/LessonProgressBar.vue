@@ -39,54 +39,13 @@
         <q-card class="rounded-b-0">
           <q-list bordered separator>
             <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
-            <q-item dense clickable v-ripple :style="(starsLevel == 1) ? '' : 'filter: grayscale(1)'">
-              <q-item-section avatar>
-                  <img src="/images/star_1x.png" width="30px">
-              </q-item-section>
-              <q-item-section>
-                <div class="row q-gutter-sm q-py-sm">
-                  <div v-for="(resource, resourceIndex) in reward[1]" :key="resourceIndex">
-                    <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
-                  </div>
-                </div>
-              </q-item-section>
-              <q-item-section side >
-                <q-icon v-if="starsLevel >= 1" name="check_circle" color="positive" />
-                <q-icon v-else name="lock" color="grey-5" />
-              </q-item-section>
-            </q-item>
-
-            <q-item dense clickable v-ripple  :style="(starsLevel == 2) ? '' : 'filter: grayscale(1)'">
-              <q-item-section avatar>
-                  <img src="/images/star_2x.png" width="30px">
-              </q-item-section>
-              <q-item-section>
-                <div class="row q-gutter-sm q-py-sm">
-                  <div v-for="(resource, resourceIndex) in reward[2]" :key="resourceIndex">
-                    <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
-                  </div>
-                </div>
-              </q-item-section>
-              <q-item-section side >
-                <q-icon v-if="starsLevel >= 2" name="check_circle" color="positive" />
-                <q-icon v-else name="lock" color="grey-5" />
-              </q-item-section>
-            </q-item>
-
-            <q-item dense clickable v-ripple :style="(starsLevel == 3) ? '' : 'filter: grayscale(1)'">
-              <q-item-section avatar>
-                  <img src="/images/star_3x.png" width="30px">
-              </q-item-section>
+            <q-item dense clickable v-ripple >
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">
                   <div v-for="(resource, resourceIndex) in reward[3]" :key="resourceIndex">
                     <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                   </div>
                 </div>
-              </q-item-section>
-              <q-item-section side >
-                <q-icon v-if="starsLevel == 3" name="check_circle" color="positive" />
-                <q-icon v-else name="lock" color="grey-5" />
               </q-item-section>
             </q-item>
           </q-list>

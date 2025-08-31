@@ -1,5 +1,5 @@
 <template  withBackground="true">
-    <q-item class="bg-dark-transparent q-py-xs  q-px-sm q-my-xs bg-dark-transparent-50 rounded-sm"
+    <q-item class="bg-dark-transparent q-py-xs  q-px-sm bg-dark-transparent-50 rounded-sm"
       style="color: inherit"
       clickable
       dense
@@ -15,7 +15,6 @@
         <div lines="1" class="text-caption ellipsis" style="max-width: 140px;">{{course.active?.description}}</div>
       </q-item-section>
     </q-item>
-
     <q-dialog v-model="dialog" maximized transition-show="slide-up" transition-hide="slide-down">
       <q-card>
         <q-card-section>
@@ -44,7 +43,6 @@
 import { watch, ref } from 'vue'
 import { useCourse } from '../composables/useCourse'
 import CourseList from '../components/CourseList.vue'
-import AppBackground from 'components/AppBackground.vue'
 
 const emit = defineEmits(['update:dialogOpened', 'onSelect'])
 

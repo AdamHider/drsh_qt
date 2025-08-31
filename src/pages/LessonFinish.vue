@@ -1,6 +1,6 @@
 <template>
   <q-page-wrapper>
-    <q-page :class="`text-center full-width finish-page `" style="padding-top: 50px;">
+    <q-page :class="`text-center full-width finish-page `" style="padding-top: 50px; margin-bottom: -1px;">
         <q-card class="transparent text-white no-shadow full-width" style="position: relative; z-index: 1;">
             <q-card-section class="q-pb-none">
                 <div class="text-h5"><b>{{ lesson.active.title }}</b></div>
@@ -8,7 +8,7 @@
             <q-card-section class="lesson-image q-pt-none relative-position">
                 <transition
                   appear
-                  enter-active-class="animated fadeInUp animation-slow"
+                  enter-active-class="animated fadeIn animation-slow"
                   leave-active-class="animated rubberBand  animation-delay-1">
                   <q-img
                     v-if="transitionTrigger"

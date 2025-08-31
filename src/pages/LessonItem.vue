@@ -1,11 +1,11 @@
 <template>
-  <q-page-container>
+  <q-page-container class="bg-white">
     <q-app-header class="bg-white rounded-b-md" contentClass="items-end" reveal>
         <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
         <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" :exercise="lesson.active.exercise" compact/>
     </q-app-header>
     <q-page class="bg-white column full-width full-height lesson-page" style="padding-top: 60px;">
-        <q-card flat class="lesson-header relative text-left full-width">
+        <q-card flat class="lesson-header relative text-left full-width" v-if="lesson.active.page">
             <q-card-section class="q-py-none">
                 <div class="flex no-wrap  justify-between">
                   <div class="text-subtitle1"><b>{{ lesson.active.page?.header?.index }}. </b><b v-html="lesson.active.page?.header?.title"></b></div>

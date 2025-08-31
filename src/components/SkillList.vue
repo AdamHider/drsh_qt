@@ -18,6 +18,7 @@
                   size="60px"
                   style="z-index: 10; min-width: 165px; max-width: 60px;"
                   :color="props.color"
+                  :class="(currentSkill.id == skill.id) ? 'is-active' : ''"
                 />
                 <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
               </swiper-slide>
@@ -25,8 +26,8 @@
           </div>
       </div>
     </div>
-    <q-dialog v-model="claimDialog"  transition-show="slide-up" transition-hide="slide-down" full-width position="bottom" class="overflow-visible">
-      <q-card :class="`rounded-b-0 skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
+    <q-dialog v-model="claimDialog"  position="bottom" full-width  class="overflow-visible" @before-hide="currentSkill = false">
+      <q-card :class="`skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
         <div class="q-pa-sm" style="background: center / contain no-repeat url('/images/rays.png');">
           <q-img width="150px" :src="currentSkill.image" no-spinner/>
         </div>

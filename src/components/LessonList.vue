@@ -17,50 +17,52 @@
         class="section-block"
     >
       <div
-        v-for="(courseSectionItem, courseSectionIndex) in courseSection.list" :key="`courseSectionIndex${courseSectionIndex}`"
-        :class="`planet-block row q-px-sm q-py-md ${courseSectionIndex % 2 ? 'justify-end' : 'justify-start'} ${courseSectionItem.is_blocked === true ? 'is-blocked' : ''} ${courseSectionItem.is_initial ? 'is-initial' : ''}`"
+        v-for="(lessonItem, lessonIndex) in courseSection.list" :key="`lessonIndex${lessonIndex}`"
+        :class="`planet-block row q-px-sm q-py-md ${lessonIndex % 2 ? 'justify-end' : 'justify-start'} ${lessonItem.is_blocked === true ? 'is-blocked' : ''} ${lessonItem.is_initial ? 'is-initial' : ''}`"
       >
         <div :class="`col-6`" style="position: relative; z-index: 10">
-          <div v-if="courseSectionItem.is_quest" id="scrollAnchor"></div>
+          <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
           <transition
             appear
             enter-active-class="animated zoomIn"
-            :leave-active-class="selectedLesson !== courseSectionItem.id ? 'animated planetBounceInactive' : 'animated planetBounceActive'"
+            :leave-active-class="selectedLesson !== lessonItem.id ? 'animated planetBounceInactive' : 'animated planetBounceActive'"
           >
             <div v-if="transitionTrigger">
-              <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`" @click="openLesson(courseSectionItem.id)">
+              <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`" @click="openLesson(lessonItem.id)">
                 <q-card-section class="text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto">
-                  <div v-if="courseSectionItem.satellites" class="satellite-list">
+                  <div v-if="lessonItem.satellites.length > 0" class="satellite-list">
+
+
+                    <div class="satelites-circle"></div>
                     <div
-                      v-for="(satellite, index) in courseSectionItem.satellites" :key="index"
+                      v-for="(satellite, index) in lessonItem.satellites" :key="index"
                       class="transparent satellite-item nopadding"
                       :style="{
-                        animationDelay: `-${satellite.delay}s`,
-                        animationDuration: `${satellite.duration}s`,
-                        scale: `1.${satellite.distance / 2}`,
+                        transform: `rotate(${satellite.rotation}deg)`,
                       }"
                     >
                       <img
                         :src="satellite.image"
                         :style="{
                           width: `${satellite.size}px`,
-                          top: `calc(-${satellite.size}px/2)`,
-                          scale: `calc(-1.${satellite.distance} + 2)`,
+                          marginLeft: `-${satellite.size/2}px`,
+                          marginTop: `-${satellite.size/2}px`,
+                          rotate: `${(lessonIndex % 2) ? 90-satellite.rotation : (90+satellite.rotation)*-1}deg`
                         }"
                       />
                     </div>
                   </div>
-                  <q-img :src="courseSectionItem.image" class="planet-image" loading="lazy" no-spinner> </q-img>
+                  <q-img :src="lessonItem.image" class="planet-image" loading="lazy" no-spinner> </q-img>
                 </q-card-section>
                 <q-card-section class="text-center text-white q-pa-none absolute full-width"  style="top: 100%">
                   <div class="text-caption">
                     <span>Изучено: </span>
-                    <b :class="courseSectionItem.progress > 0 ? ((courseSectionItem.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ courseSectionItem.progress }}%</b>
+                    <b :class="lessonItem.progress > 0 ? ((lessonItem.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lessonItem.progress }}%</b>
                   </div>
                   <div class="text-bold">
-                    <q-icon v-if="courseSectionItem.is_blocked === true" name="lock"  class="q-mr-xs"></q-icon>
-                    <q-avatar v-if="courseSectionItem.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-mr-xs" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
-                    <span class="vertical-middle">{{ courseSectionItem.title }}</span>
+                    <q-icon v-if="lessonItem.is_blocked === true" name="lock"  class="q-mr-xs"></q-icon>
+                    <q-avatar v-if="lessonItem.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-mr-xs" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
+                    <span class="vertical-middle">{{ lessonItem.title }}</span>
                   </div>
                 </q-card-section>
               </q-card>
@@ -109,7 +111,6 @@ const activeCourseSection = ref({})
 const selectedLesson = ref(0);
 const transitionTrigger = ref(false);
 const inView = ref({});
-const lockDialog = ref(false);
 const courseSections = ref([])
 
 const props = defineProps({
@@ -118,7 +119,6 @@ const props = defineProps({
 });
 const disable = toRef(props, "disable");
 const reloadTrigger = toRef(props, "reloadTrigger");
-const lessonList = ref([]);
 
 const load = async function () {
   await getList()
@@ -126,8 +126,8 @@ const load = async function () {
   hideLoader()
 }
 const composeList = () => {
-  lessonList.value = [];
   var result = []
+  checkScrollAnchor()
   const courseSectionsRaw = lesson.list.reduce((result, obj) => {
     result[obj.course_section_id] = result[obj.course_section_id] || {
         ... obj.course_section, ...{ expandDescription: false, list: [] }
@@ -140,12 +140,22 @@ const composeList = () => {
   for(var i in courseSectionIds){
     var couseSection = courseSectionsRaw[courseSectionIds[i]]
     couseSection.list[0].is_initial = true
+
     couseSection.list = couseSection.list.reverse()
     result.push(couseSection)
 
   }
   courseSections.value = result
 };
+const checkScrollAnchor = () => {
+  if(lesson.list.filter((item) => item.scroll_anchor).length > 0) return
+  for(var i in lesson.list){
+    if(lesson.list[i*1+1]?.is_blocked == true){
+      lesson.list[i].scroll_anchor = true
+      break
+    }
+  }
+}
 const openLesson = (lessonId) => {
   transitionTrigger.value = false;
   selectedLesson.value = lessonId;
@@ -179,7 +189,9 @@ onActivated(async () => {
     transitionTrigger.value = true;
     selectedLesson.value = 0;
   }
-  load()
+  /*if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "center"})
+  else if(bottomPoint.value) bottomPoint.value.scrollIntoView()*/
+  await load()
 });
 watch( () => course.active?.id, async () => {
   load()
@@ -246,38 +258,61 @@ watch(() => reloadTrigger.value, () => {
     }
   }
 }
+.satellite-list{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 100%;
+  rotate: 90deg;
+  .satelites-circle{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 100%;
+    border: 2px dashed #ffffff33;
+    -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
+    animation: 16s linear infinite sateliteRotate;
+  }
+}
+.justify-end .satellite-list{
+  rotate: -90deg;
+}
 .satellite-item {
   position: absolute;
-  top: 10%;
-  left: 10%;
-  height: 80%;
-  width: 80%;
+  top: 0%;
+  left: 0%;
+  height: 100%;
+  width: 100%;
   z-index: 100;
   border-radius: 100%;
-  border: 2px dashed #ffffff33;
   text-align: center;
-  -webkit-animation: 16s linear 0s infinite sateliteRotate;
-  animation: 16s linear infinite sateliteRotate;
+  /*-webkit-animation: 16s linear 0s infinite sateliteRotate;
+  animation: 16s linear infinite sateliteRotate;*/
 }
 .satellite-item img {
   position: absolute;
-  -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
-  animation: 16s linear 0s infinite satelitePlanetRotate;
+  filter: drop-shadow(0px 0px 8px #35adf4);
+ /* -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
+  animation: 16s linear 0s infinite satelitePlanetRotate;*/
 }
 @keyframes sateliteRotate {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translateZ(2px);
   }
   100% {
-    transform: rotate(360deg);
+    transform: rotate(360deg) translateZ(2px);
   }
 }
 @keyframes satelitePlanetRotate {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translateZ(2px);
   }
   100% {
-    transform: rotate(-360deg);
+    transform: rotate(-360deg) translateZ(2px);
   }
 }
 </style>

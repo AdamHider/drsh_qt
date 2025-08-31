@@ -11,7 +11,7 @@
         v-model="formData.valid"
         @submit.prevent="validate()"
         autocomplete="off"
-        class="full-width full-height column justify-end">
+        class="full-width full-height column justify-end q-desc-mx-quart">
           <q-card v-if="formData.step == 1" class="ful-width rounded-b-0">
             <q-card-section>
               <div class="text-h6"><b>Создание нового героя</b></div>
@@ -163,9 +163,9 @@
           </q-card>
       </q-form>
 
-      <q-dialog v-model="mainStoryDialog" maximized transition-show="fade" transition-hide="fade">
-        <AppMainStorySlider @onEnded="mainStoryDialog = false"/>
-      </q-dialog>
+    <q-dialog v-model="mainStoryDialog" maximized transition-show="fade" transition-hide="fade" class="full-width-important">
+      <AppMainStorySlider @onEnded="mainStoryDialog = false"/>
+    </q-dialog>
     <q-dialog v-model="termsDialog">
       <q-card>
         <q-card-section>

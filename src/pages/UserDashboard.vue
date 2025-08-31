@@ -1,5 +1,8 @@
 <template>
   <q-page-container>
+      <div class="fixed-full">
+        <AppBackground/>
+      </div>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
           <q-toolbar-title></q-toolbar-title>
           <div class="relative-position q-mr-sm">
@@ -121,15 +124,15 @@
           </q-card>
           </transition>
       </q-page>
-      <q-dialog v-model="inviteDialog">
-        <q-card v-if="userInvitation" class="relative-position allow-overflow">
-          <div class="absolute full-width text-center" style="bottom: 100%;">
-            <q-img width="200px" src="/images/market/character.png" style="max-width: 100%;"/>
-          </div>
+      <q-dialog v-model="inviteDialog" position="bottom" transition-hide="fade" >
+        <q-card v-if="userInvitation" class="relative-position allow-overflow rounded-b-0">
+            <div class="absolute full-width text-center" style="bottom: 100%;">
+              <q-img  width="200px" src="/images/market/character.png" style="max-width: 100%;"/>
+            </div>
           <q-card-section>
             <div class="items-center text-center">
               <div class="text-subtitle1"><b>Пригласи друзей с выгодой!</b></div>
-              <div class="text-caption">Друзья, которые присоединятся к нам по этой ссылке принесут вам драгоценный <b class="text-green">изонит</b>!</div>
+              <div class="text-caption">Друзья, которые присоединятся к приключениям по этой ссылке принесут драгоценный <b class="text-green">изонит</b>!</div>
               <div class="text-caption">Для этого приглашённым друзьям нужно только выполнить задание <b class="text-primary">"Час расплаты"</b>!</div>
             </div>
           </q-card-section>
@@ -155,30 +158,43 @@ import AchievementList from '../components/AchievementList.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
+import AppBackground from '../components/AppBackground.vue'
 
 import { useRoute } from 'vue-router'
-import { ref, watch, onMounted, onActivated } from 'vue'
+import { ref, watch, onMounted, onActivated, onBeforeMount } from 'vue'
 import { copyToClipboard } from 'quasar'
 
 const { user, getItem, getItemInvitation } = useUserStore()
 const route = useRoute()
 
+
 const inviteDialog = ref(false)
 const userInvitation = ref({})
 const userInvitationCopied = ref(false)
 
-const userStatistic = ref(null)
-const userLevel = ref(null)
-
 onMounted(async () => {
+  endTime.value = new Date()
+  let timeDiff = endTime.value - startTime.value // in ms
+  // strip the ms
+  timeDiff /= 1000
+
+  // get seconds
+  console.log('UserDashboard: ' + timeDiff + ' mseconds')
   await getItem()
 })
 
 onActivated(async () => {
+  endTime.value = new Date()
+  let timeDiff = endTime.value - startTime.value // in ms
+  // strip the ms
+  timeDiff /= 1000
+
+  // get seconds
+  console.log('UserDashboard: ' + timeDiff + ' mseconds')
   await getItem()
 })
 const copyInvitationLink = () => {
-  const link = `http://localhost:9000/user-invitation-${userInvitation.value.hash}`
+  const link = `https://mektepium.com/user-invitation-${userInvitation.value.hash}`
   copyToClipboard(link)
   userInvitationCopied.value = true
 }
@@ -190,7 +206,17 @@ watch(() => inviteDialog.value, async () => {
   }
   userInvitationCopied.value = false
 })
+const startTime = ref()
+const endTime = ref()
+const AchievementDialog = ref(false)
 
+onBeforeMount(async () => {
+  startTime.value = new Date()
+})
+
+watch(route, (to) => {
+  startTime.value = new Date()
+})
 </script>
 <style scoped>
 

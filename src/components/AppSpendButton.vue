@@ -1,5 +1,5 @@
 <template>
-    <q-btn :push="props.push" dense :class="`${props.class}`" :color="props.color" style="padding-right: 2px;">
+    <q-btn :push="props.push" dense :class="`${props.class}`" :loading="loading" :color="props.color" style="padding-right: 2px;">
       <div class="flex justify-between items-center">
         <span v-if="props.label" class="block">{{ props.label }}</span>
         <span v-else class="block">Начать</span>
@@ -27,6 +27,7 @@ const props = defineProps({
   label: String,
   resources: Array,
   iconRight: String,
+  loading: Boolean,
   push: Boolean
 })
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="video-container">
     <video :controls="false" autoplay height="100%" width="100%" @ended="emits('onEnded', true)">
-      <source src="/videos/mektepium trailer_2.mp4" type="video/mp4" />
+      <source src="/videos/mektepium trailer.mp4" type="video/mp4" />
     </video>
     <q-card class="bg-transparent absolute-bottom full-width" flat>
       <q-card-actions class="justify-end">

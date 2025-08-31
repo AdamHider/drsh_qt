@@ -61,7 +61,7 @@ export function useNotification () {
     }
   }
   function closeSSE () {
-    evtSource.close();
+    if(evtSource) evtSource.close()
   }
 
   return {

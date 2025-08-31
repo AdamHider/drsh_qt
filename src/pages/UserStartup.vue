@@ -13,8 +13,8 @@
               <div v-else>
                 <transition
                   appear
-                  enter-active-class="animated fadeInUp"
-                  leave-active-class="animated fadeOutDown" >
+                  enter-active-class="animated fadeIn"
+                  leave-active-class="animated fadeOut" >
                   <q-card-section class="q-pb-xl">
                     <div style="max-width: 200px;">
                       <q-btn push color="primary" @click="signIn()" class="full-width q-my-sm">Продолжить</q-btn>
@@ -89,10 +89,14 @@ onBeforeRouteLeave((to, from) => {
 </script>
 <style scoped>
 .q-page{
-  background-image: url('/images/splash.jpg');
+  background-image: url('/images/splash_mobile.jpg');
   background-size: auto 100%;
   background-position: center center;
   transition: 0.3s all ease;
+}
+.desktop .q-page{
+  background-image: url('/images/splash_desktop.jpg');
+  background-size: auto 100%;
 }
 .q-page.zoomed{
   background-size: auto 110%;

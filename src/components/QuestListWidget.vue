@@ -19,6 +19,14 @@
           <q-badge v-else-if="questItem.is_completed" floating color="positive" class="q-pa-xs"  style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
             <q-icon name="done" size="14px"></q-icon>
           </q-badge>
+          <div v-if="questItem.time_left">
+            <div  class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
+              <q-chip  dense size="10px" text-color="white" color="dark" class="q-ma-none"
+                :style="`max-width: none;`">
+                <span v-if="questItem.time_left > 0"><b>{{ questItem.counter?.hours }}:{{ questItem.counter?.minutes }}:{{ questItem.counter?.seconds }}</b></span>
+              </q-chip>
+            </div>
+          </div>
       </q-btn>
       </TransitionGroup>
     </div>
@@ -57,18 +65,18 @@
 
 <script setup>
 import { api } from '../services/index'
-import { ref, onMounted, onActivated } from 'vue'
+import { ref, onMounted, onActivated, onDeactivated } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import QuestItem from '../components/QuestItem.vue'
-
-
 
 const error = ref(false)
 const claimDialog = ref(false)
 const claimError = ref(false)
 const reloadTrigger = ref(false)
 const quests = ref([])
+
+const activeCountdown = ref(false)
 
 const activeQuest = ref({})
 const activeQuestDialog = ref(false)
@@ -108,7 +116,7 @@ const startQuest = async (questId) => {
 
 const showQuest = (questId) => {
   const quest = quests.value.find((quest) => { return quest.id == questId});
-  
+
   activeQuest.value =  quest
   activeQuestDialog.value = true
 
@@ -123,6 +131,44 @@ const claimReward = async (questId) => {
     claimError.value = true
   }
   emits('onClaim')
+}
+
+const countdown = () => {
+  var has_counters = false
+  setTimeout(async () => {
+    if(!activeCountdown.value) return
+    for(var i in quests.value){
+      if(quests.value[i].time_left && quests.value[i].time_left > 0){
+        quests.value[i].time_left--;
+        quests.value[i].counter = timeLeftHumanize(quests.value[i].time_left)
+        has_counters = true
+      }
+    }
+    if(has_counters){
+      countdown()
+    }
+  }, 1000)
+}
+
+const calculateTimeLeft = () => {
+  for(var i in quests.value){
+    if(quests.value[i].time_left){
+      quests.value[i].counter = timeLeftHumanize(quests.value[i].time_left)
+    }
+  }
+}
+
+const timeLeftHumanize = (totalSeconds) => {
+    var counter = {}
+    counter.hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    counter.minutes = Math.floor(totalSeconds / 60);
+    counter.seconds = totalSeconds % 60;
+
+    if(counter.hours < 10) counter.hours = '0'+counter.hours
+    if(counter.minutes < 10) counter.minutes = '0'+counter.minutes
+    if(counter.seconds < 10) counter.seconds = '0'+counter.seconds
+    return counter;
 }
 
 const reload = async () => {
@@ -143,6 +189,12 @@ onBeforeRouteLeave((to, from) => {
 onActivated(async () => {
   await load()
   checkInactive()
+  calculateTimeLeft()
+  if(!activeCountdown.value) activeCountdown.value = true
+  countdown()
+})
+onDeactivated(() => {
+  activeCountdown.value = false
 })
 
 </script>

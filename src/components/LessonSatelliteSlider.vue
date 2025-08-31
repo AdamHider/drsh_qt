@@ -12,6 +12,7 @@
       :creativeEffect="{
           perspective: false,
           limitProgress: 4,
+          speed: 200,
           prev: {
               translate: ['-70%', '20%', -100],
               rotate: [0, 0, -20],

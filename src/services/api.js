@@ -157,6 +157,9 @@ export class Api extends ApiService{
         checkEmail: (params) => {
             return this.post('user', 'checkEmail', params);
         },
+        checkEmailVerification: (params) => {
+            return this.post('user', 'checkEmailVerification', params);
+        },
         generateUsername: (params) => {
             return this.post('user', 'generateUsername', params);
         },

@@ -3,7 +3,7 @@
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title><b>Изменить героя</b></q-toolbar-title>
-        <q-btn flat icon="check" @click="saveChanges()"/>
+        <q-btn flat icon="check" @click="saveChanges()" :disable="hasErrors"/>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
         <q-form
@@ -30,6 +30,7 @@
             label="Никнейм"
             standout
             required
+            class="q-my-sm"
           >
             <template v-if="formData.fields.username.errors == ''" v-slot:append>
               <q-icon color="success" name="check"></q-icon>
@@ -62,18 +63,12 @@
             :error="formData.fields.email.errors !== ''"
             label="Эл. почта"
             standout
-          ></q-input>
-          <q-input
-            v-model="formData.fields.phone.value"
-            :rules="formData.fields.phone.rules"
-            :error-message="formData.fields.phone.errors"
-            :error="formData.fields.phone.errors !== ''"
-            mask="+# (###) ### - ## - ##"
-            fill-mask
-            unmasked-value
-            label="Телефон"
-            standout
-          ></q-input>
+          >
+            <template v-slot:append >
+              <q-icon v-if="user.active.data.email_verified && user.active.data.email == formData.fields.email.value" color="positive" name="verified_user" />
+              <q-icon v-else name="report_problem" color="orange-9" />
+            </template>
+          </q-input>
         </q-form>
     </q-page>
   </q-page-container>
@@ -81,13 +76,16 @@
 
 <script setup >
 import { useUserStore } from '../stores/user'
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const form = ref(null)
-const route = useRoute()
 const router = useRouter()
 const { user, checkUsername, checkEmail, saveItem  } = useUserStore()
+
+const hasErrors = computed(() => {
+  return formData.fields.name.errors != '' || formData.fields.username.errors != '' || formData.fields.email.errors != ''
+})
 
 const formData = reactive({
   valid: true,
@@ -119,14 +117,6 @@ const formData = reactive({
         v => v === null || (v !== null && ((/.+@.+\..+/.test(v)))) || 'E-mail must be valid'
       ],
       errors: ''
-    },
-    phone: {
-      value: user.active.data.phone,
-      rules: [
-        v => v === null || (v !== null && (/\(?([0-9]{4})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/.test(v))) || 'Phone must be valid'
-      ],
-      errors: '',
-      suggestions: []
     }
   }
 })
@@ -139,13 +129,11 @@ const saveChanges = async function () {
       name: formData.fields.name.value,
       username: formData.fields.username.value,
       email: formData.fields.email.value,
-      phone: formData.fields.phone.value
+      phone: ''
     }
     const saved = await saveItem(data)
     if (!saved.error) {
       return router.go(-1)
-    } else {
-      formData.fields[saved.data].errors = saved.message
     }
   }
 }
@@ -160,9 +148,15 @@ watch(() => formData.fields.username.value, async (currentValue, oldValue) => {
 })
 watch(() => formData.fields.email.value, async (currentValue, oldValue) => {
   formData.fields.email.errors = ''
+  if(currentValue == user.active.data.email) {
+    formData.valid = true
+    formData.fields.email.errors = ''
+    return
+  }
   if (!currentValue || /.+@.+\..+/.test(currentValue) === false) return
   const result = await checkEmail({ email: currentValue })
   if (result.error) {
+    if(result.messages.error == 'email_in_use') result.messages.error = 'Такой адрес уже используется'
     formData.fields.email.errors = result.messages.error
     formData.valid = false
   }
