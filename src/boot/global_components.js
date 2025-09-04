@@ -3,6 +3,7 @@ import AppPageWrapper from '../components/AppPageWrapper.vue'
 import AppBottomBar from '../components/AppBottomBar.vue'
 import AppInfiniteList from '../components/AppInfiniteList.vue'
 import AppSpendButton from '../components/AppSpendButton.vue'
+import AppPaymentButton from '../components/AppPaymentButton.vue'
 import PinField from '../components/PinField.vue'
 import AppProgressBar from '../components/AppProgressBar.vue'
 import AppTutorialItem from '../components/AppTutorialItem.vue'
@@ -18,6 +19,7 @@ export default ({ app }) => {
   app.component('q-bottom-bar', AppBottomBar)
   app.component('q-infinite-list', AppInfiniteList)
   app.component('q-spend-button', AppSpendButton)
+  app.component('q-payment-button', AppPaymentButton)
   app.component('q-pin-field', PinField)
   app.component('q-progress-bar', AppProgressBar)
   app.component('q-tutorial-item', AppTutorialItem)

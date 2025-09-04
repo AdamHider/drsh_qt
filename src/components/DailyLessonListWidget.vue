@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, toRef, onActivated, watch } from 'vue'
+import { ref, toRef, onMounted, onActivated, watch } from 'vue'
 import { useLesson } from '../composables/useLesson'
 
 const { lesson, getDailyList  } = useLesson()
@@ -59,6 +59,9 @@ const load = async () => {
 onActivated(() => {
   load()
 })
+onMounted(() => {
+  load()
+})
 watch(() => reloadTrigger.value, () => {
   load()
 })
@@ -79,6 +82,7 @@ watch(() => reloadTrigger.value, () => {
     box-shadow: 0 0 0 1px $secondary;
     border-radius: inherit;
     animation: pulseSignal 1.5s ease infinite;
+    
   }
   &:after{
     content: "";

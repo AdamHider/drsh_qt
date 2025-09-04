@@ -4,6 +4,7 @@ import { api } from '../services/index'
 const lesson = reactive({
   active: {},
   list: [],
+  listExtended: {},
   dailyList: [],
   target: 0
 })
@@ -11,7 +12,12 @@ const lesson = reactive({
 export function useLesson () {
   async function getItem (lessonId) {
     const lessonResponse = await api.lesson.getItem({ lesson_id: lessonId })
+    let satellites = [];
+    if(lesson.active.satellites){
+      satellites = lesson.active.satellites
+    }
     lesson.active = lessonResponse
+    lesson.active.satellites = satellites
   }
   async function getList () {
     try {

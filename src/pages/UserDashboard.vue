@@ -194,7 +194,7 @@ onActivated(async () => {
   await getItem()
 })
 const copyInvitationLink = () => {
-  const link = `https://mektepium.com/user-invitation-${userInvitation.value.hash}`
+  const link = `https://app.mektepium.com/user-invitation-${userInvitation.value.hash}`
   copyToClipboard(link)
   userInvitationCopied.value = true
 }

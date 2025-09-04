@@ -7,22 +7,22 @@
     </q-app-header>
     <q-page class="full-width " style="padding-top: 50px; overflow: hidden;">
       <q-card class="transparent no-shadow full-width q-desc-mx-quart" style="position: relative; z-index: 1;">
-            <transition
-              appear
-              enter-active-class="animated fadeInUp "
-              leave-active-class="animated fadeOutDown">
-                <LessonSatelliteSlider
-                    v-if="transitionTrigger"
-                    :slidesPerView=1.3
-                    :centerAligned="true"
-                    :withButton="false"
-                    slideHeight="100"
-                    :navigation="false"
-                    captionMode="full"
-                    @change="change"
-                    :activeSlide="activeIndex"
-                />
-            </transition>
+        <transition
+          appear
+          enter-active-class="animated fadeInUp"
+          leave-active-class="animated fadeOutDown">
+                    <LessonSatelliteSlider
+                      v-if="transitionTrigger"
+                        :slidesPerView=1.3
+                        :centerAligned="true"
+                        :withButton="false"
+                        slideHeight="100"
+                        :navigation="false"
+                        captionMode="full"
+                        @change="change"
+                        :activeSlide="activeIndex"
+                    />
+        </transition>
       </q-card>
       <q-page-sticky
           :class="`fixed full-width full-height background-space ${(isDark) ? 'dark': ''}`"
@@ -41,7 +41,7 @@
           appear
           enter-active-class="animated fadeInUp"
           leave-active-class="animated fadeOutDown">
-          <q-card flat class="bg-transparent rounded-b-0 full-width"  v-if="transitionTrigger && dialog">
+          <q-card flat class="bg-transparent rounded-b-0 full-width"  v-if="dialog && transitionTrigger">
             <q-card-section class="q-pb-sm">
                 <div class="text-h5">
                   <q-icon v-if="activeLesson.is_blocked === true" name="lock"></q-icon>
@@ -132,6 +132,11 @@
           </q-card>
         </transition>
       </q-page-sticky>
+      <div v-if="lesson.active.satellites?.length > 0">
+         <div v-for="(satelliteItem, index) in lesson.active.satellites" :key="`satelliteItemImage${index}`">
+          <img :src="satelliteItem.image" width="0px"/>
+        </div>
+      </div>
     </q-page>
   </q-page-container>
 </template>
@@ -164,8 +169,8 @@ const expandDescription = ref(false)
 const isDark = ref(false)
 const buttonLoading = ref(false)
 
-const change = (index) => {
-  dialog.value = false
+const change = (index, noAnimation = 0) => {
+  if(!noAnimation) dialog.value = false
   expandDescription.value = false
   if(lesson.active.satellites) activeLesson.value = lesson.active.satellites[index]
   setTimeout(() => {
@@ -201,23 +206,41 @@ const redo = async (lessonId) => {
   buttonLoading.value = false
   if (!exerciseRedoCreated.error) router.push(`/lesson-${lessonId}`)
 }
-
-const load = async () => {
+const preload = () => {
+    lesson.active = lesson.listExtended[route.params.lesson_id]
+    transitionTrigger.value = true
+    activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == lesson.target);
+    if(activeIndex.value == -1){
+      activeIndex.value = 0;
+      setTarget(0);
+    }
+    change(activeIndex.value, true)
+}
+const load = async (isPartial = 0) => {
+  let isFirstLoad = true
   isDark.value = false
-  dialog.value = false
+  if(lesson.listExtended[route.params.lesson_id]){
+    preload()
+    isFirstLoad = false
+    dialog.value = true
+  }
+
   await getItem(route.params.lesson_id)
-  transitionTrigger.value = true
   if (lesson.active.error) {
     router.go(-1)
     return
   }
   await getSatelliteList()
-  activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == lesson.target);
-  if(activeIndex.value == -1){
-    activeIndex.value = 0;
-    setTarget(0);
+  lesson.listExtended[route.params.lesson_id] = lesson.active
+
+  if(isFirstLoad){
+    activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == lesson.target);
+    if(activeIndex.value == -1){
+      activeIndex.value = 0;
+      setTarget(0);
+    }
   }
-  change(activeIndex.value)
+  change(activeIndex.value, !isFirstLoad)
 }
 const goToSattelite = (unblockLesson) => {
   if(unblockLesson.parent_id) {
@@ -247,10 +270,21 @@ watch(() => activeLesson.value, () => {
   activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == activeLesson.value.id)
 })
 onActivated(async () =>{
+  transitionTrigger.value = false
   await load()
-  buttonLoading.value = false
   hideLoader()
+  buttonLoading.value = false
+  onImagesRendered(() => {
+    transitionTrigger.value = true
+  })
 })
+
+const onImagesRendered = (callback) => {
+  const images = [...document.querySelectorAll("img")];
+  images.map(im=>new Promise(res=>
+    im.onload = callback
+  ))
+}
 
 
 </script>

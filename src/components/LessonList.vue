@@ -1,46 +1,46 @@
 <template>
-  <div class="relative-position" style="z-index: 1;">
-    <q-card class="transparent text-white q-mb-md" flat>
-      <q-card-section>
-        <div class="text-subtitle1">
-          <b>Новые миры</b>
-        </div>
-        <div class="text-caption">
-          Уже очень скоро
-        </div>
-      </q-card-section>
-    </q-card>
-    <q-separator class="section-separator" style="margin: 24px 0 48px; border-bottom: 2px dashed white; opacity: 0.25;" />
-    <div v-for="(courseSection, courseSectionsIndex) in courseSections" :key="`courseSectionsIndex-${courseSectionsIndex}`"
-        v-intersection="onIntersection"
-        :groupKey="courseSectionsIndex"
-        class="section-block"
-    >
-      <div
-        v-for="(lessonItem, lessonIndex) in courseSection.list" :key="`lessonIndex${lessonIndex}`"
-        :class="`planet-block row q-px-sm q-py-md ${lessonIndex % 2 ? 'justify-end' : 'justify-start'} ${lessonItem.is_blocked === true ? 'is-blocked' : ''} ${lessonItem.is_initial ? 'is-initial' : ''}`"
-      >
-        <div :class="`col-6`" style="position: relative; z-index: 10">
-          <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
-          <transition
-            appear
-            enter-active-class="animated zoomIn"
-            :leave-active-class="selectedLesson !== lessonItem.id ? 'animated planetBounceInactive' : 'animated planetBounceActive'"
-          >
-            <div v-if="transitionTrigger">
+  <div v-if="lesson.list.length > 0" style="height: 0px;">
+      <div v-for="(satelliteItem, index) in lesson.list" :key="`satelliteItemImage${index}`">
+      <img :src="satelliteItem.image" width="1px"/>
+      <img :src="satelliteItem.course_section.background_image" width="1px"/>
+    </div>
+  </div>
+  <transition
+    appear
+    enter-active-class="animated fadeInUp"
+    leave-active-class="animated fadeOutDown">
+    <div class="relative-position" style="z-index: 1;" v-if="transitionTrigger">
+      <q-card class="transparent text-white q-mb-md" flat>
+        <q-card-section>
+          <div class="text-subtitle1">
+            <b>Новые миры</b>
+          </div>
+          <div class="text-caption">
+            Уже очень скоро
+          </div>
+        </q-card-section>
+      </q-card>
+      <q-separator class="section-separator" style="margin: 24px 0 48px; border-bottom: 2px dashed white; opacity: 0.25;" />
+      <div v-for="(courseSection, courseSectionsIndex) in courseSections" :key="`courseSectionsIndex-${courseSectionsIndex}`"
+          v-intersection="onIntersection"
+          :groupKey="courseSectionsIndex"
+          class="section-block">
+        <div v-for="(lessonItem, lessonIndex) in courseSection.list" :key="`lessonIndex${lessonIndex}`"
+          :class="`planet-block row q-px-sm q-py-md ${lessonIndex % 2 ? 'justify-end' : 'justify-start'} ${lessonItem.is_blocked === true ? 'is-blocked' : ''} ${lessonItem.is_initial ? 'is-initial' : ''}`"
+        >
+          <div :class="`col-6`" style="position: relative; z-index: 10">
+            <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
+            <div>
               <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`" @click="openLesson(lessonItem.id)">
                 <q-card-section class="text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto">
                   <div v-if="lessonItem.satellites.length > 0" class="satellite-list">
-
-
                     <div class="satelites-circle"></div>
                     <div
                       v-for="(satellite, index) in lessonItem.satellites" :key="index"
                       class="transparent satellite-item nopadding"
                       :style="{
                         transform: `rotate(${satellite.rotation}deg)`,
-                      }"
-                    >
+                      }">
                       <img
                         :src="satellite.image"
                         :style="{
@@ -48,8 +48,7 @@
                           marginLeft: `-${satellite.size/2}px`,
                           marginTop: `-${satellite.size/2}px`,
                           rotate: `${(lessonIndex % 2) ? 90-satellite.rotation : (90+satellite.rotation)*-1}deg`
-                        }"
-                      />
+                        }"/>
                     </div>
                   </div>
                   <q-img :src="lessonItem.image" class="planet-image" loading="lazy" no-spinner> </q-img>
@@ -67,26 +66,29 @@
                 </q-card-section>
               </q-card>
             </div>
-          </transition>
+          </div>
         </div>
+        <q-card class="transparent text-white q-mb-md" flat>
+          <q-card-section>
+            <div class="text-subtitle1">
+              <b>Система "{{ courseSection.title }}"</b>
+            </div>
+            <div :class="`text-caption satellite-description ${(courseSection.expandDescription) ? '': 'max-two-lines'}`" @click="courseSection.expandDescription = !courseSection.expandDescription">
+              {{courseSection.description}}
+            </div>
+            <div class="text-caption" @click="courseSection.expandDescription = !courseSection.expandDescription">
+              <b v-if="courseSection.expandDescription">Свернуть <q-icon name="keyboard_arrow_up"></q-icon></b>
+              <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
+            </div>
+          </q-card-section>
+        </q-card>
+        <q-separator class="section-separator" style="border-bottom: 2px dashed white; opacity: 0.25;" />
       </div>
-      <q-card class="transparent text-white q-mb-md" flat>
-        <q-card-section>
-          <div class="text-subtitle1">
-            <b>Система "{{ courseSection.title }}"</b>
-          </div>
-          <div :class="`text-caption satellite-description ${(courseSection.expandDescription) ? '': 'max-two-lines'}`" @click="courseSection.expandDescription = !courseSection.expandDescription">
-            {{courseSection.description}}
-          </div>
-          <div class="text-caption" @click="courseSection.expandDescription = !courseSection.expandDescription">
-            <b v-if="courseSection.expandDescription">Свернуть <q-icon name="keyboard_arrow_up"></q-icon></b>
-            <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-separator class="section-separator" style="border-bottom: 2px dashed white; opacity: 0.25;" />
     </div>
-  </div>
+    <div v-else>
+      <q-spinner-puff size="50px" color="white" />
+    </div>
+  </transition>
   <div ref="bottomPoint" class="bottomPoint" style="margin-top: 60px;"></div>
   <q-page-sticky class="fixed full-width full-height" >
     <q-img :src="activeCourseSection.background_image" class="absolute-top absolute-left full-width full-height" no-spinner/>
@@ -159,10 +161,10 @@ const checkScrollAnchor = () => {
 const openLesson = (lessonId) => {
   transitionTrigger.value = false;
   selectedLesson.value = lessonId;
-  setTimeout(() => {
+  //setTimeout(() => {
     router.push(`/lesson-startup-${selectedLesson.value}`);
     transitionTrigger.value = true;
-  }, 250);
+  //}, 250);
 };
 const onIntersection = (entry) => {
   const groupIndex = entry.target.attributes.groupKey?.value
@@ -176,21 +178,27 @@ const onIntersection = (entry) => {
   }
 };
 onMounted(async () => {
-  transitionTrigger.value = true;
   selectedLesson.value = 0;
   await load()
   setTimeout(() => {
     if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "center", behavior: "smooth"})
     else if(bottomPoint.value) bottomPoint.value.scrollIntoView()
   }, 250);
+  onImagesRendered(() => {
+    transitionTrigger.value = true
+  })
 });
+const onImagesRendered = (callback) => {
+  const images = [...document.querySelectorAll(".q-page img")];
+  images.map(im=>new Promise(res=>
+    im.onload = callback
+  ))
+}
 onActivated(async () => {
   if (lesson.list.length > 0) {
     transitionTrigger.value = true;
     selectedLesson.value = 0;
   }
-  /*if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "center"})
-  else if(bottomPoint.value) bottomPoint.value.scrollIntoView()*/
   await load()
 });
 watch( () => course.active?.id, async () => {

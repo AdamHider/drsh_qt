@@ -94,7 +94,6 @@ import { ref, onActivated, watch } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import AppBackground from 'components/AppBackground.vue'
 
 const { user, getItem } = useUserStore()
 

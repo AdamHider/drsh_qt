@@ -35,7 +35,6 @@
             <q-card-section class="transparent no-shadow text-center q-pa-none satellite-image" style="min-height: 100px">
                 <q-img
                     :src="satelliteItem.image"
-                    loading="lazy"
                     no-spinner>
                 </q-img>
             </q-card-section>
