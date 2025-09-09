@@ -21,7 +21,7 @@
             </div>
           </q-card-section>
       </q-card>
-      <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
+      <q-card flat class="relative text-left q-pt-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
           <q-card-section style=" margin-top: -50px;" class="q-desc-mx-quart">
             <div class="row q-pb-sm">
               <div :class="`col col-${12/marketOffer.priority} q-pa-sm q-mt-sm`" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOfferIndex-${marketOfferIndex}`">
@@ -76,10 +76,43 @@
               </div>
             </div>
           </q-card-section>
+          <q-card-section class=" q-pb-none">
+            <div class="text-subtitle1"><b>Юридическая информация</b></div>
+            <div class="text-caption">Здесь можно ознакомиться с условиями нашего маркета.</div>
+          </q-card-section>
+          <q-card-section class="q-pa-none q-pt-none">
+            <q-list class="q-my-sm" separator>
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/requisites.html'" target="_blank" class="text-grey-10">
+                <q-item-section><b>Реквизиты и контактные данные</b></q-item-section>
+                <q-item-section side>
+                  <q-icon name="chevron_right" />
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/return.html'" target="_blank" class="text-grey-10">
+                <q-item-section><b>Доставка и возврат</b></q-item-section>
+                <q-item-section side>
+                  <q-icon name="chevron_right" />
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/terms.html'" target="_blank" class="text-grey-10">
+                <q-item-section><b>Правила пользования</b></q-item-section>
+                <q-item-section side>
+                  <q-icon name="chevron_right" />
+                </q-item-section>
+              </q-item>
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/privacy.html'" target="_blank" class="text-grey-10">
+                <q-item-section><b>Политика конфиденциальности</b></q-item-section>
+                <q-item-section side>
+                  <q-icon name="chevron_right" />
+                </q-item-section>
+              </q-item>
+            </q-list>
+
+          </q-card-section>
       </q-card>
       <q-dialog v-model="buyDialog">
-        <q-card>
-          <q-card-section>
+        <q-card class="full-width q-push">
+          <q-card-section v-if="CONFIG.isBeta">
             <div class="text-subtitle1">Покупка</div>
             <div class="text-caption">Покупки недоступны в бета-версии</div>
           </q-card-section>
@@ -94,6 +127,7 @@ import { ref, onActivated, watch } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import { CONFIG } from '../config.js'
 
 const { user, getItem } = useUserStore()
 
@@ -101,9 +135,10 @@ const marketOffers = ref([])
 const error = ref(false)
 const headerShowForce = ref(false)
 const buyDialog = ref(false)
+const activeOffer = ref({})
 
 const load = async (filter) => {
-  const marketOfferListResponse = await api.market_offer.getList({})
+  const marketOfferListResponse = await api.chest.getList({type: 'market'})
   if (marketOfferListResponse.error) {
     error.value = marketOfferListResponse
     marketOffers.value = []
@@ -112,9 +147,11 @@ const load = async (filter) => {
   marketOffers.value = marketOfferListResponse
 }
 const openBuyDialog = async (offer_id) => {
+  activeOffer.value = marketOffers.value.find((offer) => offer.id == offer_id);
+
   buyDialog.value = true
   return;
-  const marketOfferBoughtResponse = await api.market_offer.buyItem({offer_id})
+  const marketOfferBoughtResponse = await api.chest.buyItem({offer_id})
   if (marketOfferBoughtResponse.error) {
     return;
   }

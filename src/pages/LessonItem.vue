@@ -6,17 +6,21 @@
     </q-app-header>
     <q-page class="bg-white column full-width full-height lesson-page" style="padding-top: 60px;">
         <q-card flat class="lesson-header relative text-left full-width" v-if="lesson.active.page">
-            <q-card-section class="q-py-none">
-                <div class="flex no-wrap  justify-between">
-                  <div class="text-subtitle1"><b>{{ lesson.active.page?.header?.index }}. </b><b v-html="lesson.active.page?.header?.title"></b></div>
-                  <div>
-                    <span class="text-subtitle1 text-bold text-primary">{{ lesson.active.page?.header?.index }}/</span>
-                    <span class="text-subtitle2 text-bold text-grey-8">{{ lesson.active.page?.header?.total_pages }}</span>
-                  </div>
+          <q-card-section class="q-py-none">
+            <div class="flex no-wrap  justify-between">
+              <div>
+                <div class="text-subtitle1"><b>{{ lesson.active.page?.header?.index }}. </b> <b v-html="lesson.active.page?.header?.title"></b>
+                  <q-chip icon="bolt" text-color="white" color="secondary" class="q-pa-sm q-my-none  q-mx-xs q-push text-white text-caption"><b>На время</b></q-chip>
                 </div>
 
-                <div class="text-caption" v-html="lesson.active.page?.header?.subtitle"></div>
-            </q-card-section>
+              </div>
+              <div>
+                <span class="text-subtitle1 text-bold text-primary">{{ lesson.active.page?.header?.index }}/</span>
+                <span class="text-subtitle2 text-bold text-grey-8">{{ lesson.active.page?.header?.total_pages }}</span>
+              </div>
+            </div>
+            <div class="text-caption" v-html="lesson.active.page?.header?.subtitle"></div>
+          </q-card-section>
         </q-card>
         <q-page-sticky v-if="lesson.active.page?.header?.note" position="bottom-left">
           <LessonNote :note="lesson.active.page?.header?.note"/>
@@ -154,6 +158,10 @@ onBeforeRouteLeave((to, from) => {
 }
 
 .lesson-bottombar{
+}
+.lesson-page{
+  container-type: inline-size;
+  container-name: lessonpage;
 }
 
 </style>

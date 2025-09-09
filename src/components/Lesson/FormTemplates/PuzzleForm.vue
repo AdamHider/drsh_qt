@@ -6,7 +6,7 @@
             tabindex="-1"
             @focus="matchStart(index)"
             @blur="matchEnd"
-            :class="`q-lesson-field bg-grey-3 q-pa-sm ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
+            :class="`q-lesson-field ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
             :style="`min-width: ${input.width}px`"
           >
               <q-chip v-for="text in input.value.array" :key="`${text}`"
@@ -135,6 +135,7 @@ const matchEnd = (evt) => {
 }
 const matchStart = (index) => {
   if(index === null) return
+  if(formData.fields[index].answer) return
   currentIndex.value = index
   currentValue.value = formData.fields[currentIndex.value].value.text
   currentValueArray.value = formData.fields[currentIndex.value].value.array
@@ -206,11 +207,45 @@ watch(formData.fields, (newValue, oldValue) => {
   vertical-align: middle;
   display: inline-block;
   min-width: 60px;
+  box-shadow: none;
   min-height: 2.3em;
+  &:before{
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-bottom: 2px dotted #00000083;
+    border-radius: 8px 8px 0 0  !important;
+    box-shadow: none !important;
+    opacity: 1;
+    /*animation: pulseBottomLessonField 1.5s infinite alternate;*/
+    animation:none  !important;
+    transition: 0.3s all ease;
+  }
   &.is-answered{
+    box-shadow: none !important;
   }
   &.q-active{
     border-color: $primary;
+    background: $grey-3 !important;
+    &:before{
+      top: 4px !important;
+    }
+  }
+  &.has-value{
+    &:before{
+      top: 4px !important;
+      opacity: 0;
+    }
+  }
+  &.is-correct{
+    background: none !important;
+    border: none;
+  }
+  &.is-incorrect{
+    background: none !important;
+    border: none;
   }
   .q-lesson-field-value{
     margin: 2px;

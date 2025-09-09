@@ -1,8 +1,9 @@
 <template>
   <div class="full-width content-start ">
     <q-card class="q-ma-sm " flat>
-        <q-card-section class="q-pa-sm ">
+        <q-card-section class="q-pa-sm text-center">
           <q-img v-if="data.data.image"
+            style="max-width: min(calc(90vh - 420px), 100vw);"
             class="rounded-borders"
             :src="data.data.image"
             no-spinner
@@ -31,7 +32,7 @@
             </span>
           </div>
           <div v-else class="text-bold text-h6">
-            
+
               <div v-html="data.data.text"></div>
           </div>
         </q-card-section>

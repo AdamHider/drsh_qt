@@ -34,7 +34,24 @@
             leave-active-class="animated fadeOutDownBig">
           <q-card flat square class="relative text-left q-pt-md q-pb-lg col full-width no-shadow user-card">
               <q-card-section class="text-center q-pa-none">
-                <div class="text-h6"><b>{{ user.active?.data.name }}</b></div>
+                <div class="text-h6">
+                  <b>{{ user.active?.data.name }}</b>
+                  <span class="q-ml-xs" v-if="user.active?.data.achievements.length > 0">
+                    <q-avatar size="22px" v-for="(achievementItem, achievementIndex) in user.active?.data.achievements" :key="`achievementIndex${achievementIndex}`">
+                      <q-img :src="achievementItem.image"/>
+                      <q-tooltip>
+                        <q-item class="q-pl-sm">
+                          <q-item-section avatar>
+                            <q-img :src="achievementItem.image"/>
+                          </q-item-section>
+                          <q-item-section>
+                            <b>{{ achievementItem.title }}</b>
+                          </q-item-section>
+                        </q-item>
+                      </q-tooltip>
+                    </q-avatar>
+                  </span>
+                </div>
                 <div class="text-caption">
                   {{ user.active?.data.username }}
                 </div>

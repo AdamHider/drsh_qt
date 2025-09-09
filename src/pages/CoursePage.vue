@@ -20,11 +20,21 @@
             <q-avatar size="60px"><q-img src="images/icons/map.png"/></q-avatar>
           </q-btn>
         </q-page-sticky>
+        <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[70, 60]">
+          <q-btn class="bg-gradient-primary" round push size="20px" @click="dailyChestDialogStatus = true">
+            <q-avatar size="60px"><q-img src="images/icons/map.png"/></q-avatar>
+          </q-btn>
+        </q-page-sticky>
+
+
         <q-page-sticky position="bottom-right" style="z-index: 100" :offset="[10, 60]">
           <DailyLessonListWidget :reloadTrigger="lessonListReloadTrigger"/>
         </q-page-sticky>
 
     </q-page>
+    <q-dialog v-model="dailyChestDialogStatus" transition-show="fade" transition-hide="fade" maximized persistent backdrop-filter="blur(4px)">
+      <DailyChestDialog />
+    </q-dialog>
   </q-page-wrapper>
 </template>
 
@@ -33,6 +43,7 @@ import LessonList from '../components/LessonList.vue'
 import CourseToggle from '../components/CourseToggle.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import QuestListWidget from '../components/QuestListWidget.vue'
+import DailyChestDialog from '../components/DailyChestDialog.vue'
 import DailyLessonListWidget from '../components/DailyLessonListWidget.vue'
 import { ref, reactive, watch, onActivated, onDeactivated } from 'vue'
 import { useUserStore } from '../stores/user'
@@ -43,6 +54,7 @@ const { user } = useUserStore()
 const route = useRoute()
 
 const lessonListReloadTrigger = ref(false)
+const dailyChestDialogStatus = ref(false)
 
 const courseDialog = ref(false)
 const header = ref(null)

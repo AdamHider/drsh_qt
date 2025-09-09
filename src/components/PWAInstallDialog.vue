@@ -1,14 +1,14 @@
 <template>
   <q-dialog v-model="showInstallDialog" v-if="canInstall && isInstallable">
-    <q-card>
+    <q-card class="q-push">
       <q-card-section>
         <div class="text-h6">Хочешь установить Mektepium?</div>
         <div class="text-subtitle2">Это даст тебе мгновенный доступ к заданиям и прогрессу.</div>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Нет, спасибо" v-close-popup />
-        <q-btn flat label="Да, установить" @click="handleInstall" />
+        <q-btn flat v-close-popup ><b>Нет, спасибо</b></q-btn>
+        <q-btn flat @click="handleInstall" color="primary"><b>Да, установить</b></q-btn>
       </q-card-actions>
     </q-card>
       </q-dialog>

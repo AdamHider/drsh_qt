@@ -5,7 +5,7 @@
         <q-toolbar-title></q-toolbar-title>
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
     </q-app-header>
-    <q-page class="full-width " style="padding-top: 50px; overflow: hidden;">
+    <q-page class="full-width column justify-center" style="padding-top: 50px; overflow: hidden;">
       <q-card class="transparent no-shadow full-width q-desc-mx-quart" style="position: relative; z-index: 1;">
         <transition
           appear
@@ -41,8 +41,8 @@
           appear
           enter-active-class="animated fadeInUp"
           leave-active-class="animated fadeOutDown">
-          <q-card flat class="bg-transparent rounded-b-0 full-width"  v-if="dialog && transitionTrigger">
-            <q-card-section class="q-pb-sm">
+          <q-card flat class="bg-transparent card-container rounded-b-0 full-width"  v-if="dialog && transitionTrigger">
+            <q-card-section class="q-pb-sm" style="text-shadow: 0px 1px 2px black;">
                 <div class="text-h5">
                   <q-icon v-if="activeLesson.is_blocked === true" name="lock"></q-icon>
                   <q-avatar v-if="activeLesson.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-mr-xs"  style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
@@ -269,6 +269,19 @@ watch(() => activeLesson.value, () => {
   isDark.value = activeLesson.value.is_blocked
   activeIndex.value = lesson.active.satellites?.findIndex((item) => item.id == activeLesson.value.id)
 })
+
+watch(() => route.params.lesson_id, async () => {
+  if(!transitionTrigger.value) return
+  transitionTrigger.value = false
+  setTimeout(async () => {
+    await load()
+    hideLoader()
+    buttonLoading.value = false
+    onImagesRendered(() => {
+      transitionTrigger.value = true
+    })
+  }, 250)
+})
 onActivated(async () =>{
   transitionTrigger.value = false
   await load()
@@ -289,6 +302,19 @@ const onImagesRendered = (callback) => {
 
 </script>
 <style lang="scss">
+.card-container{
+  position: relative;
+  &:before{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150%;
+    background: linear-gradient(to top, #0000006b 35%, #0000 100%);
+    pointer-events: none;
+  }
+}
 .satellite-description{
 }
 .background-space{

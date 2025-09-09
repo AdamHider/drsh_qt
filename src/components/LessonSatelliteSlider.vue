@@ -26,33 +26,16 @@
               scale: 0.5
           },
       }"
-      style="padding-bottom: 50px;"
-    >
+      style="margin-top: -150px;"    >
       <swiper-slide v-for="(satelliteItem, index) in lesson.active.satellites" :key="index"
-        :class="`text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'} ${(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'lesson-finished' : 'lesson'} ${(satelliteItem.is_blocked === true) ? 'is-blocked' : ''}`"
+        :class="`allow-overflow text-center ${(!satelliteItem.parent_id) ? 'main-lesson': 'satellite-lesson'} ${(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'lesson-finished' : 'lesson'} ${(satelliteItem.is_blocked === true) ? 'is-blocked' : ''}`"
         >
-        <q-card flat class="transparent q-ma-sm satellite-block" :style="(!satelliteItem.parent_id && lesson.active.satellites?.length > 1) ? 'width: 160%; margin-top: -35%;' : ''">
+        <q-card flat class="transparent q-ma-sm satellite-block" :style="(!satelliteItem.parent_id && lesson.active.satellites?.length > 1) ? 'width: 160%; margin-top: -15%;' : ''">
             <q-card-section class="transparent no-shadow text-center q-pa-none satellite-image" style="min-height: 100px">
                 <q-img
                     :src="satelliteItem.image"
                     no-spinner>
                 </q-img>
-            </q-card-section>
-            <q-card-section class="text-center text-white q-pa-none">
-              <div :style="(!satelliteItem.parent_id && lesson.active.satellites?.length > 1) ? 'position: absolute; transform: translate3d(100%, -50%, 0px) rotate(22deg); transform-origin: top;' : ''">
-                <q-chip dense :color="(satelliteItem.exercise && satelliteItem.exercise?.finished_at) ? 'positive': (satelliteItem.exercise) ? 'orange' : 'dark'"
-                  text-color="white" class="q-pa-xs q-px-sm">
-                  <q-icon v-if="satelliteItem.is_blocked" name="lock"  class="vertical-middle"/>
-                  <q-icon v-else-if="(satelliteItem.exercise && satelliteItem.exercise?.finished_at)" name="done"/>
-                  <q-icon v-else-if="(satelliteItem.exercise && !satelliteItem.exercise?.finished_at)" name="hourglass_top"/>
-                  <q-icon v-else-if="!satelliteItem.exercise" name="stop"/>
-                  <b  class="vertical-middle"> {{ satelliteItem.title }}</b>
-                </q-chip>
-                <div v-if="lesson.active.satellites?.length > 1">
-                  <div class="text-caption" v-if="satelliteItem.parent_id">Спутник</div>
-                  <div class="text-caption" v-else>Планета</div>
-                </div>
-              </div>
             </q-card-section>
         </q-card>
       </swiper-slide>
@@ -107,31 +90,19 @@ watch(() => activeSlide.value, () => {
 }
 .swiper.swiper-creative{
   overflow: visible;
+  .swiper-slide{
+    align-self: center;
+  }
 }
 .satellites{
-  margin-top: 100px;
   max-width: 100vw;
   position: relative;
-  &.has-orbit:before{
-    content: "";
-    position: absolute;
-    top: 40vw;
-    left: -40vw;
-    width: 180vw;
-    height: 180vw;
-    border-radius: 100%;
-    border: 2px dashed white;
-    opacity: 0.6;
-  }
-  &:not(.has-orbit){
-    .satellite-block{
-      width: 120%;
-      margin-top: -10%;
-      margin-left: -10%;
-    }
-  }
   .swiper-slide-active {
     .satellite-image{
+      filter: drop-shadow(0px 0px 7px white);
+      .q-img{
+        filter: drop-shadow(0px 0px 7px rgba(255, 193, 22, 0.411));
+      }
       &:before{
         opacity: 0.6;
       }

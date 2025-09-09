@@ -3,7 +3,7 @@
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
         <q-toolbar-title><b>Изменить героя</b></q-toolbar-title>
-        <q-btn flat icon="check" @click="saveChanges()" :disable="hasErrors"/>
+        <q-btn v-if="hasChanges && !hasErrors" flat icon="check" @click="saveChanges()"/>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
         <q-form
@@ -32,13 +32,13 @@
             required
             class="q-my-sm"
           >
-            <template v-if="formData.fields.username.errors == ''" v-slot:append>
-              <q-icon color="success" name="check"></q-icon>
+            <template v-slot:append >
+              <q-icon @click="formData.fields.username.value = user.active.data.username" v-if="formData.fields.username.value !== user.active.data.username" name="replay" />
             </template>
           </q-input>
           <q-card
             v-if="(formData.fields.username.suggestions.length > 0)"
-            class="mx-auto pa-2"
+            class="q-push mx-auto pa-2"
           >
             <q-list bordered separator class="q-my-sm">
               <q-item
@@ -48,7 +48,7 @@
                 :value="item"
                 @click="(formData.fields.username.value = item); formData.fields.username.suggestions = []"
               >
-                <q-item-section class="text-left">{{ item }}</q-item-section>
+                <q-item-section class="text-left"><b>{{ item }}</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="check" color="positive" />
                 </q-item-section>
@@ -82,6 +82,7 @@ import { useRoute, useRouter } from 'vue-router'
 const form = ref(null)
 const router = useRouter()
 const { user, checkUsername, checkEmail, saveItem  } = useUserStore()
+const hasChanges = ref(false)
 
 const hasErrors = computed(() => {
   return formData.fields.name.errors != '' || formData.fields.username.errors != '' || formData.fields.email.errors != ''
@@ -98,7 +99,6 @@ const formData = reactive({
         v => !(/[^A-Za-zА-Яа-я0-9\_ ]/.test(v)) || 'Только буквы и цифры'
       ],
       errors: '',
-      isError: false,
       required: true
     },
     username: {
@@ -138,15 +138,26 @@ const saveChanges = async function () {
   }
 }
 
+watch(() => formData.fields.name.value, async (currentValue, oldValue) => {
+  hasChanges.value = false
+  if(formData.fields.name.value !== user.active.data.name) hasChanges.value = true
+})
+
 watch(() => formData.fields.username.value, async (currentValue, oldValue) => {
+  hasChanges.value = false
   formData.fields.username.errors = ''
   const result = await checkUsername({ username: currentValue })
   if (result) {
     formData.fields.username.suggestions = result
-    formData.fields.username.errors = 'Username is in use'
+    formData.fields.username.errors = 'Такой никнейм уже занят. Попробуйте другие:'
+  } else {
+    formData.fields.username.suggestions = []
   }
+  if(formData.fields.username.value !== user.active.data.username) hasChanges.value = true
 })
+
 watch(() => formData.fields.email.value, async (currentValue, oldValue) => {
+  hasChanges.value = false
   formData.fields.email.errors = ''
   if(currentValue == user.active.data.email) {
     formData.valid = true
@@ -160,5 +171,6 @@ watch(() => formData.fields.email.value, async (currentValue, oldValue) => {
     formData.fields.email.errors = result.messages.error
     formData.valid = false
   }
+  if(formData.fields.email.value !== user.active.data.email) hasChanges.value = true
 })
 </script>

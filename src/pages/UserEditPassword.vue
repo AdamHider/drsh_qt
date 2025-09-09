@@ -2,34 +2,25 @@
   <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
-        <q-toolbar-title>Change password</q-toolbar-title>
-        <q-btn flat icon="check" @click="saveChanges()"/>
+        <q-toolbar-title><b>Изменить пароль</b></q-toolbar-title>
+        <q-btn v-if="!hasErrors" flat icon="check" @click="saveChanges()"/>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
         <q-form
           ref="form"
           v-model="formData.valid"
           @submit.prevent="validate()"
+          no-error-focus
           autocomplete="off"
           class="full-width q-py-sm"
         >
-        <q-input v-if="formData.passwordIsPin"
-            :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
+          <q-input
             v-model="formData.fields.oldPassword.value"
             :rules="formData.fields.oldPassword.rules"
             :error-message="formData.fields.oldPassword.errors"
+            :error="formData.fields.oldPassword.errors !== ''"
             :type="formData.fields.oldPassword.reveal ? 'text' : 'password'"
-            no-error-icon
-            label="Old pin password"
-            standout
-            mask="####"
-          />
-          <q-input v-else
-            v-model="formData.fields.oldPassword.value"
-            :rules="formData.fields.oldPassword.rules"
-            :error-message="formData.fields.oldPassword.errors"
-            :type="formData.fields.oldPassword.reveal ? 'text' : 'password'"
-            label="Old Password"
+            label="Старый пароль"
             standout
           >
             <template v-slot:append>
@@ -41,24 +32,14 @@
             </template>
           </q-input>
 
-          <q-input v-if="formData.passwordIsPin"
-            :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
+          <q-input
             v-model="formData.fields.password.value"
             :rules="formData.fields.password.rules"
             :error-message="formData.fields.password.errors"
             :error="formData.fields.password.errors !== ''"
             :type="formData.fields.password.reveal ? 'text' : 'password'"
-            no-error-icon
-            standout
-            label="New pin password"
-            mask="####"
-          />
-          <q-input v-else
-            v-model="formData.fields.password.value"
-            :rules="formData.fields.password.rules"
-            :error-message="formData.fields.password.errors"
-            :type="formData.fields.password.reveal ? 'text' : 'password'"
-            label="New password"
+            label="Новый пароль"
+            class="q-my-md"
             standout
           >
             <template v-slot:append>
@@ -70,23 +51,14 @@
             </template>
           </q-input>
 
-          <q-input v-if="formData.passwordIsPin"
-            :input-style="{letterSpacing: '10px', fontSize: '20px', textAlign: 'center'}"
+          <q-input
             v-model="formData.fields.passwordConfirm.value"
             :rules="formData.fields.passwordConfirm.rules"
             :error-message="formData.fields.passwordConfirm.errors"
+            :error="formData.fields.passwordConfirm.errors !== ''"
             :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
-            no-error-icon
-            standout
-            label="Confirm new pin password"
-            mask="####"
-          />
-          <q-input v-else
-            v-model="formData.fields.passwordConfirm.value"
-            :rules="formData.fields.passwordConfirm.rules"
-            :error-message="formData.fields.passwordConfirm.errors"
-            :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
-            label="Confirm new password"
+            label="Повтори новый пароль"
+            class="q-my-md"
             standout
           >
             <template v-slot:append>
@@ -97,16 +69,6 @@
               />
             </template>
           </q-input>
-
-          <q-btn-toggle
-            v-model="formData.passwordIsPin"
-            spread
-            no-caps
-            :options="[
-              {label: 'Use pin', value: true},
-              {label: 'Use password', value: false}
-            ]"
-          />
         </q-form>
     </q-page>
   </q-page-wrapper>
@@ -114,43 +76,45 @@
 
 <script setup >
 import { useUserStore } from '../stores/user'
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed, watch, onActivated, onDeactivated } from 'vue'
 import { useRouter } from 'vue-router'
 
 const form = ref(null)
 const router = useRouter()
 const { savePassword } = useUserStore()
+const hasChanges = ref(false)
+
+const hasErrors = computed(() => {
+  return !formData.valid || formData.fields.oldPassword.errors != '' || formData.fields.password.errors != '' || formData.fields.passwordConfirm.errors != ''
+})
 
 const formData = reactive({
-  passwordIsPin: true,
-  valid: true,
+  valid: false,
   fields: {
     oldPassword: {
       value: '',
       rules: [
-        v => !!v || 'Required.',
-        v => (/^[0-9a-zA-Z]{4,}$/.test(v)) || 'Password must contain at least one digit, be of latin and min 8 characters'
+        v => !!v || 'Обязательное поле',
+        v => (/^[0-9a-zA-Z]{4,}$/.test(v)) || 'Пароль должен быть не менее 4 символов'
       ],
-      errors: '',
-      reveal: false
+      errors: ''
     },
     password: {
       value: '',
       rules: [
-        v => !!v || 'Required.',
-        v => (/^[0-9a-zA-Z]{4,}$/.test(v)) || 'Password must contain at least one digit, be of latin and min 8 characters'
+        v => !!v || 'Обязательное поле',
+        v => (/^[0-9a-zA-Z]{4,}$/.test(v)) || 'Пароль должен быть не менее 4 символов',
+        v => v !== formData.fields.oldPassword.value || 'Пароль должен отличаться от старого'
       ],
-      errors: '',
-      reveal: false
+      errors: ''
     },
     passwordConfirm: {
       value: '',
       rules: [
-        v => !!v || 'Required.',
-        v => (v === formData.fields.password.value) || 'Your passwords are different'
+        v => !!v || 'Обязательное поле',
+        v => (v === formData.fields.password.value) || 'Пароли не совпадают'
       ],
-      errors: '',
-      reveal: false
+      errors: ''
     }
   }
 })
@@ -167,8 +131,40 @@ const saveChanges = async function () {
     if (!saved.error) {
       return router.go(-1)
     } else {
-      formData.fields[saved.data].errors = saved.message
+      if(saved.messages.error == 'wrong_password'){
+        formData.fields.oldPassword.errors = 'Неверный старый пароль'
+      }
+      if(saved.messages.error == 'empty_password'){
+        formData.fields.password.errors = 'Пароль не может быть пустым'
+      }
+      if(saved.messages.error == 'different_password'){
+        formData.fields.passwordConfirm.errors = 'Пароли не совпадают'
+      }
     }
   }
 }
+onActivated(async () => {
+  formData.fields.oldPassword.value = ''
+  formData.fields.password.value = ''
+  formData.fields.passwordConfirm.value = ''
+  await form.value.reset()
+})
+onDeactivated(async () => {
+  formData.fields.oldPassword.value = ''
+  formData.fields.password.value = ''
+  formData.fields.passwordConfirm.value = ''
+  await form.value.reset()
+})
+
+
+watch(() => formData.fields.oldPassword.value, async (currentValue, oldValue) => {
+  formData.valid = await form.value.validate()
+})
+watch(() => formData.fields.password.value, async (currentValue, oldValue) => {
+  formData.valid = await form.value.validate()
+})
+watch(() => formData.fields.passwordConfirm.value, async (currentValue, oldValue) => {
+  formData.valid = await form.value.validate()
+})
+
 </script>

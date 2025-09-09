@@ -12,11 +12,12 @@
           </div>
           <div>
             <q-list>
-                <q-item v-for="(achievementItem, achievementIndex) in achievementGroup.list" :key="achievementIndex">
+                <q-item class="q-push q-ma-md rounded-md q-py-sm" v-for="(achievementItem, achievementIndex) in achievementGroup.list" :key="achievementIndex">
+                  <q-item-section avatar v-if="achievementItem.image">
+                    <q-img :src="achievementItem.image"/>
+                  </q-item-section>
                   <q-item-section>
-                    <q-card class="q-push">
-                      <q-card-section class="q-py-sm">
-                        <div :class="`flex justify-between q-pb-sm ${(achievementItem.progress.current >= achievementItem.progress.target) ? 'items-center' : 'items-end'}`">
+                        <div :class="`flex justify-between no-wrap q-pb-sm ${(achievementItem.progress.current >= achievementItem.progress.target) ? 'items-center' : 'items-end'}`">
                           <div>
                             <div class="text-bold">{{achievementItem.title}}</div>
                             <div class="text-grey text-caption">{{achievementItem.description}}</div>
@@ -25,8 +26,6 @@
                           <b v-else>{{achievementItem.progress.current}}/{{achievementItem.progress.target}}</b>
                         </div>
                         <q-progress-bar :value="achievementItem.progress.percentage" size="25px" color="positive"/>
-                      </q-card-section>
-                    </q-card>
                   </q-item-section>
                 </q-item>
               </q-list>

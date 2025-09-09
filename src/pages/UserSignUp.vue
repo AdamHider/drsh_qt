@@ -154,6 +154,7 @@
             <q-card-actions vertical>
               <q-btn
                   push
+                  :loading="buttonLoading"
                   :disabled="!formData.valid"
                   @click="validate()"
                   v-on:keyup.enter="validate()"
@@ -167,15 +168,15 @@
       <AppMainStorySlider @onEnded="mainStoryDialog = false"/>
     </q-dialog>
     <q-dialog v-model="termsDialog">
-      <q-card>
+      <q-card class="q-push">
         <q-card-section>
           <div class="text-h6"><b>Правила пользования</b></div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          У нашего приключения есть определённые правила, которые необходимо соблюдать. Ознакомиться с ними можно <a href="https://docs.mektepium.com/terms" target="_blank">здесь</a>. Продолжая создание героя вы подтверждаете, что согласны с нашими условиями и правилами.
+          У нашего приключения есть определённые правила, которые необходимо соблюдать. Ознакомиться с ними можно <a href="https://docs.mektepium.com/terms.html" target="_blank">здесь</a>. Продолжая создание героя вы подтверждаете, что согласны с нашими условиями и правилами.
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" v-close-popup />
+          <q-btn flat  color="primary" v-close-popup><b>Окей</b></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>

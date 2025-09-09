@@ -31,6 +31,22 @@
               <q-item-label>
                 <span class="q-pa-none text-dark">
                   <b :class="(row.is_active == 1) ? 'text-primary' : 'text-dark'">{{ row.name }}</b>
+
+                  <span class="q-ml-xs" v-if="row.achievements.length > 0">
+                    <q-avatar size="22px" v-for="(achievementItem, achievementIndex) in row.achievements" :key="`achievementIndex${achievementIndex}`">
+                      <q-img :src="achievementItem.image"/>
+                      <q-tooltip>
+                        <q-item class="q-pl-sm">
+                          <q-item-section avatar>
+                            <q-img :src="achievementItem.image"/>
+                          </q-item-section>
+                          <q-item-section>
+                            <b>{{ achievementItem.title }}</b>
+                          </q-item-section>
+                        </q-item>
+                      </q-tooltip>
+                    </q-avatar>
+                  </span>
                 </span>
               </q-item-label>
             </q-item-section>

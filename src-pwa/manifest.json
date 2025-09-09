@@ -1,10 +1,13 @@
 {
   "orientation": "portrait",
-  "background_color": "#5d06e9",
+  "background_color": "#10154e",
   "theme_color": "#fff",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "name": "Mektepium",
   "short_name": "Mektepium",
+  "description": "Mektepium — это игра, которая поможет вам освоить крымскотатарский язык, спасая Галактику!",
   "icons": [
     {
       "src": "icons/icon-128x128.png",
@@ -30,6 +33,12 @@
       "src": "icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/icons/splash-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
