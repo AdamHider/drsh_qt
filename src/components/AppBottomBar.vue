@@ -12,32 +12,32 @@
     <q-tabs content-class="allow-overflow">
       <div class="relative-position">
         <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры, солнычные системы и целые галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
-        <q-route-tab  :to="`${routes.course.link}`" exact replace>
+        <q-route-tab  :to="`${routes.course.link}`" exact replace @click.stop="playAudio('click_tiny')">
           <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
           <q-badge v-show="routes.course.is_updated" color="red" rounded floating />
         </q-route-tab>
       </div>
       <div class="relative-position">
         <q-tutorial-item title="Технологии" description="На этой странице отображаются технологии, помогающие в освоении космоса." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
-        <q-route-tab :to="routes.skills.link" exact replace>
+        <q-route-tab :to="routes.skills.link" exact replace  @click.stop="playAudio('click_tiny')">
           <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
           <q-badge v-show="routes.skills.is_updated" color="red" rounded floating />
         </q-route-tab>
       </div>
       <div class="relative-position">
         <q-tutorial-item title="Рейтинг" description="На этой странице можно увидеть свой рейтинг среди других исследователей." :index="7" :positionFixed="{bottom: 50, left: 0}"/>
-        <q-route-tab  :to="routes.leaderboard.link" exact replace>
+        <q-route-tab  :to="routes.leaderboard.link" exact replace @click.stop="playAudio('click_tiny')">
           <q-img :src="`/icons/leaderboard${(routes.leaderboard.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
         </q-route-tab>
       </div>
       <div class="relative-position">
         <q-tutorial-item title="Уведомления" description="На этой странице виден список уведомлений." :index="6" :positionFixed="{bottom: 50, left: 0}"/>
-        <q-route-tab :to="routes.notifications.link" exact replace style="opacity: 1;">
+        <q-route-tab :to="routes.notifications.link" exact replace style="opacity: 1;"  @click.stop="playAudio('click_tiny')">
           <q-img :src="`/icons/notifications${(routes.notifications.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
           <q-badge v-show="routes.notifications.is_updated" color="red" rounded floating />
         </q-route-tab>
       </div>
-      <q-route-tab :to="routes.user.link" exact replace>
+      <q-route-tab :to="routes.user.link" exact replace @click.stop="playAudio('click_tiny')">
         <q-img :src="`/icons/account${(routes.user.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
         <q-badge v-show="routes.user.is_updated" color="red" rounded floating />
       </q-route-tab>
@@ -51,7 +51,9 @@ import { useNavigationHistory } from '../composables/useNavigationHistory'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { watch, ref, onMounted } from 'vue'
 import { useNotification } from '../composables/useNotification'
+import { useAudio } from '../composables/useAudio'
 
+const { playAudio } = useAudio()
 const { notifications } = useNotification()
 
 const { routes } = useNavigationHistory();

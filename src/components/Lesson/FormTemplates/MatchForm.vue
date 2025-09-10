@@ -4,7 +4,7 @@
           <Teleport :to="`\#input_${input.index}`">
             <div
               tabindex="-1"
-              @focus="matchStart(index)"
+              @focus="matchStart(index); playAudio('click_tiny')"
               @blur="matchEnd"
               :ref="el => { fieldsRefs[index] = el }"
               :class="`q-lesson-field q-pb-xs ${(index == currentIndex) ? 'q-active' : ''} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-correct' : 'is-incorrect') : ''}`"
@@ -79,6 +79,9 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useAudio } from '../../../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
@@ -116,6 +119,7 @@ const matchStart = (fieldIndex) => {
   currentIndex.value = fieldIndex
 }
 const selectVariant = (text) => {
+  playAudio('click_planet')
   for(var i in formData.fields){
     if(formData.fields[i].value.text == text) formData.fields[i].value.text = ''
   }
@@ -128,6 +132,7 @@ const selectVariant = (text) => {
   calculateSelected()
 }
 const clearVariant = (text) => {
+  playAudio('click_planet')
   formData.fields[currentIndex.value].value.text = ''
   calculateSelected()
 }

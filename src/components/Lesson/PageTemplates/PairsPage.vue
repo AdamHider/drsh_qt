@@ -6,7 +6,7 @@
             :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
         <LessonAudioPlayer/>
     </q-card>
-    <div class="q-px-md q-pb-md" >
+    <div class="q-px-md q-pb-md q-pt-sm" >
       <div>
         <div v-for="(item, index) in pairs.items" :key="index" class="row items-stretch q-mb-md">
           <div v-for="(pair, colIndex) in item.pair_list" :key="colIndex" class="pair-block relative-position col " style="white-space: normal;">

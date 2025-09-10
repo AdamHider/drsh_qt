@@ -48,11 +48,15 @@ import { Navigation } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { ref, watch, toRefs, onMounted, onActivated } from 'vue'
 import { EffectCreative } from 'swiper/modules';
+import { useAudio } from '../composables/useAudio'
+
 import 'swiper/css/effect-creative';
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
+
+const { playAudio } = useAudio()
 
 const swiperElement = ref(null)
 
@@ -70,6 +74,7 @@ const activeSlide = toRefs(props).activeSlide
 
 const { lesson } = useLesson()
 const change = async (event) => {
+  playAudio('swing_short')
   emits('change', event.activeIndex)
 }
 const swiperEl = ref(null)

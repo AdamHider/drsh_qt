@@ -1,7 +1,7 @@
 <template>
   <q-page-container class="bg-white">
     <q-app-header class="bg-white rounded-b-md" contentClass="items-end" reveal>
-        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button"/>
+        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button" @click.stop="playAudio('click_tiny')"/>
         <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" :exercise="lesson.active.exercise" compact/>
     </q-app-header>
     <q-page class="bg-white column full-width full-height lesson-page" style="padding-top: 60px;">
@@ -10,7 +10,7 @@
             <div class="flex no-wrap  justify-between">
               <div>
                 <div class="text-subtitle1"><b>{{ lesson.active.page?.header?.index }}. </b> <b v-html="lesson.active.page?.header?.title"></b>
-                  <q-chip icon="bolt" text-color="white" color="secondary" class="q-pa-sm q-my-none  q-mx-xs q-push text-white text-caption"><b>На время</b></q-chip>
+                  <q-chip v-if="lesson.active.page?.timer" icon="bolt" text-color="white" color="secondary" class="q-pa-sm q-my-none  q-mx-xs q-push text-white text-caption"><b>На время</b></q-chip>
                 </div>
 
               </div>
@@ -38,8 +38,8 @@
           <div>Можно будет вернуться к планете в любое время.</div>
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat class="col" color="grey" v-close-popup><b>Нет</b></q-btn>
-          <q-btn push class="col" color="primary" @click="closeLesson"><b>Да</b></q-btn>
+          <q-btn flat class="col" color="grey" v-close-popup  @click.stop="playAudio('click_tiny')"><b>Нет</b></q-btn>
+          <q-btn push class="col" color="primary" @click="closeLesson"  @click.stop="playAudio('click_tiny_positive')"><b>Да</b></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -53,6 +53,9 @@ import LessonNote from '../components/LessonNote.vue'
 import { useLesson } from '../composables/useLesson'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
+import { useAudio } from '../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const route = useRoute()
 const router = useRouter()
@@ -111,6 +114,7 @@ const onAnswerSaved = async (timeBonus = 0) => {
   setTimeout(() => {
     rendered.value = true
   },0)
+  return true
   /*
   setTimeout(() => {
     document.querySelector('.q-scrollarea__container').scrollTo(0, document.body.scrollHeight)

@@ -13,6 +13,20 @@
       <PWAInstallDialog/>
   </q-layout>
   <AppLoader/>
+  <audio id="audio_click_short" src="/audio/click_short.mp3" preload="auto"></audio>
+  <audio id="audio_click_tiny" src="/audio/click_tiny.mp3" preload="auto"></audio>
+  <audio id="audio_click_tiny_positive" src="/audio/click_tiny_positive.mp3" preload="auto"></audio>
+  <audio id="audio_swing_long" src="/audio/swing_long.mp3" preload="auto"></audio>
+  <audio id="audio_swing_short" src="/audio/swing_short.mp3" preload="auto"></audio>
+  <audio id="audio_click_planet" src="/audio/click_planet.mp3" preload="auto"></audio>
+  <audio id="audio_page_success" src="/audio/page_success.mp3" preload="auto"></audio>
+  <audio id="audio_page_fail" src="/audio/page_fail.mp3" preload="auto"></audio>
+  <audio id="audio_lesson_success" src="/audio/lesson_success.mp3" preload="auto"></audio>
+  <audio id="audio_lesson_fail" src="/audio/lesson_fail.mp3" preload="auto"></audio>
+  <audio id="audio_dialog_show" src="/audio/dialog_show.mp3" preload="auto"></audio>
+  <audio id="audio_dialog_hide" src="/audio/dialog_hide.mp3" preload="auto"></audio>
+
+
 </template>
 
 <script setup>

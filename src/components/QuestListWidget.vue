@@ -6,7 +6,7 @@
         :enter-active-class="`animated fadeInLeft`"
         :leave-active-class="`animated fadeOutLeft`">
       <q-btn v-for="(questItem, index) in quests" :key="index" push dense
-        @click="showQuest(questItem.id)"
+        @click="showQuest(questItem.id)" @click.stop="playAudio('click_tiny')"
         size="sm"
         :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed || questItem.status == 'created') ? ' q-btn-blinking q-btn-shaking' : ''}`" >
           <div style="width: 40px" >
@@ -47,7 +47,7 @@
           </div>
         </q-card-section>
         <q-card-actions align="center" class="bg-white q-px-md q-pb-md text-teal">
-          <q-btn class="full-width" push label="Отлично" color="positive" v-close-popup />
+          <q-btn class="full-width" push label="Отлично" color="positive" v-close-popup @click.stop="playAudio('click_tiny')"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -69,6 +69,9 @@ import { ref, onMounted, onActivated, onDeactivated } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import QuestItem from '../components/QuestItem.vue'
+import { useAudio } from '../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const error = ref(false)
 const claimDialog = ref(false)

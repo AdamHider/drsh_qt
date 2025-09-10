@@ -2,7 +2,7 @@
     <q-item class="bg-dark-transparent q-py-xs  q-px-sm bg-dark-transparent-50 rounded-sm"
       style="color: inherit"
       clickable
-      dense
+      dense  @click.stop="playAudio('click_tiny')"
       @click="dialog = true"
     >
       <q-item-section avatar>
@@ -24,14 +24,14 @@
           <q-inner-loading
               style="z-index: 300"
               :showing="course.isLoading"
-              label="Please wait..."
-              label-class="text-teal"
+              label="Ищем созвездия..."
+              label-class="text-primary"
               label-style="font-size: 1.1em"
             />
           <CourseList @select="select"/>
         </q-card-section>
         <q-page-sticky v-if="course.active" position="bottom" :offset="[0, 18]">
-          <q-btn push class="q-pa-sm" color="negative" v-close-popup>
+          <q-btn push class="q-pa-sm" color="negative" v-close-popup @click.stop="playAudio('click_tiny')">
             <q-avatar size="60px"><q-img src="images/icons/back_galaxy.png"/></q-avatar>
           </q-btn>
         </q-page-sticky>
@@ -43,6 +43,9 @@
 import { watch, ref } from 'vue'
 import { useCourse } from '../composables/useCourse'
 import CourseList from '../components/CourseList.vue'
+import { useAudio } from '../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const emit = defineEmits(['update:dialogOpened', 'onSelect'])
 

@@ -1,6 +1,6 @@
 <template>
   <div class="column q-gutter-md" v-if="lessons.length > 0">
-    <q-btn class="bg-gradient-primary" round push @click="dailyLessonDialog = true">
+    <q-btn class="bg-gradient-primary" round push @click="dailyLessonDialog = true" @click.stop="playAudio('click_tiny')">
       <q-avatar size="60px" class="daily-lesson-avatar">
         <img src="/images/icons/radar.png" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
       </q-avatar>
@@ -10,7 +10,7 @@
         transition-hide="jump-down"
         class="bg-transparent q-flat allow-overflow" fit>
         <div v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`" class="text-center q-mb-md ">
-          <router-link :to="`/lesson-startup-${lesson.id}`">
+          <router-link :to="`/lesson-startup-${lesson.id}`" @click.stop="playAudio('click_tiny')">
             <q-avatar clickable v-ripple  :to="`/lesson-startup-${lesson.id}`"
               :class="`q-push relative-position  ${(lesson.is_explored) ? '' : 'daily-lesson-avatar'}`" size="60px"
               :style="`background-image: url(${lesson.course_section.background_image}); background-size: cover; background-position: center; height: 64px;`">
@@ -27,6 +27,9 @@
 <script setup>
 import { ref, toRef, onMounted, onActivated, watch } from 'vue'
 import { useLesson } from '../composables/useLesson'
+import { useAudio } from '../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const { lesson, getDailyList  } = useLesson()
 
@@ -82,7 +85,7 @@ watch(() => reloadTrigger.value, () => {
     box-shadow: 0 0 0 1px $secondary;
     border-radius: inherit;
     animation: pulseSignal 1.5s ease infinite;
-    
+
   }
   &:after{
     content: "";

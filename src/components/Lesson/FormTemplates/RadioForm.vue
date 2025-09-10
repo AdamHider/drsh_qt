@@ -4,7 +4,7 @@
             <Teleport :to="`\#input_${input.index}`">
               <div v-if="input.mode == 'match'">
                 <q-list v-if="!formData.fields[index].answer">
-                  <q-item v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex"
+                  <q-item v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex" @click.stop="playAudio('click_tiny')"
                    tag="label" :class="`q-lesson-radio q-mb-sm rounded-sm ${(formData.fields[index].value.text == variant.text) ? 'q-active' : ''}`"
                   >
                     <q-item-section side>
@@ -68,6 +68,9 @@
 <script setup>
 import { reactive, watch } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useAudio } from '../../../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()

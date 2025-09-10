@@ -101,6 +101,9 @@ import { ref, onActivated, onMounted, toRef, watch } from "vue";
 import { useCourse } from "../composables/useCourse";
 import { useLoader } from '../composables/useLoader'
 import { useRouter } from "vue-router";
+import { useAudio } from '../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const { lesson, getList } = useLesson();
 const { course } = useCourse();
@@ -159,6 +162,7 @@ const checkScrollAnchor = () => {
   }
 }
 const openLesson = (lessonId) => {
+  playAudio('click_planet')
   transitionTrigger.value = false;
   selectedLesson.value = lessonId;
   //setTimeout(() => {

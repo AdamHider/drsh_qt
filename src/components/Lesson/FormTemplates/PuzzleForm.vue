@@ -4,7 +4,7 @@
         <Teleport :to="`\#input_${input.index}`">
           <div
             tabindex="-1"
-            @focus="matchStart(index)"
+            @focus="matchStart(index); playAudio('click_tiny')"
             @blur="matchEnd"
             :class="`q-lesson-field ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
             :style="`min-width: ${input.width}px`"
@@ -82,6 +82,9 @@
 <script setup>
 import { reactive, watch, ref } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useAudio } from '../../../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
@@ -141,6 +144,7 @@ const matchStart = (index) => {
   currentValueArray.value = formData.fields[currentIndex.value].value.array
 }
 const selectVariant = (text, variantIndex) => {
+  playAudio('click_planet')
   if(variantsDisabled.value) return
   if(formData.fields[currentIndex.value].options[variantIndex].count > 0) return clearVariant(text)
 
@@ -153,6 +157,7 @@ const selectVariant = (text, variantIndex) => {
 }
 
 const clearVariant = (text = null) => {
+  playAudio('click_planet')
   if(clearDisabled.value) return
   if(text){
     currentValueArray.value = removeVariantFromArray(text)
@@ -206,6 +211,7 @@ watch(formData.fields, (newValue, oldValue) => {
 .q-lesson-field {
   vertical-align: middle;
   display: inline-block;
+  position: relative;
   min-width: 60px;
   box-shadow: none;
   min-height: 2.3em;
@@ -213,6 +219,7 @@ watch(formData.fields, (newValue, oldValue) => {
     content: "";
     position: absolute;
     left: 0;
+    top: 0px;
     width: 100%;
     height: 100%;
     border-bottom: 2px dotted #00000083;

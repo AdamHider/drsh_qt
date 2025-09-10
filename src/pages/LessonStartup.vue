@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="transparent text-white rounded-b-md q-py-xs" >
-        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button" @click.stop="playAudio('click_tiny')"/>
         <q-toolbar-title></q-toolbar-title>
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
     </q-app-header>
@@ -152,6 +152,9 @@ import { ref, onActivated, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 import { useLoader } from '../composables/useLoader'
+import { useAudio } from '../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const $q = useQuasar()
 const router = useRouter()
@@ -180,6 +183,7 @@ const change = (index, noAnimation = 0) => {
 }
 const start = async (lessonId) => {
   buttonLoading.value = true
+  playAudio('click_short')
   const exerciseCreated = await createItem(lessonId)
   buttonLoading.value = false
   if (!exerciseCreated.error) {
@@ -195,12 +199,14 @@ const start = async (lessonId) => {
   }
 }
 const open = async (lessonId) => {
+  playAudio('click_short')
   dialog.value = false
   buttonLoading.value = true
   router.push(`/lesson-${lessonId}`)
 }
 const redo = async (lessonId) => {
   dialog.value = false
+  playAudio('click_short')
   buttonLoading.value = true
   const exerciseRedoCreated = await redoItem(lessonId)
   buttonLoading.value = false

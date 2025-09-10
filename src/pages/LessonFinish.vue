@@ -146,6 +146,9 @@ import { useExercise } from '../composables/useExercise'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import { useAudio } from '../composables/useAudio'
+
+const { playAudio } = useAudio()
 
 const route = useRoute()
 const router = useRouter()
@@ -163,23 +166,28 @@ const load = async () => {
   if(lesson.active.exercise?.data.totals.difference > 0) {
     currentPoints.value = lesson.active.exercise?.data.totals.total;
     previousPoints.value = lesson.active.exercise?.data.totals.total - lesson.active.exercise?.data.totals.difference;
+    playAudio('lesson_success')
   }
   if(lesson.active.exercise?.data.totals.difference < 0) {
     currentPoints.value = lesson.active.exercise?.data.totals.total + lesson.active.exercise?.data.totals.difference;
     previousPoints.value = lesson.active.exercise?.data.totals.total;
+    playAudio('lesson_fail')
   }
   if(lesson.active.exercise?.data.totals.difference == 0) {
     currentPoints.value = lesson.active.exercise?.data.totals.total
     if(lesson.active.exercise.attempts > 0) previousPoints.value = lesson.active.exercise?.data.totals.total;
+    playAudio('lesson_success')
   }
 }
 
 const redo = async () => {
+  playAudio('click_short')
   const exerciseRedoCreated = await redoItem(lesson.active.id)
   if (!exerciseRedoCreated.error) router.replace(`/lesson-${lesson.active.id}`)
 }
 
 const next = async () => {
+  playAudio('click_short')
   setTarget(lesson.active.id)
   router.go(-1)
 }
