@@ -1,9 +1,9 @@
 <template>
   <q-page-wrapper>
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
-        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"  @click.stop="playAudio('click')"/>
         <q-toolbar-title><b>Изменить пароль</b></q-toolbar-title>
-        <q-btn v-if="!hasErrors" flat icon="check" @click="saveChanges()"/>
+        <q-btn v-if="!hasErrors" flat icon="check" @click="saveChanges()"  @click.stop="playAudio('click')"/>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
         <q-form
@@ -21,6 +21,7 @@
             :error="formData.fields.oldPassword.errors !== ''"
             :type="formData.fields.oldPassword.reveal ? 'text' : 'password'"
             label="Старый пароль"
+            @focus="playAudio('click')"
             standout
           >
             <template v-slot:append>
@@ -39,6 +40,7 @@
             :error="formData.fields.password.errors !== ''"
             :type="formData.fields.password.reveal ? 'text' : 'password'"
             label="Новый пароль"
+            @focus="playAudio('click')"
             class="q-my-md"
             standout
           >
@@ -58,6 +60,7 @@
             :error="formData.fields.passwordConfirm.errors !== ''"
             :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
             label="Повтори новый пароль"
+            @focus="playAudio('click')"
             class="q-my-md"
             standout
           >
@@ -78,6 +81,7 @@
 import { useUserStore } from '../stores/user'
 import { reactive, ref, computed, watch, onActivated, onDeactivated } from 'vue'
 import { useRouter } from 'vue-router'
+import { playAudio } from 'src/services/audioService';
 
 const form = ref(null)
 const router = useRouter()

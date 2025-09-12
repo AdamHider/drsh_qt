@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="transparent text-white rounded-b-md q-py-xs" >
-        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button" @click.stop="playAudio('click_tiny')"/>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button" @click.stop="playAudio('click')"/>
         <q-toolbar-title></q-toolbar-title>
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
     </q-app-header>
@@ -51,7 +51,7 @@
                 <div :class="`text-caption satellite-description ${(expandDescription) ? '': 'max-two-lines'}`" @click="expandDescription = !expandDescription">
                   {{activeLesson.description}}
                 </div>
-                <div class="text-caption" @click="expandDescription = !expandDescription">
+                <div class="text-caption" @click="expandDescription = !expandDescription"  @click.stop="playAudio('click')">
                   <b v-if="expandDescription">Свернуть <q-icon name="keyboard_arrow_up"></q-icon></b>
                   <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
                 </div>
@@ -66,7 +66,7 @@
               <div v-if="activeLesson.unblock?.lessons?.length > 0">
                 <q-list>
                   <q-item clickable v-ripple class="text-left q-px-none"  v-for="(unblockLesson, unblockLessonIndex) in activeLesson.unblock.lessons" :key="`unblockLessonIndex-${unblockLessonIndex}`"
-                    @click="goToSattelite(unblockLesson)">
+                    @click="goToSattelite(unblockLesson)" @click.stop="playAudio('click')">
                     <q-item-section avatar>
                         <q-img :src="unblockLesson.image"/>
                     </q-item-section>
@@ -84,7 +84,7 @@
               <div v-if="activeLesson?.unblock?.skills?.length > 0">
                 <q-list>
                   <q-item clickable v-ripple class="text-left q-px-none"  v-for="(unblockSkill, unblockSkillIndex) in activeLesson.unblock.skills" :key="`unblockLessonIndex-${unblockSkillIndex}`"
-                    :to="`/skills`">
+                    :to="`/skills`" @click.stop="playAudio('click')">
                     <q-item-section avatar>
                         <q-img :src="unblockSkill.image"/>
                     </q-item-section>
@@ -152,9 +152,9 @@ import { ref, onActivated, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 import { useLoader } from '../composables/useLoader'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const $q = useQuasar()
 const router = useRouter()
@@ -183,7 +183,7 @@ const change = (index, noAnimation = 0) => {
 }
 const start = async (lessonId) => {
   buttonLoading.value = true
-  playAudio('click_short')
+  playAudio('click')
   const exerciseCreated = await createItem(lessonId)
   buttonLoading.value = false
   if (!exerciseCreated.error) {
@@ -199,14 +199,14 @@ const start = async (lessonId) => {
   }
 }
 const open = async (lessonId) => {
-  playAudio('click_short')
+  playAudio('click')
   dialog.value = false
   buttonLoading.value = true
   router.push(`/lesson-${lessonId}`)
 }
 const redo = async (lessonId) => {
   dialog.value = false
-  playAudio('click_short')
+  playAudio('click')
   buttonLoading.value = true
   const exerciseRedoCreated = await redoItem(lessonId)
   buttonLoading.value = false

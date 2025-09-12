@@ -4,7 +4,7 @@
         <Teleport :to="`\#input_${input.index}`">
           <div
             tabindex="-1"
-            @focus="matchStart(index); playAudio('click_tiny')"
+            @focus="matchStart(index); playAudio('click')"
             @blur="matchEnd"
             @click="(formData.fields[index].answer && !formData.fields[index].answer.is_correct) ? input.modal = true : ''"
             :class="`q-lesson-field ${(index == currentIndex) ? 'q-active' : (input.value.text == '' || input.value.text == false) ? 'is-inactive' : 'has-value'} ${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
@@ -78,9 +78,9 @@
 <script setup>
 import { reactive, watch, ref } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
-import { useAudio } from '../../../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
@@ -129,11 +129,11 @@ const matchStart = (index) => {
   currentIndex.value = index
 }
 const selectVariant = (text) => {
-  playAudio('click_planet')
+  playAudio('click')
   formData.fields[currentIndex.value].value.text = text
 }
 const clearVariant = (text) => {
-  playAudio('click_planet')
+  playAudio('click')
   formData.fields[currentIndex.value].value.text = ''
 }
 

@@ -44,12 +44,12 @@
         </q-card-section>
       </transition>
       <q-card-actions class=" justify-center q-px-md"  v-if="chests.length > 0">
-          <q-btn v-if="activeChest.is_available && !activeChest.is_gained" class="q-item-blinking " push color="primary" @click="claimItem(activeChest.id)" :loading="buttonLoading" @click.stop="playAudio('click_tiny')">Получить</q-btn>
+          <q-btn v-if="activeChest.is_available && !activeChest.is_gained" class="q-item-blinking " push color="primary" @click="claimItem(activeChest.id)" :loading="buttonLoading">Получить</q-btn>
           <q-btn v-else-if="activeChest.is_gained" push color="positive" icon="check">Получено</q-btn>
           <q-btn v-else  push disable color="grey">Недоступно</q-btn>
       </q-card-actions>
     <q-page-sticky position="top-right" :offset="[16,16]">
-      <q-btn push class="col-auto q-ma-xs" color="negative" v-close-popup icon="close" @click.stop="playAudio('click_tiny')"/>
+      <q-btn push class="col-auto q-ma-xs" color="negative" v-close-popup icon="close" @click.stop="playAudio('click')"/>
     </q-page-sticky>
     </q-card>
 </template>
@@ -61,9 +61,9 @@ import { useUserStore } from '../stores/user'
 import UserResourceBar from './UserResourceBar.vue'
 import { CONFIG } from '../config.js'
 import { Swiper, SwiperSlide } from 'swiper/vue'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 import 'swiper/css'
 
@@ -102,6 +102,7 @@ const claimItem = async (offer_id) => {
   buttonLoading.value = false
   await load()
   activeChest.value = chests.value.find((offer) => offer.id == offer_id);
+  playAudio('gain')
 }
 const checkActive = () => {
   let activeIndex = chests.value.findIndex((item) => item.is_active);

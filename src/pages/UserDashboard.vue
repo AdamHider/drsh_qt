@@ -6,10 +6,10 @@
       <q-app-header class="transparent text-white rounded-b-md" reveal>
           <q-toolbar-title></q-toolbar-title>
           <div class="relative-position q-mr-sm">
-            <q-btn flat round dense icon="person_add" @click="inviteDialog = true"/>
+            <q-btn flat round dense icon="person_add" @click="inviteDialog = true"  @click.stop="playAudio('click')"/>
             <q-tutorial-item title="Пригласить друзей" description="Здесь можно пригласить друзей и получить большой подарок за каждого." :index="5" position="bottom" positionInline="right"/>
           </div>
-          <q-btn flat round dense icon="settings" class="q-mr-sm" to="/user/settings">
+          <q-btn flat round dense icon="settings" class="q-mr-sm" to="/user/settings"  @click.stop="playAudio('click')">
           </q-btn>
       </q-app-header>
       <q-page style="padding-top: 50px; padding-bottom: 35px;" class="text-center flex column full-width">
@@ -36,8 +36,8 @@
               <q-card-section class="text-center q-pa-none">
                 <div class="text-h6">
                   <b>{{ user.active?.data.name }}</b>
-                  <span class="q-ml-xs" v-if="user.active?.data.achievements.length > 0">
-                    <q-avatar size="22px" v-for="(achievementItem, achievementIndex) in user.active?.data.achievements" :key="`achievementIndex${achievementIndex}`">
+                  <span class="q-ml-xs" v-if="user.active?.data?.achievements?.length > 0">
+                    <q-avatar size="22px" v-for="(achievementItem, achievementIndex) in user.active?.data?.achievements" :key="`achievementIndex${achievementIndex}`">
                       <q-img :src="achievementItem.image"/>
                       <q-tooltip>
                         <q-item class="q-pl-sm">
@@ -132,7 +132,7 @@
                 <q-tutorial-item title="Достижения" description="Здесь будут отображаться заработанные достижения." :index="4" position="top"/>
                 <q-card-section class="q-py-none flex justify-between items-center q-pt-sm">
                     <div class="text-subtitle1"><b>Достижения</b></div>
-                    <router-link to="/achievements">Показать все</router-link>
+                    <router-link to="/achievements" @click.stop="playAudio('click')">Показать все</router-link>
                 </q-card-section>
                 <q-card-section class="q-pa-none q-pb-sm">
                     <AchievementList/>
@@ -159,9 +159,10 @@
             </div>
           </q-card-section>
           <q-card-actions>
-            <q-btn v-if="!userInvitationCopied" class="full-width" push color="primary" icon="content_copy" label="Скопировать ссылку" @click="copyInvitationLink()"/>
+            <q-btn v-if="!userInvitationCopied" class="full-width" push color="primary" icon="content_copy" label="Скопировать ссылку"
+              @click="copyInvitationLink()" @click.stop="playAudio('click')"/>
             <q-btn v-else class="full-width" push color="primary" label="Скопировано" icon="check" disabled/>
-            <q-btn v-close-popup class="full-width q-my-sm" flat color="primary"><b>Закрыть</b></q-btn>
+            <q-btn v-close-popup class="full-width q-my-sm" flat color="primary"  @click.stop="playAudio('click')"><b>Закрыть</b></q-btn>
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -176,6 +177,7 @@ import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 import AppBackground from '../components/AppBackground.vue'
+import { playAudio } from 'src/services/audioService';
 
 import { useRoute } from 'vue-router'
 import { ref, watch, onMounted, onActivated, onBeforeMount } from 'vue'

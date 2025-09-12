@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
-        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button" @click.stop="playAudio('click')"/>
         <q-toolbar-title><b>Достижения</b></q-toolbar-title>
     </q-app-header>
     <q-page class="bg-white "  style="padding-top: 50px; padding-bottom: 48px;">
@@ -38,12 +38,8 @@
 <script setup >
 import { ref, onMounted } from 'vue'
 import { api } from '../services/index'
-import { Swiper, SwiperSlide } from 'swiper/vue'
+import { playAudio } from 'src/services/audioService';
 
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import 'swiper/css/scrollbar'
 
 const achievements = ref([])
 const error = ref({})

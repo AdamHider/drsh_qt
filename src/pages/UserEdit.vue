@@ -1,9 +1,9 @@
 <template>
   <q-page-container>
     <q-app-header class="bg-white rounded-b-md bordered" reveal>
-        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"  @click.stop="playAudio('click')"/>
         <q-toolbar-title><b>Изменить героя</b></q-toolbar-title>
-        <q-btn v-if="hasChanges && !hasErrors" flat icon="check" @click="saveChanges()"/>
+        <q-btn v-if="hasChanges && !hasErrors" flat icon="check" @click="saveChanges()" @click.stop="playAudio('click')"/>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
         <q-form
@@ -18,6 +18,7 @@
             :rules="formData.fields.name.rules"
             :error-message="formData.fields.name.errors"
             :error="formData.fields.name.errors !== ''"
+            @focus="playAudio('click')"
             label="Имя"
             standout
             required
@@ -27,6 +28,7 @@
             :rules="formData.fields.username.rules"
             :error-message="formData.fields.username.errors"
             :error="formData.fields.username.errors !== ''"
+            @focus="playAudio('click')"
             label="Никнейм"
             standout
             required
@@ -45,7 +47,7 @@
                 v-for="(item, index) in formData.fields.username.suggestions"
                 :key="index"
                 clickable
-                :value="item"
+                :value="item" @click.stop="playAudio('click')"
                 @click="(formData.fields.username.value = item); formData.fields.username.suggestions = []"
               >
                 <q-item-section class="text-left"><b>{{ item }}</b></q-item-section>
@@ -55,13 +57,14 @@
               </q-item>
             </q-list>
           </q-card>
-          <q-btn class="full-width q-ma-sm q-mb-lg" color="dark" to="edit/password" push>Изменить пароль</q-btn>
+          <q-btn class="full-width q-ma-sm q-mb-lg" color="dark" to="edit/password" push @click.stop="playAudio('click')">Изменить пароль</q-btn>
           <q-input
             v-model="formData.fields.email.value"
             :rules="formData.fields.email.rules"
             :error-message="formData.fields.email.errors"
             :error="formData.fields.email.errors !== ''"
             label="Эл. почта"
+            @focus="playAudio('click')"
             standout
           >
             <template v-slot:append >
@@ -77,7 +80,8 @@
 <script setup >
 import { useUserStore } from '../stores/user'
 import { reactive, ref, watch, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { playAudio } from 'src/services/audioService';
 
 const form = ref(null)
 const router = useRouter()

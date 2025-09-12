@@ -4,11 +4,11 @@
           <q-card flat class="bg-transparent text-white">
               <q-card-section v-if="user.active?.data.id" class="d-flex flex-no-wrap justify-space-between align-center">
                   <h4 class="text-h6">{{user.active?.data.name}}</h4>
-                  <q-btn push  @click="signOut()" color="white">Sign out</q-btn>
+                  <q-btn push  @click="signOut()" color="white" @click.stop="playAudio('click')">Выйти</q-btn>
               </q-card-section>
               <div v-if="!tapped">
-                  <div class="tap-overlay" @click="tapped = true"></div>
-                  <q-btn flat class="full-width q-ma-sm q-mb-xl animation-flash" @click="tapped = true"><b>Нажмите, чтобы продолжить</b></q-btn>
+                  <div class="tap-overlay" @click="tapped = true" @click.stop="playAudio('click')"></div>
+                  <q-btn flat class="full-width q-ma-sm q-mb-xl animation-flash" @click="tapped = true" @click.stop="playAudio('click')"><b>Нажмите, чтобы продолжить</b></q-btn>
               </div>
               <div v-else>
                 <transition
@@ -17,9 +17,9 @@
                   leave-active-class="animated fadeOut" >
                   <q-card-section class="q-pb-xl">
                     <div style="max-width: 200px;">
-                      <q-btn push color="primary" @click="signIn()" class="full-width q-my-sm">Продолжить</q-btn>
-                      <q-btn push color="secondary" @click="signUp()"  class="full-width  q-my-sm">Новая игра</q-btn>
-                      <q-btn push color="primary" @click="closeDialog = true;" class="q-my-sm">Выйти из игры</q-btn>
+                      <q-btn push color="primary" @click="signIn()" class="full-width q-my-sm" @click.stop="playAudio('click')">Продолжить</q-btn>
+                      <q-btn push color="secondary" @click="signUp()"  class="full-width  q-my-sm" @click.stop="playAudio('click')">Новая игра</q-btn>
+                      <q-btn push color="primary" @click="closeDialog = true;" class="q-my-sm" @click.stop="playAudio('click')">Выйти из игры</q-btn>
                     </div>
                   </q-card-section>
                 </transition>
@@ -34,8 +34,8 @@
                 Вы уверены? Вы можете вернуться к планете в любое время.
               </q-card-section>
               <q-card-actions align="center" class="bg-white text-teal">
-                <q-btn flat class="col" color="grey" v-close-popup ><b>Отмена</b></q-btn>
-                <q-btn push class="col" color="primary" label="Выйти" @click="closeApp" />
+                <q-btn flat class="col" color="grey" v-close-popup @click.stop="playAudio('click')"><b>Отмена</b></q-btn>
+                <q-btn push class="col" color="primary" label="Выйти" @click="closeApp" @click.stop="playAudio('click')"/>
               </q-card-actions>
             </q-card>
           </q-dialog>
@@ -47,6 +47,7 @@
 import { ref, watch, onActivated, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
+import { playAudio } from 'src/services/audioService';
 
 const router = useRouter()
 

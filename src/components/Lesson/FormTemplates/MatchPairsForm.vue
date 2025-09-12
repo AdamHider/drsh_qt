@@ -4,7 +4,7 @@
           <Teleport :to="`\#input_${input.index}`">
             <div
               tabindex="-1"
-              @focus="matchStart(index); playAudio('click_tiny')"
+              @focus="matchStart(index); playAudio('click')"
               @blur="matchEnd"
               @click="(formData.fields[index].answer && !formData.fields[index].answer.is_correct) ? input.modal = true : ''"
               :ref="el => { fieldsRefs[index] = el }"
@@ -80,9 +80,9 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
-import { useAudio } from '../../../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
@@ -123,12 +123,12 @@ const matchEnd = (variantIndex) => {
 }
 
 const matchStart = (fieldIndex) => {
-  
+
   if (lesson.active.page.answers) return
   currentIndex.value = fieldIndex
 }
 const selectVariant = (text) => {
-  playAudio('click_tiny')
+  playAudio('click')
   for(var i in formData.fields){
     if(formData.fields[i].value.text == text) formData.fields[i].value.text = ''
   }
@@ -141,7 +141,7 @@ const selectVariant = (text) => {
   calculateSelected()
 }
 const clearVariant = (text) => {
-  playAudio('click_tiny')
+  playAudio('click')
   formData.fields[currentIndex.value].value.text = ''
   calculateSelected()
 }

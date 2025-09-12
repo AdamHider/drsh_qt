@@ -5,47 +5,15 @@
     </video>
     <q-card class="bg-transparent absolute-bottom full-width" flat>
       <q-card-actions class="justify-end">
-        <q-btn flat color="white" icon-right="chevron_right" @click="emits('onEnded', true)"><b>Пропустить</b></q-btn>
+        <q-btn flat color="white" icon-right="chevron_right" @click="emits('onEnded', true)" @click.stop="playAudio('click')"><b>Пропустить</b></q-btn>
       </q-card-actions>
     </q-card>
   </div>
-  <!--
-    <swiper
-      :slides-per-view="props.slidesPerView"
-      :centeredSlides="props.centerAligned"
-      :autoplay="{
-        delay: 9000,
-        disableOnInteraction: false,
-        stopOnLastSlide: true
-      }"
-      :crossFade="true"
-      :allowTouchMove="false"
-      :modules="modules"
-      :effect="'fade'"
-    >
-      <swiper-slide  v-for="(slide, index) in slides" :key="`story-slide-${index}`">
-        <q-card flat class="story-card full-height no-border-radius column justify-end">
-            <q-img class="story-image absolute-full" :src="slide.image"/>
-            <q-card-section style="z-index: 2">
-              <div class="bg-dark-transparent text-white text-center text-subtitle1"><b>
-                {{ slide.text }}
-              </b></div>
-            </q-card-section>
-            <q-card-actions  style="z-index: 2" class="justify-end text-right">
-              <q-btn flat color="white" icon-right="chevron_right"><b>Next</b></q-btn>
-            </q-card-actions>
-        </q-card>
-      </swiper-slide>
-    </swiper>
-    -->
 </template>
 <script setup>
-import { api } from '../services/index'
-import { ref, onMounted, onActivated } from 'vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user'
-import { Swiper, SwiperSlide } from 'swiper/vue'
+import { ref } from 'vue'
 import { EffectFade, Autoplay } from 'swiper/modules';
+import { playAudio } from 'src/services/audioService';
 
 
 import 'swiper/css'
@@ -54,14 +22,6 @@ import 'swiper/css/effect-fade';
 const modules = [ EffectFade, Autoplay ]
 const emits = defineEmits(['onEnded'])
 
-const props = defineProps({
-  slidesPerView: Number,
-  centerAligned: Boolean,
-  withButton: Boolean,
-  slideHeight: String,
-  navigation: Boolean,
-  captionMode: String
-})
 const slides = ref([])
 
 slides.value = [

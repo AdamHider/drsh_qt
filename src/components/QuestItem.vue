@@ -82,17 +82,17 @@
     <div class="absolute-bottom q-pa-sm text-white" style="z-index: 100">
       <div class="row justify-center">
         <div v-if="isLastReplica" class="col">
-          <q-btn v-if="props.mode == 'active' && props.quest.target.id" push class="bg-gradient-primary  full-width q-ma-xs" @click="goToQuestTarget()" icon-right="navigate_next" @click.stop="playAudio('click_tiny')"><b>Перейти к цели</b></q-btn>
-          <q-btn v-else-if="props.mode == 'start'" :loading="loading[0]"  push class="full-width bg-gradient-primary q-ma-xs" @click="onStart()" @click.stop="playAudio('click_tiny')"><b >Начать задание</b></q-btn>
-          <q-btn v-else-if="props.mode == 'finish'" push :loading="loading[1]" class="full-width bg-gradient-primary q-ma-xs" @click="onClaim()" @click.stop="playAudio('click_tiny')"><b >Завершить задание</b></q-btn>
+          <q-btn v-if="props.mode == 'active' && props.quest.target.id" push class="bg-gradient-primary  full-width q-ma-xs" @click="goToQuestTarget()" icon-right="navigate_next" @click.stop="playAudio('click')"><b>Перейти к цели</b></q-btn>
+          <q-btn v-else-if="props.mode == 'start'" :loading="loading[0]"  push class="full-width bg-gradient-primary q-ma-xs" @click="onStart()" @click.stop="playAudio('click')"><b >Начать задание</b></q-btn>
+          <q-btn v-else-if="props.mode == 'finish'" push :loading="loading[1]" class="full-width bg-gradient-primary q-ma-xs" @click="onClaim()" @click.stop="playAudio('click')"><b >Завершить задание</b></q-btn>
           <q-btn v-else push class="full-width bg-gradient-primary q-ma-xs" @click="onClose()"><b >Закрыть</b></q-btn>
         </div>
-        <q-btn push  v-else class="bg-gradient-primary col full-width q-ma-xs" @click="nextReplica()" icon-right="navigate_next" :disabled="nextDisabled" @click.stop="playAudio('click_tiny')"><b>Далее</b></q-btn>
-        <q-btn v-if="!isLastReplica" push class="bg-dark col-auto q-ma-xs" @click="skipAll()" icon-right="last_page" @click.stop="playAudio('click_tiny')"><b></b></q-btn>
+        <q-btn push  v-else class="bg-gradient-primary col full-width q-ma-xs" @click="nextReplica()" icon-right="navigate_next" :disabled="nextDisabled" @click.stop="playAudio('click')"><b>Далее</b></q-btn>
+        <q-btn v-if="!isLastReplica" push class="bg-dark col-auto q-ma-xs" @click="skipAll()" icon-right="last_page" @click.stop="playAudio('click')"><b></b></q-btn>
       </div>
     </div>
     <q-page-sticky position="top-right" :offset="[16,16]">
-      <q-btn push class="col-auto q-ma-xs" color="negative" @click="onClose()" icon="close" @click.stop="playAudio('click_tiny')"/>
+      <q-btn push class="col-auto q-ma-xs" color="negative" @click="onClose()" icon="close" @click.stop="playAudio('click')"/>
     </q-page-sticky>
   </q-card>
 </template>
@@ -103,9 +103,9 @@ import { useRouter } from 'vue-router'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { useUserStore } from '../stores/user'
 import { useLesson } from '../composables/useLesson'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const { user } = useUserStore()
 const { setTarget } = useLesson()

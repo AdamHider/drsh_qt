@@ -1,7 +1,7 @@
 <template>
   <q-page-container class="bg-white">
     <q-app-header class="bg-white rounded-b-md" contentClass="items-end" reveal>
-        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button" @click.stop="playAudio('click_tiny')"/>
+        <q-btn flat icon="close"  @click="closeDialog=true" v:slot="back-button" @click.stop="playAudio('click')"/>
         <lesson-progress-bar size="25px" :value="progress" :reward="lesson.active.reward" :exercise="lesson.active.exercise" compact/>
     </q-app-header>
     <q-page class="bg-white column full-width full-height lesson-page" style="padding-top: 60px;">
@@ -38,8 +38,8 @@
           <div>Можно будет вернуться к планете в любое время.</div>
         </q-card-section>
         <q-card-actions align="center" class="bg-white text-teal">
-          <q-btn flat class="col" color="grey" v-close-popup  @click.stop="playAudio('click_tiny')"><b>Нет</b></q-btn>
-          <q-btn push class="col" color="primary" @click="closeLesson"  @click.stop="playAudio('click_tiny_positive')"><b>Да</b></q-btn>
+          <q-btn flat class="col" color="grey" v-close-popup  @click.stop="playAudio('click')"><b>Нет</b></q-btn>
+          <q-btn push class="col" color="primary" @click="closeLesson"  @click.stop="playAudio('click')"><b>Да</b></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -53,9 +53,9 @@ import LessonNote from '../components/LessonNote.vue'
 import { useLesson } from '../composables/useLesson'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const route = useRoute()
 const router = useRouter()
@@ -103,7 +103,7 @@ const onPageChanged = async (action) => {
   }
 }
 
-const onAnswerSaved = async (timeBonus = 0) => {
+const onAnswerSaved = async (timeBonus = 0, callback = () => {}) => {
   const answers = {}
   for (const i in pageAnswers.value) {
     answers[i] = pageAnswers.value[i].value
@@ -114,6 +114,7 @@ const onAnswerSaved = async (timeBonus = 0) => {
   setTimeout(() => {
     rendered.value = true
   },0)
+  callback(exerciseAnswerResponse)
   return true
   /*
   setTimeout(() => {

@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="transparent text-white">
-        <q-btn flat round dense icon="arrow_back" @click="formData.step--" v:slot="back-button"></q-btn>
+        <q-btn flat round dense icon="arrow_back" @click="formData.step--" v:slot="back-button" @click.stop="playAudio('click')"></q-btn>
         <q-toolbar-title></q-toolbar-title>
     </q-app-header>
     <q-page class="flex justify-center items-end full-height full-width text-center" style="padding-top: 50px">
@@ -27,6 +27,7 @@
               v-on:keyup.enter="checkUsernameValue()"
               placeholder="Введите логин..."
               bottom-slots
+              @focus="playAudio('click')"
               required
               autofocus
             >
@@ -41,7 +42,8 @@
                 :disabled="!formData.valid"
                 @click="checkUsernameValue()"
                 color="primary"
-                label="Продолжить"/>
+                label="Продолжить"
+                @click.stop="playAudio('click')"/>
           </q-card-actions>
         </q-card>
         <q-card v-if="formData.step == 2" class="rounded-b-0">
@@ -60,6 +62,7 @@
                 v-on:keyup.enter="validate()"
                 @update:model-value="clearErrors()"
                 bottom-slots
+                @focus="playAudio('click')"
                 autofocus
               >
                 <template v-slot:append>
@@ -81,7 +84,7 @@
                 :disabled="!formData.valid"
                 @click="validate()"
                 color="primary"
-                label="Войти"/>
+                label="Войти" @click.stop="playAudio('click')"/>
           </q-card-actions>
         </q-card>
       </q-form>
@@ -110,7 +113,7 @@
                       </q-item>
                   </q-list>
               <q-card-actions align="right" class="bg-white text-teal">
-                  <q-btn flat label="CLOSE" v-close-popup />
+                  <q-btn flat label="Закрыть" v-close-popup @click.stop="playAudio('click')"/>
               </q-card-actions>
               <q-separator color="white" v-if="(Object.keys(user.list).length > 0)" class="q-mx-md"></q-separator>
               <q-card-section  v-if="(Object.keys(user.list).length > 0)">
@@ -126,6 +129,7 @@
 import { useUserStore } from '../stores/user'
 import { reactive, ref, watch, onMounted, onActivated } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { playAudio } from 'src/services/audioService';
 
 const form = ref(null)
 const buttonLoading = ref(false)

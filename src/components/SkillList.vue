@@ -19,6 +19,7 @@
                   style="z-index: 10; min-width: 165px; max-width: 60px;"
                   :color="props.color"
                   :class="(currentSkill.id == skill.id) ? 'is-active' : ''"
+                  @click.stop="playAudio('click')"
                 />
                 <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
               </swiper-slide>
@@ -47,8 +48,8 @@
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)"/>
-            <q-btn v-else color="positive" push class="full-width text-bold q-mt-sm" icon="add" label="Докупить ресурсы" @click="openMarket()"/>
+            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"/>
+            <q-btn v-else color="positive" push class="full-width text-bold q-mt-sm" icon="add" label="Докупить ресурсы" @click="openMarket()"  @click.stop="playAudio('click')"/>
           </div>
           <div v-if="currentSkill.is_gained" class="full-width">
             <q-btn color="white" icon="check" flat class="full-width text-bold" label="Исследовано"/>
@@ -56,7 +57,7 @@
           <div v-if="!currentSkill.is_gained && !currentSkill.is_available" class="full-width">
             <div class="text-subtitle1"><b>Сначала изучите: </b></div>
             <q-list class="text-left">
-              <q-item  clickable  v-for="(requiredSkill, requiredSkillIndex) in currentSkill.required_skills" :key="requiredSkillIndex"  @click="openModal(requiredSkill)">
+              <q-item  clickable  v-for="(requiredSkill, requiredSkillIndex) in currentSkill.required_skills" :key="requiredSkillIndex"  @click="openModal(requiredSkill)"  @click.stop="playAudio('click')">
                 <q-item-section avatar>
                   <q-avatar size="50px" text-color="white">
                     <img class="absolute" :src="requiredSkill.image" />
@@ -65,6 +66,9 @@
                 <q-item-section class="q-pl-sm">
                   <q-item-label lines="1"><b>{{ requiredSkill.title }}</b></q-item-label>
                   <q-item-label caption>{{ requiredSkill.description }}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-btn size="12px" flat dense round icon="chevron_right" />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -83,6 +87,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
 import SkillItem from '../components/SkillItem.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import { playAudio } from 'src/services/audioService';
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -113,7 +118,7 @@ const claimSkill = async function (skillId) {
     claimError.value = true
   } else {
     emit('onClaim')
-    claimDialog.value = false
+    currentSkill.value = false
   }
 }
 const openMarket = () => {

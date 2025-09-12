@@ -2,7 +2,7 @@
     <q-item class="bg-dark-transparent q-py-xs  q-px-sm bg-dark-transparent-50 rounded-sm"
       style="color: inherit"
       clickable
-      dense  @click.stop="playAudio('click_tiny')"
+      dense  @click.stop="playAudio('click')"
       @click="dialog = true"
     >
       <q-item-section avatar>
@@ -31,7 +31,7 @@
           <CourseList @select="select"/>
         </q-card-section>
         <q-page-sticky v-if="course.active" position="bottom" :offset="[0, 18]">
-          <q-btn push class="q-pa-sm" color="negative" v-close-popup @click.stop="playAudio('click_tiny')">
+          <q-btn push class="q-pa-sm" color="negative" v-close-popup @click.stop="playAudio('click')">
             <q-avatar size="60px"><q-img src="images/icons/back_galaxy.png"/></q-avatar>
           </q-btn>
         </q-page-sticky>
@@ -43,9 +43,9 @@
 import { watch, ref } from 'vue'
 import { useCourse } from '../composables/useCourse'
 import CourseList from '../components/CourseList.vue'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const emit = defineEmits(['update:dialogOpened', 'onSelect'])
 

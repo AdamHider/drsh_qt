@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="transparent text-white">
-        <q-btn flat round dense icon="arrow_back" @click="formData.step--" v:slot="back-button"></q-btn>
+        <q-btn flat round dense icon="arrow_back" @click="formData.step--" v:slot="back-button" @click.stop="playAudio('click')"></q-btn>
         <q-toolbar-title></q-toolbar-title>
     </q-app-header>
     <q-page class="flex justify-center items-end full-height full-width text-center" style="padding-top: 50px">
@@ -23,14 +23,15 @@
                   push
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Вперёд!"/>
-              <div class="text-caption text-grey q-py-sm">Продолжая, вы соглашаетесь с <a @click="termsDialog = true;">нашими правилами</a>.</div>
+                  label="Вперёд!"
+                  @click.stop="playAudio('click')"/>
+              <div class="text-caption text-grey q-py-sm">Продолжая, вы соглашаетесь с <a class="cursor-pointer" @click="termsDialog = true;" @click.stop="playAudio('click')">нашими правилами</a>.</div>
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 2" class="ful-width rounded-b-0">
             <q-card-section>
-              <div class="text-h6"><b>Как Вас зовут?</b></div>
-              <div class="text-grey">Придумайте имя для своего героя</div>
+              <div class="text-h6"><b>Как зовут героя?</b></div>
+              <div class="text-grey">Придумай имя для своего героя</div>
             </q-card-section>
             <q-card-section>
               <q-input
@@ -38,9 +39,10 @@
                 :rules="formData.fields.name.rules"
                 :error-messages="formData.fields.name.errors"
                 :error="formData.fields.name.isError"
-                placeholder="Введите имя..."
+                placeholder="Введи имя..."
                 bottom-slots
                 standout
+                @focus.stop="playAudio('click')"
                 debounce="400"
                 required
               >
@@ -56,12 +58,13 @@
                   push
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Продолжить"/>
+                  label="Продолжить"
+                  @click.stop="playAudio('click')"/>
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 3" class="ful-width rounded-b-0">
             <q-card-section>
-              <div class="text-h6"><b>Вы мальчик или девочка?</b></div>
+              <div class="text-h6"><b>Мальчик или девочка?</b></div>
               <div class="text-grey">Этот выбор нельзя будет изменить</div>
             </q-card-section>
             <q-card-section>
@@ -70,6 +73,7 @@
                 :rules="formData.fields.gender.rules"
                 class="rounded-sm"
                 push
+                @click.stop="playAudio('click')"
                 :text-color="(formData.fields.gender.value == 'male') ? 'red-4' : 'blue-4'"
                 :toggle-color="(formData.fields.gender.value == 'male') ? 'blue' : 'red'"
                 toggle-text-color="white"
@@ -94,12 +98,12 @@
                   push
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Продолжить"/>
+                  label="Продолжить" @click.stop="playAudio('click')"/>
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 4" class="ful-width rounded-b-0">
             <q-card-section>
-              <div class="text-h6"><b>Придумайте пароль</b></div>
+              <div class="text-h6"><b>Придумай пароль</b></div>
               <div class="text-grey">Он нужен для того, чтобы в любой момент продолжить путешествие</div>
             </q-card-section>
             <q-card-section>
@@ -108,13 +112,14 @@
                 v-model="formData.fields.password.value"
                 :rules="formData.fields.password.rules"
                 :type="formData.fields.password.reveal ? 'text' : 'password'"
-                placeholder="Введите пароль..."
+                placeholder="Придумай пароль..."
+                @focus="playAudio('click')"
               >
                 <template v-slot:append>
                   <q-icon
                     :name="formData.fields.password.reveal ? 'visibility' : 'visibility_off'"
                     class="cursor-pointer"
-                    @click="formData.fields.password.reveal = !formData.fields.password.reveal"
+                    @click="formData.fields.password.reveal = !formData.fields.password.reveal; playAudio('click')"
                   />
                 </template>
               </q-input>
@@ -126,13 +131,13 @@
                   @click="validate()"
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Продолжить" />
+                  label="Продолжить" @click.stop="playAudio('click')" />
             </q-card-actions>
           </q-card>
           <q-card v-else-if="formData.step == 5" class="ful-width rounded-b-0">
             <q-card-section>
-              <div class="text-h6"><b>Повторите пароль</b></div>
-              <div class="text-grey">И убедитесь, что помните его</div>
+              <div class="text-h6"><b>Повтори пароль</b></div>
+              <div class="text-grey">И убедись, что помнишь его</div>
             </q-card-section>
             <q-card-section>
               <q-input
@@ -140,13 +145,14 @@
                 v-model="formData.fields.passwordConfirm.value"
                 :rules="formData.fields.passwordConfirm.rules"
                 :type="formData.fields.passwordConfirm.reveal ? 'text' : 'password'"
-                placeholder="Повторите пароль..."
+                placeholder="Повтори пароль..."
+                @focus="playAudio('click')"
               >
                 <template v-slot:append>
-                  <q-icon
+                  <q-icon @click.stop="playAudio('click')"
                     :name="formData.fields.passwordConfirm.reveal ? 'visibility' : 'visibility_off'"
                     class="cursor-pointer"
-                    @click="formData.fields.passwordConfirm.reveal = !formData.fields.passwordConfirm.reveal"
+                    @click="formData.fields.passwordConfirm.reveal = !formData.fields.passwordConfirm.reveal; ; playAudio('click')"
                   />
                 </template>
               </q-input>
@@ -159,7 +165,7 @@
                   @click="validate()"
                   v-on:keyup.enter="validate()"
                   color="primary"
-                  label="Продолжить" />
+                  label="Продолжить" @click.stop="playAudio('click')"/>
             </q-card-actions>
           </q-card>
       </q-form>
@@ -173,10 +179,10 @@
           <div class="text-h6"><b>Правила пользования</b></div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          У нашего приключения есть определённые правила, которые необходимо соблюдать. Ознакомиться с ними можно <a href="https://docs.mektepium.com/terms.html" target="_blank">здесь</a>. Продолжая создание героя вы подтверждаете, что согласны с нашими условиями и правилами.
+          У нашего приключения есть определённые правила, которые необходимо соблюдать. Ознакомиться с ними можно <a @click.stop="playAudio('click')" href="https://docs.mektepium.com/terms.html" target="_blank">здесь</a>. Продолжая создание героя вы подтверждаете, что согласны с нашими условиями и правилами.
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat  color="primary" v-close-popup><b>Окей</b></q-btn>
+          <q-btn flat  color="primary" v-close-popup @click.stop="playAudio('click')"><b>Окей</b></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -189,6 +195,7 @@ import { useUserStore } from '../stores/user'
 import AppMainStorySlider from 'components/AppMainStorySlider.vue'
 import { reactive, ref, watch, onActivated, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { playAudio } from 'src/services/audioService';
 
 const { user, signUp, signIn, generateUsername } = useUserStore()
 const route = useRoute()

@@ -16,13 +16,13 @@
           <QuestListWidget active-only @onStart="lessonListReload()" @onClaim="lessonListReload()"/>
         </q-page-sticky>
         <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[10, 60]">
-          <q-btn class="bg-gradient-primary" round push size="20px" @click="courseDialog = true" @click.stop="playAudio('click_short')">
+          <q-btn class="bg-gradient-primary" round push size="20px" @click="courseDialog = true" @click.stop="playAudio('click')">
             <q-avatar size="60px"><q-img src="images/icons/map.png"/></q-avatar>
           </q-btn>
         </q-page-sticky>
         <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[80, 60]">
 
-          <q-btn class="bg-gradient-primary" round push size="17px" @click="dailyChestDialogStatus = true" @click.stop="playAudio('click_short')">
+          <q-btn class="bg-gradient-primary" round push size="17px" @click="dailyChestDialogStatus = true" @click.stop="playAudio('click')">
             <q-avatar size="45px"><q-img src="images/icons/chest.png"/></q-avatar>
           </q-btn>
         </q-page-sticky>
@@ -50,9 +50,9 @@ import { ref, reactive, watch, onActivated, onDeactivated } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
 import { useRoute } from 'vue-router'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const { user } = useUserStore()
 const route = useRoute()

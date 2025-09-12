@@ -146,9 +146,9 @@ import { useExercise } from '../composables/useExercise'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const route = useRoute()
 const router = useRouter()
@@ -181,13 +181,13 @@ const load = async () => {
 }
 
 const redo = async () => {
-  playAudio('click_short')
+  playAudio('click')
   const exerciseRedoCreated = await redoItem(lesson.active.id)
   if (!exerciseRedoCreated.error) router.replace(`/lesson-${lesson.active.id}`)
 }
 
 const next = async () => {
-  playAudio('click_short')
+  playAudio('click')
   setTarget(lesson.active.id)
   router.go(-1)
 }

@@ -34,7 +34,7 @@
     </div>
     <div
       tabindex="-1"
-      @focus="matchStart(activeInput.k)"
+      @focus="matchStart(activeInput.k); playAudio('click')"
       clickable
       @blur="matchEnd"
       :class="`q-lesson-field q-pa-xs q-ma-sm flex text-subtitle2`"
@@ -87,6 +87,7 @@
 <script setup>
 import { reactive, watch, ref } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { playAudio } from 'src/services/audioService';
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
@@ -136,12 +137,14 @@ const matchStart = (index) => {
   currentIndex.value = index
   currentValue.value = formData.fields[currentIndex.value].value.text
   currentValueArray.value = formData.fields[currentIndex.value].value.array
+  /*
   setTimeout(() => {
     document.querySelector('.q-scrollarea__container').scrollTo(0, document.body.scrollHeight)
-  }, 0)
+  }, 0)*/
 
 }
 const selectVariant = (text, variantIndex) => {
+  playAudio('click')
   if(variantsDisabled.value) return
   if(formData.fields[currentIndex.value].options[variantIndex].count > 0) return clearVariant(text)
   currentValueArray.value.push(text)
@@ -153,6 +156,7 @@ const selectVariant = (text, variantIndex) => {
 }
 
 const clearVariant = (text = null) => {
+  playAudio('click')
   if(clearDisabled.value) return
   if(text){
     currentValueArray.value = removeVariantFromArray(text)

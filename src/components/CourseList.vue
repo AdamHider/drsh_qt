@@ -1,6 +1,6 @@
 <template>
     <q-list>
-      <q-item clickable v-ripple v-for="(courseItem, index) in course.list" :key="index"  @click="select(courseItem.id)"  @click.stop="playAudio('click_tiny')"
+      <q-item clickable v-ripple v-for="(courseItem, index) in course.list" :key="index"  @click="select(courseItem.id)"  @click.stop="playAudio('click')"
         :class="`${(courseItem.is_active) ? 'active' : ''} q-ma-sm rounded-md q-push`"
         :style="`background-image: url(${courseItem.background_image}); background-size: cover;`">
         <q-item-section class="text-white q-ma-sm">
@@ -21,9 +21,9 @@ import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import { useCourse } from '../composables/useCourse'
 import { CONFIG } from '../config.js'
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const props = defineProps({
   slidesPerView: Number,

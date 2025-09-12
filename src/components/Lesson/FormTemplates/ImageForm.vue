@@ -10,7 +10,7 @@
                     <div>
                       <q-card v-if="!formData.fields[index].answer"
                         :class="`q-lesson-radio cursor-pointer rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
-                        @click="formData.fields[index].value.text = image.text;" @click.stop="playAudio('click_tiny')">
+                        @click="formData.fields[index].value.text = image.text;" @click.stop="playAudio('click')">
                         <q-card-section class="flex items-center justify-center text-center text-subtitle1 " style="line-height: 1.2; min-height: 4.4rem;">
                           <b>{{ transliterateHTML(image.text) }}</b>
                         </q-card-section>
@@ -36,9 +36,9 @@ import { reactive, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { useTransliterate } from '../../../composables/useTransliterate'
-import { useAudio } from '../../../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 

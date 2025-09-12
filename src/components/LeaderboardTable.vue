@@ -11,7 +11,6 @@
       />
     </q-card-section>
     <q-card-section v-if="leaderboardData.data.length > 0 " class="q-py-sm relative-position">
-
       <q-list separator >
         <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" :class="`q-my-sm q-px-none text-left `">
             <q-item-section avatar class="text-center">

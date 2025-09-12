@@ -33,10 +33,10 @@
           </transition>
           <div v-if="props.withBadge">
             <div v-if="props.dense" class="absolute" style="right: -12px">
-              <q-btn dense round push size="10px" icon="add" color="isonit" :to="props.badgeLink"/>
+              <q-btn dense round push size="10px" icon="add" color="isonit" :to="props.badgeLink"  @click.stop="playAudio('click')"/>
             </div>
             <div v-else class="absolute" style="top: -8px; right: -8px">
-              <q-btn dense round push icon="add" color="isonit" :to="props.badgeLink"/>
+              <q-btn dense round push icon="add" color="isonit" :to="props.badgeLink"  @click.stop="playAudio('click')"/>
             </div>
           </div>
       </q-item>
@@ -45,6 +45,7 @@
 <script setup>
 import { ref, watch, toRefs, onActivated, onDeactivated, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
+import { playAudio } from 'src/services/audioService';
 
 const { getItem } = useUserStore()
 
@@ -92,6 +93,7 @@ const secondsFormat = (timeLeft) => {
 
 onActivated(async () => {
   showCountdown.value = false
+  console.log(resource.value)
   if (!resource.value.restoration) return
   await getItem()
   calculateRestoration()

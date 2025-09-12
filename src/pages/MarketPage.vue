@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce" contentClass="justify-between">
-      <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+      <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"  @click.stop="playAudio('click')"/>
       <div class="flex full-width justify-center">
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
@@ -44,7 +44,7 @@
                     <transition  mode="out-in"
                         enter-active-class="animated zoomIn"
                         leave-active-class="animated zoomOut">
-                        <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)">{{ marketOffer.price }}₽</q-btn>
+                        <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)" @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
                         <q-btn v-else class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
                     </transition>
                   </q-card-actions>
@@ -68,7 +68,7 @@
                     <transition  mode="out-in"
                           enter-active-class="animated zoomIn"
                           leave-active-class="animated zoomOut">
-                      <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)">{{ marketOffer.price }}₽</q-btn>
+                      <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)"  @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
                       <q-btn v-else class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
                     </transition>
                   </q-card-actions>
@@ -82,25 +82,25 @@
           </q-card-section>
           <q-card-section class="q-pa-none q-pt-none">
             <q-list class="q-my-sm" separator>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/requisites.html'" target="_blank" class="text-grey-10">
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/requisites.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Реквизиты и контактные данные</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/return.html'" target="_blank" class="text-grey-10">
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/return.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Доставка и возврат</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/terms.html'" target="_blank" class="text-grey-10">
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/terms.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Правила пользования</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/privacy.html'" target="_blank" class="text-grey-10">
+              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/privacy.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Политика конфиденциальности</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
@@ -128,6 +128,7 @@ import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { CONFIG } from '../config.js'
+import { playAudio } from 'src/services/audioService';
 
 const { user, getItem } = useUserStore()
 

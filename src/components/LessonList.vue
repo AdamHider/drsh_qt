@@ -91,7 +91,14 @@
   </transition>
   <div ref="bottomPoint" class="bottomPoint" style="margin-top: 60px;"></div>
   <q-page-sticky class="fixed full-width full-height" >
-    <q-img :src="activeCourseSection.background_image" class="absolute-top absolute-left full-width full-height" no-spinner/>
+    <q-img
+      v-for="( courseSectionsImage, courseSectionsImageIndex) in courseSections"
+      :key="`courseSectionsImageIndex${courseSectionsImageIndex}`"
+      :src=" courseSectionsImage.background_image"
+      class="parallax-bg"
+      :class="{ 'is-active': activeCourseSection.id === courseSectionsImage.id }"
+      no-spinner
+    />
   </q-page-sticky>
 </template>
 
@@ -101,9 +108,9 @@ import { ref, onActivated, onMounted, toRef, watch } from "vue";
 import { useCourse } from "../composables/useCourse";
 import { useLoader } from '../composables/useLoader'
 import { useRouter } from "vue-router";
-import { useAudio } from '../composables/useAudio'
+import { playAudio } from 'src/services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const { lesson, getList } = useLesson();
 const { course } = useCourse();
@@ -162,13 +169,11 @@ const checkScrollAnchor = () => {
   }
 }
 const openLesson = (lessonId) => {
-  playAudio('click_planet')
+  playAudio('click')
   transitionTrigger.value = false;
   selectedLesson.value = lessonId;
-  //setTimeout(() => {
-    router.push(`/lesson-startup-${selectedLesson.value}`);
-    transitionTrigger.value = true;
-  //}, 250);
+  router.push(`/lesson-startup-${selectedLesson.value}`);
+  transitionTrigger.value = true;
 };
 const onIntersection = (entry) => {
   const groupIndex = entry.target.attributes.groupKey?.value
@@ -302,29 +307,21 @@ watch(() => reloadTrigger.value, () => {
   z-index: 100;
   border-radius: 100%;
   text-align: center;
-  /*-webkit-animation: 16s linear 0s infinite sateliteRotate;
-  animation: 16s linear infinite sateliteRotate;*/
 }
 .satellite-item img {
   position: absolute;
   filter: drop-shadow(0px 0px 8px #35adf4);
- /* -webkit-animation: 16s linear 0s infinite satelitePlanetRotate;
-  animation: 16s linear 0s infinite satelitePlanetRotate;*/
 }
-@keyframes sateliteRotate {
-  0% {
-    transform: rotate(0deg) translateZ(2px);
-  }
-  100% {
-    transform: rotate(360deg) translateZ(2px);
-  }
-}
-@keyframes satelitePlanetRotate {
-  0% {
-    transform: rotate(0deg) translateZ(2px);
-  }
-  100% {
-    transform: rotate(-360deg) translateZ(2px);
+.parallax-bg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: 0.5s all ease;
+  opacity: 0;
+  &.is-active{
+    opacity: 1;
   }
 }
 </style>

@@ -7,9 +7,10 @@
           <div v-if="props.allowedFilters.includes('time_period')">
             <q-chip v-for="(option, optionKey) in formData.fields.time_period.options" :key="optionKey"
               clickable
+              class="q-push"
               :color="(formData.fields.time_period.value == option.value) ? 'primary' : ''"
               :text-color="(formData.fields.time_period.value == option.value) ? 'white' : ''"
-              @click="formData.fields.time_period.value = option.value">
+              @click="formData.fields.time_period.value = option.value"  @click.stop="playAudio('click')">
               <b>{{ option.label }}</b>
             </q-chip>
           </div>
@@ -18,6 +19,7 @@
 
 <script setup >
 import { onActivated, onMounted, reactive, ref, watch } from 'vue'
+import { playAudio } from 'src/services/audioService';
 
 const emits = defineEmits(['update-filter'])
 

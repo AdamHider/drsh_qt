@@ -13,29 +13,30 @@
       <PWAInstallDialog/>
   </q-layout>
   <AppLoader/>
-  <audio id="audio_click_short" src="/audio/click_short.mp3" preload="auto"></audio>
-  <audio id="audio_click_tiny" src="/audio/click_tiny.mp3" preload="auto"></audio>
-  <audio id="audio_click_tiny_positive" src="/audio/click_tiny_positive.mp3" preload="auto"></audio>
-  <audio id="audio_swing_long" src="/audio/swing_long.mp3" preload="auto"></audio>
-  <audio id="audio_swing_short" src="/audio/swing_short.mp3" preload="auto"></audio>
-  <audio id="audio_click_planet" src="/audio/click_planet.mp3" preload="auto"></audio>
-  <audio id="audio_page_success" src="/audio/page_success.mp3" preload="auto"></audio>
-  <audio id="audio_page_fail" src="/audio/page_fail.mp3" preload="auto"></audio>
-  <audio id="audio_lesson_success" src="/audio/lesson_success.mp3" preload="auto"></audio>
-  <audio id="audio_lesson_fail" src="/audio/lesson_fail.mp3" preload="auto"></audio>
-  <audio id="audio_dialog_show" src="/audio/dialog_show.mp3" preload="auto"></audio>
-  <audio id="audio_dialog_hide" src="/audio/dialog_hide.mp3" preload="auto"></audio>
+
 
 
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import AppLoader from 'components/AppLoader.vue'
 import AppNotifications from 'components/AppNotifications.vue'
 import UserNewLevelDialog from 'components/UserNewLevelDialog.vue'
 import PWAInstallDialog from 'components/PWAInstallDialog.vue'
-
+import { loadAudio } from 'src/services/audioService';
 import { Platform } from 'quasar'
 
+onMounted(async () => {
+  // Загружаем все необходимые звуки заранее
+  await loadAudio('/audio/click.mp3', 'click');
+  await loadAudio('/audio/swoosh.mp3', 'swoosh');
+  await loadAudio('/audio/gain.mp3', 'gain');
+  await loadAudio('/audio/page_success.mp3', 'page_success');
+  await loadAudio('/audio/page_fail.mp3', 'page_fail');
+  await loadAudio('/audio/lesson_success.mp3', 'lesson_success');
+  await loadAudio('/audio/lesson_fail.mp3', 'lesson_fail');
 
+  console.log('Все звуки загружены и готовы к воспроизведению.');
+});
 </script>

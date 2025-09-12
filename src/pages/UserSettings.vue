@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
     <q-app-header class="bg-white rounded-b-md " reveal>
-        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"/>
+        <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"  @click.stop="playAudio('click')"/>
         <q-toolbar-title><b>Настройки</b></q-toolbar-title>
     </q-app-header>
     <q-page class="bg-white q-pa-sm" style="padding-top: 50px">
@@ -18,19 +18,11 @@
                     <div class="text-caption">{{user.active.data.username}}</div>
                 </q-item-section>
                 <q-item-section side>
-                    <q-btn flat to="/user/edit" icon="edit"/>
+                    <q-btn flat to="/user/edit" icon="edit" @click.stop="playAudio('click')"/>
                 </q-item-section>
             </q-item>
         </q-card-section>
         <q-card-section>
-          <div class="text-subtitle1"><b>Режим письменности</b></div>
-          <div v-if="formData.fields.writingMode.value == 'lat'" class="text-caption text-orange">
-            <q-icon name="report_problem" color="orange" size="20px"></q-icon>
-            Внимание! Выбрана латиница, но следует иметь в виду, что могут возникать ошибки и неточности. Рекомендуем выбрать кириллицу.
-          </div>
-          <div v-if="formData.fields.writingMode.value == 'cyr'" class="text-caption text-positive">
-            Кириллица - не лучший выбор, но пока это лучшее, из того, что есть.
-          </div>
           <q-form
             ref="form"
             v-model="formData.valid"
@@ -39,25 +31,65 @@
             class="full-width q-py-sm"
           >
           <q-list>
-            <q-item tag="label" v-ripple dense class="q-px-none">
+            <div class="text-subtitle1"><b>Режим письменности</b></div>
+            <div v-if="formData.fields.writingMode.value == 'lat'" class="q-py-sm text-caption text-orange">
+              <q-icon name="report_problem" color="orange" size="20px"></q-icon>
+              Внимание! Выбрана латиница, но следует иметь в виду, что могут возникать ошибки и неточности. Рекомендуем выбрать кириллицу.
+            </div>
+            <div v-if="formData.fields.writingMode.value == 'cyr'" class="q-py-sm text-caption text-positive">
+              Кириллица - не лучший выбор, но пока это лучшее, из того, что есть.
+            </div>
+            <q-item tag="label" v-ripple dense class="q-px-none"  @click.stop="playAudio('click')">
               <q-item-section avatar>
-                <q-radio v-model="formData.fields.writingMode.value" val="cyr" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)"/>
+                <q-radio v-model="formData.fields.writingMode.value" val="cyr" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)" @click.stop="playAudio('click')"/>
               </q-item-section>
               <q-item-section>
-                <q-item-label>Кириллица (рекомендовано)</q-item-label>
+                <q-item-label><b>Кириллица (рекомендовано)</b></q-item-label>
                 <q-item-label caption>Весь крымскотатарский текст будет написан на кириллической графике</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item tag="label" v-ripple class="q-px-none">
+            <q-item tag="label" v-ripple class="q-px-none"  @click.stop="playAudio('click')">
               <q-item-section avatar>
-                <q-radio v-model="formData.fields.writingMode.value" val="lat" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)"/>
+                <q-radio v-model="formData.fields.writingMode.value" val="lat" @update:model-value="saveSetting('writingMode', formData.fields.writingMode.value)" @click.stop="playAudio('click')"/>
               </q-item-section>
               <q-item-section>
-                <q-item-label>Латиница</q-item-label>
+                <q-item-label><b>Латиница</b></q-item-label>
                 <q-item-label caption>Весь крымскотатарский текст будет написан на латинской графике</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
+          <q-separator spaced/>
+          <q-list>
+            <div class="text-subtitle1"><b>Аудио</b></div>
+            <q-item tag="label" v-ripple class="q-pl-none" @click.stop="playAudio('click')">
+              <q-item-section>
+                <q-item-label><b>Звуковые эффекты</b></q-item-label>
+                <q-item-label caption>Звуки нажатий, переходов и многое другое</q-item-label>
+              </q-item-section>
+              <q-item-section avatar>
+                <q-toggle
+                  color="blue"
+                  false-value="0"
+                  true-value="1"
+                  @click.stop="playAudio('click')"
+                  v-model="formData.fields.soundFX.value" @update:model-value="saveSetting('soundFX', formData.fields.soundFX.value)"/>
+              </q-item-section>
+            </q-item>
+            <q-item tag="label" class="q-pl-none" @click.stop="playAudio('click')" disable>
+              <q-item-section>
+                <q-item-label><b>Музыка (В разработке)</b></q-item-label>
+                <q-item-label caption>Фоновая музыка, окружение</q-item-label>
+              </q-item-section>
+              <q-item-section avatar>
+                <q-toggle disable
+                  color="blue"
+                  false-value="0"
+                  true-value="1"
+                  v-model="formData.fields.musicFX.value" @update:model-value="saveSetting('musicFX', formData.fields.musicFX.value)"/>
+              </q-item-section>
+            </q-item>
+          </q-list>
+
           </q-form>
         </q-card-section>
         <q-card-actions>
@@ -66,7 +98,7 @@
                 @click="exitUser();"
                 icon="logout"
                 label="Выйти"
-                push color="dark"
+                push color="dark" @click.stop="playAudio('click')"
             />
         </q-card-actions>
       </q-card>
@@ -78,6 +110,7 @@
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 import { ref, reactive } from 'vue'
+import { playAudio } from 'src/services/audioService';
 
 const { user, signOut, saveItemSetting } = useUserStore()
 const router = useRouter()
@@ -88,11 +121,18 @@ const formData = reactive({
   fields: {
     writingMode: {
       value: user.active.data.settings.writingMode.value,
-      rules: [
-        v => !!v || 'Нужно ввести имя',
-        v => v.length > 3 || 'Имя должно быть минимум 3 символа',
-        v => !(/[^A-Za-zА-Яа-я0-9\_ ]/.test(v)) || 'Только буквы и цифры'
-      ],
+      errors: '',
+      isError: false,
+      required: true
+    },
+    soundFX: {
+      value: user.active.data.settings.soundFX?.value ?? '1',
+      errors: '',
+      isError: false,
+      required: true
+    },
+    musicFX: {
+      value: user.active.data.settings.musicFX?.value ?? '1',
       errors: '',
       isError: false,
       required: true

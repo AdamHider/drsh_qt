@@ -96,8 +96,8 @@
           <div>Некоторые поля остались незаполненными. Советуем заполнить их хотя-бы случайными ответами.</div>
         </q-card-section>
         <q-card-actions align="around">
-          <q-btn flat class="col" color="grey" @click="closeConfirmDialog()" @click.stop="playAudio('click_tiny')"><b>Отмена</b></q-btn>
-          <q-btn push class="col" color="primary" @click="confirm" v-close-popup @click.stop="playAudio('click_tiny_positive')"><b>Продолжить</b></q-btn>
+          <q-btn flat class="col" color="grey" @click="closeConfirmDialog()" @click.stop="playAudio('click')"><b>Отмена</b></q-btn>
+          <q-btn push class="col" color="primary" @click="confirm" v-close-popup @click.stop="playAudio('click')"><b>Продолжить</b></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -108,9 +108,9 @@
 import { useLesson } from '../../composables/useLesson'
 import { computed, ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { useAudio } from '../../composables/useAudio'
+import { playAudio } from '../../services/audioService';
 
-const { playAudio } = useAudio()
+
 
 const backDialog = ref(false)
 const confirmDialog = ref(false)
@@ -136,7 +136,7 @@ const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (
 const { lesson } = useLesson()
 
 const next = async () => {
-  playAudio('click_short')
+  playAudio('click')
   isLoading.value = true
   //var audio = new Audio('/audio/button.mp3');
   //audio.play();
@@ -144,20 +144,26 @@ const next = async () => {
   extraActions.value = false
 }
 const finish = async () => {
-  playAudio('click_short')
+  playAudio('click')
   isLoading.value = true
   emits('onPageChanged', 'finish')
   extraActions.value = false
 }
 const confirm = async () => {
-  playAudio('click_short')
+  playAudio('click')
   if (!confirmDialog.value && isEmptyAnswer.value) {
     confirmDialog.value = true
     pageTimerStarted.value = false
     return
   }
   isLoading.value = true
-  emits('onAnswerSaved', pageTimerProgress.value*100)
+  emits('onAnswerSaved', pageTimerProgress.value*100, () => {
+    if((lesson.active.page?.answer?.correct * 100 / lesson.active.page?.answer?.quantity) > 40){
+      playAudio('page_success')
+    } else {
+      playAudio('page_fail')
+    }
+  })
   pageTimerStarted.value = false
   extraActions.value = false
 }
@@ -199,15 +205,6 @@ watch(() => backDialog.value, (newValue, oldValue) => {
 })
 watch(() => confirmDialog.value, (newValue, oldValue) => {
   emits('onDialogOpened', newValue)
-})
-watch(() => lesson.active.page?.answer?.is_finished, (newValue, oldValue) => {
-  if(lesson.active.page?.answer?.is_finished){
-    if((lesson.active.page?.answer?.correct * 100 / lesson.active.page?.answer?.quantity) > 40){
-      playAudio('page_success')
-    } else {
-      playAudio('page_fail')
-    }
-  }
 })
 watch(() => lesson.active.page, (newValue, oldValue) => {
   isLoading.value = false

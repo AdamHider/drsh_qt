@@ -27,7 +27,7 @@
             <span><b :class="(value > 0 && value < 100) ? 'text-warning': ''">{{(value) ? value : 0}}%</b></span>
           </div>
           <div v-if="reward">
-            <q-btn flat round @click="rewardsDialog = true" :color="(props.dark) ? 'white' : 'primary'" icon="help_outline"/>
+            <q-btn flat round @click="rewardsDialog = true" :color="(props.dark) ? 'white' : 'primary'" icon="help_outline"  @click.stop="playAudio('click')"/>
           </div>
         </div>
       </q-card>
@@ -50,7 +50,7 @@
             </q-item>
           </q-list>
           <q-card-actions>
-            <q-btn push color="primary" @click="rewardsDialog = false" class="full-width">
+            <q-btn push color="primary" @click="rewardsDialog = false" class="full-width"  @click.stop="playAudio('click')">
               Понятно
             </q-btn>
           </q-card-actions>
@@ -62,7 +62,7 @@
 <script setup>
 import { ref, toRefs, toRef, watch, onMounted, onActivated } from 'vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import { CONFIG } from '../config.js'
+import { playAudio } from 'src/services/audioService';
 
 const props = defineProps({
   exercise: Object,

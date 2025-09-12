@@ -19,7 +19,7 @@
                 <div class="text-caption">Меня зовут Кодекс и я твой главный помощник!</div>
               </div>
               <div class="flex justify-end q-gutter-sm">
-                <q-btn push label="Привет, Кодекс!" color="primary" @click="tutorialPageIndex++"/>
+                <q-btn push label="Привет, Кодекс!" color="primary" @click="tutorialPageIndex++"  @click.stop="playAudio('click')"/>
               </div>
           </q-card-section>
           <q-card-section v-if="tutorialPageIndex == 1">
@@ -28,8 +28,8 @@
                 <div class="text-caption">Поэтому я должен ознакомить тебя с основами освоения космоса!</div>
               </div>
               <div class="flex justify-center q-gutter-sm">
-                <q-btn  push label="Не нужно" color="grey" @click="finishTutorial(false)"/>
-                <q-btn push label="Конечно, давай" color="primary" @click="tutorialPageIndex++"/>
+                <q-btn  push label="Не нужно" color="grey" @click="finishTutorial(false)"  @click.stop="playAudio('click')"/>
+                <q-btn push label="Конечно, давай" color="primary" @click="tutorialPageIndex++"  @click.stop="playAudio('click')"/>
               </div>
           </q-card-section>
           <q-card-section v-if="tutorialPageIndex == 2">
@@ -38,7 +38,7 @@
                 <div class="text-caption">Это не займёт много времени.</div>
               </div>
               <div class="flex justify-end q-gutter-sm">
-                <q-btn  push label="Вперёд" color="primary" @click="startTutorial"/>
+                <q-btn  push label="Вперёд" color="primary" @click="startTutorial"  @click.stop="playAudio('click')"/>
               </div>
           </q-card-section>
         </q-card>
@@ -63,8 +63,8 @@
                 <div class="text-caption">Пришло время переходить к спасению галактики! На звёздной карте для тебя есть задания!</div>
               </div>
               <div class="flex justify-center q-gutter-sm">
-                <q-btn push label="Позже" color="grey" @click="finishTutorial(false)"/>
-                <q-btn push label="Вперёд!" color="primary" @click="finishTutorial(true)"/>
+                <q-btn push label="Позже" color="grey" @click="finishTutorial(false)"  @click.stop="playAudio('click')"/>
+                <q-btn push label="Вперёд!" color="primary" @click="finishTutorial(true)"  @click.stop="playAudio('click')"/>
               </div>
           </q-card-section>
         </q-card>
@@ -78,6 +78,7 @@ import { ref, onMounted, onActivated, watch } from 'vue'
 import { useTutorial } from '../../composables/useTutorial'
 import { useUserStore } from '../../stores/user'
 import { useRouter } from "vue-router";
+import { playAudio } from 'src/services/audioService';
 
 const { tutorial, setStatus, setIndex } = useTutorial()
 const router = useRouter();

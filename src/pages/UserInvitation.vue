@@ -5,8 +5,8 @@
               <q-card-section v-if="user.active?.data.id">
                   <h4 class="text-h6">Привет, <b>{{user.active?.data.name}}</b>!</h4>
                   <div class="text-caption">Это пригласительная ссылка. Она работает только для новых героев.</div>
-                  <q-btn class=" q-mt-sm full-width" push @click="createNewHero()" color="primary">Создать новго героя</q-btn>
-                  <q-btn class="q-mt-sm q-mb-xl full-width" push color="secondary" to="/user"><b>Назад к моему герою</b></q-btn>
+                  <q-btn class=" q-mt-sm full-width" push @click="createNewHero()" color="primary" @click.stop="playAudio('click')">Создать новго героя</q-btn>
+                  <q-btn class="q-mt-sm q-mb-xl full-width" push color="secondary" to="/user" @click.stop="playAudio('click')"><b>Назад к моему герою</b></q-btn>
               </q-card-section>
           </q-card>
         </q-page>
@@ -17,6 +17,7 @@
 import { ref, watch, onActivated, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter, useRoute } from 'vue-router'
+import { playAudio } from 'src/services/audioService';
 
 const router = useRouter()
 const route = useRoute()
