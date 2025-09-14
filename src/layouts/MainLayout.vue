@@ -36,7 +36,5 @@ onMounted(async () => {
   await loadAudio('/audio/page_fail.mp3', 'page_fail');
   await loadAudio('/audio/lesson_success.mp3', 'lesson_success');
   await loadAudio('/audio/lesson_fail.mp3', 'lesson_fail');
-
-  console.log('Все звуки загружены и готовы к воспроизведению.');
 });
 </script>

@@ -196,6 +196,17 @@ export class Api extends ApiService{
       },
       buyItem: (params) => {
           return this.post('chest', 'buyItem', params)
+      },
+      claimItem: (params) => {
+          return this.post('chest', 'claimItem', params)
       }
+    }
+    payment = {
+      createItem: (params) => {
+          return this.post('payment', 'createItem', params)
+      },
+      checkItem: (params) => {
+          return this.post('payment', 'checkItem', params)
+      },
     }
 }

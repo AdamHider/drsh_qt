@@ -93,7 +93,6 @@ const secondsFormat = (timeLeft) => {
 
 onActivated(async () => {
   showCountdown.value = false
-  console.log(resource.value)
   if (!resource.value.restoration) return
   await getItem()
   calculateRestoration()

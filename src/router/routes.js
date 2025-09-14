@@ -195,7 +195,13 @@ const routes = [
       {
         path: 'market',
         component: MarketPage,
-        meta: { noBottomBar: true },
+        meta: { noBottomBar: true }
+      },
+      {
+        path: 'market-:chest_id-:payment_hash',
+        name: 'market-payment-result',
+        component: MarketPage,
+        meta: { noBottomBar: true }
       },
     ]
   },

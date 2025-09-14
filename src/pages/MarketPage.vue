@@ -28,7 +28,7 @@
                 <q-card v-if="marketOffer.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover; margin-top: 40px;`">
                   <q-card-section horizontal class="q-pa-sm items-center">
                     <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px; min-width: 150px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
-                    <q-card-section class="q-pt-none">
+                    <q-card-section class="q-pt-none" style="text-shadow: 0px 1px 2px black">
                       <div class="text-h7" style="line-height: 1.5;"><b>{{ marketOffer.title }}</b></div>
                       <div class="text-caption">{{ marketOffer.description }}</div>
                     </q-card-section>
@@ -44,8 +44,9 @@
                     <transition  mode="out-in"
                         enter-active-class="animated zoomIn"
                         leave-active-class="animated zoomOut">
-                        <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)" @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
-                        <q-btn v-else class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                        <q-btn v-if="marketOffer.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                        <q-btn v-else-if="marketOffer.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
+                        <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketOffer.id" @click="goToPayment(marketOffer.id)"  @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
                     </transition>
                   </q-card-actions>
                 </q-card>
@@ -53,7 +54,7 @@
                   <q-card-section class="q-pb-none q-px-none">
                     <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
                   </q-card-section>
-                  <q-card-section class="q-pa-sm q-pt-none">
+                  <q-card-section class="q-pa-sm q-pt-none" style="text-shadow: 0px 1px 2px black">
                     <div class="text-subtitle1"><b>{{ marketOffer.title }}</b></div>
                     <div class="text-caption">{{ marketOffer.description }}</div>
                   </q-card-section>
@@ -68,8 +69,9 @@
                     <transition  mode="out-in"
                           enter-active-class="animated zoomIn"
                           leave-active-class="animated zoomOut">
-                      <q-btn v-if="!marketOffer.is_bought" class="q-item-blinking full-width" push color="primary" @click="openBuyDialog(marketOffer.id)"  @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
-                      <q-btn v-else class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                      <q-btn v-if="marketOffer.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                      <q-btn v-else-if="marketOffer.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
+                      <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketOffer.id" @click="goToPayment(marketOffer.id)"  @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
                     </transition>
                   </q-card-actions>
                 </q-card>
@@ -110,25 +112,54 @@
 
           </q-card-section>
       </q-card>
-      <q-dialog v-model="buyDialog">
-        <q-card class="full-width q-push">
-          <q-card-section v-if="CONFIG.isBeta">
+      <q-dialog v-model="paymentStatusDialog">
+        <q-card class="full-width q-push text-white text-center relative" flat :style="`background-image: url('${activeOffer.background_image}'); background-size: cover;`">
+          <q-card-section class="q-pb-none q-px-none">
+            <q-img :src="activeOffer.image" width="100%" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
+          </q-card-section>
+          <q-card-section class="q-pa-sm q-pt-none" style="text-shadow: 0px 1px 2px black">
+            <div class="text-subtitle1"><b>Ресурсы получены!</b></div>
+            <div class="text-caption">Операция прошла успешно!</div>
+          </q-card-section>
+          <q-card-section class="q-pa-none">
+            <div class="row q-gutter-sm items-center justify-center">
+              <div v-for="(resource, resourceIndex) in activeOffer.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
+                  <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
+              </div>
+            </div>
+          </q-card-section>
+          <q-card-actions class="justify-center">
+            <q-btn push v-close-popup color="primary">Отлично</q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+      <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}">
+        <q-card class="full-width q-push" v-if="!CONFIG.isBeta">
+          <q-card-section >
             <div class="text-subtitle1">Покупка</div>
             <div class="text-caption">Покупки недоступны в бета-версии</div>
           </q-card-section>
         </q-card>
+        <PaymentWidget v-else
+            :confirmationToken="confirmationToken"
+            @onPaymentSuccess="handlePaymentSuccess"
+            @onPaymentFail="handlePaymentFail"/>
       </q-dialog>
     </q-page>
   </q-page-container>
 </template>
 
 <script setup >
-import { ref, onActivated, watch } from 'vue'
+import { ref, onActivated, onMounted } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import PaymentWidget from '../components/PaymentWidget.vue'
 import { CONFIG } from '../config.js'
 import { playAudio } from 'src/services/audioService';
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const { user, getItem } = useUserStore()
 
@@ -136,7 +167,9 @@ const marketOffers = ref([])
 const error = ref(false)
 const headerShowForce = ref(false)
 const buyDialog = ref(false)
+const paymentStatusDialog = ref(false)
 const activeOffer = ref({})
+const confirmationToken = ref({})
 
 const load = async (filter) => {
   const marketOfferListResponse = await api.chest.getList({type: 'market'})
@@ -147,23 +180,43 @@ const load = async (filter) => {
   }
   marketOffers.value = marketOfferListResponse
 }
-const openBuyDialog = async (offer_id) => {
+const goToPayment = async (offer_id) => {
   activeOffer.value = marketOffers.value.find((offer) => offer.id == offer_id);
-
-  buyDialog.value = true
-  return;
-  const marketOfferBoughtResponse = await api.chest.buyItem({offer_id})
-  if (marketOfferBoughtResponse.error) {
+  const paymentCreatedResponse = await api.payment.createItem({item_id: offer_id, item_code: 'chest', return_url: 'market'})
+  if (paymentCreatedResponse.error) {
+    confirmationToken.value = {}
     return;
   }
+  confirmationToken.value = paymentCreatedResponse.confirmationToken
+  buyDialog.value = true;
+  return;
+}
+
+const handlePaymentSuccess = async () => {
+  markItem('is_bought')
+  activeOffer.value = {}
+  buyDialog.value = false;
+  getItem()
+}
+
+const handlePaymentFail = async (data) => {
+  markItem('is_error')
+  activeOffer.value = {}
+  buyDialog.value = false;
+  getItem()
+}
+const markItem = (key) => {
   for(let i in marketOffers.value){
-    if(marketOffers.value[i].id == marketOfferBoughtResponse) marketOffers.value[i].is_bought = true;
+    if(marketOffers.value[i].id == activeOffer.value.id) marketOffers.value[i][key] = true;
     setTimeout(() => {
-      marketOffers.value[i].is_bought = false;
+      marketOffers.value[i][key] = false;
     }, 2000)
   }
 }
-onActivated(() => {
+onActivated(async () => {
   load()
+})
+onMounted(async () => {
+  load();
 })
 </script>

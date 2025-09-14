@@ -34,7 +34,7 @@
                   <span class="q-ml-xs" v-if="row.achievements.length > 0">
                     <q-avatar size="22px" v-for="(achievementItem, achievementIndex) in row.achievements" :key="`achievementIndex${achievementIndex}`">
                       <q-img :src="achievementItem.image"/>
-                      <q-tooltip>
+                      <q-menu self="top middle">
                         <q-item class="q-pl-sm">
                           <q-item-section avatar>
                             <q-img :src="achievementItem.image"/>
@@ -43,7 +43,7 @@
                             <b>{{ achievementItem.title }}</b>
                           </q-item-section>
                         </q-item>
-                      </q-tooltip>
+                      </q-menu>
                     </q-avatar>
                   </span>
                 </span>
@@ -57,8 +57,8 @@
     </q-card-section>
     <q-card-section v-else-if="!notLoaded" class="q-pa-none">
       <BannerNotFound
-        title="Ooops..."
-        description="There is no available statistics"
+        title="Упс..."
+        description="Пока показать нечего"
         default-image
       />
     </q-card-section>

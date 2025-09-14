@@ -27,7 +27,7 @@
           </div>
       </div>
     </div>
-    <q-dialog v-model="claimDialog"  position="bottom" full-width  class="overflow-visible" @before-hide="currentSkill = false">
+    <q-dialog v-model="claimDialog"  position="bottom" full-width  class="overflow-visible" >
       <q-card :class="`skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
         <div class="q-pa-sm" style="background: center / contain no-repeat url('/images/rays.png');">
           <q-img width="150px" :src="currentSkill.image" no-spinner/>
@@ -119,6 +119,7 @@ const claimSkill = async function (skillId) {
   } else {
     emit('onClaim')
     currentSkill.value = false
+    claimDialog.value = false
   }
 }
 const openMarket = () => {
