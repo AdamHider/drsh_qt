@@ -205,8 +205,15 @@ export class Api extends ApiService{
       createItem: (params) => {
           return this.post('payment', 'createItem', params)
       },
-      checkItem: (params) => {
-          return this.post('payment', 'checkItem', params)
+      checkStatus: (params) => {
+          return this.post('payment', 'checkStatus', params)
       },
+      getList: (params) => {
+          return this.post('payment', 'getList', params)
+      },
+      getItem: (params) => {
+          return this.post('payment', 'getItem', params)
+      },
+
     }
 }

@@ -20,6 +20,7 @@ import LessonFinish from 'pages/LessonFinish.vue'
 import LessonItem from 'pages/LessonItem.vue'
 import UserInvitation from 'pages/UserInvitation.vue'
 import MarketPage from 'pages/MarketPage.vue'
+import PaymentsPage from 'pages/PaymentsPage.vue'
 import ErrorNotFound from 'pages/ErrorNotFound.vue'
 
 import { useUserStore } from '../stores/user'
@@ -198,9 +199,8 @@ const routes = [
         meta: { noBottomBar: true }
       },
       {
-        path: 'market-:chest_id-:payment_hash',
-        name: 'market-payment-result',
-        component: MarketPage,
+        path: 'payments',
+        component: PaymentsPage,
         meta: { noBottomBar: true }
       },
     ]

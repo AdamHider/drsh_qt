@@ -31,12 +31,6 @@
 <script setup >
 import { ref, onMounted, onActivated } from 'vue'
 import { api } from '../services/index'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
-import 'swiper/css/scrollbar'
 
 const notifications = ref([])
 const error = ref({})

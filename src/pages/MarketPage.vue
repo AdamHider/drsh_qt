@@ -84,6 +84,12 @@
           </q-card-section>
           <q-card-section class="q-pa-none q-pt-none">
             <q-list class="q-my-sm" separator>
+              <q-item clickable v-ripple exact to="/payments" class="text-grey-10" @click.stop="playAudio('click')">
+                <q-item-section><b>Список чеков</b></q-item-section>
+                <q-item-section side>
+                  <q-icon name="chevron_right" />
+                </q-item-section>
+              </q-item>
               <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/requisites.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Реквизиты и контактные данные</b></q-item-section>
                 <q-item-section side>
@@ -134,23 +140,39 @@
         </q-card>
       </q-dialog>
       <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}">
-        <q-card class="full-width q-push" v-if="!CONFIG.isBeta">
-          <q-card-section >
-            <div class="text-subtitle1">Покупка</div>
-            <div class="text-caption">Покупки недоступны в бета-версии</div>
-          </q-card-section>
-        </q-card>
-        <PaymentWidget v-else
+        <PaymentWidget
             :confirmationToken="confirmationToken"
             @onPaymentSuccess="handlePaymentSuccess"
             @onPaymentFail="handlePaymentFail"/>
+      </q-dialog>
+      <q-dialog v-model="paymentSuccessDialog" position="bottom" >
+        <q-card class="full-width q-push text-center">
+          <q-card-section >
+            <div class="text-subtitle1"><b>Спасибо за покупку!</b></div>
+            <div class="text-caption">Все прошло успешно, а ресурсы начислены!</div>
+          </q-card-section>
+        <q-card-actions>
+          <q-btn push class="full-width" color="primary" v-close-popup>Хорошо</q-btn>
+        </q-card-actions>
+        </q-card>
+      </q-dialog>
+      <q-dialog v-model="paymentFailDialog">
+        <q-card class="full-width q-push text-center">
+          <q-card-section >
+            <div class="text-subtitle1"><b>Что-то пошло не так!</b></div>
+            <div class="text-caption">Возникла ошибка, оплата не удалась.</div>
+          </q-card-section>
+        <q-card-actions>
+          <q-btn push class="full-width" color="primary" v-close-popup>Понятно</q-btn>
+        </q-card-actions>
+        </q-card>
       </q-dialog>
     </q-page>
   </q-page-container>
 </template>
 
 <script setup >
-import { ref, onActivated, onMounted } from 'vue'
+import { ref, onActivated, onMounted, onDeactivated, onUnmounted } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
@@ -168,8 +190,12 @@ const error = ref(false)
 const headerShowForce = ref(false)
 const buyDialog = ref(false)
 const paymentStatusDialog = ref(false)
+const paymentSuccessDialog = ref(false)
+const paymentFailDialog = ref(false)
 const activeOffer = ref({})
-const confirmationToken = ref({})
+const confirmationToken = ref(false)
+const paymentId = ref(false)
+let pollingInterval = null
 
 const load = async (filter) => {
   const marketOfferListResponse = await api.chest.getList({type: 'market'})
@@ -188,7 +214,9 @@ const goToPayment = async (offer_id) => {
     return;
   }
   confirmationToken.value = paymentCreatedResponse.confirmationToken
+  paymentId.value = paymentCreatedResponse.paymentId
   buyDialog.value = true;
+  startChecking()
   return;
 }
 
@@ -197,13 +225,19 @@ const handlePaymentSuccess = async () => {
   activeOffer.value = {}
   buyDialog.value = false;
   getItem()
+  confirmationToken.value = false
+  paymentId.value = false
+  paymentSuccessDialog.value = true
 }
 
 const handlePaymentFail = async (data) => {
   markItem('is_error')
   activeOffer.value = {}
   buyDialog.value = false;
-  getItem()
+  await getItem()
+  confirmationToken.value = false
+  paymentId.value = false
+  paymentFailDialog.value = true
 }
 const markItem = (key) => {
   for(let i in marketOffers.value){
@@ -213,10 +247,45 @@ const markItem = (key) => {
     }, 2000)
   }
 }
+
+const startChecking = () => {
+  pollingInterval = setInterval(async () => {
+    try {
+      const response =  await api.payment.checkStatus({payment_id: paymentId.value})
+      const status = response.status;
+
+      if (status === 'succeeded' || status === 'canceled') {
+        // Если статус не pending, останавливаем пуллинг
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+
+        // Здесь можно показать соответствующее уведомление пользователю
+        if (status === 'succeeded') {
+          handlePaymentSuccess();
+        } else {
+          handlePaymentFail();
+        }
+      }
+    } catch (error) {
+      console.error('Ошибка пуллинга:', error);
+      clearInterval(pollingInterval);
+      pollingInterval = null;
+    }
+  }, 3000);
+};
+
 onActivated(async () => {
   load()
 })
 onMounted(async () => {
   load();
+})
+onDeactivated(async () => {
+  clearInterval(pollingInterval);
+  pollingInterval = null;
+})
+onUnmounted(async () => {
+  clearInterval(pollingInterval);
+  pollingInterval = null;
 })
 </script>
