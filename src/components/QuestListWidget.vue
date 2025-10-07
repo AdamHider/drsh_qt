@@ -5,7 +5,7 @@
         appear
         :enter-active-class="`animated fadeInLeft`"
         :leave-active-class="`animated fadeOutLeft`">
-      <q-btn v-for="(questItem, index) in quests" :key="index" push dense
+      <q-btn v-for="(questItem, index) in quest.list" :key="index" push dense
         @click="showQuest(questItem.id)" @click.stop="playAudio('click')"
         size="sm"
         :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed || questItem.status == 'created') ? ' q-btn-blinking q-btn-shaking' : ''}`" >
@@ -19,7 +19,7 @@
           <q-badge v-else-if="questItem.is_completed" floating color="positive" class="q-pa-xs"  style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
             <q-icon name="done" size="14px"></q-icon>
           </q-badge>
-          <div v-if="questItem.time_left">
+          <div v-if="questItem.time_left > 0">
             <div  class="absolute text-center q-ma-none full-width" style="left: 0; bottom: -18px;">
               <q-chip  dense size="10px" text-color="white" color="dark" class="q-ma-none"
                 :style="`max-width: none;`">
@@ -69,15 +69,16 @@ import { ref, onMounted, onActivated, onDeactivated } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import QuestItem from '../components/QuestItem.vue'
+import { useQuest } from '../composables/useQuest'
 import { playAudio } from 'src/services/audioService';
 
 
+const { getList, quest, claimItem, startItem } = useQuest()
 
 const error = ref(false)
 const claimDialog = ref(false)
 const claimError = ref(false)
 const reloadTrigger = ref(false)
-const quests = ref([])
 
 const activeCountdown = ref(false)
 
@@ -89,43 +90,33 @@ const props = defineProps({
 })
 const emits = defineEmits(['onStart', 'onClaim'])
 
-const load = async () => {
-  const questListResponse = await api.quest.getList({ mode: props.mode, active_only: props.activeOnly })
-  if (questListResponse.error) {
-    error.value = questListResponse
-    quests.value = []
-    return false;
-  }
-  quests.value = questListResponse
-}
 
 const checkInactive = () => {
-  const quest = quests.value.find((quest) => { return quest.status == 'created' && quest.group.is_primary})
-  if(quest){
-    activeQuest.value = quest
+  let inactiveQuest = quest.list.find((quest) => { return quest.status == 'active' && quest.is_completed && quest.group.is_primary})
+  if(!inactiveQuest) inactiveQuest = quest.list.find((quest) => { return quest.status == 'created' && quest.group.is_primary})
+  if(inactiveQuest){
+    activeQuest.value = inactiveQuest
     activeQuestDialog.value = true
   }
 }
 
 const startQuest = async (questId) => {
-  const questStartedResponse = await api.quest.startItem({ quest_id: questId })
-  if(questStartedResponse){
-    await load()
-    activeQuest.value = quests.value.find((quest) => { return quest.id == questId})
+  const started = await startItem(questId)
+  if(started){
+    await getList(props.active_only)
+    activeQuest.value = quest.list.find((quest) => { return quest.id == questId})
     activeQuestDialog.value = false
     emits('onStart')
   }
 }
 
 const showQuest = (questId) => {
-  const quest = quests.value.find((quest) => { return quest.id == questId});
-
-  activeQuest.value =  quest
+  activeQuest.value =  quest.list.find((quest) => { return quest.id == questId});
   activeQuestDialog.value = true
-
 }
+
 const claimReward = async (questId) => {
-  const questRewardResponse = await api.quest.claimReward({ quest_id: questId })
+  const questRewardResponse = claimItem(questId)
   reloadTrigger.value = !reloadTrigger.value
   claimDialog.value = true
   activeQuestDialog.value = false
@@ -140,10 +131,10 @@ const countdown = () => {
   var has_counters = false
   setTimeout(async () => {
     if(!activeCountdown.value) return
-    for(var i in quests.value){
-      if(quests.value[i].time_left && quests.value[i].time_left > 0){
-        quests.value[i].time_left--;
-        quests.value[i].counter = timeLeftHumanize(quests.value[i].time_left)
+    for(var i in quest.list){
+      if(quest.list[i].time_left && quest.list[i].time_left > 0){
+        quest.list[i].time_left--;
+        quest.list[i].counter = timeLeftHumanize(quest.list[i].time_left)
         has_counters = true
       }
     }
@@ -154,9 +145,9 @@ const countdown = () => {
 }
 
 const calculateTimeLeft = () => {
-  for(var i in quests.value){
-    if(quests.value[i].time_left){
-      quests.value[i].counter = timeLeftHumanize(quests.value[i].time_left)
+  for(var i in quest.value){
+    if(quest.value[i].time_left){
+      quest.value[i].counter = timeLeftHumanize(quest.value[i].time_left)
     }
   }
 }
@@ -178,19 +169,24 @@ const reload = async () => {
   claimDialog.value = false
   activeQuestDialog.value = false
   activeQuest.value = {}
-  await load()
+  await getList(props.active_only)
   checkInactive()
 }
 
 onBeforeRouteLeave((to, from) => {
   if (claimDialog.value) {
+    claimDialog.value = false
+    return false
+  }
+  if (activeQuestDialog.value) {
+    activeQuestDialog.value = false
     return false
   }
   return true
 })
 
 onActivated(async () => {
-  await load()
+  await getList(props.active_only)
   checkInactive()
   calculateTimeLeft()
   if(!activeCountdown.value) activeCountdown.value = true

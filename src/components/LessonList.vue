@@ -28,45 +28,8 @@
         <div v-for="(lessonItem, lessonIndex) in courseSection.list" :key="`lessonIndex${lessonIndex}`"
           :class="`planet-block row q-px-sm q-py-md ${lessonIndex % 2 ? 'justify-end' : 'justify-start'} ${lessonItem.is_blocked === true ? 'is-blocked' : ''} ${lessonItem.is_initial ? 'is-initial' : ''}`"
         >
-          <div :class="`col-6`" style="position: relative; z-index: 10">
-            <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
-            <div>
-              <q-card flat :class="`bg-transparent justify-center q-ma-sm q-pa-sm q-pt-none column items-center`" @click="openLesson(lessonItem.id)">
-                <q-card-section class="text-center self-center planet" style="width: 130px; min-height: 130px; margin: 0 auto">
-                  <div v-if="lessonItem.satellites.length > 0" class="satellite-list">
-                    <div class="satelites-circle"></div>
-                    <div
-                      v-for="(satellite, index) in lessonItem.satellites" :key="index"
-                      class="transparent satellite-item nopadding"
-                      :style="{
-                        transform: `rotate(${satellite.rotation}deg)`,
-                      }">
-                      <img
-                        :src="satellite.image"
-                        :style="{
-                          width: `${satellite.size}px`,
-                          marginLeft: `-${satellite.size/2}px`,
-                          marginTop: `-${satellite.size/2}px`,
-                          rotate: `${(lessonIndex % 2) ? 90-satellite.rotation : (90+satellite.rotation)*-1}deg`
-                        }"/>
-                    </div>
-                  </div>
-                  <q-img :src="lessonItem.image" class="planet-image" loading="lazy" no-spinner> </q-img>
-                </q-card-section>
-                <q-card-section class="text-center text-white q-pa-none absolute full-width"  style="top: 100%">
-                  <div class="text-caption">
-                    <span>Изучено: </span>
-                    <b :class="lessonItem.progress > 0 ? ((lessonItem.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lessonItem.progress }}%</b>
-                  </div>
-                  <div class="text-bold">
-                    <q-icon v-if="lessonItem.is_blocked === true" name="lock"  class="q-mr-xs"></q-icon>
-                    <q-avatar v-if="lessonItem.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-mr-xs" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
-                    <span class="vertical-middle">{{ lessonItem.title }}</span>
-                  </div>
-                </q-card-section>
-              </q-card>
-            </div>
-          </div>
+          <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
+          <LessonItem :lessonItem="lessonItem" :lessonIndex="lessonIndex" @onSelected="openLesson"/>
         </div>
         <q-card class="transparent text-white q-mb-md" flat>
           <q-card-section>
@@ -85,9 +48,14 @@
         <q-separator class="section-separator" style="border-bottom: 2px dashed white; opacity: 0.25;" />
       </div>
     </div>
-    <div v-else>
-      <q-spinner-puff size="50px" color="white" />
-    </div>
+    <q-page-sticky  v-else class="fixed full-width full-height text-white text-center">
+      <div class="absolute-center">
+        <q-spinner-puff size="50px" color="white" />
+        <div class="q-my-sm">
+          <b>Сканируем новые миры...</b>
+        </div>
+      </div>
+    </q-page-sticky >
   </transition>
   <div ref="bottomPoint" class="bottomPoint" style="margin-top: 60px;"></div>
   <q-page-sticky class="fixed full-width full-height" >
@@ -107,6 +75,7 @@ import { useLesson } from "../composables/useLesson";
 import { ref, onActivated, onMounted, toRef, watch } from "vue";
 import { useCourse } from "../composables/useCourse";
 import { useLoader } from '../composables/useLoader'
+import LessonItem from '../components/LessonItem.vue'
 import { useRouter } from "vue-router";
 import { playAudio } from 'src/services/audioService';
 
@@ -189,12 +158,12 @@ const onIntersection = (entry) => {
 onMounted(async () => {
   selectedLesson.value = 0;
   await load()
-  setTimeout(() => {
-    if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "center", behavior: "smooth"})
-    else if(bottomPoint.value) bottomPoint.value.scrollIntoView()
-  }, 250);
-  onImagesRendered(() => {
+  onImagesRendered((is_finish) => {
     transitionTrigger.value = true
+    setTimeout(() => {
+      if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "center", behavior: "smooth"})
+      else if(bottomPoint.value) bottomPoint.value.scrollIntoView()
+    }, 100);
   })
 });
 const onImagesRendered = (callback) => {
@@ -209,6 +178,10 @@ onActivated(async () => {
     selectedLesson.value = 0;
   }
   await load()
+  setTimeout(() => {
+    if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "center", behavior: "smooth"})
+    else if(bottomPoint.value) bottomPoint.value.scrollIntoView()
+  }, 0);
 });
 watch( () => course.active?.id, async () => {
   load()
@@ -267,6 +240,7 @@ watch(() => reloadTrigger.value, () => {
   }
   .planet-image{
     filter: drop-shadow(0px 0px 15px #35adf4);
+    overflow: visible;
   }
   &.is-blocked {
     filter: grayscale(1) brightness(0.9);

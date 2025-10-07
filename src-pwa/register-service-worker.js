@@ -12,24 +12,35 @@ register(process.env.SERVICE_WORKER_FILE, {
   // registrationOptions: { scope: './' },
 
   ready () {
-    console.log('App is being served from cache by a service worker.\n')
+    console.log('PWA готово к работе 🚀')
   },
+
   registered () {
-    console.log('Service worker has been registered.')
+    console.log('Сервис-воркер зарегистрирован')
   },
+
   cached () {
-    console.log('Content has been cached for offline use.')
+    console.log('Контент закэширован для оффлайн-режима')
   },
+
   updatefound () {
-    console.log('New content is downloading.')
+    console.log('Найдена новая версия, загружаем…')
   },
-  updated () {
-    console.log('New content is available: Please refresh.')
+
+  updated (registration) {
+    console.log('Доступно новое содержимое. Service Worker ожидает активации.')
+    // 1. Отправляем кастомное событие в Window,
+    //    передавая объект ServiceWorkerRegistration (SW)
+    window.dispatchEvent(
+      new CustomEvent('swUpdated', { detail: registration })
+    )
   },
+
   offline () {
-    console.log('No internet connection found. App is running in offline mode.')
+    console.log('Нет соединения, работает оффлайн 🌐')
   },
-  error (error) {
-    console.error('Error during service worker registration:', error)
+
+  error (err) {
+    console.error('Ошибка при регистрации сервис-воркера:', err)
   }
 })

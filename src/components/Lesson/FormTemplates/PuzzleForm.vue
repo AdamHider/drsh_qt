@@ -54,7 +54,7 @@
         <q-card-section>
           <div class="flex justify-center wrap">
             <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
-              <q-chip class="q-lesson-field-value bg-white rounded-xs" size="18px" :clickable="!variantsDisabled" @click.stop="selectVariant(option.text, optionIndex)"
+              <q-chip class="q-lesson-field-value bg-white rounded-xs" :size="(isLetterly) ? '20px' : '18px'" :clickable="!variantsDisabled" @click.stop="selectVariant(option.text, optionIndex)"
               :color="(option.count > 0) ? 'orange' : 'white'"
               :text-color="(option.count > 0) ? 'white' : ''"
               >
@@ -62,7 +62,7 @@
               </q-chip>
             </div>
             <div :style="(currentValue.length > 0) ? '' : 'pointer-events: none'">
-              <q-chip class="q-lesson-field-value rounded-sm" size="18px" :clickable="!clearDisabled" @click.stop="clearVariant()" :color="(currentValue.length == 0) ? 'red-5' : 'negative'" text-color="white">
+              <q-chip class="q-lesson-field-value rounded-sm" :size="(isLetterly) ? '20px' : '18px'" :clickable="!clearDisabled" @click.stop="clearVariant()" :color="(currentValue.length == 0) ? 'red-5' : 'negative'" text-color="white">
                 <q-icon name="keyboard_backspace"></q-icon>
               </q-chip>
             </div>
@@ -94,12 +94,14 @@ const currentValue = ref('')
 const currentValueArray = ref([])
 const clearDisabled = ref(false)
 const variantsDisabled = ref(false)
+const isLetterly = ref(false)
 
 const formData = reactive({
   fields: []
 })
 const renderFields = () => {
   formData.fields = []
+  let maxLetterCount = 0
   if (!lesson.active.page?.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
@@ -113,13 +115,25 @@ const renderFields = () => {
       value.array = field.answer.value.split('|')
       value.is_finished = true
     }
+    maxLetterCount = getMaxLetterCount(field.variants, maxLetterCount)
     field.width = calculateWidth(field)
     formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
+  }
+  if(maxLetterCount <= 2){
+    isLetterly.value = true
   }
   if(formData.fields.length == 1){
     matchStart(0)
   }
   emits('update-answer', formData.fields)
+}
+const getMaxLetterCount = (options, maxLetterCount) => {
+  for(var i in options){
+    if(options[i].text.length > maxLetterCount){
+      maxLetterCount = options[i].text.length
+    }
+  }
+  return maxLetterCount
 }
 const calculateWidth = (field) => {
   let length = 0;

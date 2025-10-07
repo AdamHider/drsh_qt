@@ -29,13 +29,17 @@
                 <q-separator inset />
                 <q-item>
                   <q-item-section><b>Всего:</b></q-item-section>
-                  <q-item-section class="text-right text-primary text-bold text-h6"><b>{{ lesson.active.page?.answer?.total }}</b></q-item-section>
+                  <q-item-section side class="text-right text-primary text-bold text-h6">
+                    <q-chip class="q-ma-none q-push rounded-sm" color="primary" text-color="white" size="16px" style="transform: translateX(10px) "><b>{{ lesson.active.page?.answer?.total }}</b></q-chip>
+                  </q-item-section>
                 </q-item>
               </q-list>
               <q-list class="text-left q-mt-sm " dense v-else>
                 <q-item>
                   <q-item-section><b>Всего баллов:</b></q-item-section>
-                  <q-item-section class="text-right text-primary text-bold text-h6"><b>{{ lesson.active.page?.answer?.total }}</b></q-item-section>
+                  <q-item-section side class="text-right text-primary text-bold text-h6">
+                    <q-chip class="q-ma-none q-push rounded-sm" color="primary" text-color="white" size="16px" style="transform: translateX(10px)"><b>{{ lesson.active.page?.answer?.total }}</b></q-chip>
+                  </q-item-section>
                 </q-item>
               </q-list>
             </div>
@@ -127,7 +131,8 @@ const isLoading = ref(false)
 
 const emits = defineEmits(['onPageChanged', 'onAnswerSaved', 'onDialogOpened'])
 const props = defineProps({
-  pageAnswers: Object
+  pageAnswers: Object,
+  rendered: Boolean
 })
 
 const answerPercentage = computed(() => lesson.active.page?.answer?.correct * 100 / lesson.active.page?.answer?.quantity)
@@ -138,8 +143,6 @@ const { lesson } = useLesson()
 const next = async () => {
   playAudio('click')
   isLoading.value = true
-  //var audio = new Audio('/audio/button.mp3');
-  //audio.play();
   emits('onPageChanged', 'next')
   extraActions.value = false
 }
@@ -206,15 +209,34 @@ watch(() => backDialog.value, (newValue, oldValue) => {
 watch(() => confirmDialog.value, (newValue, oldValue) => {
   emits('onDialogOpened', newValue)
 })
-watch(() => lesson.active.page, (newValue, oldValue) => {
-  isLoading.value = false
+watch(() => props.rendered, (newValue, oldValue) => {
+  if(newValue){
+    isLoading.value = false
+  } else {
+    isLoading.value = true
+  }
   pageTimer.value = 0
   pageTimerProgress.value = 1
   if(lesson.active.page.timer && !lesson.active.page?.answer?.is_finished) {
     pageTimerStarted.value = true
     pageTimer.value = lesson.active.page.timer.time*1
     pageTimerTimeLeft.value = Math.round(pageTimer.value * 100) / 100;
-    startTimer()
+    onImagesRendered(() => {
+      startTimer()
+      isLoading.value = false
+    })
+  } else {
+    isLoading.value = false
   }
 })
+
+const onImagesRendered = (callback) => {
+  const images = [...document.querySelectorAll(".q-page img")];
+  if(images.length == 0){
+    callback()
+  }
+  images.map(im=>new Promise(res=>
+    im.onload = callback
+  ))
+}
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="showInstallDialog" v-if="canInstall && isInstallable">
+  <q-dialog v-model="showInstallDialog" v-if="canInstall && isInstallable" persistent>
     <q-card class="q-push">
       <q-card-section>
         <div class="text-h6">Хочешь установить Mektepium?</div>

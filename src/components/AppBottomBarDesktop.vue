@@ -23,6 +23,7 @@
             <q-item-section><b>{{ routes.course.label }}</b></q-item-section>
             <q-item-section side>
               <q-badge v-show="routes.course.is_updated" color="red" rounded />
+              <q-avatar v-if="routes.course.is_quest" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
             </q-item-section>
           </q-item>
         </div>
@@ -35,6 +36,7 @@
             <q-item-section><b>{{ routes.skills.label }}</b></q-item-section>
             <q-item-section side>
               <q-badge v-show="routes.skills.is_updated" color="red" rounded/>
+              <q-avatar v-if="routes.skills.is_quest" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
             </q-item-section>
           </q-item>
         </div>
@@ -75,12 +77,14 @@
 
 <script setup>
 import { useNavigationHistory } from '../composables/useNavigationHistory'
-import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { watch, ref, onMounted } from 'vue'
 import { useNotification } from '../composables/useNotification'
+import { useQuest } from '../composables/useQuest'
 
 const { notifications } = useNotification()
 
+const { getList, quest } = useQuest()
 const { routes } = useNavigationHistory();
 const route = useRoute();
 const isRootPage = ref(false);
@@ -88,10 +92,13 @@ const bottomBarEnabled = ref(false);
 
 onMounted(() => {
   checkActive()
+  getList(1)
 })
 
 watch(route, (currentValue, oldValue) => {
-  checkActive()
+  setTimeout(() => {
+    checkActive()
+  }, 0)
 });
 const checkActive = () => {
   isRootPage.value = route.fullPath.split('/').length === 2

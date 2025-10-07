@@ -55,10 +55,10 @@
           <q-card-section>
             <div class="flex justify-center wrap">
               <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
-                <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value bg-white rounded-xs" size="18px" color="white" clickable @click.stop="selectVariant(option.text)">
+                <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value bg-white rounded-xs" :size="(isLetterly) ? '20px' : '18px'" color="white" clickable @click.stop="selectVariant(option.text)">
                   <b>{{ option.text }}</b>
                 </q-chip>
-                <q-chip v-else class="q-lesson-field-value rounded-sm" size="18px" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
+                <q-chip v-else class="q-lesson-field-value rounded-sm" :size="(isLetterly) ? '20px' : '18px'" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
                   <b>{{ option.text }}</b>
                 </q-chip>
               </div>
@@ -86,12 +86,14 @@ const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
 
 const currentIndex = ref(null)
+const isLetterly = ref(false)
 
 const formData = reactive({
   fields: []
 })
 const renderFields = () => {
   formData.fields = []
+  let maxLetterCount = 0
   if (!lesson.active.page?.fields) return
   for (const k in lesson.active.page.fields) {
     const field = lesson.active.page.fields[k]
@@ -103,11 +105,15 @@ const renderFields = () => {
       value.text = field.answer.value
       value.is_finished = true
     }
+    maxLetterCount = getMaxLetterCount(field.variants, maxLetterCount)
     field.width = calculateWidth(field)
     formData.fields.push({ value, options, index: field.index, answer: field.answer, width: field.width })
   }
   if(formData.fields.length == 1){
     matchStart(0)
+  }
+  if(maxLetterCount <= 2){
+    isLetterly.value = true
   }
   emits('update-answer', formData.fields)
 }
@@ -121,6 +127,14 @@ const calculateWidth = (field) => {
     modifier = 15
   }
   return length*modifier;
+}
+const getMaxLetterCount = (options, maxLetterCount) => {
+  for(var i in options){
+    if(options[i].text.length > maxLetterCount){
+      maxLetterCount = options[i].text.length
+    }
+  }
+  return maxLetterCount
 }
 const matchEnd = (evt) => {
   if(evt.explicitOriginalTarget.nodeName == '#text' || !evt.explicitOriginalTarget.closest(".q-field")) currentIndex.value = null;

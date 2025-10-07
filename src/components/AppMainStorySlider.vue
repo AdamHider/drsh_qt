@@ -1,6 +1,6 @@
 <template>
   <div class="video-container">
-    <video :controls="false" autoplay height="100%" width="100%" @ended="emits('onEnded', true)">
+    <video playsinline autoplay height="100%" width="100%" @ended="emits('onEnded', true)">
       <source src="/videos/mektepium trailer.mp4" type="video/mp4" />
     </video>
     <q-card class="bg-transparent absolute-bottom full-width" flat>
@@ -70,6 +70,9 @@ slides.value = [
   height: 100%;
   -o-object-fit: cover;
   object-fit: cover;
+}
+video::-webkit-media-controls {
+    display: none;
 }
 
 </style>

@@ -44,8 +44,7 @@ import { watch, ref } from 'vue'
 import { useCourse } from '../composables/useCourse'
 import CourseList from '../components/CourseList.vue'
 import { playAudio } from 'src/services/audioService';
-
-
+import { onBeforeRouteLeave } from 'vue-router'
 
 const emit = defineEmits(['update:dialogOpened', 'onSelect'])
 
@@ -68,4 +67,11 @@ watch(dialog, () => {
   emit('update:dialogOpened', dialog)
 })
 
+onBeforeRouteLeave((to, from) => {
+  if (dialog.value) {
+    dialog.value = false
+    return false
+  }
+  return true
+})
 </script>

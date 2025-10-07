@@ -3,7 +3,8 @@
     <q-card-section class="overflow-auto" ref="scrollContainer">
       <div style="padding-bottom: 60px;">
         <div class="q-pa-sm text-white text-center">
-          <div class="text-subtitle1"><b>{{ props.quest.title }}</b></div>
+          <div class="text-subtitle2" v-if="props.quest.status == 'created'"><b>Новое задание!</b></div>
+          <div class="text-subtitle1"><b>"{{ props.quest.title }}"</b></div>
           <div class="text-caption">{{ props.quest.data[replicaMode].description }}</div>
         </div>
         <div v-if="props.mode !== 'active'">
@@ -135,6 +136,7 @@ const emits = defineEmits(['onStart', 'onClaim', 'onClose'])
 const onStart = async () => {
   loading.value[0] = true
   emits('onStart')
+  if(props.quest.group.is_primary) goToQuestTarget()
 }
 const onClaim = async () => {
   loading.value[1] = true

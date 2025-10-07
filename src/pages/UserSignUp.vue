@@ -179,7 +179,7 @@
           <div class="text-h6"><b>Правила пользования</b></div>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          У нашего приключения есть определённые правила, которые необходимо соблюдать. Ознакомиться с ними можно <a @click.stop="playAudio('click')" href="https://docs.mektepium.com/terms.html" target="_blank">здесь</a>. Продолжая создание героя вы подтверждаете, что согласны с нашими условиями и правилами.
+          У нашего приключения есть определённые правила, которые необходимо соблюдать. Ознакомиться с ними можно <a @click.stop="playAudio('click')" href="https://mektepium.com/terms" target="_blank">здесь</a>. Продолжая создание героя вы подтверждаете, что согласны с нашими условиями и правилами.
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat  color="primary" v-close-popup @click.stop="playAudio('click')"><b>Окей</b></q-btn>

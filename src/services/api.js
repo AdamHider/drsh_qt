@@ -166,6 +166,9 @@ export class Api extends ApiService{
         getItemInvitation: (params) => {
             return this.post('user', 'getItemInvitation', params);
         },
+        claimItemInvitation: (params) => {
+            return this.post('user', 'claimItemInvitation', params);
+        },
     }
     auth = {
         signUp: (params) =>  {

@@ -62,15 +62,19 @@
                       <q-item-section><b>Всего:</b></q-item-section>
                       <q-item-section class="text-right text-bold">
                         <div v-if="lesson.active.exercise.data.totals.difference > 0">
-                          <q-avatar class="q-mr-xs" size="sm" color="green-2"><q-icon size="xs" color="positive" name="keyboard_double_arrow_up"></q-icon></q-avatar>
-                          <b class="text-positive" style="vertical-align: middle">{{ currentPoints }}</b>
+                          <q-chip class="q-ma-none q-push rounded-sm bg-gradient-green"  text-color="white" size="15px" style="transform: translateX(10px)" icon="keyboard_double_arrow_up">
+                            {{ currentPoints }}
+                          </q-chip>
                         </div>
                         <div v-else-if="lesson.active.exercise.data.totals.difference < 0">
-                          <q-avatar class="q-mr-xs" size="sm" color="red-2"><q-icon size="xs" color="negative" name="keyboard_double_arrow_down"></q-icon></q-avatar>
-                          <b class="text-negative" style="vertical-align: middle">{{ currentPoints }}</b>
+                          <q-chip class="q-ma-none q-push rounded-sm bg-gradient-red"  text-color="white" size="15px" style="transform: translateX(10px)" icon="keyboard_double_arrow_down">
+                          {{ currentPoints }}
+                          </q-chip>
                         </div>
                         <div v-else>
-                          <b style="vertical-align: middle">{{ currentPoints }}</b>
+                          <q-chip class="q-ma-none q-push rounded-sm bg-gradient-primary"  text-color="white" size="15px" style="transform: translateX(10px)" icon="keyboard_double_arrow_down">
+                           {{ currentPoints }}
+                          </q-chip>
                         </div>
                       </q-item-section>
                     </q-item>

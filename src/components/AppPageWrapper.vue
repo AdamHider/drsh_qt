@@ -1,7 +1,7 @@
 <template>
   <div >
     <q-scroll-area
-      style="width: 100vw; height: 100vh;"
+      style="width: 100dvw; height: 100dvh;"
       :thumb-style="{opacity: 0}">
       <q-page-container>
         <slot />

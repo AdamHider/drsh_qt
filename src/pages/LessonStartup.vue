@@ -3,7 +3,8 @@
     <q-app-header class="transparent text-white rounded-b-md q-py-xs" >
         <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button" @click.stop="playAudio('click')"/>
         <q-toolbar-title></q-toolbar-title>
-        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push/>
+        <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push
+          @click="() => {if(user.active?.data.resources.energy.quantity == 0) router.push('/market')}"/>
     </q-app-header>
     <q-page class="full-width column justify-center" style="padding-top: 50px; overflow: hidden;">
       <q-card class="transparent no-shadow full-width q-desc-mx-quart" style="position: relative; z-index: 1;">
@@ -147,7 +148,7 @@ import { useExercise } from '../composables/useExercise'
 import LessonSatelliteSlider from '../components/LessonSatelliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import LessonProgressBar from '../components/LessonProgressBar.vue'
-import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, onActivated, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
@@ -223,6 +224,7 @@ const preload = () => {
     change(activeIndex.value, true)
 }
 const load = async (isPartial = 0) => {
+  if(!route.params.lesson_id) return false;
   let isFirstLoad = true
   isDark.value = false
   if(lesson.listExtended[route.params.lesson_id]){
@@ -262,14 +264,6 @@ const goToSattelite = (unblockLesson) => {
     router.push(`lesson-startup-${unblockLesson.id}`)
   }
 }
-onBeforeRouteLeave((to, from, next) => {
-  transitionTrigger.value = false
-  isDark.value = false
-  setTimeout(() => {
-    setTarget(0)
-    next()
-  }, 250)
-})
 watch(() => activeLesson.value, () => {
   if(!activeLesson.value) return
   isDark.value = activeLesson.value.is_blocked
@@ -277,7 +271,7 @@ watch(() => activeLesson.value, () => {
 })
 
 watch(() => route.params.lesson_id, async () => {
-  if(!transitionTrigger.value) return
+  if(!transitionTrigger.value || route.name !== 'lesson-startup') return
   transitionTrigger.value = false
   setTimeout(async () => {
     await load()

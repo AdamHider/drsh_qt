@@ -63,6 +63,7 @@
 import { ref, toRefs, toRef, watch, onMounted, onActivated } from 'vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { playAudio } from 'src/services/audioService';
+import { onBeforeRouteLeave } from 'vue-router'
 
 const props = defineProps({
   exercise: Object,
@@ -128,6 +129,13 @@ onMounted(() => {
   calculateBackface()
   value.value = props.value
   if(value.value > 100) value.value = 100
+})
+onBeforeRouteLeave((to, from) => {
+  if (rewardsDialog.value) {
+    rewardsDialog.value = false
+    return false
+  }
+  return true
 })
 
 

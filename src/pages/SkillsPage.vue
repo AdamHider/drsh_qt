@@ -21,7 +21,7 @@
             </div>
           </q-card-section>
       </q-card>
-      <q-card flat class="relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1;">
+      <q-card flat class="q-main-card relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1;">
           <q-inner-loading :showing="notLoaded">
             <q-spinner-puff size="50px" color="primary" />
           </q-inner-loading>
@@ -67,3 +67,15 @@ onActivated(async () => {
   load()
 })
 </script>
+<style scoped>
+.q-main-card:before{
+  content: "";
+  position: absolute;
+  z-index: 1;
+  background: white;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 100px;
+}
+</style>

@@ -30,7 +30,12 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     } else {
       if (data.authorization) user.active.authorization = data.authorization
       if (data.data) user.active.data = data.data
-      if (data.data && data.data.id) user.list[data.data.id] = data
+      if (data.data && data.data.id){
+        if(!user.list[data.data.id]) user.list[data.data.id] = {}
+        user.list[data.data.id].data = data.data
+        if (data.authorization) user.list[data.data.id].authorization = data.authorization
+      } 
+      
     }
     userStorage.set(user)
     return true
@@ -139,6 +144,10 @@ export const useUserStore = defineStore('drsh_user_store', () => {
   function getItemInvitation (params) {
     return api.user.getItemInvitation(params)
   }
+  function claimItemInvitation (params) {
+    return api.user.claimItemInvitation(params)
+  }
+
 
 
   return {
@@ -159,6 +168,7 @@ export const useUserStore = defineStore('drsh_user_store', () => {
     checkEmail,
     checkEmailVerification,
     generateUsername,
-    getItemInvitation
+    getItemInvitation,
+    claimItemInvitation
   }
 })

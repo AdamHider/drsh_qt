@@ -3,7 +3,8 @@
     <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md">
         <q-img
             cover
-            :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
+            :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" 
+            style="max-width: min(calc(90vh - 420px), 100vw);"/>
         <LessonAudioPlayer/>
     </q-card>
     <div class="q-px-md q-pb-md q-pt-sm" >

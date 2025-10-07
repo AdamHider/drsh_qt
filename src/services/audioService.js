@@ -19,7 +19,7 @@ export async function loadAudio(url, key) {
 export function playAudio(key) {
   const { user } = useUserStore()
   const buffer = audioBuffers.value[key];
-  if(user.active.data.settings.soundFX?.value !== '1') return
+  if(user.active.data.settings && user.active.data.settings.soundFX?.value !== '1') return
   if (!buffer) {
     console.warn(`Аудиофайл с ключом '${key}' не загружен.`);
     return;

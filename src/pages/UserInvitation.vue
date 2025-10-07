@@ -32,8 +32,12 @@ const createNewHero = async () => {
 </script>
 <style scoped>
 .q-page{
-  background-image: url('/images/splash.jpg');
+  background-image: url('/images/splash_mobile.jpg');
   background-size: cover;
   background-position: center center;
+}
+.desktop .q-page{
+  background-image: url('/images/splash_desktop.jpg');
+  background-size: auto 100%;
 }
 </style>

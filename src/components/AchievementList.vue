@@ -31,7 +31,6 @@ import BannerNotFound from './BannerNotFound.vue'
 const achievements = ref([])
 
 const load = async function () {
-  achievements.value = []
   const achievementListResponse = await api.achievement.getList({ mode: 'by_user', limit: 3 })
   if (!achievementListResponse.error) {
     achievements.value = achievementListResponse

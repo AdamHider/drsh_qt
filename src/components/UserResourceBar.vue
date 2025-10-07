@@ -1,5 +1,5 @@
 <template>
-      <q-item :dense="props.dense"
+      <q-item :dense="props.dense" clickable
         :class="`relative bg-light-gradient-${resource?.color} text-white ${(props.dense) ? 'q-py-xs q-pl-sm rounded-sl': 'rounded-md'} ${(transparent) ? 'bg-dark-transparent' : ''} ${(props.push) ? 'q-push': ''} ${props.class ?? ''}`" >
           <q-item-section avatar style="z-index: 2"  :style="`min-width: ${props.size};`">
               <q-img :width="props.size" :src="resource?.image" :style="`filter: drop-shadow(rgba(0, 0, 0, 0.44) 0px 2px 2px); scale: 1.2; min-height: ${props.size}`" no-spinner/>

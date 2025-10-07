@@ -4,9 +4,12 @@
         <AppBackground/>
       </div>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
+          <b>v 0.9.4</b>
           <q-toolbar-title></q-toolbar-title>
           <div class="relative-position q-mr-sm">
-            <q-btn flat round dense icon="person_add" @click="inviteDialog = true"  @click.stop="playAudio('click')"/>
+            <q-btn flat round dense icon="person_add" @click="inviteDialog = true"  @click.stop="playAudio('click')">
+              <q-badge v-if="invitationAvailable > 0" color="positive" floating><b>{{ invitationAvailable }}</b></q-badge>
+            </q-btn>
             <q-tutorial-item title="Пригласить друзей" description="Здесь можно пригласить друзей и получить большой подарок за каждого." :index="5" position="bottom" positionInline="right"/>
           </div>
           <q-btn flat round dense icon="settings" class="q-mr-sm" to="/user/settings"  @click.stop="playAudio('click')">
@@ -17,7 +20,7 @@
             appear
             enter-active-class="animated zoomIn animation-delay-1"
             leave-active-class="animated zoomOut">
-            <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 1;" >
+            <q-card class="transparent no-shadow full-width" style="position: relative; z-index: 3;" >
                 <q-card-section class="text-white">
                   <q-avatar
                     size="150px"
@@ -32,7 +35,7 @@
             appear
             enter-active-class="animated fadeInUpBig"
             leave-active-class="animated fadeOutDownBig">
-          <q-card flat square class="relative text-left q-pt-md q-pb-lg col full-width no-shadow user-card">
+          <q-card flat square class="q-main-card relative text-left q-pt-md q-pb-lg col full-width no-shadow user-card">
               <q-card-section class="text-center q-pa-none">
                 <div class="text-h6">
                   <b>{{ user.active?.data.name }}</b>
@@ -141,32 +144,12 @@
           </q-card>
           </transition>
       </q-page>
-      <q-dialog v-model="inviteDialog" position="bottom" transition-hide="fade" >
-        <q-card v-if="userInvitation" class="relative-position allow-overflow rounded-b-0">
-            <div class="absolute full-width text-center" style="bottom: 100%;">
-              <q-img  width="200px" src="/images/market/character.png" style="max-width: 100%;"/>
-            </div>
-          <q-card-section>
-            <div class="items-center text-center">
-              <div class="text-subtitle1"><b>Пригласи друзей с выгодой!</b></div>
-              <div class="text-caption">Друзья, которые присоединятся к приключениям по этой ссылке принесут драгоценный <b class="text-green">изонит</b>!</div>
-              <div class="text-caption">Для этого приглашённым друзьям нужно только выполнить задание <b class="text-primary">"Час расплаты"</b>!</div>
-            </div>
-          </q-card-section>
-          <q-card-section class="q-pt-none">
-            <div class="text-caption text-grey">
-              По вашему приглашению присоединились: {{ userInvitation.count }}
-            </div>
-          </q-card-section>
-          <q-card-actions>
-            <q-btn v-if="!userInvitationCopied" class="full-width" push color="primary" icon="content_copy" label="Скопировать ссылку"
-              @click="copyInvitationLink()" @click.stop="playAudio('click')"/>
-            <q-btn v-else class="full-width" push color="primary" label="Скопировано" icon="check" disabled/>
-            <q-btn v-close-popup class="full-width q-my-sm" flat color="primary"  @click.stop="playAudio('click')"><b>Закрыть</b></q-btn>
-          </q-card-actions>
-        </q-card>
+      <q-dialog v-model="inviteDialog" position="bottom" transition-hide="fade" @hide="getItem()">
+        <UserInvitaionWidget/>
       </q-dialog>
+
       <UserTutorialDialog/>
+      <div class="bottom-bar-overlay"></div>
   </q-page-container>
 </template>
 
@@ -177,19 +160,18 @@ import UserResourceBar from '../components/UserResourceBar.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 import AppBackground from '../components/AppBackground.vue'
+import UserInvitaionWidget from '../components/UserInvitaionWidget.vue'
 import { playAudio } from 'src/services/audioService';
 
-import { useRoute } from 'vue-router'
+import { useRoute, onBeforeRouteLeave } from 'vue-router'
 import { ref, watch, onMounted, onActivated, onBeforeMount } from 'vue'
-import { copyToClipboard } from 'quasar'
 
 const { user, getItem, getItemInvitation } = useUserStore()
 const route = useRoute()
 
 
 const inviteDialog = ref(false)
-const userInvitation = ref({})
-const userInvitationCopied = ref(false)
+const invitationAvailable = ref(0)
 
 onMounted(async () => {
   endTime.value = new Date()
@@ -198,8 +180,10 @@ onMounted(async () => {
   timeDiff /= 1000
 
   // get seconds
-  console.log('UserDashboard: ' + timeDiff + ' mseconds')
+  console.log('UserDashboard mounted: ' + timeDiff + ' mseconds')
   await getItem()
+  const invitaionResponse = await getItemInvitation()
+  invitationAvailable.value = invitaionResponse.count - invitaionResponse.claimed_count
 })
 
 onActivated(async () => {
@@ -209,25 +193,14 @@ onActivated(async () => {
   timeDiff /= 1000
 
   // get seconds
-  console.log('UserDashboard: ' + timeDiff + ' mseconds')
+  console.log('UserDashboard activated: ' + timeDiff + ' mseconds')
   await getItem()
+  const invitaionResponse = await getItemInvitation()
+  invitationAvailable.value = invitaionResponse.count - invitaionResponse.claimed_count
 })
-const copyInvitationLink = () => {
-  const link = `https://app.mektepium.com/user-invitation-${userInvitation.value.hash}`
-  copyToClipboard(link)
-  userInvitationCopied.value = true
-}
-watch(() => inviteDialog.value, async () => {
-  if(inviteDialog.value == false) return
-  const userInvitationResponse = await getItemInvitation()
-  if(!userInvitationResponse.error){
-    userInvitation.value = userInvitationResponse
-  }
-  userInvitationCopied.value = false
-})
+
 const startTime = ref()
 const endTime = ref()
-const AchievementDialog = ref(false)
 
 onBeforeMount(async () => {
   startTime.value = new Date()
@@ -236,9 +209,28 @@ onBeforeMount(async () => {
 watch(route, (to) => {
   startTime.value = new Date()
 })
+onBeforeRouteLeave((to, from) => {
+  if (inviteDialog.value) {
+    inviteDialog.value = false
+    return false
+  }
+  return true
+})
 </script>
 <style scoped>
-
+.bottom-bar-overlay{
+  content: "";
+  position: fixed;
+  z-index: 1;
+  background: white;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+}
+.user-card{
+  z-index: 2;
+}
 .user-card::before{
     content: "";
     position: absolute;

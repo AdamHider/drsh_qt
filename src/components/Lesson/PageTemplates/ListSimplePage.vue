@@ -1,11 +1,12 @@
 <template>
-  <div class="full-width">
+  <div class="full-width q-pt-sm">
     <q-card v-if="lesson.active.page?.header?.image" class="q-ma-md">
       <q-card-section class="q-pa-none ">
         <q-img
             class="rounded-borders"
             cover
-            :src="lesson.active.page?.header?.image" />
+            :src="lesson.active.page?.header?.image" 
+            style="max-width: min(calc(90vh - 420px), 100vw);"/>
         </q-card-section>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>

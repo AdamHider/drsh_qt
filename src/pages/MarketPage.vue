@@ -22,20 +22,20 @@
           </q-card-section>
       </q-card>
       <q-card flat class="relative text-left q-pt-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
-          <q-card-section style=" margin-top: -50px;" class="q-desc-mx-quart">
+          <q-card-section style=" margin-top: -25px;" class="q-desc-mx-quart">
             <div class="row q-pb-sm">
-              <div :class="`col col-${12/marketOffer.priority} q-pa-sm q-mt-sm`" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOfferIndex-${marketOfferIndex}`">
-                <q-card v-if="marketOffer.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover; margin-top: 40px;`">
+              <div :class="`col col-${12/marketChest.priority} q-pa-sm q-mt-sm`" v-for="(marketChest, marketChestIndex) in marketChests" :key="`marketChestIndex-${marketChestIndex}`">
+                <q-card v-if="marketChest.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketChest.background_image}'); background-size: cover; margin-top: 40px;`">
                   <q-card-section horizontal class="q-pa-sm items-center">
-                    <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px; min-width: 150px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
+                    <q-img :src="marketChest.image" width="100%"  style="margin-top: -50px; min-width: 150px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
                     <q-card-section class="q-pt-none" style="text-shadow: 0px 1px 2px black">
-                      <div class="text-h7" style="line-height: 1.5;"><b>{{ marketOffer.title }}</b></div>
-                      <div class="text-caption">{{ marketOffer.description }}</div>
+                      <div class="text-h7" style="line-height: 1.5;"><b>{{ marketChest.title }}</b></div>
+                      <div class="text-caption">{{ marketChest.description }}</div>
                     </q-card-section>
                   </q-card-section>
                   <q-card-section class="q-pa-none">
                     <div class="row q-gutter-sm items-center justify-center">
-                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
+                      <div v-for="(resource, resourceIndex) in marketChest.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
                           <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                       </div>
                     </div>
@@ -44,35 +44,38 @@
                     <transition  mode="out-in"
                         enter-active-class="animated zoomIn"
                         leave-active-class="animated zoomOut">
-                        <q-btn v-if="marketOffer.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
-                        <q-btn v-else-if="marketOffer.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
-                        <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketOffer.id" @click="goToPayment(marketOffer.id)"  @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
+                        <q-btn v-if="marketChest.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                        <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
+                        <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="goToPayment(marketChest.id)"  @click.stop="playAudio('click')">{{ marketChest.price }}₽</q-btn>
                     </transition>
                   </q-card-actions>
                 </q-card>
-                <q-card v-else-if="marketOffer.priority == 2" class="q-push q-mt-sm text-white text-center" :style="`background-image: url('${marketOffer.background_image}'); background-size: cover;`">
+                <q-card v-else-if="marketChest.priority == 2" class="q-push q-mt-sm text-white text-center" :style="`background-image: url('${marketChest.background_image}'); background-size: cover;`">
                   <q-card-section class="q-pb-none q-px-none">
-                    <q-img :src="marketOffer.image" width="100%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
+                    <q-img :src="marketChest.image" width="100%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
                   </q-card-section>
                   <q-card-section class="q-pa-sm q-pt-none" style="text-shadow: 0px 1px 2px black">
-                    <div class="text-subtitle1"><b>{{ marketOffer.title }}</b></div>
-                    <div class="text-caption">{{ marketOffer.description }}</div>
+                    <div class="text-subtitle1"><b>{{ marketChest.title }}</b></div>
+                    <div class="text-caption">{{ marketChest.description }}</div>
                   </q-card-section>
                   <q-card-section class="q-pa-none">
                     <div class="row q-gutter-sm items-center justify-center">
-                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
+                      <div v-for="(resource, resourceIndex) in marketChest.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
                           <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                       </div>
                     </div>
                   </q-card-section>
-                  <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
+                  <q-card-actions v-if="marketChest.price > 0" class="full-width justify-center q-px-md" style="margin-bottom: -30px">
                     <transition  mode="out-in"
                           enter-active-class="animated zoomIn"
                           leave-active-class="animated zoomOut">
-                      <q-btn v-if="marketOffer.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
-                      <q-btn v-else-if="marketOffer.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
-                      <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketOffer.id" @click="goToPayment(marketOffer.id)"  @click.stop="playAudio('click')">{{ marketOffer.price }}₽</q-btn>
+                      <q-btn v-if="marketChest.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                      <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
+                      <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="goToPayment(marketChest.id)"  @click.stop="playAudio('click')">{{ marketChest.price }}₽</q-btn>
                     </transition>
+                  </q-card-actions>
+                  <q-card-actions v-else class="full-width justify-center q-px-md" style="margin-bottom: -30px">
+                      <q-btn class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="inviteDialog = true" @click.stop="playAudio('click')">Бесплатно</q-btn>
                   </q-card-actions>
                 </q-card>
               </div>
@@ -90,25 +93,25 @@
                   <q-icon name="chevron_right" />
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/requisites.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
+              <q-item clickable v-ripple exact :href="'https://mektepium.com/requisites'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Реквизиты и контактные данные</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/return.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
+              <q-item clickable v-ripple exact :href="'https://mektepium.com/return'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Доставка и возврат</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/terms.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
+              <q-item clickable v-ripple exact :href="'https://mektepium.com/terms'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Правила пользования</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
                 </q-item-section>
               </q-item>
-              <q-item clickable v-ripple exact :href="'https://docs.mektepium.com/privacy.html'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
+              <q-item clickable v-ripple exact :href="'https://mektepium.com/privacy'" target="_blank" class="text-grey-10" @click.stop="playAudio('click')">
                 <q-item-section><b>Политика конфиденциальности</b></q-item-section>
                 <q-item-section side>
                   <q-icon name="chevron_right" />
@@ -168,6 +171,9 @@
         </q-card>
       </q-dialog>
     </q-page>
+    <q-dialog v-model="inviteDialog" position="bottom" transition-hide="fade" @hide="getItem()">
+      <UserInvitaionWidget/>
+    </q-dialog>
   </q-page-container>
 </template>
 
@@ -176,16 +182,16 @@ import { ref, onActivated, onMounted, onDeactivated, onUnmounted } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import UserInvitaionWidget from '../components/UserInvitaionWidget.vue'
 import PaymentWidget from '../components/PaymentWidget.vue'
-import { CONFIG } from '../config.js'
 import { playAudio } from 'src/services/audioService';
-import { useRoute } from 'vue-router'
+import { useRoute, onBeforeRouteLeave } from 'vue-router'
 
 const route = useRoute()
 
 const { user, getItem } = useUserStore()
 
-const marketOffers = ref([])
+const marketChests = ref([])
 const error = ref(false)
 const headerShowForce = ref(false)
 const buyDialog = ref(false)
@@ -196,18 +202,19 @@ const activeOffer = ref({})
 const confirmationToken = ref(false)
 const paymentId = ref(false)
 let pollingInterval = null
+const inviteDialog = ref(false)
 
 const load = async (filter) => {
-  const marketOfferListResponse = await api.chest.getList({type: 'market'})
-  if (marketOfferListResponse.error) {
-    error.value = marketOfferListResponse
-    marketOffers.value = []
+  const marketChestListResponse = await api.chest.getList({type: 'market'})
+  if (marketChestListResponse.error) {
+    error.value = marketChestListResponse
+    marketChests.value = []
     return []
   }
-  marketOffers.value = marketOfferListResponse
+  marketChests.value = marketChestListResponse
 }
 const goToPayment = async (offer_id) => {
-  activeOffer.value = marketOffers.value.find((offer) => offer.id == offer_id);
+  activeOffer.value = marketChests.value.find((offer) => offer.id == offer_id);
   const paymentCreatedResponse = await api.payment.createItem({item_id: offer_id, item_code: 'chest', return_url: 'market'})
   if (paymentCreatedResponse.error) {
     confirmationToken.value = {}
@@ -240,10 +247,10 @@ const handlePaymentFail = async (data) => {
   paymentFailDialog.value = true
 }
 const markItem = (key) => {
-  for(let i in marketOffers.value){
-    if(marketOffers.value[i].id == activeOffer.value.id) marketOffers.value[i][key] = true;
+  for(let i in marketChests.value){
+    if(marketChests.value[i].id == activeOffer.value.id) marketChests.value[i][key] = true;
     setTimeout(() => {
-      marketOffers.value[i][key] = false;
+      marketChests.value[i][key] = false;
     }, 2000)
   }
 }
@@ -287,5 +294,20 @@ onDeactivated(async () => {
 onUnmounted(async () => {
   clearInterval(pollingInterval);
   pollingInterval = null;
+})
+onBeforeRouteLeave((to, from) => {
+  if (inviteDialog.value) {
+    inviteDialog.value = false
+    return false
+  }
+  if (paymentStatusDialog.value) {
+    paymentStatusDialog.value = false
+    return false
+  }
+  if (buyDialog.value) {
+    buyDialog.value = false
+    return false
+  }
+  return true
 })
 </script>

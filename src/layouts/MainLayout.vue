@@ -11,6 +11,7 @@
       <AppNotifications/>
       <UserNewLevelDialog/>
       <PWAInstallDialog/>
+      <PWASWDialog/>
   </q-layout>
   <AppLoader/>
 
@@ -24,6 +25,7 @@ import AppLoader from 'components/AppLoader.vue'
 import AppNotifications from 'components/AppNotifications.vue'
 import UserNewLevelDialog from 'components/UserNewLevelDialog.vue'
 import PWAInstallDialog from 'components/PWAInstallDialog.vue'
+import PWASWDialog from 'components/PWASWDialog.vue'
 import { loadAudio } from 'src/services/audioService';
 import { Platform } from 'quasar'
 

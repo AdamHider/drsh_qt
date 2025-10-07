@@ -9,7 +9,7 @@
           <q-card-section class="q-py-none">
             <div class="flex no-wrap  justify-between">
               <div>
-                <div class="text-subtitle1"><b>{{ lesson.active.page?.header?.index }}. </b> <b v-html="lesson.active.page?.header?.title"></b>
+                <div class="text-subtitle1" style="line-height: 1.2;"><b>{{ lesson.active.page?.header?.index }}. </b> <b v-html="lesson.active.page?.header?.title"></b>
                   <q-chip v-if="lesson.active.page?.timer" icon="bolt" text-color="white" color="secondary" class="q-pa-sm q-my-none  q-mx-xs q-push text-white text-caption"><b>На время</b></q-chip>
                 </div>
 
@@ -29,7 +29,7 @@
     </q-page>
     <q-footer expand position="bottom" class="bg-white lesson-bottombar ">
         <component :is="FormTemplate" v-if="rendered" @update-answer="pageAnswers = $event" @onAnswerSaved="onAnswerSaved"  @onPageChanged="onPageChanged"/>
-        <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved" @onDialogOpened="onDialogOpened" :pageAnswers="pageAnswers"/>
+        <LessonActions @onPageChanged="onPageChanged" @onAnswerSaved="onAnswerSaved" @onDialogOpened="onDialogOpened" :pageAnswers="pageAnswers" :rendered="rendered"/>
     </q-footer>
     <q-dialog v-model="closeDialog"  transition-show="scale" transition-hide="scale">
       <q-card class="bg-white" style="width: 300px">
@@ -160,13 +160,6 @@ onBeforeRouteLeave((to, from) => {
 }
 .q-select.wrong-answer.q-field--standard .q-field__control::before{
     border-color: $negative;
-}
-
-.lesson-bottombar{
-}
-.lesson-page{
-  container-type: inline-size;
-  container-name: lessonpage;
 }
 
 </style>

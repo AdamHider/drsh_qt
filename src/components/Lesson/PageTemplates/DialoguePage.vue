@@ -5,7 +5,8 @@
         <q-img
             class="rounded-borders"
             cover
-            :src="lesson.active.page?.header?.image" />
+            :src="lesson.active.page?.header?.image" 
+            style="max-width: min(calc(90vh - 420px), 100vw);"/>
         </q-card-section>
         <LessonAudioPlayer/>
     </q-card>
