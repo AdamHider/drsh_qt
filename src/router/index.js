@@ -35,7 +35,6 @@ export default route(function (/* { store, ssrContext } */) {
   })
 
   Router.beforeEach((to, from, next) => {
-    console.log(from)
     /*
     const IsItABackButton = window.popStateDetected
     window.popStateDetected = false
