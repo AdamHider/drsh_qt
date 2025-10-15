@@ -13,8 +13,8 @@
                   <q-item-section >
                     <q-card class="q-push">
                       <q-card-section class="q-py-sm">
-                        <div ><b>{{ replica.name }}</b></div>
-                        <div><div v-html="replica.text"></div></div>
+                        <div ><b>{{ transliterateHTML(replica.name) }}</b></div>
+                        <div><div v-html="transliterateHTML(replica.text)"></div></div>
                       </q-card-section>
                     </q-card>
                   </q-item-section>
@@ -25,7 +25,7 @@
                   </q-item-section>
                 </q-item>
                 <div v-else>
-                  <div v-html="replica.text"></div>
+                  <div v-html="transliterateHTML(replica.text)"></div>
                 </div>
               </div>
               <q-item v-else class="q-px-sm">
@@ -37,8 +37,8 @@
                 <q-item-section>
                   <q-card :class="`q-push`">
                     <q-card-section class="q-py-sm ">
-                      <div><b>{{ replica.name }}</b></div>
-                      <div><div v-html="replica.text"></div></div>
+                      <div><b>{{ transliterateHTML(replica.name) }}</b></div>
+                      <div><div v-html="transliterateHTML(replica.text)"></div></div>
                     </q-card-section>
                   </q-card>
                 </q-item-section>
@@ -69,6 +69,9 @@
 <script setup>
 import { reactive, ref, watch, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
+import { useTransliterate } from '../../../composables/useTransliterate'
+
+const { transliterateHTML } = useTransliterate()
 
 const { lesson } = useLesson()
 

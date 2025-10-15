@@ -24,7 +24,8 @@
               </q-item>
             </q-card-section>
             <q-card-actions class="flex justify-end">
-              <q-btn push color="primary" label="Next" @click="setIndexNext()"/>
+              <q-btn flat color="primary" @click="finishTutorial()"><b>Хватит</b></q-btn>
+              <q-btn push color="primary" label="Далее" @click="setIndexNext()"/>
             </q-card-actions>
           </q-card>
         </div>
@@ -37,7 +38,7 @@
 import { ref, onMounted, onActivated, watch } from 'vue'
 import { useTutorial } from '../composables/useTutorial'
 
-const { tutorial, setIndexNext } = useTutorial()
+const { tutorial, setIndexNext, setStatus } = useTutorial()
 
 const tutorialDialog = ref(false)
 const tutorialHighlight = ref(null)
@@ -61,7 +62,10 @@ const render = () => {
     }, 350)
   }
 }
-
+const finishTutorial = () => {
+  setStatus(false)
+  localStorage['tutorialEnd'] = true
+}
 watch(() => tutorial.status, () => {
   render()
 })

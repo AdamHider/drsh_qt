@@ -1,7 +1,7 @@
 {
   "name": "drsh-qt",
   "version": "0.0.1",
-  "description": "Educational app",
+  "description": "Mektepium — это не просто игра, это Ваше космическое приключение, где каждый интерактивный квиз и сюжетный чат с персонажами превращает изучение крымскотатарского языка в увлекательную миссию.",
   "productName": "Mektepium",
   "author": "adamhider <ajder.adjivapov@gmail.com>",
   "type": "module",

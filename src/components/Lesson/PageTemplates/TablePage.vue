@@ -1,9 +1,9 @@
 <template>
   <div class="full-width content-start">
-    <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md">
+    <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md" flat>
         <q-img
             cover
-            :src="`${CONFIG.API_HOST}/${lesson.active.page?.data?.image}`" />
+            :src="lesson.active.page?.data?.image" />
         <LessonAudioPlayer/>
     </q-card>
     <div class="q-px-md q-pb-md" >
@@ -16,13 +16,13 @@
         <thead v-if="table.header?.length > 0">
           <tr class="text-left">
             <th v-for="(th, thIndex) in table.header" :key="thIndex">
-              <div style="white-space: wrap;" class="text-subtitle2"><b v-html="th.text"></b></div>
+              <div style="white-space: wrap;" class="text-subtitle2"><b v-html="transliterateHTML(th.text)"></b></div>
             </th>
           </tr>
         </thead>
         <tr v-for="(row, index) in table.rows" :key="index">
           <td v-for="(column, colIndex) in row.column_list" :key="colIndex" class="relative-position" style="white-space: normal;">
-              <div v-html="column.text"  class="q-py-sm"></div>
+              <div v-html="transliterateHTML(column.text)"  class="q-py-sm"></div>
 
               <div v-if="column.audio_link" class="absolute-right">
                 <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == column.audio_link && lessonAudio.is_playing"
@@ -56,7 +56,9 @@ import { reactive, watch, onMounted } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
-import { CONFIG } from '../../../config.js'
+import { useTransliterate } from '../../../composables/useTransliterate'
+
+const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['onRendered'])
 const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()

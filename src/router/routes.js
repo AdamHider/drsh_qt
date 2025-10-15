@@ -9,6 +9,8 @@ import UserEditPassword from 'pages/UserEditPassword.vue'
 
 import UserSettings from 'pages/UserSettings.vue'
 import UserEmailVerification from 'pages/UserEmailVerification.vue'
+import UserPasswordReset from 'pages/UserPasswordReset.vue'
+
 
 import AchievementsPage from 'pages/AchievementsPage.vue'
 import SkillsPage from 'pages/SkillsPage.vue'
@@ -192,7 +194,11 @@ const routes = [
         path: 'email-verification-:verification_hash',
         component: UserEmailVerification
       },
-
+      {
+        path: 'authorization/password-reset-:reset_hash',
+        name: 'password-reset',
+        component: UserPasswordReset
+      },
       {
         path: 'market',
         component: MarketPage,

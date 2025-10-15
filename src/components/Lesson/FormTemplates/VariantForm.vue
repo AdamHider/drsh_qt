@@ -13,7 +13,7 @@
             <q-chip
               :class="`q-lesson-field-value bg-white full-width text-center q-ma-none  rounded-xs ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
               style="pointer-events: none; font-size: inherit;" >
-              <b v-if="input.value.text">{{ input.value.text }}</b>
+              <b v-if="input.value.text">{{ transliterateHTML(input.value.text) }}</b>
               <b v-else>_</b>
             </q-chip>
           </div>
@@ -28,7 +28,7 @@
                       <q-chip class="q-lesson-field-value rounded-xs" size="16px"
                         color="negative"
                         text-color="white">
-                        <b>{{ option }}</b>
+                        <b>{{ transliterateHTML(option) }}</b>
                       </q-chip>
                     </div>
                   </div>
@@ -40,7 +40,7 @@
                       <q-chip class="q-lesson-field-value rounded-xs" size="16px"
                         color="positive"
                         text-color="white">
-                        <b>{{ option }}</b>
+                        <b>{{ transliterateHTML(option) }}</b>
                       </q-chip>
                     </div>
                   </div>
@@ -56,10 +56,10 @@
             <div class="flex justify-center wrap">
               <div v-for="(option, optionIndex) in formData.fields[currentIndex].options" :key="optionIndex">
                 <q-chip v-if="option.text !== formData.fields[currentIndex].value.text" class="q-lesson-field-value bg-white rounded-xs" :size="(isLetterly) ? '20px' : '18px'" color="white" clickable @click.stop="selectVariant(option.text)">
-                  <b>{{ option.text }}</b>
+                  <b>{{ transliterateHTML(option.text) }}</b>
                 </q-chip>
                 <q-chip v-else class="q-lesson-field-value rounded-sm" :size="(isLetterly) ? '20px' : '18px'" clickable @click.stop="clearVariant()" color="secondary" text-color="white">
-                  <b>{{ option.text }}</b>
+                  <b>{{ transliterateHTML(option.text) }}</b>
                 </q-chip>
               </div>
             </div>
@@ -79,8 +79,9 @@
 import { reactive, watch, ref } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { playAudio } from 'src/services/audioService';
+import { useTransliterate } from '../../../composables/useTransliterate'
 
-
+const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()

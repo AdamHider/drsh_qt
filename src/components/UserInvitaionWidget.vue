@@ -20,7 +20,8 @@
           <q-btn v-if="userInvitation.available > 0" class="q-blinking full-width q-mt-sm" push @click="claimInvitation()" color="positive">Получить награду ({{ userInvitation.available }})</q-btn>
         </q-card-section>
         <q-card-actions>
-          <q-btn v-if="!userInvitationCopied" class="full-width" push color="primary" icon="content_copy" label="Скопировать ссылку"
+          <q-btn class="full-width q-my-sm" v-if="isShareSupported" push color="primary" icon="person_add" @click.stop="playAudio('click')" label="Пригласить" @click="shareContent()"></q-btn>
+          <q-btn v-if="!userInvitationCopied" class="full-width" push color="secondary" icon="content_copy" label="Скопировать ссылку"
             @click="copyInvitationLink()" @click.stop="playAudio('click')"/>
           <q-btn v-else class="full-width" push color="primary" label="Скопировано" icon="check" disabled/>
           <q-btn v-close-popup class="full-width q-my-sm" flat color="primary"  @click.stop="playAudio('click')"><b>Закрыть</b></q-btn>
@@ -52,9 +53,12 @@
 <script setup>
 import { useUserStore } from '../stores/user'
 import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { copyToClipboard } from 'quasar'
 import { playAudio } from 'src/services/audioService';
 import UserResourceBar from './UserResourceBar.vue'
+
+const route = useRoute()
 
 const { getItemInvitation, claimItemInvitation } = useUserStore()
 const userInvitation = ref({})
@@ -62,6 +66,7 @@ const userInvitationCopied = ref(false)
 const claimDialog = ref(false)
 const reward = ref({})
 const claimError = ref(false)
+const isShareSupported = ref(false);
 
 const copyInvitationLink = () => {
   const link = `https://app.mektepium.com/user-invitation-${userInvitation.value.hash}`
@@ -86,7 +91,27 @@ const load = async () => {
     userInvitation.value.available = userInvitationResponse.count - userInvitationResponse.claimed_count
   }
 }
+const shareContent = async () => {
+  const link = `https://app.mektepium.com/user-invitation-${userInvitation.value.hash}`
+  if (isShareSupported.value) {
+    try {
+      await navigator.share({
+        title: 'Мектепиум – Вселенная знаний!',
+        text: 'Зацени игру Mektepium! Тут можно учиться играя и играть учась.',
+        url: link, // Ссылка на ваш корневой домен или на конкретную страницу
+      });
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        console.error('Ошибка при использовании Web Share API:', err);
+      }
+      // Если пользователь отменил, ничего не делаем
+    }
+  } else {
+
+  }
+};
 onMounted(() => {
+  isShareSupported.value = 'share' in navigator;
   userInvitationCopied.value = false
   load()
 })

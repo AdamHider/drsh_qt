@@ -5,7 +5,9 @@
               <q-item-section >
                 <div class="flex chip-container">
                   <div v-if="input.value.textFormatted" class="q-lesson-field-value-flat cursor-pointer">
-                    <b :class="`${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'text-positive' : 'text-negative') : ''}`">{{ input.value.textFormatted }}</b>
+                    <b :class="`${(formData.fields[index].answer) ? ((formData.fields[index].answer.is_correct) ? 'text-positive' : 'text-negative') : ''}`">
+                      {{ transliterateHTML(input.value.textFormatted) }}
+                    </b>
                     <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
                     <q-dialog v-model="input.modal" position="right">
                       <q-card flat class="relative-position allow-overflow rounded-r-0">
@@ -14,14 +16,14 @@
                           <div>
                             <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Твой ответ: </b></div>
                             <div class="flex items-center wrap" v-if="!input.answer.is_correct">
-                              <b class="text-negative">{{ formatAnswer(input.answer.value.split('|')) }}</b>
+                              <b class="text-negative">{{ transliterateHTML(formatAnswer(input.answer.value.split('|'))) }}</b>
                             </div>
                           </div>
                           <q-separator v-if="!input.answer.is_correct" class="q-my-sm"/>
                           <div>
                             <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Правильный ответ: </b></div>
                             <div class="flex items-center wrap">
-                              <b class="text-positive">{{ formatAnswer(input.answer.answer.split('|')) }}</b>
+                              <b class="text-positive">{{ transliterateHTML(formatAnswer(input.answer.answer.split('|'))) }}</b>
                             </div>
                           </div>
                         </q-card-section>
@@ -48,7 +50,7 @@
           <q-chip v-for="text in activeInput.value.array" :key="`${text}`"
             :class="`q-lesson-field-value text-center rounded-xs bg-white ${(activeInput.value.text == '' || activeInput.value.text == false) ? 'disabled': ''}`"
             style="pointer-events: none; font-size: inherit">
-            <b>{{ text }}</b>
+            <b>{{ transliterateHTML(text) }}</b>
           </q-chip>
         </div>
       </q-item-section>
@@ -69,7 +71,7 @@
               :color="(option.count > 0) ? 'orange' : 'white'"
               :text-color="(option.count > 0) ? 'white' : ''"
               >
-                <b>{{ option.text }}</b>
+                <b>{{ transliterateHTML(option.text) }}</b>
               </q-chip>
             </div>
             <div :style="(currentValue.length > 0) ? '' : 'pointer-events: none'">
@@ -88,6 +90,9 @@
 import { reactive, watch, ref } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { playAudio } from 'src/services/audioService';
+import { useTransliterate } from '../../../composables/useTransliterate'
+
+const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
@@ -180,7 +185,7 @@ const saveAnswer = function (e) {
     buttonIsLoading.value = false
     activeInput.value = null
     renderFields()
-  }, 500)
+  }, 100)
 }
 
 const removeVariantFromArray = (text) => {
@@ -201,11 +206,11 @@ const substactVariantCount = (text) => {
 }
 const setClearDebounce = () => {
   clearDisabled.value = true
-  setTimeout(() => {clearDisabled.value = false}, 100)
+  setTimeout(() => {clearDisabled.value = false}, 10)
 }
 const setVariantsDebounce = () => {
   variantsDisabled.value = true
-  setTimeout(() => {variantsDisabled.value = false}, 100)
+  setTimeout(() => {variantsDisabled.value = false}, 10)
 }
 const formatAnswer = (arrayAnswer) => {
   const result = [];

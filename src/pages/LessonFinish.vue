@@ -192,7 +192,12 @@ const redo = async () => {
 
 const next = async () => {
   playAudio('click')
-  setTarget(lesson.active.id)
+  if(lesson.active.next_lessons.length > 0){
+    setTarget(lesson.active.next_lessons[0].id)
+  } else {
+    setTarget(lesson.active.id)
+  }
+
   router.go(-1)
 }
 

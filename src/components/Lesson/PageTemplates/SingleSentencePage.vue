@@ -1,19 +1,16 @@
 <template>
   <div class="full-width">
-    <q-card v-if="text.image" class="q-ma-md" flat>
-      <q-card-section class="q-pa-none text-center">
-          <q-img v-if="text.image"
-            style="max-width: min(calc(90vh - 420px), 100vw);"
-            class="rounded-borders"
-            :src="text.image"
-          />
-        </q-card-section>
+    <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md" flat>
+      <q-img
+          cover
+          :src="lesson.active.page?.data?.image"
+          style="max-width: min(calc(90vh - 420px), 100vw);"/>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>
     <q-list class="q-mb-md text-center">
       <q-item>
         <q-item-section>
-          <q-item-label><div class="text-subtitle1 text-bold" v-html="text.text"></div></q-item-label>
+          <q-item-label><div class="text-subtitle1 text-bold" v-html="transliterateHTML(text.text)"></div></q-item-label>
         </q-item-section>
       </q-item>
     </q-list>
@@ -25,6 +22,9 @@ import { reactive, watch, onMounted } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
+import { useTransliterate } from '../../../composables/useTransliterate'
+
+const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['onRendered'])
 

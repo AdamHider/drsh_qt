@@ -2,52 +2,60 @@ var exceptions;
 var input_tags = [];
 var prepared_input = '';
 var current_pointer_mode = 'tag_closed';
-export function transliterate(input, mode) {
-    var exceptions = exceptions_cyrillize;
-    if(mode == 'latinize'){
-        exceptions = exceptions_latinize;
-    }
-    input_tags = [];
-    prepared_input = input;
-    var result_array = [];
-    var string_to_be_transliterated = '';
-    var tmp_tag = '';
-    for(var i = 0; i < input.length; i++){
-        if(current_pointer_mode == 'tag_closed'){
-            if(input[i] == '<'){
-                current_pointer_mode = 'tag_opened';
-                tmp_tag += input[i];
-                result_array.push(translit(string_to_be_transliterated, exceptions, 'simple'));
-                string_to_be_transliterated = '';
-                continue;
-            } else {
-                string_to_be_transliterated += input[i];
-                continue;
-            }
-        }
-        if(current_pointer_mode == 'tag_opened'){
-            tmp_tag += input[i];
-            if(input[i] == '>'){
-                var tag_regex = new RegExp(tmp_tag,"g");
-                html_exceptions.push([tag_regex, tmp_tag]);
-                tmp_tag = '';
-                current_pointer_mode = 'tag_closed';
-                continue;
-            } else {
-                continue;
-            }
-        }
-    }
-    var result = '';
-    var divided_tranliteration_result = result_array.join('');
-    var input_text_trasliterated = translit(' '+input+' ', exceptions);
-    if(divided_tranliteration_result === input_text_trasliterated){
-        var divided_template = translit(input, exceptions, 'inlude_tags');
-        result = makeTagSubstitution(divided_template);
-    } else {
-        result = input_text_trasliterated;
-    }
-    return result;
+ export function transliterate(input, mode) {
+  var exceptions = (mode === 'latinize') ? exceptions_latinize : exceptions_cyrillize;
+
+  // --- Инициализация переменных состояния (предполагаем, что они не глобальные) ---
+  var notranslit_active = false; // Состояние для notranslit
+  var result_array = [];
+  var string_to_be_transliterated = '';
+  var tmp_tag = '';
+  for (var i = 0; i < input.length; i++) {
+      var char = input[i];
+
+      if (current_pointer_mode === 'tag_closed') {
+          if (char === '<') {
+              current_pointer_mode = 'tag_opened';
+              tmp_tag += char;
+              if (notranslit_active) {
+                  result_array.push(string_to_be_transliterated);
+              } else {
+                  result_array.push(translit(string_to_be_transliterated, exceptions, 'simple'));
+              }
+              string_to_be_transliterated = '';
+          } else {
+              string_to_be_transliterated += char;
+          }
+      } else if (current_pointer_mode === 'tag_opened') {
+          tmp_tag += char;
+
+          if (char === '>') {
+              current_pointer_mode = 'tag_closed';
+              var is_notranslit = tmp_tag.includes('class="notranslit"') || tmp_tag.includes("class='notranslit'");
+              var is_closing_tag = tmp_tag.startsWith('</');
+
+              if (is_notranslit && !is_closing_tag) {
+                  notranslit_active = true;
+              }
+              else if (is_closing_tag) {
+                  notranslit_active = false;
+              }
+              var tag_regex = new RegExp(tmp_tag,"g");
+              html_exceptions.push([tag_regex, tmp_tag]);
+              result_array.push(tmp_tag);
+              tmp_tag = '';
+          }
+      }
+  }
+  if (string_to_be_transliterated.length > 0) {
+      if (notranslit_active) {
+          result_array.push(string_to_be_transliterated);
+      } else {
+          result_array.push(translit(string_to_be_transliterated, exceptions, 'simple'));
+      }
+  }
+
+  return result_array.join('');
 }
 
 function translit(input, exceptions, mode = 'simple'){
@@ -5692,6 +5700,10 @@ var html_exceptions = ([]);
 
   // 6. буквы е и я
 
+  [ /([\s"'\(\)\-.,:;!?>\]/бвгджзйклмнпрстфхцчшщcñБВГДЖЗЙКЛМНПРСТФХЦЧШЩCÑ(])я([абвгдеёжзийклмнопрстуфхцчшщъыьэюяqcğñüö])/g, "$1â$2" ],
+
+  [ /([\s"'\(\)\-.,:;!?>\]/бвгджзйклмнпрстфхцчшщcñБВГДЖЗЙКЛМНПРСТФХЦЧШЩCÑ(])Я([абвгдеёжзийклмнопрстуфхцчшщъыьэюяqcğñüö])/g, "$1Â$2" ],
+
   //случаи е -> ye и я -> ya
 
   [ /([\s"'\(\)\-.,:;!?>\]/аыоуеиёэюяьъöüeАЫОУЕИЁЭЮЯЬЪÖÜE(])е/g, "$1ye" ],
@@ -5724,9 +5736,13 @@ var html_exceptions = ([]);
 
   [ /Е/g, "E" ],
 
-  [ /я/g, "â" ],
+  [ /я([АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯQCĞÑÜÖ])/g, "ya$1" ],
 
-  [ /Я/g, "Â" ],
+  [ /Я([АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯQCĞÑÜÖ])/g, "Ya$1" ],
+
+  [ /я/g, "ya" ],
+
+  [ /Я/g, "Ya" ],
 
   // 7. все оставшиеся вхождения о, у, ё, ю
 

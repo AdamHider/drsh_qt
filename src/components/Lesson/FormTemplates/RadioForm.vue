@@ -15,7 +15,7 @@
                         :val="variant.text"/>
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label><b>{{ variant.text }}</b></q-item-label>
+                      <q-item-label><b>{{ transliterateHTML(variant.text) }}</b></q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -23,10 +23,10 @@
                   <q-item tag="label"  v-for="(variant, variantIndex) in formData.fields[index].options" :key="variantIndex" v-ripple
                     :class="`q-lesson-radio q-mb-sm rounded-sm ${(formData.fields[index].answer.answer == variant.text) ? 'is-correct' : (formData.fields[index].answer.value == variant.text) ? 'is-incorrect' : ''}`">
                     <q-item-section side>
-                      <q-icon :name="(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'" size="20px" :color="(formData.fields[index].answer.answer !== variant.text) ? 'gray' : 'white'"></q-icon>
+                      <q-icon :name="(formData.fields[index].answer.value == variant.text) ? 'check' : 'radio_button_unchecked'" size="20px" :color="(formData.fields[index].answer.answer !== variant.text && formData.fields[index].answer.value !== variant.text) ? 'gray' : 'white'"></q-icon>
                     </q-item-section>
                     <q-item-section>
-                      <q-item-label><b>{{ variant.text }}</b></q-item-label>
+                      <q-item-label><b>{{ transliterateHTML(variant.text) }}</b></q-item-label>
                     </q-item-section>
                   </q-item>
                 </q-list>
@@ -42,7 +42,7 @@
                       :color="`${(formData.fields[index].value.text == variant.text) ? 'white' : ''}`"
                       :val="variant.text"
                       class="text-bold"
-                      :label="variant.text" />
+                      :label="transliterateHTML(variant.text)" />
                   </div>
                 </div>
                 <div v-else  class="flex q-gutter-xs ">
@@ -56,7 +56,7 @@
                       :color="`${(formData.fields[index].answer.answer == variant.text) ? 'white' : ((formData.fields[index].answer.value == variant.text) ? 'white' : 'white')}`"
                       :val="variant.text"
                       class="text-bold"
-                      :label="variant.text" />
+                      :label="transliterateHTML(variant.text)" />
                   </div>
                 </div>
               </div>
@@ -69,8 +69,9 @@
 import { reactive, watch } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { playAudio } from 'src/services/audioService';
+import { useTransliterate } from '../../../composables/useTransliterate'
 
-
+const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()

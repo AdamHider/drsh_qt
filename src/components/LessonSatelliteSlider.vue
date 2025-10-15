@@ -80,7 +80,11 @@ const onSwiper = (swiper) => {
   swiperEl.value = swiper
 }
 onMounted(() => {
-  if(swiperEl.value) swiperEl.value.slideTo(activeSlide.value)
+  if(swiperEl.value){
+    setTimeout(() => {
+      swiperEl.value.slideTo(activeSlide.value)
+    }, 1000)
+  }
 })
 watch(() => activeSlide.value, () => {
   swiperEl.value.slideTo(activeSlide.value)

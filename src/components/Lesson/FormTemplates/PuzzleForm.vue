@@ -12,7 +12,7 @@
               <q-chip v-for="text in input.value.array" :key="`${text}`"
                 :class="`q-lesson-field-value text-center rounded-xs bg-white ${(input.value.text == '' || input.value.text == false) ? 'disabled': ''}`"
                 style="pointer-events: none; font-size: inherit">
-                <b>{{ text }}</b>
+                <b>{{ transliterateHTML(text) }}</b>
               </q-chip>
           </div>
           <q-btn v-if="input.answer && !input.answer.is_correct" flat dense color="grey" icon="help_outline" @click="input.modal = true"></q-btn>
@@ -27,7 +27,7 @@
                         <q-chip class="q-lesson-field-value rounded-xs" size="16px"
                           color="negative"
                           text-color="white">
-                          <b>{{ option }}</b>
+                          <b>{{ transliterateHTML(option) }}</b>
                         </q-chip>
                       </div>
                     </div>
@@ -39,7 +39,7 @@
                         <q-chip class="q-lesson-field-value rounded-xs" size="16px"
                           color="positive"
                           text-color="white">
-                          <b>{{ option }}</b>
+                          <b>{{ transliterateHTML(option) }}</b>
                         </q-chip>
                       </div>
                     </div>
@@ -58,7 +58,7 @@
               :color="(option.count > 0) ? 'orange' : 'white'"
               :text-color="(option.count > 0) ? 'white' : ''"
               >
-                <b>{{ option.text }}</b>
+                <b>{{ transliterateHTML(option.text) }}</b>
               </q-chip>
             </div>
             <div :style="(currentValue.length > 0) ? '' : 'pointer-events: none'">
@@ -83,6 +83,10 @@
 import { reactive, watch, ref } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { playAudio } from 'src/services/audioService';
+import { useTransliterate } from '../../../composables/useTransliterate'
+
+
+const { transliterateHTML } = useTransliterate()
 
 
 

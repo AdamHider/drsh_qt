@@ -136,7 +136,7 @@ const emits = defineEmits(['onStart', 'onClaim', 'onClose'])
 const onStart = async () => {
   loading.value[0] = true
   emits('onStart')
-  if(props.quest.group.is_primary) goToQuestTarget()
+  //if(props.quest.group.is_primary) goToQuestTarget()
 }
 const onClaim = async () => {
   loading.value[1] = true

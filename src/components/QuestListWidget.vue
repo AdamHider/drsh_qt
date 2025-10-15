@@ -13,7 +13,7 @@
             <img :src="questItem.group.image_avatar" height="45px" class="absolute-bottom q-ml-sm q-mb-xs">
           </div>
           <q-icon class="q-py-xs q-px-sm" name="chevron_right" size="24px"></q-icon>
-          <q-badge v-if="!questItem.is_completed && questItem.status !== 'active'" floating color="warning" class="q-pa-xs" style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
+          <q-badge v-if="!questItem.is_completed" floating color="warning" class="q-pa-xs" style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
             <q-icon name="priority_high" size="14px"></q-icon>
           </q-badge>
           <q-badge v-else-if="questItem.is_completed" floating color="positive" class="q-pa-xs"  style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
@@ -96,7 +96,10 @@ const checkInactive = () => {
   if(!inactiveQuest) inactiveQuest = quest.list.find((quest) => { return quest.status == 'created' && quest.group.is_primary})
   if(inactiveQuest){
     activeQuest.value = inactiveQuest
-    activeQuestDialog.value = true
+    setTimeout(() => {
+      activeQuestDialog.value = true
+    }, 500)
+    
   }
 }
 

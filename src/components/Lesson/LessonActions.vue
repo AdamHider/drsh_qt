@@ -225,9 +225,7 @@ watch(() => props.rendered, (newValue, oldValue) => {
       startTimer()
       isLoading.value = false
     })
-  } else {
-    isLoading.value = false
-  }
+  } 
 })
 
 const onImagesRendered = (callback) => {

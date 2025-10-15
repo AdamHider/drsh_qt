@@ -216,7 +216,7 @@ const formData = reactive({
       rules: [
         v => !!v || 'Нужно ввести имя',
         v => v.length > 3 || 'Имя должно быть длиннее 3 символов',
-        v => !(/[^A-Za-zА-Яа-я0-9\_ ]/.test(v)) || 'Только буквы и цифры'
+        v => !(/[^A-Za-zА-Яа-яığüñşöçİĞÜŞİÖÇÑ0-9\_ ]/.test(v)) || 'Только буквы и цифры'
       ],
       errors: '',
       isError: false,
@@ -262,8 +262,8 @@ const validate = async function () {
   if (formData.step === 5) {
     buttonLoading.value = true
     const data = {
-      name: formData.fields.name.value,
-      username: formData.fields.username.value,
+      name: formData.fields.name.value.trim(),
+      username: formData.fields.username.value.trim(),
       password: formData.fields.password.value,
       passwordConfirm: formData.fields.passwordConfirm.value,
       gender: formData.fields.gender.value,
@@ -311,7 +311,7 @@ watch(() => formData.fields.name.value, async (currentValue, oldValue) => {
     if(!formData.valid || formData.fields.name.value == '') {
       return formData.fields.username.value = ''
     }
-    const generateUsernameResponse = await generateUsername({ name: currentValue })
+    const generateUsernameResponse = await generateUsername({ name: currentValue.trim() })
     if (!generateUsernameResponse.error) {
       formData.fields.username.value = generateUsernameResponse
     }

@@ -118,7 +118,7 @@ const formData = reactive({
     email: {
       value: user.active.data.email,
       rules: [
-        v => v === null || (v !== null && ((/.+@.+\..+/.test(v)))) || 'E-mail must be valid'
+        v => v === null || (v !== null && ((/.+@.+\..+/.test(v)))) || 'Электронная почта должна быть корректной'
       ],
       errors: ''
     }

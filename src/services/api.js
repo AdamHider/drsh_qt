@@ -1,3 +1,4 @@
+
 export class ApiService {
   baseUrl = "/";
   lastRequestDataHash = "";
@@ -22,7 +23,6 @@ export class ApiService {
   }
 
   post = async(context, method, params = {}) =>  {
-    var self = this;
     let responseData = {};
     const resource = this.setResource(context, method);
     const headers = this.setHeaders(context, method);
@@ -48,6 +48,7 @@ export class ApiService {
             responseData = error
         });
     return responseData;
+
   }
 }
 
@@ -159,6 +160,15 @@ export class Api extends ApiService{
         },
         checkEmailVerification: (params) => {
             return this.post('user', 'checkEmailVerification', params);
+        },
+        sendResetPassword: (params) => {
+            return this.post('user', 'sendResetPassword', params);
+        },
+        checkPasswordReset: (params) => {
+            return this.post('user', 'checkPasswordReset', params);
+        },
+        finishPasswordReset: (params) => {
+            return this.post('user', 'finishPasswordReset', params);
         },
         generateUsername: (params) => {
             return this.post('user', 'generateUsername', params);

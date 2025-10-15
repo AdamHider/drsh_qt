@@ -1,11 +1,11 @@
 <template>
   <div class="full-width">
-    <q-card v-if="lesson.active.page?.header?.image" class="q-ma-md">
+    <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md" flat>
       <q-card-section class="q-pa-none ">
         <q-img
             class="rounded-borders"
             cover
-            :src="lesson.active.page?.header?.image" 
+            :src="lesson.active.page?.data?.image"
             style="max-width: min(calc(90vh - 420px), 100vw);"/>
         </q-card-section>
         <LessonAudioPlayer/>
@@ -16,8 +16,8 @@
           <q-item-section>
             <q-card class="q-push">
               <q-card-section class="q-py-sm">
-                <div><b>{{ replica.name }}</b></div>
-                <div><div v-html="replica.text"></div></div>
+                <div><b>{{ transliterateHTML(replica.name) }}</b></div>
+                <div><div v-html="transliterateHTML(replica.text)"></div></div>
               </q-card-section>
             </q-card>
           </q-item-section>
@@ -36,8 +36,8 @@
           <q-item-section>
             <q-card :class="`q-push`">
               <q-card-section class="q-py-sm ">
-                <div><b>{{ replica.name }}</b></div>
-                <div><div v-html="replica.text"></div></div>
+                <div><b>{{ transliterateHTML(replica.name) }}</b></div>
+                <div><div v-html="transliterateHTML(replica.text)"></div></div>
               </q-card-section>
             </q-card>
           </q-item-section>
@@ -67,7 +67,9 @@ import { reactive, onMounted } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
-import { CONFIG } from '../../../config.js'
+import { useTransliterate } from '../../../composables/useTransliterate'
+
+const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['onRendered'])
 

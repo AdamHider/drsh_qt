@@ -142,7 +142,7 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-      <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}">
+      <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}; onHide()">
         <PaymentWidget
             :confirmationToken="confirmationToken"
             @onPaymentSuccess="handlePaymentSuccess"
@@ -253,6 +253,10 @@ const markItem = (key) => {
       marketChests.value[i][key] = false;
     }, 2000)
   }
+}
+const onHide = () => {
+  clearInterval(pollingInterval); 
+  pollingInterval = null;
 }
 
 const startChecking = () => {

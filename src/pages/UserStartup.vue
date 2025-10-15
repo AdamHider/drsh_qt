@@ -147,6 +147,7 @@ const selectUser = async (user) => {
   isLoading.value = false
 }
 const openSignIn = () => {
+  userListDialog.value = false
   closeConfirmed.value = true
   return router.push('/authorization/sign-in')
 }

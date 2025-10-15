@@ -15,7 +15,7 @@
     </div>
       <q-list content-class="allow-overflow" class="q-pa-sm">
         <div class="relative-position">
-          <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры, солнычные системы и целые галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры, солнечные системы и целые галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
           <q-item  :to="`${routes.course.link}`" exact replace class="rounded-sm q-my-xs" active-class="q-push bg-light-gradient-primary-to-right text-white">
             <q-item-section avatar>
               <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
