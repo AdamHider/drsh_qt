@@ -81,7 +81,7 @@ import { playAudio } from 'src/services/audioService';
 
 
 
-const { lesson, getList } = useLesson();
+const { lesson, getList, setTarget } = useLesson();
 const { course } = useCourse();
 const { showLoader, hideLoader } = useLoader()
 
@@ -139,6 +139,7 @@ const checkScrollAnchor = () => {
 }
 const openLesson = (lessonId) => {
   playAudio('click')
+  setTarget(0)
   transitionTrigger.value = false;
   selectedLesson.value = lessonId;
   router.push(`/lesson-startup-${selectedLesson.value}`);

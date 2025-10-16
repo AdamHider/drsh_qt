@@ -109,7 +109,7 @@
                 push
                 label="Заново"
                 icon="replay"
-                color="secondary"
+                color="gradient-secondary"
                 class="full-width"
                 :loading="buttonLoading"
                 @click="redo(activeLesson.id)"/>
@@ -117,13 +117,13 @@
                 push
                 label="Продолжить"
                 icon-right="play_arrow"
-                color="positive"
+                color="gradient-green"
                 class="q-px-md full-width"
                 :loading="buttonLoading"
                 @click="open(activeLesson.id)"/>
               <q-spend-button v-else
                 push
-                color="primary"
+                color="gradient-primary"
                 icon-right="play_arrow"
                 class="full-width"
                 :resources="activeLesson.cost ?? []"
@@ -139,6 +139,33 @@
         </div>
       </div>
     </q-page>
+    <q-dialog v-model="lowEnergyDialog" position="bottom">
+      <div class="full-width column">
+        <div class="row">
+          <div class="col-6">
+            <transition
+              appear
+              enter-active-class="animated fadeInUp"
+              leave-active-class="animated fadeOutDown">
+              <img src="/images/characters/codex_full_low_energy.png" style="width: 130%; z-index: -1; margin-bottom: -20px; float: right;"/>
+            </transition>
+          </div>
+        </div>
+        <q-card class="bg-white rounded-b-0 full-width" style="overflow: visible;">
+          <q-card-section>
+              <div class="q-pb-md">
+                <div class="text-subtitle1"><b>Внимание, не хватает энергии!</b></div>
+                <div class="text-caption">Но она скоро появится! Энергия восстанавливается 1ед./час. Чтобы ускорить этот процесс можно изучить технологии в разделе "Энергетика", либо купить энергию в Космо-маркете</div>
+              </div>
+          </q-card-section>
+          <q-card-actions class="flex justify-stretch items-start">
+            <q-btn push class="full-width q-mb-sm"  color="gradient-blue" @click="openSkills()" @click.stop="playAudio('click')">К технологиям <q-icon name="biotech"></q-icon></q-btn>
+            <q-btn push @click="openMarket()"  class="full-width" color="gradient-green" @click.stop="playAudio('click')">В Космо-маркет <q-icon name="shopping_cart"></q-icon></q-btn>
+            <q-btn flat v-close-popup class="full-width q-mt-sm" @click.stop="playAudio('click')"><b>Я подожду</b></q-btn>
+          </q-card-actions>
+        </q-card>
+      </div>
+    </q-dialog>
   </q-page-container>
 </template>
 
@@ -148,7 +175,7 @@ import { useExercise } from '../composables/useExercise'
 import LessonSatelliteSlider from '../components/LessonSatelliteSlider.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import LessonProgressBar from '../components/LessonProgressBar.vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, onActivated, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
@@ -164,6 +191,8 @@ const { user } = useUserStore()
 const { lesson, getItem, getSatelliteList, setTarget } = useLesson()
 const { createItem, redoItem } = useExercise()
 const { showLoader, hideLoader } = useLoader()
+
+const lowEnergyDialog = ref(false)
 
 const dialog = ref(false)
 const activeIndex = ref(0)
@@ -192,11 +221,8 @@ const start = async (lessonId) => {
     router.push(`/lesson-${lessonId}`)
     dialog.value = false
   } else {
-    if(exerciseCreated.messages.error == 'not_enough_resources') exerciseCreated.messages.error = 'Недостаточно энергии!'
-    $q.notify({
-      message: exerciseCreated.messages.error,
-      type: 'negative'
-    })
+    if(exerciseCreated.messages.error == 'not_enough_resources')
+    lowEnergyDialog.value = true
   }
 }
 const open = async (lessonId) => {
@@ -264,6 +290,20 @@ const goToSattelite = (unblockLesson) => {
     router.push(`lesson-startup-${unblockLesson.id}`)
   }
 }
+
+const openSkills = () => {
+  lowEnergyDialog.value = false
+  setTimeout(() => {
+    router.push('/skills')
+  }, 100)
+
+}
+const openMarket = () => {
+  lowEnergyDialog.value = false
+  setTimeout(() => {
+    router.push('/market')
+  }, 100)
+}
 watch(() => activeLesson.value, () => {
   if(!activeLesson.value) return
   isDark.value = activeLesson.value.is_blocked
@@ -290,6 +330,13 @@ onActivated(async () =>{
   onImagesRendered(() => {
     transitionTrigger.value = true
   })
+})
+onBeforeRouteLeave((to, from) => {
+  if (lowEnergyDialog.value) {
+    lowEnergyDialog.value = false
+    return false
+  }
+  return true
 })
 
 const onImagesRendered = (callback) => {

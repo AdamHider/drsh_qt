@@ -100,6 +100,15 @@ onActivated(async () => {
   countdown()
 
 })
+onMounted(async () => {
+  showCountdown.value = false
+  if (!resource.value.restoration) return
+  await getItem()
+  calculateRestoration()
+  if(!activeCountdown.value) activeCountdown.value = true
+  countdown()
+
+})
 onDeactivated(() => {
   activeCountdown.value = false
   showCountdown.value = false

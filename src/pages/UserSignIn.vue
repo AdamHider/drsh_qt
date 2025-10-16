@@ -192,6 +192,7 @@ const validate = async function () {
         return router.push('/user')
       }
     } else{
+      buttonLoading.value = false
       formData.valid = false
       formData.fields.password.isError = true
       if(authResponse.messages.error == 'wrong_password') formData.fields.password.errors = 'Неверный пароль'
@@ -249,7 +250,6 @@ onActivated(() => {
 })
 watch(formData.fields, async (currentValue, oldValue) => {
   formData.valid = await form.value.validate()
-  console.log(formData.fields.email.errors)
 })
 
 

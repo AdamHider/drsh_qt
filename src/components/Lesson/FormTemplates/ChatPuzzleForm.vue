@@ -175,7 +175,7 @@ const clearVariant = (text = null) => {
   setClearDebounce()
 }
 
-const saveAnswer = function (e) {
+const saveAnswer = function () {
   currentIndex.value = null
   currentValue.value = ''
   currentValueArray.value = []

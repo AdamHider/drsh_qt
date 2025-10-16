@@ -9,12 +9,13 @@
           <q-card-section class="q-py-none">
             <div class="flex no-wrap  justify-between">
               <div>
-                <div class="text-subtitle1" style="line-height: 1.2;"><b>{{ lesson.active.page?.header?.index }}. </b> <b v-html="lesson.active.page?.header?.title"></b>
+                <div class="text-subtitle1" style="line-height: 1.2;">
+                  <b v-if="lesson.active.page?.header?.total_pages > 1">{{ lesson.active.page?.header?.index }}. </b> <b v-html="lesson.active.page?.header?.title"></b>
                   <q-chip v-if="lesson.active.page?.timer" icon="bolt" text-color="white" color="secondary" class="q-pa-sm q-my-none  q-mx-xs q-push text-white text-caption"><b>На время</b></q-chip>
                 </div>
 
               </div>
-              <div>
+              <div v-if="lesson.active.page?.header?.total_pages > 1">
                 <span class="text-subtitle1 text-bold text-primary">{{ lesson.active.page?.header?.index }}/</span>
                 <span class="text-subtitle2 text-bold text-grey-8">{{ lesson.active.page?.header?.total_pages }}</span>
               </div>
@@ -110,6 +111,7 @@ const onAnswerSaved = async (timeBonus = 0, callback = () => {}) => {
   }
   const exerciseAnswerResponse = await saveAnswer(answers, timeBonus)
   progress.value = exerciseAnswerResponse.progress
+  if(lesson.active.page?.header?.silent_saves) return true
   rendered.value = false
   setTimeout(() => {
     rendered.value = true

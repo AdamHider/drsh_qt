@@ -1,6 +1,6 @@
 <template>
   <q-card flat style="min-height:300px">
-    <q-inner-loading :showing="notLoaded">
+    <q-inner-loading :showing="isLoading">
       <q-spinner-puff size="50px" color="primary" />
     </q-inner-loading>
     <q-card-section class="q-py-sm text-left">
@@ -10,26 +10,46 @@
         @update-filter="updateFilter($event)"
       />
     </q-card-section>
-    <q-card-section v-if="leaderboardData.data.length > 0 " class="q-py-sm relative-position">
-      <q-list separator >
-        <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" :class="`q-my-sm q-px-none text-left `">
+    <q-card-section v-if="leaderboardData.data.length > 0 " class="q-py-sm q-px-sm relative-position">
+      <q-list  >
+        <q-item class="text-left text-bold text-grey-7" style="font-size: 12px">
+          <q-item-section avatar>
+            <q-item-label>Место</q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Герой</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-item-label>Очки</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item v-for="(row, commonKey) in leaderboardData.data" :key="commonKey" :active="row.is_active == 1" :class="`q-my-sm text-left rounded-sm ${(row.is_active == 1) ? ' bg-gradient-primary text-white' : 'text-dark'}`">
             <q-item-section avatar class="text-center">
-              <q-avatar size="40px">
+              <q-avatar v-if="row.place == 1" floating rounded color="gradient-gold" class="text-white q-push" size="40px" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
+                <b style="margin-bottom:2px">{{ row.place }}</b>
+              </q-avatar>
+              <q-avatar v-else-if="row.place == 2" floating rounded color="gradient-silver" size="40px" class="text-white q-push" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
+                <b style="margin-bottom:2px">{{ row.place }}</b>
+              </q-avatar>
+              <q-avatar v-else-if="row.place == 3" floating rounded color="gradient-bronze" size="40px" class="text-white q-push" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
+                <b style="margin-bottom:2px">{{ row.place }}</b>
+              </q-avatar>
+              <q-avatar v-else size="40px" >
                 <b>{{ row.place }}</b>
               </q-avatar>
             </q-item-section>
 
             <q-item-section avatar>
               <div class="q-gutter-sm">
-                <q-avatar size="40px">
+                <q-avatar size="40px" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px;">
                     <img :src="row.image">
                 </q-avatar>
               </div>
             </q-item-section>
             <q-item-section>
               <q-item-label>
-                <span class="q-pa-none text-dark">
-                  <b :class="(row.is_active == 1) ? 'text-primary' : 'text-dark'">{{ row.name }}</b>
+                <span class="q-pa-none ">
+                  <b>{{ row.name }}</b>
 
                   <span class="q-ml-xs" v-if="row.achievements.length > 0">
                     <q-avatar size="22px" v-for="(achievementItem, achievementIndex) in row.achievements" :key="`achievementIndex${achievementIndex}`">
@@ -48,14 +68,17 @@
                   </span>
                 </span>
               </q-item-label>
+              <q-item-label caption :class="` ${(row.is_active == 1) ? ' text-white' : 'text-grey-8'}`">
+                Уровень {{ row.level.level }}
+              </q-item-label>
             </q-item-section>
             <q-item-section side>
-              <div class="text-subtitle"><b>{{ row.points }}</b></div>
+              <div :class="`text-subtitle ${(row.is_active == 1) ? ' text-white' : 'text-grey-8'}`"><b>{{ row.points }}</b></div>
             </q-item-section>
         </q-item>
       </q-list>
     </q-card-section>
-    <q-card-section v-else-if="!notLoaded" class="q-pa-none">
+    <q-card-section v-else class="q-pa-none">
       <BannerNotFound
         title="Упс..."
         description="Пока показать нечего"
@@ -79,8 +102,8 @@ const leaderboardData = reactive({
   },
   data: {}
 })
+const isLoading = ref(false)
 
-const notLoaded = ref(true)
 
 const props = defineProps({
   allowedFilters: Array,
@@ -90,10 +113,12 @@ const props = defineProps({
 })
 
 const loadTable = async () => {
+  isLoading.value = true
   const filter = prepareFilter()
   const leaderboardResponse = await getLeaderboard(filter)
   leaderboardData.data = leaderboardResponse
-  notLoaded.value = false
+
+  isLoading.value = false
 }
 
 const prepareFilter = () => {
@@ -108,11 +133,6 @@ const updateFilter = (filter) => {
 }
 
 onActivated(async () => {
-  if (notLoaded.value === false) return
-  loadTable()
-})
-onMounted(async () => {
-  if (notLoaded.value === false) return
   loadTable()
 })
 </script>

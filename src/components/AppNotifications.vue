@@ -1,7 +1,7 @@
 <template>
     <div>
       <q-dialog v-model="dialog" seamless position="top">
-        <div>
+        <div class="full-width text-center">
           <q-card v-if="notification?.id" class="q-ma-sm" style="max-width: 350px" @click="openNotification(notification.link)">
             <q-card-section>
               <q-item>

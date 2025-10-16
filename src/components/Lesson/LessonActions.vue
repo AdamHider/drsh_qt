@@ -62,7 +62,7 @@
     </div>
     <q-toolbar
         class="q-pa-sm"
-        v-if="lesson.active.page && (lesson.active.page?.header?.page_template !== 'chat' || lesson.active.page?.actions?.main == 'finish')">
+        v-if="lesson.active.page && ((lesson.active.page?.header?.page_template !== 'chat' && lesson.active.page?.header?.page_template !== 'syllables') || lesson.active.page?.actions?.main == 'finish')">
         <q-btn
             v-if="lesson.active.page?.actions?.main == 'next'"
             push
@@ -225,7 +225,7 @@ watch(() => props.rendered, (newValue, oldValue) => {
       startTimer()
       isLoading.value = false
     })
-  } 
+  }
 })
 
 const onImagesRendered = (callback) => {

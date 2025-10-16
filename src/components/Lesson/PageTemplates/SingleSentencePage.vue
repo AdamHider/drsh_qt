@@ -1,11 +1,13 @@
 <template>
   <div class="full-width">
     <q-card v-if="lesson.active.page?.data?.image" class="q-ma-md" flat>
+      <q-card-section class="q-pa-sm text-center">
       <q-img
           cover
           :src="lesson.active.page?.data?.image"
           style="max-width: min(calc(90vh - 420px), 100vw);"/>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
+      </q-card-section>
     </q-card>
     <q-list class="q-mb-md text-center">
       <q-item>

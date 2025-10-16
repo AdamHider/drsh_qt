@@ -1,5 +1,25 @@
 <template>
   <div :class="`satellites non-selectable ${(lesson.active.satellites?.length > 1) ? 'has-orbit' : ''}`">
+    <div class="fixed-top  q-pa-sm" style="top: 120px; z-index: 2" v-if="swiperEl">
+      <transition appear enter-active-class="animated fadeInLeft" leave-active-class="animated fadeOutLeft">
+        <div :class="`absolute text-center full-width q-mb-sm ${(swiperEl.isBeginning) ? 'text-white' : 'text-blue-grey-3'}`" style="bottom: 100%;" v-show="!swiperEl.isEnd">
+          <div class="text-subtitle2"><b>Выбери планету для исследования</b></div>
+          <div class="text-caption">Свайпни в сторону или воспользуйся кнопками</div>
+        </div>
+      </transition>
+      <div class="full-width flex justify-between ">
+        <div>
+          <transition appear enter-active-class="animated fadeInLeft" leave-active-class="animated fadeOutLeft">
+            <q-btn color="white" flat size="sm" @click="swiperEl.slidePrev()" class="rounded-sm" v-if="!swiperEl.isBeginning"><q-icon name="chevron_left"></q-icon><b>Предыдущая</b></q-btn>
+          </transition>
+        </div>
+        <div>
+          <transition appear enter-active-class="animated fadeInRight" leave-active-class="animated fadeOutRight">
+            <q-btn color="white" flat size="sm" @click="swiperEl.slideNext()" class="rounded-sm" v-if="!swiperEl.isEnd"><b>Следующая</b><q-icon name="chevron_right"></q-icon></q-btn>
+          </transition>
+        </div>
+      </div>
+    </div>
     <swiper
       v-if="lesson.active.id"
       :modules="[Navigation,EffectCreative]"
