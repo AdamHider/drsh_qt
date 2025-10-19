@@ -3,82 +3,46 @@
     <q-inner-loading :showing="isLoading">
       <q-spinner-puff size="50px" color="primary" />
     </q-inner-loading>
-    <q-card-section class="q-py-sm text-left">
-      <LeaderboardFilter
-        :allowed-filters="props.allowedFilters"
-        :timePeriod="props.timePeriod"
-        @update-filter="updateFilter($event)"
-      />
-    </q-card-section>
-    <q-card-section v-if="leaderboardList.length > 0 " class="q-py-sm q-px-sm relative-position">
-        <div v-intersection="onIntersection" direction="up" key="up"></div>
-        <q-list ref="leaderboardContainer">
-          <q-item class="text-left text-bold text-grey-7" style="font-size: 12px">
-            <q-item-section avatar>
-              <q-item-label>Место</q-item-label>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Герой</q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-item-label>Очки</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item v-for="(row, commonKey) in leaderboardList" :key="`leaderboardKey${commonKey}`" :active="row.is_active == 1" :class="`q-my-sm text-left rounded-sm ${(row.is_active == 1) ? ' bg-gradient-primary text-white' : 'text-dark'}`">
-              <q-item-section avatar class="text-center">
-                <q-avatar v-if="row.place == 1" floating rounded color="gradient-gold" class="text-white q-push" size="40px" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
-                  <b style="margin-bottom:2px">{{ row.place }}</b>
-                </q-avatar>
-                <q-avatar v-else-if="row.place == 2" floating rounded color="gradient-silver" size="40px" class="text-white q-push" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
-                  <b style="margin-bottom:2px">{{ row.place }}</b>
-                </q-avatar>
-                <q-avatar v-else-if="row.place == 3" floating rounded color="gradient-bronze" size="40px" class="text-white q-push" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
-                  <b style="margin-bottom:2px">{{ row.place }}</b>
-                </q-avatar>
-                <q-avatar v-else size="40px" >
-                  <b>{{ row.place }}</b>
-                </q-avatar>
-              </q-item-section>
-
-              <q-item-section avatar>
-                <div class="q-gutter-sm">
-                  <q-avatar size="40px" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px;">
-                      <img :src="row.image">
-                  </q-avatar>
-                </div>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>
-                  <span class="q-pa-none ">
-                    <b>{{ row.name }}</b>
-                    <span v-if="row.is_active" id="userRow"></span>
-                    <span class="q-ml-xs" v-if="row.achievements.length > 0">
-                      <q-avatar size="22px" v-for="(achievementItem, achievementIndex) in row.achievements" :key="`achievementIndex${achievementIndex}`">
-                        <q-img :src="achievementItem.image"/>
-                        <q-menu self="top middle">
-                          <q-item class="q-pl-sm">
-                            <q-item-section avatar>
-                              <q-img :src="achievementItem.image"/>
-                            </q-item-section>
-                            <q-item-section>
-                              <b>{{ achievementItem.title }}</b>
-                            </q-item-section>
-                          </q-item>
-                        </q-menu>
-                      </q-avatar>
-                    </span>
-                  </span>
-                </q-item-label>
-                <q-item-label caption :class="` ${(row.is_active == 1) ? ' text-white' : 'text-grey-8'}`">
-                  Уровень {{ row.level.level }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <div :class="`text-subtitle ${(row.is_active == 1) ? ' text-white' : 'text-grey-8'}`"><b>{{ row.points }}</b></div>
-              </q-item-section>
-          </q-item>
-        </q-list>
-          <div v-intersection="onIntersection" direction="down" key="down"></div>
+    <q-card-section v-if="items.length > 0 " class="q-py-sm q-px-sm relative-position">
+        <q-item class="text-left text-bold text-grey-7" style="font-size: 12px">
+          <q-item-section avatar>
+            <q-item-label>Место</q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Герой</q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-item-label>Очки</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-virtual-scroll
+            style="max-height: 550px;"
+            :virtual-scroll-item-size="52"
+            :items="items"
+            :virtual-scroll-slice-size="10"
+            @virtual-scroll="onScroll"
+            ref="virtualScrollRef"
+          >
+          <template v-slot:before>
+            <div style="position: sticky; top: 0; z-index: 1;" class="bg-white">
+              <div v-for="(winner, winnerIndex) in winners" :key="`winnerIndex${winnerIndex}`">
+                <LeaderboardTableItem :item="winner" :index="winnerIndex"/>
+              </div>
+              <LeaderboardTableItem v-if="topUserShown" :item="userRow" :index="-1"/>
+            </div>
+          </template>
+          <template v-slot="{ item: item, commonKey }">
+            <div :style="(item.is_active) ? 'position: sticky; bottom: 0; top: 0; z-index: 1;' : ''">
+              <LeaderboardTableItem :item="item" :index="commonKey"/>
+              <div v-if="item.is_active" v-intersection="onIntersection" key="insersection"></div>
+            </div>
+          </template>
+          <template v-slot:after>
+            <div style="position: sticky; bottom: 0; z-index: 1;" class="bg-white">
+              <LeaderboardTableItem v-if="bottomUserShown" :item="userRow" :index="-1"/>
+            </div>
+          </template>
+        </q-virtual-scroll>
     </q-card-section>
     <q-card-section v-else class="q-pa-none">
       <BannerNotFound
@@ -92,26 +56,16 @@
 
 <script setup>
 import { onActivated, onMounted, ref, reactive, watch, nextTick } from 'vue'
-import LeaderboardFilter from '../components/LeaderboardFilter.vue'
+import LeaderboardTableItem from '../components/LeaderboardTableItem.vue'
 import BannerNotFound from '../components/BannerNotFound.vue'
 import { useExercise } from '../composables/useExercise.js'
 import { api } from '../services/index'
 
 const { getLeaderboard } = useExercise()
 
-const leaderboardList = ref([])
-const leaderboardContainer = ref(null)
-const leaderboardData = reactive({
-  filter: {
-    time_period: 'all'
-  },
-  data: {},
-  limit: 20,
-  placeStart: 0,
-  placeEnd: 0
-})
+const userRowIndex = ref(0)
+
 const isLoading = ref(false)
-const isLoadingInitial = ref(false)
 
 const props = defineProps({
   allowedFilters: Array,
@@ -120,80 +74,207 @@ const props = defineProps({
   timePeriod: String
 })
 
-const loadTable = async (direction) => {
+const bottomUserShown = ref(false)
+const topUserShown = ref(false)
 
-  const target = document.documentElement
-  const oldScrollHeight = target.scrollHeight;
+// --- Начальные константы и данные ---
+const pageSize = 18;        // Изначальный размер порции данных
+const halfPage = Math.floor(pageSize / 2); // 9
+const totalItemsCount = 1000; // Общее количество элементов на сервере (если известно)
 
-  // Текущая позиция скролла (насколько мы прокрутили вниз)
-  const oldScrollTop = target.scrollTop;
+// Параметры для первого запроса, которые инициируют поиск пользователя
+const initialStartFilter = 0;
+const initialEndFilter = 0;
 
-  isLoading.value = true
+const virtualIndex = ref(0);
+
+const items = ref([]);
+const winners = ref([]);
+const userRow = ref({});
+const virtualScrollRef = ref(null);
+const isLoadingInitial = ref(true); // Для блокировки интерфейса до первой загрузки
+
+// --- Обновленное состояние для отслеживания границ загруженных данных по МЕСТАМ ---
+const state = reactive({
+  firstLoadedPlace: 0,
+  lastLoadedPlace: 0,
+  isLoading: false,
+  hasMoreAbove: true,
+  hasMoreBelow: true,
+  direction: ''
+});
+// Загрузка начальных данных
+const loadInitialData = async () => {
+  state.isLoading = true;
+  isLoadingInitial.value = true;
+
+  // 1. Запрос с "нулевыми" фильтрами для поиска пользователя
   const filter = {
     mode: 'new',
-    place_start: leaderboardData.placeStart,
-    place_end: leaderboardData.placeEnd
-  }
+    place_start: initialStartFilter,
+    place_end: initialEndFilter
+  };
   const leaderboardResponse = await api.exercise.getLeaderboard(filter)
-  if(direction == 'up'){
-    leaderboardResponse.reverse()
-    for(var i in leaderboardResponse){
-      leaderboardList.value.unshift(leaderboardResponse[i]);
-    }
-  } else if(direction == 'down') {
-    for(var i in leaderboardResponse){
-      leaderboardList.value.push(leaderboardResponse[i]);
+  winners.value = leaderboardResponse.head.winners
+  userRow.value = leaderboardResponse.head.user_row
+
+  const initialData = leaderboardResponse.body;
+  items.value = initialData;
+  state.isLoading = false;
+
+  if (initialData.length > 0) {
+    userRowIndex.value = initialData.findIndex(item => item.is_active);
+
+    state.firstLoadedPlace = initialData[0].place;
+    state.lastLoadedPlace = initialData[initialData.length - 1].place;
+
+    if (state.firstLoadedPlace === 1) state.hasMoreAbove = false;
+    if (state.lastLoadedPlace === totalItemsCount || initialData.length < pageSize && state.firstLoadedPlace !== 1) {
+      state.hasMoreBelow = false;
     }
   } else {
-    leaderboardList.value = leaderboardResponse
+    state.hasMoreAbove = false;
+    state.hasMoreBelow = false;
   }
-  leaderboardData.placeStart = leaderboardList.value[0].place
-  leaderboardData.placeEnd = leaderboardList.value[leaderboardList.value.length - 1].place
-  isLoading.value = false
-  await nextTick();
 
-  // Новая общая высота прокручиваемого контента
-  const newScrollHeight = target.scrollHeight;
+  isLoadingInitial.value = false;
+};
 
-  // Вычисляем, насколько увеличилась высота (т.е. высота добавленных элементов)
-  const addedHeight = newScrollHeight - oldScrollHeight;
+// --- Подгрузка ВВЕРХ (к меньшим местам) ---
+const loadMoreAbove = async () => {
+  if (state.isLoading || !state.hasMoreAbove) return;
 
-  // Устанавливаем новую позицию скролла:
-  // Старая позиция + высота добавленных элементов
-  const newScrollTop = oldScrollTop + addedHeight;
+  // Рассчитываем диапазон мест для подгрузки ВВЕРХ
+  const placeEnd = state.firstLoadedPlace - 1;
+  // Новое начало порции. Лимит остается pageSize.
+  const placeStart = Math.max(1, placeEnd - pageSize + 1);
 
-  // Применяем новую позицию
-  target.scrollTop = newScrollTop;
-}
+  if (placeStart < state.firstLoadedPlace) {
+    state.isLoading = true;
+    const actualLimit = placeEnd - placeStart*1 + 1; // Фактический лимит
 
-const onIntersection = async (entry) => {
-  const direction = entry.target.attributes.direction.value
-  if(entry.isIntersecting){
-    if(isLoadingInitial.value) return false
-    if(direction == 'up'){
-      leaderboardData.placeEnd = leaderboardData.placeStart
-      leaderboardData.placeStart = leaderboardData.placeEnd - leaderboardData.limit - 1
-    } else
-    if(direction == 'down'){
-      leaderboardData.placeStart = leaderboardData.placeEnd*1
-      leaderboardData.placeEnd = leaderboardData.placeStart + leaderboardData.limit*1
+    if (actualLimit > 0) {
+      const filter = {
+        mode: 'new',
+        place_start: placeStart,
+        place_end: placeEnd
+      };
+
+      const leaderboardResponse = await api.exercise.getLeaderboard(filter)
+      const newItems = leaderboardResponse.body;
+
+      if (newItems.length > 0) {
+        // --- КОРРЕКЦИЯ СКРОЛЛА: ДО ИЗМЕНЕНИЯ МАССИВА ---
+        let currentScrollTop = 0;
+        if (virtualScrollRef.value && virtualScrollRef.value.$el) {
+            // Получаем текущую позицию скролла через нативный DOM
+            currentScrollTop = virtualScrollRef.value.$el.scrollTop;
+        }
+        // Добавляем новые данные в начало
+        items.value.unshift(...newItems);
+        state.firstLoadedPlace = newItems[0].place;
+
+        // Рассчитываем новую позицию: старая позиция + высота добавленных элементов
+        const addedHeight = newItems.length * 52; // Предполагаемая высота 50px
+        const newScrollTop = currentScrollTop + addedHeight;
+
+        // Корректируем позицию скролла с помощью setScrollPosition
+        if (virtualScrollRef.value) {
+          virtualScrollRef.value.$el.scrollTo({top:newScrollTop})
+        }
+        // --------------------------------------------------
+
+        if (state.firstLoadedPlace === 1) state.hasMoreAbove = false;
+      } else {
+          state.hasMoreAbove = false;
+      }
     }
-    await loadTable(direction)
-
+    state.isLoading = false;
   }
 };
 
-const updateFilter = (filter) => {
-  leaderboardData.filter = filter
-  loadTable()
-}
+// --- Подгрузка ВНИЗ (к большим местам) ---
+const loadMoreBelow = async () => {
 
+  if (state.isLoading || !state.hasMoreBelow) return;
+
+  // Рассчитываем диапазон мест для подгрузки ВНИЗ
+  const placeStart = state.lastLoadedPlace*1 + 1;
+  const placeEnd = Math.min(totalItemsCount, placeStart + pageSize - 1);
+
+  if (placeStart <= placeEnd) {
+    state.isLoading = true;
+
+    const filter = {
+      mode: 'new',
+      place_start: placeStart,
+      place_end: placeEnd
+    };
+
+    const leaderboardResponse = await api.exercise.getLeaderboard(filter)
+    const newItems = leaderboardResponse.body;
+
+    if (newItems.length > 0) {
+      items.value.push(...newItems);
+      state.lastLoadedPlace = newItems[newItems.length - 1].place; // Обновляем последнее загруженное место
+
+      // Проверяем, достигнут ли конец:
+      if (state.lastLoadedPlace >= totalItemsCount || newItems.length < pageSize) {
+        state.hasMoreBelow = false;
+      }
+    } else {
+      state.hasMoreBelow = false;
+    }
+
+    state.isLoading = false;
+  } else {
+      state.hasMoreBelow = false;
+  }
+};
+
+// Обработчик события скролла от QVirtualScroll (ОСТАЕТСЯ ПРЕЖНИМ)
+const onScroll = ({ index, direction, ref }) => {
+  const threshold = halfPage; // 9 элементов
+  virtualIndex.value = index
+  state.direction = direction
+  // Подгрузка вниз (к концу списка)
+  if (direction === 'increase' && index >= items.value.length - threshold && state.hasMoreBelow) {
+    loadMoreBelow();
+  }
+  // Подгрузка вверх (к началу списка)
+  if (direction === 'decrease' && index < threshold && state.hasMoreAbove) {
+    loadMoreAbove();
+  }
+};
+
+const onIntersection = (entry) => {
+  console.log(entry)
+  if(entry.isIntersecting){
+    topUserShown.value = false
+    bottomUserShown.value = false
+  } else {
+    if(state.direction == 'increase'){
+      topUserShown.value = true
+      bottomUserShown.value = false
+    }
+    if(state.direction == 'decrease'){
+      topUserShown.value = false
+      bottomUserShown.value = true
+    }
+  }
+};
+
+onMounted(async () => {
+  await loadInitialData();
+    if(virtualScrollRef.value){
+      //virtualScrollRef.value.scrollTo(userRowIndex.value)
+    }
+});
+
+// onActivated для скролла к элементу пользователя
 onActivated(async () => {
-  isLoadingInitial.value = true
-  await loadTable()
-  setTimeout(() => {
-    if(document.querySelector('#userRow')) document.querySelector('#userRow').scrollIntoView({block: "center", behavior: "smooth"})
-    isLoadingInitial.value = false
-  }, 100);
-})
+
+  // Ждем, пока загрузка закончится, и скроллим к элементу пользователя
+
+});
 </script>
