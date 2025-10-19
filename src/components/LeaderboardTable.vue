@@ -12,7 +12,7 @@
     </q-card-section>
     <q-card-section v-if="leaderboardList.length > 0 " class="q-py-sm q-px-sm relative-position">
         <div v-intersection="onIntersection" direction="up" key="up"></div>
-        <q-list>
+        <q-list ref="leaderboardContainer">
           <q-item class="text-left text-bold text-grey-7" style="font-size: 12px">
             <q-item-section avatar>
               <q-item-label>Место</q-item-label>
@@ -91,7 +91,7 @@
 </template>
 
 <script setup>
-import { onActivated, onMounted, ref, reactive, watch } from 'vue'
+import { onActivated, onMounted, ref, reactive, watch, nextTick } from 'vue'
 import LeaderboardFilter from '../components/LeaderboardFilter.vue'
 import BannerNotFound from '../components/BannerNotFound.vue'
 import { useExercise } from '../composables/useExercise.js'
@@ -100,7 +100,7 @@ import { api } from '../services/index'
 const { getLeaderboard } = useExercise()
 
 const leaderboardList = ref([])
-
+const leaderboardContainer = ref(null)
 const leaderboardData = reactive({
   filter: {
     time_period: 'all'
@@ -121,6 +121,13 @@ const props = defineProps({
 })
 
 const loadTable = async (direction) => {
+
+  const target = document.documentElement
+  const oldScrollHeight = target.scrollHeight;
+
+  // Текущая позиция скролла (насколько мы прокрутили вниз)
+  const oldScrollTop = target.scrollTop;
+
   isLoading.value = true
   const filter = {
     mode: 'new',
@@ -143,10 +150,23 @@ const loadTable = async (direction) => {
   leaderboardData.placeStart = leaderboardList.value[0].place
   leaderboardData.placeEnd = leaderboardList.value[leaderboardList.value.length - 1].place
   isLoading.value = false
+  await nextTick();
+
+  // Новая общая высота прокручиваемого контента
+  const newScrollHeight = target.scrollHeight;
+
+  // Вычисляем, насколько увеличилась высота (т.е. высота добавленных элементов)
+  const addedHeight = newScrollHeight - oldScrollHeight;
+
+  // Устанавливаем новую позицию скролла:
+  // Старая позиция + высота добавленных элементов
+  const newScrollTop = oldScrollTop + addedHeight;
+
+  // Применяем новую позицию
+  target.scrollTop = newScrollTop;
 }
 
-const onIntersection = (entry) => {
-  console.log(entry)
+const onIntersection = async (entry) => {
   const direction = entry.target.attributes.direction.value
   if(entry.isIntersecting){
     if(isLoadingInitial.value) return false
@@ -158,7 +178,8 @@ const onIntersection = (entry) => {
       leaderboardData.placeStart = leaderboardData.placeEnd*1
       leaderboardData.placeEnd = leaderboardData.placeStart + leaderboardData.limit*1
     }
-    loadTable(direction)
+    await loadTable(direction)
+
   }
 };
 
