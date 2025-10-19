@@ -496,6 +496,13 @@ a{
 .q-btn-shaking{
   animation: shakeItem 4s ease infinite  var(--delay);
 }
+.q-btn-shaking-always{
+  animation: shakeItemAlways 1s ease infinite  var(--delay);
+}
+.q-btn-shaking-always-slow{
+  animation: shakeItemAlways 4s ease infinite  var(--delay);
+}
+
 
 @keyframes shakeItem {
   0% { transform: translateX(0px); }
@@ -503,6 +510,13 @@ a{
   5% { transform: translateX(0px); }
   7% { transform: translateX(5px); }
   10%, 100% { transform: translateX(0px); }
+}
+@keyframes shakeItemAlways {
+  0% { transform: translateX(0px); }
+  25% { transform: translateX(5px); }
+  50% { transform: translateX(0px); }
+  75% { transform: translateX(5px); }
+  100% { transform: translateX(0px); }
 }
 
 html, body {

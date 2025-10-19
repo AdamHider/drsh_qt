@@ -2,9 +2,9 @@
     <div>
       <q-dialog v-model="dialog" seamless position="top">
         <div class="full-width text-center">
-          <q-card v-if="notification?.id" class="q-ma-sm" style="max-width: 350px" @click="openNotification(notification.link)">
+          <q-card v-if="notification?.id" class="q-push q-ma-sm" style="max-width: 350px" @click="openNotification(notification.link)">
             <q-card-section>
-              <q-item>
+              <q-item  class="text-left">
                 <q-item-section>
                   <q-item-label class="text-subtitle1"><b>{{ notification.title }}</b></q-item-label>
                   <q-item-label class="text-caption"><b>{{ notification.description }}</b></q-item-label>

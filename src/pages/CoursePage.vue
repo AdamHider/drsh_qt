@@ -7,7 +7,7 @@
           @click="() => {if(user.active?.data.resources.energy.quantity == 0) router.push('/market')}"/>
     </q-app-header>
     <q-page style="padding-top: 50px; padding-bottom: 48px;"  class="items-end full-height full-width text-center" >
-        <LessonList v-if="course.active?.id" :disable="courseDialog" :reloadTrigger="lessonListReloadTrigger"/>
+        <LessonList v-if="course.active?.id" :reloadTrigger="lessonListReloadTrigger"/>
 
         <q-page-sticky position="top-left" style="z-index: 100" :offset="[0, 60]">
           <QuestListWidget active-only @onStart="lessonListReload()" @onClaim="lessonListReload()"/>

@@ -26,10 +26,13 @@
           :groupKey="courseSectionsIndex"
           class="section-block">
         <div v-for="(lessonItem, lessonIndex) in courseSection.list" :key="`lessonIndex${lessonIndex}`"
-          :class="`planet-block row q-px-sm q-py-md ${lessonIndex % 2 ? 'justify-end' : 'justify-start'} ${lessonItem.is_blocked === true ? 'is-blocked' : ''} ${lessonItem.is_initial ? 'is-initial' : ''}`"
+          :class="`planet-block row q-px-sm q-py-md ${lessonIndex % 2 ? 'justify-end' : 'justify-start'}  ${lessonItem.is_initial ? 'is-initial' : ''}`"
         >
           <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
-          <LessonItem :lessonItem="lessonItem" :lessonIndex="lessonIndex" @onSelected="openLesson"/>
+          <div class="relative-position">
+            <LessonItem :lessonItem="lessonItem" :lessonIndex="lessonIndex" @onSelected="openLesson"/>
+            <LessonQuestsWidget  :quests="lessonItem.active_quests" @onClaim="load()" @onStart="load()"/>
+          </div>
         </div>
         <q-card class="transparent text-white q-mb-md" flat>
           <q-card-section>
@@ -73,6 +76,7 @@
 <script setup>
 import { useLesson } from "../composables/useLesson";
 import { ref, onActivated, onMounted, toRef, watch } from "vue";
+import LessonQuestsWidget from "../components/LessonQuestsWidget.vue";
 import { useCourse } from "../composables/useCourse";
 import { useLoader } from '../composables/useLoader'
 import LessonItem from '../components/LessonItem.vue'
@@ -95,10 +99,8 @@ const inView = ref({});
 const courseSections = ref([])
 
 const props = defineProps({
-  disable: Boolean,
   reloadTrigger: Boolean
 });
-const disable = toRef(props, "disable");
 const reloadTrigger = toRef(props, "reloadTrigger");
 
 const load = async function () {
@@ -242,12 +244,6 @@ watch(() => reloadTrigger.value, () => {
   .planet-image{
     filter: drop-shadow(0px 0px 15px #35adf4);
     overflow: visible;
-  }
-  &.is-blocked {
-    filter: grayscale(1) brightness(0.9);
-    &:before {
-      opacity: 0.3;
-    }
   }
 }
 .satellite-list{

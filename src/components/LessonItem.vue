@@ -1,6 +1,6 @@
 <template>
   <div v-if="isActive" class="background-overlay" @click="select(0)"></div>
-  <div :class="`col-6 ${(isActive) ? 'is-active' : ''}`" style="position: relative; z-index: 10">
+  <div :class="`col-6 ${(isActive) ? 'is-active' : ''} ${lessonItem.is_blocked === true ? 'is-blocked' : ''}`" style="position: relative; z-index: 10">
     <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
     <transition
       appear
@@ -59,19 +59,12 @@ import { useLoader } from '../composables/useLoader'
 import { useRouter } from "vue-router";
 
 const { lesson, getList } = useLesson();
-const { course } = useCourse();
-const { hideLoader } = useLoader()
 
 const emits = defineEmits(['onSelected'])
 
-const router = useRouter();
 
-const bottomPoint = ref(null);
-const activeCourseSection = ref({})
 const selectedLesson = ref(0);
 const transitionTrigger = ref(false);
-const inView = ref({});
-const courseSections = ref([])
 
 const props = defineProps({
   lessonItem: Object,
@@ -138,11 +131,14 @@ onActivated(async () => {
     transition: 0.5s all ease;
     filter: drop-shadow(0px 0px 15px #35adf4);
   }
-  &.is-blocked {
+}
+.is-blocked{
+  .satellite-item ,
+  .planet-image{
     filter: grayscale(1) brightness(0.9);
-    &:before {
-      opacity: 0.3;
-    }
+  }
+  &:before {
+    opacity: 0.3;
   }
 }
 .background-overlay{

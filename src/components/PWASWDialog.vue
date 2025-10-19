@@ -1,16 +1,20 @@
 <template>
-  <q-dialog v-model="updateAvailable" persistent>
-    <q-card class="q-push">
-      <q-card-section>
-        <div class="text-h6">Доступна новая версия!</div>
-        <div class="text-subtitle2">Рекомендуем обновить приложение, чтобы получить последние функции и исправления.</div>
-      </q-card-section>
-
-      <q-card-actions align="right">
-        <q-btn flat v-close-popup ><b>Позже</b></q-btn>
-        <q-btn flat @click="applyUpdate" color="primary"><b>Обновить сейчас</b></q-btn>
-      </q-card-actions>
-    </q-card>
+  <q-dialog v-model="updateAvailable" position="top" seamless style="z-index: 100000">
+    <div class="full-width text-center">
+      <q-card class="q-push q-ma-sm" style="max-width: 350px">
+        <q-card-section class="q-pa-xs">
+          <q-item class="text-left">
+            <q-item-section>
+              <q-item-label class="text-subtitle1"><b>Обновимся?</b></q-item-label>
+              <q-item-label class="text-caption">Рекомендуем обновить приложение, чтобы получить последние функции и исправления.</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-btn flat @click="applyUpdate"  color="primary"><b>Да</b></q-btn>
+            </q-item-section>
+          </q-item>
+        </q-card-section>
+      </q-card>
+    </div>
   </q-dialog>
 </template>
 
@@ -43,8 +47,14 @@ const applyUpdate = () => {
 }
 onMounted(() => {
   window.addEventListener('swUpdated', handleSWUpdated)
+  setTimeout(() => {
+    updateAvailable.value = false
+  }, 5000)
 })
 onUnmounted(() => {
   window.removeEventListener('swUpdated', handleSWUpdated)
+  setTimeout(() => {
+    updateAvailable.value = false
+  }, 5000)
 })
 </script>

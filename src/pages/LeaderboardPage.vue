@@ -8,7 +8,7 @@
                 <div class="text-caption">Только вверх, к звёздам!</div>
               </q-card-section>
           </q-card>
-            <q-card flat class="q-main-card relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1;">
+            <q-card flat class="text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1;">
                 <q-card-section class="q-pa-none">
                     <LeaderboardTable :allowed-filters="['time_period']"/>
                 </q-card-section>

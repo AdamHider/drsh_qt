@@ -1,19 +1,20 @@
 <template>
   <div>
-    <div class="flex column">
+    <div v-if="quests.length > 0" class="flex column absolute-left justify-center quest-btn-container">
       <TransitionGroup
         appear
         :enter-active-class="`animated fadeInLeft`"
         :leave-active-class="`animated fadeOutLeft`">
-      <q-btn v-for="(questItem, index) in quest.list" :key="index" push dense
+      <q-btn v-for="(questItem, index) in quests" :key="index" flat
         @click="showQuest(questItem.id)" @click.stop="playAudio('click')"
-        size="sm"
-        :class="`bg-gradient-${questItem.group.color} text-white q-ma-sm cursor-pointer rounded-sm q-mt-sm ${(questItem.is_completed || questItem.status == 'created') ? ' q-btn-blinking q-btn-shaking' : ''}`" >
-          <div style="width: 40px" >
-            <img :src="questItem.group.image_avatar" height="45px" class="absolute-bottom q-ml-sm q-mb-xs">
-          </div>
-          <q-icon class="q-py-xs q-px-sm" name="chevron_right" size="24px"></q-icon>
-          <q-badge v-if="!questItem.is_completed" floating color="warning" class="q-pa-xs" style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
+        size="sm" round
+        :class="`bg-transparent text-white q-ma-sm cursor-pointer q-mt-sm quest-btn ${(questItem.is_completed || questItem.status == 'created') ? ' q-btn-blinking q-btn-shaking-always' : 'q-btn-blinking q-btn-shaking-always-slow'}`" >
+          <q-avatar size="60px" :class="`q-push bg-gradient-${questItem.group.color} outer-avatar`" rounded>
+            <q-avatar size="46px" class="bg-dark-transparent-50 q-ma-xs inner-avatar">
+              <img :src="questItem.group.image_avatar" height="45px">
+            </q-avatar>
+          </q-avatar>
+          <q-badge v-if="!questItem.is_completed && questItem.status == 'created'" floating color="warning" class="q-pa-xs" style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
             <q-icon name="priority_high" size="14px"></q-icon>
           </q-badge>
           <q-badge v-else-if="questItem.is_completed" floating color="positive" class="q-pa-xs"  style="box-shadow: inset 0px 0px 0px 2px #ffffff82;">
@@ -64,8 +65,7 @@
 </template>
 
 <script setup>
-import { api } from '../services/index'
-import { ref, onMounted, onActivated, onDeactivated } from 'vue'
+import { ref, onMounted, onActivated, onDeactivated, toRef  } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import QuestItem from '../components/QuestItem.vue'
@@ -86,24 +86,25 @@ const activeQuest = ref({})
 const activeQuestDialog = ref(false)
 
 const props = defineProps({
-  activeOnly: Boolean
+  quests: Array
 })
 const emits = defineEmits(['onStart', 'onClaim'])
 
+const quests = toRef(props, "quests");
 
 
 const startQuest = async (questId) => {
   const started = await startItem(questId)
   if(started){
     await getList(props.active_only)
-    activeQuest.value = quest.list.find((quest) => { return quest.id == questId})
+    activeQuest.value = quests.value.find((quest) => { return quest.id == questId})
     activeQuestDialog.value = false
     emits('onStart')
   }
 }
 
 const showQuest = (questId) => {
-  activeQuest.value =  quest.list.find((quest) => { return quest.id == questId});
+  activeQuest.value =  quests.value.find((quest) => { return quest.id == questId});
   activeQuestDialog.value = true
 }
 
@@ -123,10 +124,10 @@ const countdown = () => {
   var has_counters = false
   setTimeout(async () => {
     if(!activeCountdown.value) return
-    for(var i in quest.list){
-      if(quest.list[i].time_left && quest.list[i].time_left > 0){
-        quest.list[i].time_left--;
-        quest.list[i].counter = timeLeftHumanize(quest.list[i].time_left)
+    for(var i in quests.value){
+      if(quests.value[i].time_left && quests.value[i].time_left > 0){
+        quests.value[i].time_left--;
+        quests.value[i].counter = timeLeftHumanize(quests.value[i].time_left)
         has_counters = true
       }
     }
@@ -137,9 +138,9 @@ const countdown = () => {
 }
 
 const calculateTimeLeft = () => {
-  for(var i in quest.value){
-    if(quest.value[i].time_left){
-      quest.value[i].counter = timeLeftHumanize(quest.value[i].time_left)
+  for(var i in quests.value){
+    if(quests.value[i].time_left){
+      quests.value[i].counter = timeLeftHumanize(quests.value[i].time_left)
     }
   }
 }
@@ -177,7 +178,7 @@ onBeforeRouteLeave((to, from) => {
 })
 
 onActivated(async () => {
-  await getList(props.active_only)
+  console.log(quests.value.value)
   calculateTimeLeft()
   if(!activeCountdown.value) activeCountdown.value = true
   countdown()
@@ -187,3 +188,38 @@ onDeactivated(() => {
 })
 
 </script>
+<style lang="scss">
+.quest-btn-container{
+  right: 80%;
+  left: unset;
+  z-index: 10;
+}
+.quest-btn{
+  position: relative;
+  .outer-avatar{
+    border-top-left-radius: 100%;
+    border-top-right-radius: 100%;
+    border-bottom-left-radius: 100%;
+    border-bottom-right-radius: 16px;
+    transform: rotate(-45deg);
+    .inner-avatar{
+      transform: rotate(45deg) translate(-2px, -1px);;
+    }
+  }
+}
+.justify-start{
+
+  .quest-btn-container{
+    left: 80%;
+    right: unset;
+    .quest-btn{
+
+      .outer-avatar{
+        transform: scaleX(-1) rotate(-45deg);
+      }
+
+    }
+  }
+}
+
+</style>

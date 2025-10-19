@@ -9,7 +9,7 @@
             <div class="text-subtitle2"><b>{{ notification.description }}</b></div>
           </q-card-section>
           <q-card-actions class="justify-center">
-            <q-btn flat color="white" v-close-popup><b>Нажмите, чтобы продолжить</b></q-btn>
+            <q-btn flat color="white" v-close-popup><b>Нажми, чтобы продолжить</b></q-btn>
           </q-card-actions>
 
         </q-card>

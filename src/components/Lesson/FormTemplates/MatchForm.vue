@@ -23,7 +23,7 @@
                 <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/codex_full.png"/>
                   <q-card-section>
                     <div>
-                      <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Ваш ответ: </b></div>
+                      <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Твой ответ: </b></div>
                       <div class="flex wrap items-center">
                         <div v-for="(option, optionIndex) in input.answer.value.split('|')" :key="optionIndex">
                           <q-chip class="q-lesson-field-value rounded-xs" size="16px"
