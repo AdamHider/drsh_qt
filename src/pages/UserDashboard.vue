@@ -105,7 +105,7 @@
                 <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
                     <div class="q-pa-sm row items-start">
                         <div class="col-12 q-pa-sm">
-                            <UserResourceProgressBar :resource="user.active?.data.resources.energy" size="25px" push/>
+                            <UserEnergyBar :energy="user.active?.data.resources.energy" :speed="user.active?.data.resources.speed" size="20px" dense push/>
                         </div>
                         <div class="col-6 q-pa-sm">
                             <UserResourceProgressBar :resource="user.active?.data.resources.speed" size="25px" push/>
@@ -174,6 +174,7 @@ import { useUserStore } from '../stores/user'
 import AchievementList from '../components/AchievementList.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import UserResourceProgressBar from '../components/UserResourceProgressBar.vue'
+import UserEnergyBar from '../components/UserEnergyBar.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 import AppBackground from '../components/AppBackground.vue'

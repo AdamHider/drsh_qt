@@ -1,5 +1,5 @@
 <template>
-    <q-card flat style="min-height:300px" class="rounded-b-0 q-pb-md full-width">
+    <q-card flat style="min-height:80vh" class="rounded-b-0 q-pb-md full-width">
       <q-card-section class="q-pb-sm q-pt-md text-left">
         <LeaderboardFilter
           :allowed-filters="props.allowedFilters"
@@ -7,8 +7,7 @@
           @update-filter="updateFilter($event)"
         />
       </q-card-section>
-      <q-card-section v-if="items.length > 0 " class="q-py-sm q-px-sm relative-position" style="height: 80vh">
-
+      <q-card-section v-if="items.length > 0 " class="q-py-sm q-px-sm relative-position" style="height: 78vh">
         <q-list class="column full-height" >
           <q-item class="text-left text-bold text-grey-7" style="font-size: 12px">
             <q-item-section side>
@@ -50,7 +49,7 @@
                     </q-avatar>
                   </q-item-section>
                   <q-item-section class="text-left">
-                    <q-item-label><b>И ещё {{ item.count }} героев</b></q-item-label>
+                    <q-item-label><b>И ещё {{ item.count }}</b></q-item-label>
                     <q-item-label v-if="item.position == 'end'" caption>Ниже в рейтинге</q-item-label>
                     <q-item-label v-else caption>Выше в рейтинге</q-item-label>
                   </q-item-section>

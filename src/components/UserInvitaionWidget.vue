@@ -15,7 +15,7 @@
             По приглашению присоединились: {{ userInvitation.count }}
           </div>
           <div class="text-caption text-grey">
-            Использовано наград: {{ userInvitation.claimed_count }}/{{ userInvitation.count }}
+            Использовано наград: {{ userInvitation.claimed_count }}
           </div>
           <q-btn v-if="userInvitation.available > 0" class="q-blinking full-width q-mt-sm" push @click="claimInvitation()" color="positive">Получить награду ({{ userInvitation.available }})</q-btn>
         </q-card-section>

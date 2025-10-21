@@ -1,15 +1,14 @@
 <template>
-    <q-item  :active="item.is_active == 1" :class="` text-left ${(item.place <= 3) ? 'q-push q-my-xs place-'+item.place : ''} rounded-sm ${(item.is_active == 1) ? ' place-user q-push' : 'bg-white text-dark place-common'}`">
-        <q-item-section side class="text-center ">
-          <q-avatar v-if="item.place == 1" floating rounded color="gradient-gold" class="text-white q-push" size="32px" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
-            <b style="margin-bottom:2px">{{ item.place }}</b>
-          </q-avatar>
-          <q-avatar v-else-if="item.place == 2" floating rounded color="gradient-silver" size="32px" class="text-white q-push" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
-            <b style="margin-bottom:2px">{{ item.place }}</b>
-          </q-avatar>
-          <q-avatar v-else-if="item.place == 3" floating rounded color="gradient-bronze" size="32px" class="text-white q-push" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;">
-            <b style="margin-bottom:2px">{{ item.place }}</b>
-          </q-avatar>
+    <q-item  :active="item.is_active == 1" :class="`relative-position text-left ${(item.place <= 3) ? 'q-push q-my-xs place-'+item.place : ''} rounded-sm ${(item.is_active == 1) ? ' place-user q-push' : 'bg-white text-dark place-common'}`">
+        <q-item-section side class="text-center">
+          <div class="relative-position" v-if="item.place <= 3" style="margin-top: -24px; margin-left: -10px; margin-right: 10px">
+            <q-avatar  size="28px" class="allow-overflow"></q-avatar>
+            <div class="absolute-top"  style="filter: drop-shadow(0px 2px 2px #00000094);">
+              <img v-if="item.place == 1" src="/images/leaderboard/gold.png" width="49px"/>
+              <img v-else-if="item.place == 2" src="/images/leaderboard/silver.png" width="49px"/>
+              <img v-else-if="item.place == 3" src="/images/leaderboard/bronze.png" width="49px"/>
+            </div>
+          </div>
           <q-avatar v-else size="28px" >
             <b>{{ item.place }}</b>
           </q-avatar>
