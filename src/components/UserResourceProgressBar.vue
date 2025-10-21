@@ -1,22 +1,38 @@
 <template>
       <q-item :dense="props.dense" clickable
-        :class="`relative bg-light-gradient-${resource?.color} text-white ${(props.dense) ? 'q-py-xs q-pl-sm rounded-sl': 'rounded-md'} ${(transparent) ? 'bg-dark-transparent' : ''} ${(props.push) ? 'q-push': ''} ${props.class ?? ''}`" >
-          <q-item-section avatar style="z-index: 2"  :style="`min-width: ${props.size};`">
-              <q-img :width="props.size" :src="resource?.image" :style="`filter: drop-shadow(rgba(0, 0, 0, 0.44) 0px 2px 2px); scale: 1.2; min-height: ${props.size}`" no-spinner/>
+        :class="`q-push relative text-white bg-light-gradient-${resource?.color} q-px-xs rounded-md`" style="padding-top: 6px;">
+          <q-item-section avatar style="z-index: 3" class="absolute-left" :style="`min-width: ${props.size};`">
+            <q-avatar :class="`bg-light-gradient-${resource?.color}`" size="42px" style="box-shadow: inset 0px 0px 0px 2px #ffffff2b;">
+                <q-avatar class="allow-overflow" style="background: rgba(0, 0, 0, 0.31);" size="32px">
+                  <q-img :width="props.size" :src="resource?.image" style="filter: drop-shadow(rgba(0, 0, 0, 0.44) 0px 2px 2px); scale: 1.2; min-height: 32px" no-spinner/>
+                </q-avatar>
+            </q-avatar>
           </q-item-section>
-          <q-item-section style="z-index: 2; text-shadow: 0px 1px 2px #00000094;">
+          <q-item-section style="z-index: 2; text-shadow: 0px 1px 2px #00000094;" class="q-pl-md">
+            <div class="flex full-height q-mr-sm" :style="`gap: 4px; margin-left: ${props.size}`">
+              <div v-for="(bar, barIndex) in bars" :key="`barIndex${barIndex}`" style="flex: 1" >
+                <q-chip :class="`q-push bg-${(bar.isFilled) ? 'light-gradient-'+resource?.color : 'grey'} full-height full-width rounded-xs q-my-none  q-pa-none`" ></q-chip>
+              </div>
+            </div>
+          </q-item-section>
+
+
+
+
+          <q-item-section v-if="false"  style="z-index: 2; text-shadow: 0px 1px 2px #00000094;">
               <q-item-label :class="`${(props.dense) ? '' : 'text-h7'} `">
-                  <span class=""><b>{{(resource?.quantity*1).toLocaleString()}}</b></span>
+                  <span class=""><b>{{resource?.quantity}}</b></span>
                   <span v-if="resource.is_restorable"><b>{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</b></span>
                   <span v-if="resource.quantity_cost" class="text-caption"><b>/{{ resource.quantity_cost }}</b></span>
               </q-item-label>
-              <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{resource?.title}}</b></q-item-label>
+              <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{ resource?.title }}</b></q-item-label>
           </q-item-section>
+
+
           <div v-if="resource.is_restorable"
-            size="24px"
-            :class="`absolute-top ${(props.dense) ? 'rounded-sl': 'rounded-md'} full-width overflow-hidden`" style="height: calc(100% - 1px) !important">
-            <div class="absolute-top full-width full-height" style="z-index: 0; background: rgba(0, 0, 0, 0.31)"></div>
-            <div :class="`relative-position ${(props.dense) ? 'q-py-xs rounded-sm': 'rounded-md'} full-height bg-light-gradient-${resource?.color}`" :style="`width: ${percentageCount}% !important; z-index: 1`"></div>
+            size="24px" :class="`absolute-top ${(props.dense) ? 'rounded-sm': 'rounded-sl'} full-width full-height overflow-hidden q-pa-xs`">
+            <div :class="`absolute-top full-width full-height bg-light-gradient-${resource?.color}`"></div>
+            <div :class="`relative-position ${(props.dense) ? 'q-py-xs ': ''} full-height`" style="z-index: 1; background: rgba(0, 0, 0, 0.31); border-radius: 11px;"></div>
           </div>
           <transition appear
             enter-active-class="animated fadeInDown animation-delay-2"
@@ -31,19 +47,11 @@
               </div>
             </div>
           </transition>
-          <div v-if="props.withBadge">
-            <div v-if="props.dense" class="absolute" style="right: -12px">
-              <q-btn dense round push size="10px" icon="add" color="isonit" :to="props.badgeLink"  @click.stop="playAudio('click')"/>
-            </div>
-            <div v-else class="absolute" style="top: -8px; right: -8px">
-              <q-btn dense round push icon="add" color="isonit" :to="props.badgeLink"  @click.stop="playAudio('click')"/>
-            </div>
-          </div>
       </q-item>
 </template>
 
 <script setup>
-import { ref, watch, toRefs, onActivated, onDeactivated, onMounted } from 'vue'
+import { ref, watch, toRefs, computed, onActivated, onDeactivated, onMounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { playAudio } from 'src/services/audioService';
 
@@ -59,6 +67,20 @@ const props = defineProps({
   withBadge: Boolean,
   badgeLink: String
 })
+
+const bars = computed(() => {
+  const result = []
+  const totalBars = props.resource.max_quantity ??  props.resource.quantity
+  for(var i = 1; i <= totalBars; i++){
+    result.push({
+      index: i,
+      isFilled: (i <= props.resource.quantity)
+    })
+  }
+  return result
+})
+
+
 const resource = toRefs(props).resource
 
 const showCountdown = ref(false)
@@ -106,7 +128,6 @@ onMounted(async () => {
   await getItem()
   calculateRestoration()
   if(!activeCountdown.value) activeCountdown.value = true
-  countdown()
 
 })
 onDeactivated(() => {
@@ -120,9 +141,6 @@ watch(() => resource.value?.restoration, () => {
 })
 </script>
 <style lang="scss" scoped>
-.q-avatar {
-  box-shadow: 0px 0px 0px 3px $grey-3;
-}
 
 </style>
 

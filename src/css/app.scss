@@ -1,5 +1,6 @@
 // app global css in SCSS form
-.allow-overflow{
+.allow-overflow, 
+.allow-overflow > div{
   overflow: visible !important;
 }
 .text-h7{

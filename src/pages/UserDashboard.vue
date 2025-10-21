@@ -100,6 +100,22 @@
                       </div>
                   </div>
               </q-card-section>
+              <q-card-section class="q-pa-none">
+                <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
+                <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
+                    <div class="q-pa-sm row items-start">
+                        <div class="col-12 q-pa-sm">
+                            <UserResourceProgressBar :resource="user.active?.data.resources.energy" size="25px" push/>
+                        </div>
+                        <div class="col-6 q-pa-sm">
+                            <UserResourceProgressBar :resource="user.active?.data.resources.speed" size="25px" push/>
+                        </div>
+                        <div class="col-6 q-pa-sm">
+                            <UserResourceProgressBar :resource="user.active?.data.resources.energy" size="25px" push/>
+                        </div>
+                    </div>
+                </q-card-section>
+              </q-card-section>
               <div class="relative-position">
                 <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
                 <q-card-section class="q-py-none q-pt-sm">
@@ -108,16 +124,16 @@
                 <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
                     <div class="q-pa-sm row items-start">
                         <div class="col-6 q-pa-sm">
-                            <UserResourceBar :resource="user.active?.data.resources.energy" size="38px" push/>
+                            <UserResourceBar :resource="user.active?.data.resources.star" size="38px" push/>
                         </div>
                         <div class="col-6 q-pa-sm">
                             <UserResourceBar :resource="user.active?.data.resources.terralit" size="38px" push/>
                         </div>
                         <div class="col-6 q-pa-sm">
-                            <UserResourceBar :resource="user.active?.data.resources.isonit" size="38px" badge-link="/market" with-badge push/>
+                            <UserResourceBar :resource="user.active?.data.resources.science" size="38px" push/>
                         </div>
                         <div class="col-6 q-pa-sm">
-                            <UserResourceBar :resource="user.active?.data.resources.science" size="38px" push/>
+                            <UserResourceBar :resource="user.active?.data.resources.isonit" size="38px" badge-link="/market" with-badge push/>
                         </div>
                     </div>
                 </q-card-section>
@@ -157,6 +173,7 @@
 import { useUserStore } from '../stores/user'
 import AchievementList from '../components/AchievementList.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import UserResourceProgressBar from '../components/UserResourceProgressBar.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 import AppBackground from '../components/AppBackground.vue'
