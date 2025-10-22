@@ -4,7 +4,7 @@
         <AppBackground/>
       </div>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
-          <div class="text-caption"><b>v 1.0.3</b></div>
+          <div class="text-caption"><b>v 1.1.0</b></div>
           <q-toolbar-title></q-toolbar-title>
           <div class="relative-position q-mr-sm">
             <q-btn flat round dense icon="person_add" @click="inviteDialog = true"  @click.stop="playAudio('click')">
@@ -102,27 +102,8 @@
               </q-card-section>
               <q-card-section class="q-pa-none">
                 <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
-                <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
-                    <div class="q-pa-sm row items-start">
-                        <div class="col-4 q-pa-sm">
-                          <q-card :class="`q-push bg-light-gradient-${user.active?.data.resources.streak.color} text-white`">
-                            <q-img :src="user.active?.data.resources.streak.image"/>
-                            <q-card-section>
-                              <div class="text-subtitle1"><b>Ежедневная серия</b></div>
-                              <div class="text-h4"><b>{{ user.active?.data.resources.streak.quantity }}</b></div>
-                            </q-card-section>
-                          </q-card>
-                        </div>
-                        <div class="col-8 q-pa-sm">
-                          <q-card :class="`q-push`">
-                            <q-img :src="user.active?.data.resources.streak.image"/>
-                            <q-card-section>
-                              <div class="text-subtitle1"><b>Ежедневная серия</b></div>
-                              <div class="text-h4"><b>{{ user.active?.data.resources.streak.quantity }}</b></div>
-                            </q-card-section>
-                          </q-card>
-                        </div>
-                    </div>
+                <q-card-section class="q-pa-none" v-if="user.active?.data.daily_goal">
+                    <UserGoalBlock :streak="user.active?.data.resources.streak" :daily_goal="user.active?.data.daily_goal"/>
                 </q-card-section>
               </q-card-section>
               <div class="relative-position">
@@ -182,8 +163,7 @@
 import { useUserStore } from '../stores/user'
 import AchievementList from '../components/AchievementList.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import UserResourceProgressBar from '../components/UserResourceProgressBar.vue'
-import UserEnergyBar from '../components/UserEnergyBar.vue'
+import UserGoalBlock from '../components/UserGoalBlock.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 import AppBackground from '../components/AppBackground.vue'
