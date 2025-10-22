@@ -5,7 +5,7 @@
         <div class="q-pa-sm text-white text-center">
           <div class="text-subtitle2" v-if="props.quest.status == 'created'"><b>Новое задание!</b></div>
           <div class="text-subtitle1"><b>"{{ props.quest.title }}"</b></div>
-          <div class="text-caption">{{ props.quest.data[replicaMode].description }}</div>
+          <div class="text-caption"  v-if="props.quest.data">{{ props.quest.data[replicaMode].description }}</div>
         </div>
         <div v-if="props.mode !== 'active'">
           <div v-for="(replica, replicaIndex) in replicaList" :key="`replicaIndex${replicaIndex}`" >
@@ -155,6 +155,7 @@ const renderReplicaList = () => {
   } else {
     replicaMode.value = 'intro'
   }
+  if(!props.quest.data) return
   if(props.expanded){
     replicaList.value = props.quest.data[replicaMode.value].dialogue
     isLastReplica.value = true

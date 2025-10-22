@@ -64,10 +64,10 @@
                 <q-progress-bar :value="user.active.data.level?.percentage" size="25px" color="positive"/>
                 <div class="row q-ma-sm ">
                     <div class="col text-left">
-                        <b>Уровень {{user.active.data.level?.level}}</b>
+                        <b>Уровень {{user.active.data.level?.level.toLocaleString()}}</b>
                     </div>
                     <div class="col text-right">
-                        <b>{{user.active.data.level?.experience}}/{{user.active.data.level?.points_to}}</b>
+                        <b>{{(user.active.data.level?.experience*1).toLocaleString()}}<span class="text-grey-8">/{{(user.active.data.level?.points_to*1).toLocaleString()}}</span></b>
                     </div>
                 </div>
               </q-card-section>
@@ -78,7 +78,7 @@
                         <q-item class="rounded-borders text-center">
                           <q-item-section>
                               <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_points?.label}}</b></q-item-label>
-                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_points?.value}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_points?.value.toLocaleString()}}</b></q-item-label>
                           </q-item-section>
                         </q-item>
                       </div>
@@ -86,7 +86,7 @@
                         <q-item class="rounded-borders text-center">
                           <q-item-section>
                               <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_exercises?.label}}</b></q-item-label>
-                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_exercises?.value}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_exercises?.value.toLocaleString()}}</b></q-item-label>
                           </q-item-section>
                         </q-item>
                       </div>
@@ -94,7 +94,7 @@
                         <q-item class="rounded-borders text-center">
                           <q-item-section>
                               <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_skills?.label}}</b></q-item-label>
-                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_skills?.value}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_skills?.value.toLocaleString()}}</b></q-item-label>
                           </q-item-section>
                         </q-item>
                       </div>
@@ -104,14 +104,23 @@
                 <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
                 <q-card-section class="q-pa-none" v-if="user.active?.data.resources">
                     <div class="q-pa-sm row items-start">
-                        <div class="col-12 q-pa-sm">
-                            <UserEnergyBar :energy="user.active?.data.resources.energy" :speed="user.active?.data.resources.speed" size="20px" dense push/>
+                        <div class="col-4 q-pa-sm">
+                          <q-card :class="`q-push bg-light-gradient-${user.active?.data.resources.streak.color} text-white`">
+                            <q-img :src="user.active?.data.resources.streak.image"/>
+                            <q-card-section>
+                              <div class="text-subtitle1"><b>Ежедневная серия</b></div>
+                              <div class="text-h4"><b>{{ user.active?.data.resources.streak.quantity }}</b></div>
+                            </q-card-section>
+                          </q-card>
                         </div>
-                        <div class="col-6 q-pa-sm">
-                            <UserResourceProgressBar :resource="user.active?.data.resources.speed" size="25px" push/>
-                        </div>
-                        <div class="col-6 q-pa-sm">
-                            <UserResourceProgressBar :resource="user.active?.data.resources.energy" size="25px" push/>
+                        <div class="col-8 q-pa-sm">
+                          <q-card :class="`q-push`">
+                            <q-img :src="user.active?.data.resources.streak.image"/>
+                            <q-card-section>
+                              <div class="text-subtitle1"><b>Ежедневная серия</b></div>
+                              <div class="text-h4"><b>{{ user.active?.data.resources.streak.quantity }}</b></div>
+                            </q-card-section>
+                          </q-card>
                         </div>
                     </div>
                 </q-card-section>

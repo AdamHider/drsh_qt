@@ -19,6 +19,7 @@
           </div>
           <q-btn v-if="userInvitation.available > 0" class="q-blinking full-width q-mt-sm" push @click="claimInvitation()" color="positive">Получить награду ({{ userInvitation.available }})</q-btn>
         </q-card-section>
+        <q-separator/>
         <q-card-actions>
           <q-btn class="full-width q-my-sm" v-if="isShareSupported" push color="primary" icon="person_add" @click.stop="playAudio('click')" label="Пригласить" @click="shareContent()"></q-btn>
           <q-btn v-if="!userInvitationCopied" class="full-width" push color="secondary" icon="content_copy" label="Скопировать ссылку"
