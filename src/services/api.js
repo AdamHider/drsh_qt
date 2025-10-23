@@ -227,6 +227,10 @@ export class Api extends ApiService{
       getItem: (params) => {
           return this.post('payment', 'getItem', params)
       },
-
+    }
+    streak = {
+      getItem: (params) =>  {
+          return this.post('streak', 'getItem', params)
+      }
     }
 }

@@ -102,8 +102,8 @@
               </q-card-section>
               <q-card-section class="q-pa-none">
                 <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
-                <q-card-section class="q-pa-none" v-if="user.active?.data.daily_goal">
-                    <UserGoalBlock :streak="user.active?.data.resources.streak" :daily_goal="user.active?.data.daily_goal"/>
+                <q-card-section class="q-pa-none">
+                    <UserGoalBlock/>
                 </q-card-section>
               </q-card-section>
               <div class="relative-position">
