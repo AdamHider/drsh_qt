@@ -73,6 +73,9 @@ export class Api extends ApiService{
         },
         startItem: (params) => {
           return this.post('quest', 'startItem', params)
+        },
+        getDailyGoalItem: (params) => {
+          return this.post('quest', 'getDailyGoalItem', params)
         }
     }
     character = {
@@ -229,8 +232,8 @@ export class Api extends ApiService{
       },
     }
     streak = {
-      getItem: (params) =>  {
-          return this.post('streak', 'getItem', params)
+      getList: (params) =>  {
+          return this.post('streak', 'getList', params)
       }
     }
 }

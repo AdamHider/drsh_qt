@@ -1,8 +1,5 @@
 <template>
   <q-page-container>
-      <div class="fixed-full">
-        <AppBackground/>
-      </div>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
           <div class="text-caption"><b>v 1.1.0</b></div>
           <q-toolbar-title></q-toolbar-title>
@@ -15,7 +12,7 @@
           <q-btn flat round dense icon="settings" class="q-mr-sm" to="/user/settings"  @click.stop="playAudio('click')">
           </q-btn>
       </q-app-header>
-      <q-page style="padding-top: 50px; padding-bottom: 35px;" class="text-center flex column full-width">
+      <q-page style="padding-top: 10px; padding-bottom: 35px;" class="text-center flex column full-width">
           <transition
             appear
             enter-active-class="animated zoomIn animation-delay-1"
@@ -100,12 +97,15 @@
                       </div>
                   </div>
               </q-card-section>
-              <q-card-section class="q-pa-none">
+              <div class="relative-position">
                 <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
-                <q-card-section class="q-pa-none">
-                    <UserGoalBlock/>
+                <q-card-section class="q-py-none q-pt-sm">
+                    <div class="text-subtitle1"><b>Ежедневная серия</b></div>
                 </q-card-section>
-              </q-card-section>
+                <q-card-section class="q-py-sm">
+                  <DailyStreakBlock/>
+                </q-card-section>
+              </div>
               <div class="relative-position">
                 <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
                 <q-card-section class="q-py-none q-pt-sm">
@@ -163,7 +163,7 @@
 import { useUserStore } from '../stores/user'
 import AchievementList from '../components/AchievementList.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import UserGoalBlock from '../components/UserGoalBlock.vue'
+import DailyStreakBlock from '../components/DailyStreakBlock.vue'
 import UserSettingModifierSlider from '../components/UserSettingModifierSlider.vue'
 import UserTutorialDialog from '../components/Tutorials/UserTutorialDialog.vue'
 import AppBackground from '../components/AppBackground.vue'

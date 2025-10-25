@@ -35,59 +35,6 @@
               <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 1" src="/images/lesson_finish_not_bad.png"/>
               <q-img v-else src="/images/lesson_finish_fail.png"/>
             </q-card-section>
-            <q-card-section class="q-pb-sm q-pt-sm">
-              <q-list  separator class="q-pa-xs text-left bg-grey-3 rounded-sm">
-                <q-item  v-if="previousPoints">
-                  <q-item-section>
-                    <b>Предыдущий результат: </b>
-                  </q-item-section>
-                  <q-item-section side>
-                    <b>{{ previousPoints }}</b>
-                  </q-item-section>
-                </q-item>
-                <q-item >
-                  <q-item-section>
-                    <b>Новый результат: </b>
-                  </q-item-section>
-                </q-item>
-                <div>
-                  <q-list class="text-left" dense>
-                    <q-item>
-                      <q-item-section>Баллы:</q-item-section>
-                      <q-item-section class="text-right"><b>+{{ lesson.active.exercise?.data.totals?.points }}</b></q-item-section>
-                    </q-item>
-                    <q-item v-if="lesson.active.exercise?.data.totals?.time_bonus > 0">
-                      <q-item-section>Бонус за время:</q-item-section>
-                      <q-item-section class="text-right">+{{ lesson.active.exercise?.data.totals?.time_bonus }}</q-item-section>
-                    </q-item >
-                    <q-item v-else>
-                      <q-item-section>Бонусы:</q-item-section>
-                      <q-item-section class="text-right">0</q-item-section>
-                    </q-item >
-                    <q-item>
-                      <q-item-section><b>Всего:</b></q-item-section>
-                      <q-item-section class="text-right text-bold">
-                        <div v-if="lesson.active.exercise.data.totals.difference > 0">
-                          <q-chip class="q-ma-none q-push rounded-sm bg-gradient-green"  text-color="white" size="15px" style="transform: translateX(10px)" icon="keyboard_double_arrow_up">
-                            {{ currentPoints }}
-                          </q-chip>
-                        </div>
-                        <div v-else-if="lesson.active.exercise.data.totals.difference < 0">
-                          <q-chip class="q-ma-none q-push rounded-sm bg-gradient-red"  text-color="white" size="15px" style="transform: translateX(10px)" icon="keyboard_double_arrow_down">
-                          {{ currentPoints }}
-                          </q-chip>
-                        </div>
-                        <div v-else>
-                          <q-chip class="q-ma-none q-push rounded-sm bg-gradient-primary"  text-color="white" size="15px" style="transform: translateX(10px)" icon="keyboard_double_arrow_down">
-                           {{ currentPoints }}
-                          </q-chip>
-                        </div>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </div>
-              </q-list>
-            </q-card-section>
             <q-card-section v-if="lesson.active.exercise.data.totals.reward" class="q-pb-sm q-pt-sm">
               <div class="q-pa-sm q-pb-md bg-grey-3 rounded-sm">
                 <div class="text-center text-subtitle2 q-pt-none q-pb-sm"><b>Награда: </b></div>
@@ -100,19 +47,22 @@
             </q-card-section>
             <q-card-section class="q-pb-sm q-pt-sm"  v-if="lesson.active.next_lessons.length > 0">
               <div class="q-pa-sm bg-grey-3 rounded-sm">
-                <div class="text-subtitle2"><b>Следующие планеты:</b></div>
+                <div class="text-subtitle2"><b>Разблокированы планеты:</b></div>
                 <q-list>
-                  <q-item class="text-left"  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`">
-                    <q-item-section avatar>
-                        <q-img :src="nextLesson.image"/>
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label><b>{{ nextLesson.title }}</b></q-item-label>
-                      <q-item-label caption lines="2">{{ nextLesson.description }}</q-item-label>
-                    </q-item-section>
-                  </q-item>
+                    <q-item  v-for="(nextLesson, nextLessonIndex) in lesson.active.next_lessons" :key="`nextLessonIndex-${nextLessonIndex}`"  class="text-left">
+                      <q-item-section avatar>
+                          <q-img :src="nextLesson.image"/>
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label><b>{{ nextLesson.title }}</b></q-item-label>
+                        <q-item-label caption lines="2">{{ nextLesson.description }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
                 </q-list>
               </div>
+            </q-card-section>
+            <q-card-section class="q-pb-sm q-pt-sm">
+                <DailyStreakBlock lite/>
             </q-card-section>
           </q-card>
         </transition>
@@ -201,6 +151,7 @@ import { useExercise } from '../composables/useExercise'
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+import DailyStreakBlock from '../components/DailyStreakBlock.vue'
 import { useUserStore } from '../stores/user'
 import { playAudio } from 'src/services/audioService';
 import { useQuasar } from 'quasar'
@@ -274,11 +225,9 @@ const next = async () => {
     } else {
       setTarget(nextLesson.value.id)
     }
-
   } else {
     setTarget(lesson.active.id)
   }
-
   router.go(-1)
 }
 const openSkills = () => {

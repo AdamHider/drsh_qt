@@ -18,6 +18,7 @@
             <q-item-label caption lines="1" class="text-sm">
               <b v-if="modifier.source_code == 'skill'" class="text-blue-7">{{modifier.title}}</b>
               <b v-else-if="modifier.source_code == 'character'" class="text-purple-7">{{modifier.title}}</b>
+              <b v-else-if="modifier.source_code == 'streak'" class="text-flame">{{modifier.title}}</b>
               <b v-else-if="modifier.source_code == 'bonus'" class="text-green-7">{{modifier.title}}</b>
               <b v-else-if="modifier.source_code == 'penalty'" class="text-red-7">{{modifier.title}}</b>
             </q-item-label>

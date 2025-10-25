@@ -51,6 +51,7 @@ $terralit: #0045a8;
 $isonit: #00d75e;
 $science: #df1bf6;
 
+$flame   : #fa6a0d;
 
 $typography-font-family: "Nunito";
 
@@ -92,13 +93,15 @@ $light-gradient-primary: linear-gradient(to top right, $primary, $primary-light)
 $light-gradient-secondary: linear-gradient(to top right, #1c9137, #21BA45);
 $light-gradient-positive: linear-gradient(to top right, #21BA45, #31e65b);
 $light-gradient-green: linear-gradient(to top right, #21BA45, #31e65b);
-$light-gradient-blue: linear-gradient(to top right, #1e88e5, #439ceb);
+$light-gradient-blue: linear-gradient(to top right, #1a7bcf, #439ceb);
 $light-gradient-orange: linear-gradient(to top right, #ff9800, #ffb03a);
 $light-gradient-purple: linear-gradient(to top right, #3f51b5, #5d71e6);
-$light-gradient-red: linear-gradient(to top right, #f44336, #f56d63);
-$light-gradient-light-blue: linear-gradient(to top right, #03a9f4, #3cbefa);
+$light-gradient-red: linear-gradient(to top right, #ea0e27, #ff6441);
+$light-gradient-light-blue: linear-gradient(to top right, #0572e7, #48c2fb);
 $light-gradient-indigo: linear-gradient(to top right, #3f51b5, #5f72e2);
 $light-gradient-flame: linear-gradient(to top right, #ff0401, #ff4800, #f39f20);
+$light-gradient-grey: linear-gradient(to top right, #535353, #878787);
+
 
 $light-gradient-terralit: linear-gradient(to top right, #0e60d4, #478cec);
 $light-gradient-isonit: linear-gradient(to top right, #04a349, #06d660);
@@ -110,6 +113,7 @@ $light-gradient-orange-to-right: linear-gradient(to right, #ff9800, #ffb03a);
 $light-gradient-positive-to-right: linear-gradient(to right, #21BA45, #31e65b);
 $light-gradient-primary-to-right: linear-gradient(to right, $primary, $primary-light);
 $light-gradient-blue-to-right: linear-gradient(to right, #1e88e5, #439ceb);
+$light-gradient-flame-to-right: linear-gradient(to right, #ff0401, #ff4800, #f39f20);
 
 
 $dark-gradient-dark-purple: linear-gradient(to top right, #1a0a22, #5a0c0c);

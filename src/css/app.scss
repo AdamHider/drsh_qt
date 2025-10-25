@@ -109,7 +109,9 @@ a{
     border-color: $green-5;
 }
 
-
+.filter-grayscale{
+  filter: grayscale(1) !important;
+}
 .text-white-transparent1{
     color: $white-transparent1;
 }
@@ -118,6 +120,12 @@ a{
 }
 .bg-primary-light{
   background: $primary-light;
+}
+.text-flame{
+  color: $flame;
+}
+.bg-flame{
+  background: $flame;
 }
 .bg-isonit{
   background: $isonit;
@@ -187,12 +195,9 @@ a{
 .bg-gradient-silver { background: $gradient-silver; }
 .bg-gradient-bronze { background: $gradient-bronze; }
 
-
-
 .bg-gradient-terralit   { background: $gradient-terralit; }
 .bg-gradient-isonit   { background: $gradient-isonit; }
 .bg-gradient-science   { background: $gradient-science; }
-
 
 .bg-light-gradient-primary  { background: $light-gradient-primary; }
 .bg-light-gradient-secondary{ background: $light-gradient-secondary; }
@@ -204,6 +209,7 @@ a{
 .bg-light-gradient-indigo   { background: $light-gradient-indigo; }
 .bg-light-gradient-light-blue   { background: $light-gradient-light-blue; }
 .bg-light-gradient-flame    { background: $light-gradient-flame; }
+.bg-light-gradient-grey    { background: $light-gradient-grey; }
 
 .bg-light-gradient-terralit   { background: $light-gradient-red; }
 .bg-light-gradient-isonit   { background: $light-gradient-isonit; }
@@ -214,6 +220,7 @@ a{
 .bg-light-gradient-positive-to-right { background: $light-gradient-positive-to-right; }
 .bg-light-gradient-blue-to-right { background: $light-gradient-blue-to-right; }
 .bg-light-gradient-primary-to-right { background: $light-gradient-primary-to-right; }
+.bg-light-gradient-flame-to-right { background: $light-gradient-flame-to-right; }
 
 .bg-dark-gradient-dark-purple   { background: $dark-gradient-dark-purple; }
 .bg-dark-gradient-pink   { background: $dark-gradient-pink; }
@@ -242,6 +249,9 @@ a{
   line-height: 1em;
   min-height: 3em;
   border-radius: $button-border-radius;
+}
+.q-btn--push.rounded-xs:not(.q-btn--round){
+  border-radius: $extra-small-border-radius;
 }
 .q-btn--push::before{
   border-bottom-width: 4px;
