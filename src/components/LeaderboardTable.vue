@@ -1,14 +1,7 @@
 <template>
-    <q-card flat style="min-height:80vh" class="rounded-b-0 q-pb-md full-width">
-      <q-card-section class="q-pb-sm q-pt-md text-left">
-        <LeaderboardFilter
-          :allowed-filters="props.allowedFilters"
-          :timePeriod="props.timePeriod"
-          @update-filter="updateFilter($event)"
-        />
-      </q-card-section>
-      <q-card-section v-if="items.length > 0 " class="q-py-sm q-px-sm relative-position" style="height: 78vh">
-        <q-list class="column full-height" >
+    <q-card flat style="height: calc(100% - 30px);" class="absolute-top rounded-b-0 rounded-t-0 q-pb-md full-width">
+      <q-card-section class="q-pb-none q-px-sm relative-position" style="height: calc(100% - 55px);">
+        <q-list v-if="items.length > 0 " class="column full-height" >
           <q-item class="text-left text-bold text-grey-7" style="font-size: 12px">
             <q-item-section side>
               <q-item-label>Место</q-item-label>
@@ -37,7 +30,7 @@
               </div>
             </template>
             <template v-slot="{ item, index }">
-              <div :style="(item.is_active) ? 'position: sticky; bottom: 0; top: 0; z-index: 1;' : ''" :index="index" :key="`itemIndex${index}`">
+              <div :style="(item.is_active) ? 'position: sticky; bottom: 5px; top: 0; z-index: 1;' : ''" :index="index" :key="`itemIndex${index}`">
                 <LeaderboardTableItem v-if="!item.is_border" :item="item" />
                 <q-item v-else>
                   <q-item-section side>
@@ -57,28 +50,36 @@
               </div>
             </template>
             <template v-slot:after>
-              <div style="position: sticky; bottom: 0; z-index: 1;" class="bg-white">
+              <div style="position: sticky; bottom: 5px; z-index: 1;" class="bg-white">
                 <LeaderboardTableItem v-if="!state.userIsVisible && state.userIsBelow" :item="userRow" :index="-1"/>
               </div>
             </template>
           </q-virtual-scroll>
         </q-list>
+        <div v-if="isLoadingInitial" class="q-pa-none">
+          <div class="fixed-full bg-white-transparent " style="z-index: 6"></div>
+          <div class="absolute-center" style="z-index: 20">
+            <q-spinner-puff size="50px" color="primary" />
+            <div class="q-my-sm">
+              <b>Сканируем список лучших...</b>
+            </div>
+          </div>
+        </div>
       </q-card-section>
-      <q-card-section v-else class="q-pa-none">
-        <BannerNotFound
-          title="Упс..."
-          description="Пока показать нечего"
-          default-image
+      <q-card-section class="q-pa-none text-left border-t-sm rouded-t border-grey" style="position: relative; z-index: 5;">
+        <LeaderboardFilter
+          :allowed-filters="props.allowedFilters"
+          :timePeriod="props.timePeriod"
+          @update-filter="updateFilter($event)"
         />
       </q-card-section>
     </q-card>
 </template>
 
 <script setup>
-import { onActivated, onMounted, watch, ref, reactive, nextTick } from 'vue'
+import { onActivated, watch, ref, reactive, nextTick } from 'vue'
 import BannerNotFound from '../components/BannerNotFound.vue'
 import LeaderboardFilter from '../components/LeaderboardFilter.vue'
-import { useExercise } from '../composables/useExercise.js'
 import LeaderboardTableItem from '../components/LeaderboardTableItem.vue'
 import { api } from '../services/index'
 
@@ -95,6 +96,7 @@ const virtualScrollRef = ref(null);
 const isLoadingInitial = ref(true);
 const userRow = ref({})
 const filter = ref({})
+
 
 const state = reactive({
   isLoading: false,

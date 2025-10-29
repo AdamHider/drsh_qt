@@ -178,7 +178,6 @@ onBeforeRouteLeave((to, from) => {
 })
 
 onActivated(async () => {
-  console.log(quests.value.value)
   calculateTimeLeft()
   if(!activeCountdown.value) activeCountdown.value = true
   countdown()

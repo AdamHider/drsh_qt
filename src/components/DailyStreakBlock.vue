@@ -76,20 +76,20 @@
             </q-item-section>
           </q-item>
         </q-card-section>
-        <q-card-section v-if="today.modifiers.length > 0" class="q-py-none">
-            <div class="row q-gutter-sm items-center justify-center">
+        <q-card-section class="q-py-none">
+            <div class="row q-gutter-sm items-center justify-center" >
               <div v-for="(modifier, modifierIndex) in today.modifiers" :key="`modifierIndex-${modifierIndex}`" >
                 <q-chip class="q-push" color="positive" text-color="white">
                   <div class="text-sm"><b>{{ modifier.setting.title }}:</b></div>
                   <div class="text-caption q-ml-xs"><b>{{ modifier.value }}</b></div>
                 </q-chip>
-                <q-chip class="q-push" v-if="today.streak.is_defended || today.streak.day_count > 1" color="positive" text-color="white">
-                  <div class="text-sm"><b>Рейтинг растёт!</b></div>
-                </q-chip>
-                <q-chip class="q-push" v-else color="negative" text-color="white">
-                  <div class="text-sm"><b>Рейтинг падает!</b></div>
-                </q-chip>
               </div>
+              <q-chip class="q-push" v-if="today.streak.is_defended || today.streak.day_count*1 > 1" color="positive" text-color="white">
+                <div class="text-sm"><b>Рейтинг растёт!</b></div>
+              </q-chip>
+              <q-chip class="q-push" v-else color="negative" text-color="white">
+                <div class="text-sm"><b>Рейтинг падает!</b></div>
+              </q-chip>
           </div>
         </q-card-section>
         <q-card-section class="q-pt-sm">
@@ -147,7 +147,7 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="infoDialog" maximized transition-show="fade" transition-hide="fade">
+    <q-dialog v-model="infoDialog" maximized transition-show="fade" transition-hide="fade" style="z-index: 10000">
       <div class="bg-dark-gradient-cosmic full-width full-height row justify-center items-center">
         <q-list class="text-white full-width column">
           <q-item class="self-start q-my-lg">

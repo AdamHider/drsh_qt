@@ -74,14 +74,6 @@
                       <div class="col-4">
                         <q-item class="rounded-borders text-center">
                           <q-item-section>
-                              <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_points?.label}}</b></q-item-label>
-                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_points?.value.toLocaleString()}}</b></q-item-label>
-                          </q-item-section>
-                        </q-item>
-                      </div>
-                      <div class="col-4">
-                        <q-item class="rounded-borders text-center">
-                          <q-item-section>
                               <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_exercises?.label}}</b></q-item-label>
                               <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_exercises?.value.toLocaleString()}}</b></q-item-label>
                           </q-item-section>
@@ -92,6 +84,14 @@
                           <q-item-section>
                               <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_skills?.label}}</b></q-item-label>
                               <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_skills?.value.toLocaleString()}}</b></q-item-label>
+                          </q-item-section>
+                        </q-item>
+                      </div>
+                      <div class="col-4">
+                        <q-item class="rounded-borders text-center">
+                          <q-item-section>
+                              <q-item-label caption lines="1"><b>{{user.active?.data.statistics.total_quests?.label}}</b></q-item-label>
+                              <q-item-label class="text-h6"><b>{{user.active?.data.statistics.total_quests?.value.toLocaleString()}}</b></q-item-label>
                           </q-item-section>
                         </q-item>
                       </div>

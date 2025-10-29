@@ -1,26 +1,34 @@
 <template>
-  <div class="column q-gutter-md" v-if="lessons.length > 0">
+  <div class="column q-gutter-md" v-if="dailyLessons.length > 0">
     <q-btn class="bg-gradient-primary" round push @click="dailyLessonDialog = true" @click.stop="playAudio('click')">
       <q-avatar size="60px" class="daily-lesson-avatar">
         <img src="/images/icons/radar.png" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
       </q-avatar>
       <q-badge v-if="unexploredCount > 0" floating rounded color="secondary" style="width: 20px; height: 20px; box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"><b>{{ unexploredCount }}</b></q-badge>
-      <q-menu anchor="top middle" self="bottom middle"
-        transition-show="jump-up"
-        transition-hide="jump-down"
-        class="bg-transparent q-flat allow-overflow" fit>
-        <div v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`" class="text-center q-mb-md ">
-          <router-link :to="`/lesson-startup-${lesson.id}`" @click.stop="playAudio('click')">
-            <q-avatar clickable v-ripple  :to="`/lesson-startup-${lesson.id}`"
-              :class="`q-push relative-position  ${(lesson.is_explored) ? '' : 'daily-lesson-avatar'}`" size="60px"
-              :style="`background-image: url(${lesson.course_section.background_image}); background-size: cover; background-position: center; height: 64px;`">
-                <q-img :src="lesson.image" width="50px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
-            </q-avatar>
-            <div class="text-white text-caption"><b>{{ lesson.title }}</b></div>
-          </router-link>
-        </div>
-      </q-menu>
     </q-btn>
+    <q-dialog v-model="dailyLessonDialog" position="bottom">
+      <q-card class="q-push">
+        <q-toolbar>
+          <q-toolbar-title class="text-subtitle1"><b>Ежедневные планеты</b></q-toolbar-title>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+        <q-card-section style="max-height: 50vh" class="scroll">
+          <q-list>
+            <q-item v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" clickable class="q-push overflow-hidden relative-position rounded-sm q-mb-md text-white text-shadow" :to="`/lesson-startup-${lesson.id}`"
+                :style="`background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
+              <q-item-section avatar>
+                    <q-img :src="lesson.image" width="60px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
+              </q-item-section>
+              <q-item-section style="z-index: 0">
+                <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
+                <div class="text-sm max-three-lines">{{ lesson.description }}</div>
+              </q-item-section>
+
+            </q-item>
+          </q-list>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -35,9 +43,10 @@ const { lesson, getDailyList  } = useLesson()
 
 const error = ref(false)
 
-const lessons = ref([])
-const dailyLessonDialog = ref(false)
+const dailyLessons = ref([])
 const unexploredCount = ref(0)
+
+const dailyLessonDialog = ref(false)
 
 const props = defineProps({
   activeOnly: Boolean,
@@ -50,11 +59,11 @@ const load = async () => {
   const questListResponse = await getDailyList()
   if (questListResponse.error) {
     error.value = questListResponse
-    lessons.value = []
+    dailyLessons.value = []
     return false;
   }
-  lessons.value = lesson.dailyList
-  unexploredCount.value = lessons.value.filter(function(item){
+  dailyLessons.value = lesson.dailyList
+  unexploredCount.value = dailyLessons.value.filter(function(item){
     return !item.is_explored;
   }).length;
 }

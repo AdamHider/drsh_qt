@@ -46,7 +46,7 @@
             Уровень {{ item.level.level }}
           </q-item-label>
         </q-item-section>
-        <q-item-section side>
+        <q-item-section side v-if="item.is_dynamics">
           <q-avatar v-if="item.is_growing" class="q-push rounded-xs"  color="green-5" size="22px">
             <q-icon size="14px" color="white" class="q-mb-xs" name="keyboard_double_arrow_up"/>
           </q-avatar>
