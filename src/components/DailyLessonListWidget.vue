@@ -15,7 +15,7 @@
         <q-card-section style="max-height: 50vh" class="scroll">
           <q-list>
             <q-item v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" clickable
-                :class="`q-push overflow-hidden relative-position rounded-sm q-mb-md text-white text-shadow ${lesson.unblock ? 'is-blocked' : ''}`" :to="`/lesson-startup-${lesson.id}`"
+                :class="`q-push overflow-hidden relative-position rounded-sm q-mb-md text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" :to="`/lesson-startup-${lesson.id}`"
                 :style="`background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
               <q-item-section avatar>
                     <q-img class="planet-image" :src="lesson.image" width="60px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
@@ -65,7 +65,7 @@ const load = async () => {
   }
   dailyLessons.value = lesson.dailyList
   unexploredCount.value = dailyLessons.value.filter(function(item){
-    return !item.unblock && !item.is_explored;
+    return !item.is_blocked && !item.is_explored;
   }).length;
 }
 
