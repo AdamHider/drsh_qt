@@ -1,6 +1,6 @@
 <template>
   <div class="column q-gutter-md" v-if="dailyLessons.length > 0">
-    <q-btn class="bg-gradient-primary" round push @click="dailyLessonDialog = true" @click.stop="playAudio('click')">
+    <q-btn :class="`bg-gradient-primary ${(unexploredCount > 0) ? 'unexplored' : ''}`" round push @click="dailyLessonDialog = true" @click.stop="playAudio('click')">
       <q-avatar size="60px" class="daily-lesson-avatar">
         <img src="/images/icons/radar.png" height="60px" style="filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 3px);" >
       </q-avatar>
@@ -14,10 +14,11 @@
         </q-toolbar>
         <q-card-section style="max-height: 50vh" class="scroll">
           <q-list>
-            <q-item v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" clickable class="q-push overflow-hidden relative-position rounded-sm q-mb-md text-white text-shadow" :to="`/lesson-startup-${lesson.id}`"
+            <q-item v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" clickable
+                :class="`q-push overflow-hidden relative-position rounded-sm q-mb-md text-white text-shadow ${lesson.unblock ? 'is-blocked' : ''}`" :to="`/lesson-startup-${lesson.id}`"
                 :style="`background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
               <q-item-section avatar>
-                    <q-img :src="lesson.image" width="60px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
+                    <q-img class="planet-image" :src="lesson.image" width="60px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
               </q-item-section>
               <q-item-section style="z-index: 0">
                 <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
@@ -64,7 +65,7 @@ const load = async () => {
   }
   dailyLessons.value = lesson.dailyList
   unexploredCount.value = dailyLessons.value.filter(function(item){
-    return !item.is_explored;
+    return !item.unblock && !item.is_explored;
   }).length;
 }
 
@@ -80,11 +81,14 @@ watch(() => reloadTrigger.value, () => {
 
 </script>
 <style scoped lang="scss">
+.is-blocked{
+  filter: grayscale(1) brightness(0.9);
+}
 .daily-lesson-avatar{
   &.lesson{
     box-shadow: inset 0 0 0 2px $yellow;
   }
-  &:before{
+  &.unexplored:before{
     content: "";
     position: absolute;
     top: 0;
@@ -96,7 +100,7 @@ watch(() => reloadTrigger.value, () => {
     animation: pulseSignal 1.5s ease infinite;
 
   }
-  &:after{
+  &.unexplored:after{
     content: "";
     position: absolute;
     top: 0;

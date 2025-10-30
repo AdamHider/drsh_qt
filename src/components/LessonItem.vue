@@ -1,6 +1,6 @@
 <template>
   <div v-if="isActive" class="background-overlay" @click="select(0)"></div>
-  <div :class="`col-6 ${(isActive) ? 'is-active' : ''} ${lessonItem.is_blocked === true ? 'is-blocked' : ''}`" style="position: relative; z-index: 10">
+  <div :class="`col-6 ${(isActive) ? 'is-active' : ''} ${isBlocked ? 'is-blocked' : ''}`" style="position: relative; z-index: 10">
     <div v-if="lessonItem.scroll_anchor" id="scrollAnchor"></div>
     <transition
       appear
@@ -53,15 +53,15 @@
 
 <script setup>
 import { useLesson } from "../composables/useLesson";
-import { ref, onActivated, onMounted, toRef, watch } from "vue";
-import { useCourse } from "../composables/useCourse";
-import { useLoader } from '../composables/useLoader'
-import { useRouter } from "vue-router";
+import { ref, onActivated, onMounted, toRef, computed } from "vue";
 
-const { lesson, getList } = useLesson();
+const { lesson } = useLesson();
 
 const emits = defineEmits(['onSelected'])
 
+const isBlocked = computed(() => {
+  return lessonItem.value.is_blocked === true && lessonItem.value.satellites.filter((item) => { return !item.is_blocked }).length == 0
+})
 
 const selectedLesson = ref(0);
 const transitionTrigger = ref(false);

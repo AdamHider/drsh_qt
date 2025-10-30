@@ -163,6 +163,7 @@ const reload = async () => {
   activeQuestDialog.value = false
   activeQuest.value = {}
   await getList(props.active_only)
+  emits('onClaim')
 }
 
 onBeforeRouteLeave((to, from) => {

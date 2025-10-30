@@ -1,6 +1,6 @@
 <template>
     <q-card :class="`${(props.lite) ? 'no-shadow bg-grey-3 rounded-sm' : 'q-push'} full-width text-left`"  @click="streakDialog = true" v-if="today.streak" @click.stop="playAudio('click')">
-        <q-card-section v-if="!props.lite" :class="` q-px-sm q-py-none ${(today.streak.day_count == 1 && !today.streak.is_defended) ? 'bg-light-gradient-grey' : 'bg-light-gradient-flame'} text-white`">
+        <q-card-section :class="` q-px-sm q-py-none ${(today.streak.day_count == 1 && !today.streak.is_defended) ? 'bg-light-gradient-grey' : 'bg-light-gradient-flame'} text-white`">
           <q-item dense class="q-pa-none ">
             <q-item-section avatar >
               <q-img class="q-mt-sm" src="/images/streak_full.png" width="35px" style="margin-top: -15px; filter: drop-shadow(0px 2px 5px #ffcf97);"/>
@@ -15,7 +15,7 @@
             </q-item-section>
           </q-item>
         </q-card-section>
-        <q-card-section v-if="!props.lite" class="q-pa-sm">
+        <q-card-section class="q-pa-sm">
           <div class="flex full-width justify-around" style="gap: 10px">
             <div v-for="(streakItem, streakItemIndex) in streaks" :key="`streakItemIndex-${streakItemIndex}`" class="text-center text-dark">
               <div :class="`text-caption ${(streakItem.is_today) ? 'text-flame' : (streakItem.is_inactive) ? 'text-grey' : ''}`"><b>{{ streakItem.weekday }}</b></div>
@@ -32,7 +32,7 @@
           <div v-if="!props.lite"  class="arrow-top"></div>
           <div class="full-width">
             <div class="flex justify-between q-pb-xs items-center no-wrap">
-              <div class="text-caption q-ml-sm" style="line-height: 1.4;">
+              <div class="text-caption q-ml-sm q-pr-sm" style="line-height: 1.4;">
                 <b>Изучи <span v-if="today.quest.progress > 0">ещё</span> {{ (today.quest.value-today.quest.progress).toLocaleString() }}
                 {{ today.quest.plural_text }}
                 для <span v-if="today.streak.day_count == 1 && !today.streak.is_defended">начала</span><span v-else>защиты</span> серии!</b>
@@ -224,7 +224,9 @@ const load = async () => {
     streaks.value = streakListResponse
     today.value = streakListResponse.find((item) => item.is_today)
     today.value.streak.plural_text = pluralHumanize(today.value.streak.day_count, ['дней','день','дня'])
-    today.value.quest.plural_text = pluralHumanize(today.value.quest.value - today.value.quest.progress, questTargetsHumanizer.value[today.value.quest.code])
+    if(today.value.quest){
+      today.value.quest.plural_text = pluralHumanize(today.value.quest.value - today.value.quest.progress, questTargetsHumanizer.value[today.value.quest.code])
+    }
   }
   isLoading.value = false
 }
