@@ -7,37 +7,42 @@
           style="max-width: min(calc(90vh - 420px), 100vw);"/>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
     </q-card>
-    <div class="q-mb-md  syllables-grid">
-      <q-card class="syllables-image rounded-sm" flat v-for="(item, index) in words.listActive" :key="index" dense >
-        <div>
-          <q-img
-          class="rounded-sm"
-            cover
-            :src="item.image"/>
-          <div class="text-subtitle1 text-bold" v-html="transliterateHTML(item.text)"></div>
-          <div v-if="item.audio_link" side>
-            <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == item.audio_link && lessonAudio.is_playing"
-              flat
-              class="play-audio"
-              :data-audio="item.audio_link"
-              @click="pauseAudio()"
-              icon="pause"
-            />
-            <q-btn  v-else
-              class="play-audio"
-              :data-audio="item.audio_link"
-              @click="playAudio(item.audio_link)"
-              icon="play_arrow"
-            />
+    <div class="syllables-grid">
+      <q-card class="syllables-image rounded-sm text-center q-pa-sm" flat v-for="(item, index) in words.listActive" :key="index" dense >
+          <transition
+            appear
+            enter-active-class="animated zoomIn"
+            leave-active-class="animated zoomOut">
+          <div v-if="item.rendered" class="bg-white full-height">
+            <q-img
+              :class="`rounded-sm ${(changedIndex == index) ? 'is-correct' : ''}`"
+              cover
+              :src="item.image"
+              style="max-width: min(calc(50vh - 190px), 50vw);"/>
+            <div v-if="item.audio_link" side>
+              <q-btn  v-if="lessonAudio.list[lessonAudio.activeIndex]?.filename == item.audio_link && lessonAudio.is_playing"
+                flat
+                class="play-audio"
+                :data-audio="item.audio_link"
+                @click="pauseAudio()"
+                icon="pause"
+              />
+              <q-btn  v-else
+                class="play-audio"
+                :data-audio="item.audio_link"
+                @click="playAudio(item.audio_link)"
+                icon="play_arrow"
+              />
+            </div>
           </div>
-        </div>
+          </transition>
       </q-card>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, watch, onMounted } from 'vue'
+import { reactive, watch, onMounted, ref } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
@@ -50,7 +55,7 @@ const emits = defineEmits(['onRendered'])
 const { lesson } = useLesson()
 const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
-
+const changedIndex = ref(null)
 const words = reactive({
   list: [],
   listActive: []
@@ -82,6 +87,7 @@ const setAllWords = () => {
 const setActiveWords = () => {
   for (const i in words.list) {
     if(words.list[i].status == 'active' && words.listActive.length < 4){
+      lesson.active.page.data.word_list[i].rendered = true
       words.listActive.push(lesson.active.page.data.word_list[i])
     }
   }
@@ -98,9 +104,11 @@ const getInactiveWords = () => {
   result.push({text: ""})
   return result;
 }
-const refillWords = (changedIndex) => {
+const refillWords = () => {
   var inactiveWords = getInactiveWords()
-  words.listActive[changedIndex] = inactiveWords[0]
+  words.listActive[changedIndex.value] = inactiveWords[0]
+  words.listActive[changedIndex.value].rendered = true
+  changedIndex.value = null
   inactiveWords.shift();
 }
 const findDifferences = (newArray, oldArray) => {
@@ -119,9 +127,12 @@ onMounted(() => {
   emits('onRendered', true)
 })
 watch(() => lesson.active.page, (newValue, oldValue) => {
-  const changedIndex = findDifferences(newValue.fields, oldValue.fields)
-  refillWords(changedIndex)
-  renderData()
+  changedIndex.value = findDifferences(newValue.fields, oldValue.fields)
+  words.listActive[changedIndex.value].rendered = false
+  setTimeout(() => {
+    refillWords()
+    renderData()
+  }, 300)
 })
 
 </script>
@@ -132,6 +143,7 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
   grid-template-areas:
     "a b"
     "c d";
+  grid-template-rows: 1fr 1fr;
 }
 
 .syllables-grid > div:nth-child(1){
@@ -145,5 +157,8 @@ watch(() => lesson.active.page, (newValue, oldValue) => {
 }
 .syllables-grid > div:nth-child(4){
   grid-area: d;
+}
+.syllables-grid.is-correct{
+  box-shadow: 0px 0px 0px 2px $positive;
 }
 </style>

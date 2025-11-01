@@ -4,7 +4,7 @@
         <q-img
             cover
             :src="lesson.active.page?.data?.image"
-            style="max-width: min(calc(90vh - 420px), 100vw);"/>
+            style="max-width: min(calc(90vh - 420px), 400px);"/>
         <LessonAudioPlayer/>
     </q-card>
     <div class="q-px-md q-pb-md q-pt-sm" >

@@ -3,7 +3,7 @@
     <q-card class="q-ma-sm " flat>
         <q-card-section class="q-pa-sm text-center">
           <q-img v-if="data.data.image"
-            style="max-width: min(calc(90vh - 420px), 100vw);"
+            style="max-width: min(calc(90vh - 420px), 400px);"
             class="rounded-borders"
             :src="data.data.image"
             no-spinner

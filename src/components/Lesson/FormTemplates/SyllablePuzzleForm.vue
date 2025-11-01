@@ -1,22 +1,27 @@
 <template>
   <div v-if="activeInputs.length > 0" class="q-mb-md">
-        <div :class="`q-ma-sm flex justify-center items-center q-pa-xs bg-grey-3 rounded-sm`"  >
+        <div :class="`q-ma-sm flex justify-center relative-position items-center q-pa-xs bg-grey-3 rounded-sm`"  >
+          <q-spinner-puff v-if="isAnswered" class="absolute-left" size="50px" color="primary" />
           <div style="flex:1" class="flex justify-center ">
             <div v-for="(option, optionIndex) in selectedSyllables" :key="optionIndex">
-              <q-chip :class="`q-lesson-field-value bg-white rounded-xs ${(isAnswered) ? 'is-correct': ''}`" size="20px" clickable @click.stop="selectVariant(option, optionIndex)">
+              <q-chip :class="`q-lesson-field-value bg-white rounded-xs ${(isCorrect) ? 'is-correct': ''}`" size="18px" style="width: 40px; height: 40px;" clickable @click.stop="selectVariant(option, optionIndex)">
                 <b>{{ transliterateHTML(option) }}</b>
               </q-chip>
             </div>
           </div>
             <div :style="(selectedSyllables.length > 0) ? '' : 'pointer-events: none'">
-              <q-chip class="q-lesson-field-value rounded-sm" :size="(isLetterly) ? '20px' : '18px'" @click.stop="clearVariant()" :color="(selectedSyllables.length == 0) ? 'red-5' : 'negative'" text-color="white" :clickable="!isAnswered">
+              <q-chip class="q-lesson-field-value rounded-sm" size="20px" :clickable="!clearDisabled && !isAnswered" @click.stop="clearVariant()" :color="(selectedSyllables.length == 0) ? 'red-5' : 'negative'" text-color="white" >
                 <q-icon name="keyboard_backspace"></q-icon>
               </q-chip>
             </div>
         </div>
-        <div class="flex justify-center wrap">
+        <div class="flex variant-container justify-center wrap q-pa-sm" >
           <div v-for="(option, optionIndex) in activeSyllables" :key="optionIndex">
-            <q-chip :class="`q-lesson-field-value bg-white rounded-xs ${(selectedSyllablesIndexes.includes(optionIndex)) ? 'bg-orange text-white' : ''} `" size="20px" style="width: 50px; height: 50px;" :clickable="option.text !== '' && !selectedSyllablesIndexes.includes(optionIndex) && !isAnswered" @click.stop="selectVariant(option, optionIndex)">
+            <q-chip :class="`q-lesson-field-value bg-white rounded-xs ${(selectedSyllablesIndexes.includes(optionIndex)) ? 'bg-orange text-white' : ''} `"
+              size="18px"
+              style="width: 50px; height: 50px;"
+              :clickable="option.text !== '' && !selectedSyllablesIndexes.includes(optionIndex) && !isAnswered"
+              @click.stop="selectVariant(option, optionIndex)">
               <b>{{ transliterateHTML(option.text) }}</b>
             </q-chip>
           </div>
@@ -34,10 +39,9 @@ const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
-
-const currentIndex = ref(null)
-const isLetterly = ref(false)
 const isAnswered = ref(false)
+const isCorrect = ref(false)
+const clearDisabled = ref(false)
 const formData = reactive({
   fields: []
 })
@@ -75,12 +79,16 @@ const setActiveInputs = () => {
   }
 }
 const setActiveSyllables = () => {
-  const totalSyllables = 20
   const active_syllables = allSyllables.value.filter((item) => {return item.status == 'active'})
-  for(var i in active_syllables){
-    if(active_syllables[i].status == 'active'  && i < totalSyllables){
+
+  for(var i = 0; i < 20; i++) {
+    if(active_syllables[i] && active_syllables[i].status == 'active'){
         activeSyllables.value.push(active_syllables[i])
+    } else {
+        activeSyllables.value.push({status: 'blank', text: ''})
     }
+  }
+  for(var i in active_syllables){
   }
 }
 const setAllSyllables = () => {
@@ -140,8 +148,10 @@ const selectVariant = (syllable, index) => {
 }
 const clearVariant = (text) => {
   playAudio('click')
+  if(clearDisabled.value) return
   selectedSyllables.value.pop()
   selectedSyllablesIndexes.value.pop()
+  setClearDebounce()
 }
 const checkExistingScheme = () => {
   const scheme = selectedSyllables.value.join('|')
@@ -163,13 +173,21 @@ const refillSyllablesFields = () => {
   selectedSyllables.value = []
   selectedSyllablesIndexes.value = []
 }
-
+const setClearDebounce = () => {
+  clearDisabled.value = true
+  setTimeout(() => {clearDisabled.value = false}, 10)
+}
 const saveAnswer = function () {
   isAnswered.value = true
   setTimeout(() => {
     emits('onAnswerSaved')
+    playAudio('page_success')
+    isCorrect.value = true
     isAnswered.value = false
   }, 500)
+  setTimeout(() => {
+    isCorrect.value = false
+  }, 1000)
 }
 
 renderFields()
@@ -222,5 +240,11 @@ watch(formData.fields, (newValue, oldValue) => {
       background: $green-7 !important;
       color: white !important;
   }
+}
+.variant-container{
+  width: max-content;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  margin: 0 auto;
 }
 </style>

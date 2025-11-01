@@ -1,0 +1,202 @@
+{
+    "index": 1,
+    "title": "Собери слова по слогам",
+    "subtitle": "",
+    "form_stepper": true,
+    "silent_saves": true,
+    "form_template": "syllablePuzzle",
+    "page_template": "syllables",
+    "template_config": {
+        "word_list": [
+            {
+                "text": "{{input1}}",
+                "image": "image/index.php/lessons/unit_2/sinif.jpg",
+                "index": 1
+            },
+            {
+                "text": "{{input2}}",
+                "image": "image/index.php/lessons/unit_2/qat.jpg",
+                "index": 2
+            },
+            {
+                "text": "{{input3}}",
+                "image": "image/index.php/lessons/unit_2/divar.jpg",
+                "index": 3,
+                "label": "стена"
+            },
+            {
+                "text": "{{input4}}",
+                "image": "image/index.php/lessons/unit_2/koridor.jpg",
+                "index": 4,
+                "label": "коридор"
+            },
+            {
+                "text": "{{input5}}",
+                "image": "image/index.php/lessons/unit_2/resim.jpg",
+                "index": 5,
+                "label": "рисунок"
+            },
+            {
+                "text": "{{input6}}",
+                "image": "image/index.php/lessons/unit_2/silgich.jpg",
+                "index": 6,
+                "label": "стёрка"
+            },
+            {
+                "text": "{{input7}}",
+                "image": "image/index.php/lessons/unit_2/bor.jpg",
+                "index": 7,
+                "label": "мел"
+            },
+            {
+                "text": "{{input8}}",
+                "image": "image/index.php/lessons/unit_2/rale.jpg",
+                "index": 8,
+                "label": "парта"
+            }
+        ],
+        "input_list": [
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 1,
+                "answer": "сыныф",
+                "scheme": "сы|ны|ф",
+                "syllables": [
+                    {
+                        "text": "сы"
+                    },
+                    {
+                        "text": "ны"
+                    },
+                    {
+                        "text": "ф"
+                    }
+                ]
+            },
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 2,
+                "answer": "къат",
+                "scheme": "къа|т",
+                "syllables": [
+                    {
+                        "text": "къа"
+                    },
+                    {
+                        "text": "т"
+                    }
+                ]
+            },
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 3,
+                "answer": "дивар",
+                "scheme": "ди|ва|р",
+                "syllables": [
+                    {
+                        "text": "ди"
+                    },
+                    {
+                        "text": "ва"
+                    },
+                    {
+                        "text": "р"
+                    }
+                ]
+            },
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 4,
+                "answer": "коридор",
+                "scheme": "ко|ри|до|р",
+                "syllables": [
+                    {
+                        "text": "ко"
+                    },
+                    {
+                        "text": "ри"
+                    },
+                    {
+                        "text": "до"
+                    },
+                    {
+                        "text": "р"
+                    }
+                ]
+            },
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 5,
+                "answer": "ресим",
+                "scheme": "ре|си|м",
+                "syllables": [
+                    {
+                        "text": "ре"
+                    },
+                    {
+                        "text": "си"
+                    },
+                    {
+                        "text": "м"
+                    }
+                ]
+            },
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 6,
+                "answer": "сильгич",
+                "scheme": "си|ль|ги|ч",
+                "syllables": [
+                    {
+                        "text": "си"
+                    },
+                    {
+                        "text": "ль"
+                    },
+                    {
+                        "text": "ги"
+                    },
+                    {
+                        "text": "ч"
+                    }
+                ]
+            },
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 7,
+                "answer": "бор",
+                "scheme": "бо|р",
+                "syllables": [
+                    {
+                        "text": "бо"
+                    },
+                    {
+                        "text": "р"
+                    }
+                ]
+            },
+            {
+                "mode": "syllablePuzzle",
+                "type": "input",
+                "index": 8,
+                "answer": "рале",
+                "scheme": "ра|ле",
+                "syllables": [
+                    {
+                        "text": "ра"
+                    },
+                    {
+                        "text": "ле"
+                    }
+                ]
+            }
+        ]
+    }
+}

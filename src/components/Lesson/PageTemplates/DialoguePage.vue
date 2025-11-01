@@ -6,7 +6,7 @@
             class="rounded-borders"
             cover
             :src="lesson.active.page?.data?.image"
-            style="max-width: min(calc(90vh - 420px), 100vw);"/>
+            style="max-width: min(calc(90vh - 420px), 400px);"/>
         </q-card-section>
         <LessonAudioPlayer/>
     </q-card>

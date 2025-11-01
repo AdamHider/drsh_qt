@@ -15,7 +15,7 @@
         <q-card-section style="max-height: 50vh" class="scroll">
           <q-list>
             <q-item v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" clickable
-                :class="`q-push overflow-hidden relative-position rounded-sm q-mb-md text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" :to="`/lesson-startup-${lesson.id}`"
+                :class="`q-push  relative-position rounded-sm q-mb-md text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" :to="`/lesson-startup-${lesson.id}`"
                 :style="`background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
               <q-item-section avatar>
                     <q-img class="planet-image" :src="lesson.image" width="60px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
@@ -24,6 +24,7 @@
                 <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
                 <div class="text-sm max-three-lines">{{ lesson.description }}</div>
               </q-item-section>
+              <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
 
             </q-item>
           </q-list>
@@ -57,9 +58,9 @@ const props = defineProps({
 const reloadTrigger = toRef(props, "reloadTrigger");
 
 const load = async () => {
-  const questListResponse = await getDailyList()
-  if (questListResponse.error) {
-    error.value = questListResponse
+  const lessonListResponse = await getDailyList()
+  if (lessonListResponse.error) {
+    error.value = lessonListResponse
     dailyLessons.value = []
     return false;
   }
