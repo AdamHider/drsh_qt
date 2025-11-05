@@ -16,8 +16,8 @@
           </q-item>
         </q-card-section>
         <q-card-section class="q-pa-sm">
-          <div class="flex full-width justify-around" style="gap: 10px">
-            <div v-for="(streakItem, streakItemIndex) in streaks" :key="`streakItemIndex-${streakItemIndex}`" class="text-center text-dark">
+          <div class="flex full-width justify-around">
+            <div v-for="(streakItem, streakItemIndex) in streaks" :key="`streakItemIndex-${streakItemIndex}`" class="text-center text-dark" style="flex: 1">
               <div :class="`text-caption ${(streakItem.is_today) ? 'text-flame' : (streakItem.is_inactive) ? 'text-grey' : ''}`"><b>{{ streakItem.weekday }}</b></div>
               <div :class="`daily-streak text-center text-dark ${(streakItem.streak?.id && streakItem?.streak?.has_previous) ? 'has-previous' : ''} q-mt-xs`">
                 <q-avatar size="30px" :class="`daily-streak-value ${(streakItem.is_inactive) ? 'text-grey' : ''} ${ (streakItem.streak?.is_defended) ? 'bg-flame text-white' : 'bg-white'} ${ (streakItem.is_today) ? 'is-today' : ''}`">
@@ -96,8 +96,8 @@
           </div>
         </q-card-section>
         <q-card-section class="q-pt-sm">
-          <div class="flex full-width justify-around no-wrap" style="gap: 10px">
-            <div v-for="(streakItem, streakItemIndex) in streaks" :key="`streakItemIndex-${streakItemIndex}`"
+          <div class="flex full-width justify-around no-wrap">
+            <div v-for="(streakItem, streakItemIndex) in streaks" :key="`streakItemIndex-${streakItemIndex}`" style="flex: 1"
               class="text-center text-dark relative-position">
               <div :class="`text-caption ${(streakItem.is_today) ? 'text-flame' : ''}`"><b>{{ streakItem.weekday }}</b></div>
               <div :class="`daily-streak text-center text-dark ${(streakItem.streak?.id && streakItem.streak?.has_previous) ? 'has-previous' : ''} q-mt-xs`">
@@ -265,10 +265,10 @@ onBeforeRouteLeave((to, from) => {
     &:before{
       content: "";
       position: absolute;
-      width: 150%;
+      width: 100%;
       height: 100%;
       top: 0;
-      right: 45%;
+      right: 50%;
       background: $flame;
       z-index: 0;
     }
