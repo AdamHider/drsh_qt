@@ -5,14 +5,15 @@
       <q-img
           cover
           :src="lesson.active.page?.data?.image"
+          class="rounded-borders"
           style="max-width: min(calc(90vh - 420px), 400px);"/>
         <LessonAudioPlayer v-if="lessonAudio.list.length > 0"/>
       </q-card-section>
     </q-card>
-    <q-list class="q-mb-md text-center">
+    <q-list :class="`q-mb-md ${(lesson.active.page?.data?.image) ? 'text-center' : 'text-left'}`">
       <q-item>
         <q-item-section>
-          <q-item-label><div class="text-subtitle1 text-bold" v-html="transliterateHTML(text.text)"></div></q-item-label>
+          <q-item-label><div :class="`${(lesson.active.page?.data?.image) ? 'text-subtitle1 text-bold' : 'text-subtitle2'}`" v-html="transliterateHTML(text.text)"></div></q-item-label>
         </q-item-section>
       </q-item>
     </q-list>

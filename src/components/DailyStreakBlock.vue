@@ -203,6 +203,7 @@ const questTargetsHumanizer = ref({
 })
 
 const pluralHumanize = (n, wordsConfig) => {
+  if(!wordsConfig) return ''
   const absN = Math.abs(n)
   const lastDigit = absN % 10
   const lastTwoDigits = absN % 100

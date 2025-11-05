@@ -72,7 +72,7 @@ function translit(input, exceptions, mode = 'simple'){
     for ( var i in exceptions ) {
         input = input.replace( exceptions[i][0], exceptions[i][1] );
     }
-    return input.trim();
+    return input;
 }
 
 function makeTagSubstitution(input){

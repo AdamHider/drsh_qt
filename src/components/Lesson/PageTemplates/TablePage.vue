@@ -15,13 +15,13 @@
       >
         <thead v-if="table.header?.length > 0">
           <tr class="text-left">
-            <th v-for="(th, thIndex) in table.header" :key="thIndex">
+            <th v-for="(th, thIndex) in table.header" :key="thIndex" class="q-pa-xs">
               <div style="white-space: wrap;" class="text-subtitle2"><b v-html="transliterateHTML(th.text)"></b></div>
             </th>
           </tr>
         </thead>
         <tr v-for="(row, index) in table.rows" :key="index">
-          <td v-for="(column, colIndex) in row.column_list" :key="colIndex" class="relative-position" style="white-space: normal;">
+          <td v-for="(column, colIndex) in row.column_list" :key="colIndex" class="relative-position q-pa-xs" style="white-space: normal;">
               <div v-html="transliterateHTML(column.text)"  class="q-py-sm"></div>
 
               <div v-if="column.audio_link" class="absolute-right">
@@ -99,5 +99,9 @@ onMounted(() => {
 <style lang="scss" >
 .q-markup-table tr:not(:last-child) td{
   border-bottom-width: 1px;
+}
+.q-table td,
+.q-table th{
+  padding: 4px 8px !important;
 }
 </style>
