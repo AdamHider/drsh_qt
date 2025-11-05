@@ -6,7 +6,7 @@
           enter-active-class="animated fadeInUp"
           leave-active-class="animated fadeOutDown">
             <div class="text-h5 vertical-middle" v-if="lesson.active.page?.answer?.is_finished">
-              <b v-if="answerPercentage == 100">Отличный результат!</b>
+              <b v-if="answerPercentage == 100">Превосходно!</b>
               <b v-else-if="answerPercentage < 80 && answerPercentage >= 40">Хороший результат!</b>
               <b v-else-if="answerPercentage < 40">Можно было и лучше!</b>
             </div>

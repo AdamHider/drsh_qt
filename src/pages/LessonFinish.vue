@@ -226,7 +226,8 @@ const next = async () => {
       setTarget(nextLesson.value.id)
     }
   } else {
-    setTarget(lesson.active.id)
+    router.go(-2)
+    return
   }
   router.go(-1)
 }

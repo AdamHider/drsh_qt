@@ -33,7 +33,10 @@
           <div class="full-width">
             <div class="flex justify-between q-pb-xs items-center no-wrap">
               <div class="text-caption q-ml-sm q-pr-sm" style="line-height: 1.4;">
-                <b>Изучи <span v-if="today.quest.progress > 0">ещё</span> {{ (today.quest.value-today.quest.progress).toLocaleString() }}
+                <b>
+                  <span v-if="today.quest.code == 'total_lessons'">Изучи</span>
+                  <span v-else-if="today.quest.code == 'resource'">Собери</span>
+                  <span v-if="today.quest.progress > 0">ещё</span> {{ (today.quest.value-today.quest.progress).toLocaleString() }}
                 {{ today.quest.plural_text }}
                 для <span v-if="today.streak.day_count == 1 && !today.streak.is_defended">начала</span><span v-else>защиты</span> серии!</b>
               </div>
@@ -113,7 +116,10 @@
             <div class="full-width">
               <div class="flex justify-between q-pb-xs items-end no-wrap">
                 <div class="text-caption q-ml-sm" style="line-height: 1.4;">
-                  <b>Изучи <span v-if="today.quest.progress > 0">ещё</span> {{ (today.quest.value-today.quest.progress).toLocaleString() }}
+                  <b>
+                  <span v-if="today.quest.code == 'total_lessons'">Изучи</span>
+                  <span v-else-if="today.quest.code == 'resource'">Собери</span>
+                  <span v-if="today.quest.progress > 0">ещё</span> {{ (today.quest.value-today.quest.progress).toLocaleString() }}
                   {{ today.quest.plural_text }}
                   для <span v-if="today.streak.day_count == 1 && !today.streak.is_defended">начала</span><span v-else>защиты</span> серии!</b>
                 </div>
@@ -199,7 +205,8 @@ const infoDialog = ref(false)
 const isLoading = ref(false)
 
 const questTargetsHumanizer = ref({
-  total_lessons: ['планет','планету','планеты',]
+  total_lessons: ['планет','планету','планеты',],
+  resource: ['звёзд','звезду','звезды',]
 })
 
 const pluralHumanize = (n, wordsConfig) => {
