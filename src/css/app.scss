@@ -115,7 +115,9 @@ a{
 .border-green-5{
     border-color: $green-5;
 }
-
+.nowrap{
+  white-space: nowrap;
+}
 .filter-grayscale{
   filter: grayscale(1) !important;
 }
