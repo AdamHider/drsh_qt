@@ -25,6 +25,9 @@ import { reactive, watch, onMounted } from 'vue'
 import LessonAudioPlayer from '../LessonAudioPlayer.vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useTransliterate } from '../../../composables/useTransliterate'
+import { useLessonAudio } from '../../../composables/useLessonAudio'
+
+const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 
 const { transliterateHTML } = useTransliterate()
 

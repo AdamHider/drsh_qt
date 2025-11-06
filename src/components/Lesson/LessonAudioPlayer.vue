@@ -1,5 +1,5 @@
 <template>
-    <q-card  v-if="lessonAudio.list.length > 0" class="transparent absolute-bottom full-width full-height flex" flat>
+    <q-card  v-if="lessonAudio.list?.length > 0" class="transparent absolute-bottom full-width full-height flex" flat>
         <div v-if="!lessonAudio.is_playing"
             @click="lessonAudio.is_playing = true; playAudioAll();"
             class="absolute full-width full-height flex justify-center content-center"
