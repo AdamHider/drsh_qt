@@ -6,8 +6,8 @@
       <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push
           @click="() => {if(user.active?.data.resources.energy.quantity == 0) router.push('/market')}"/>
     </q-app-header>
-    <q-page :class="`text-center full-width finish-page `" style="padding-top: 50px; margin-bottom: -1px;">
-        <q-card class="transparent text-white no-shadow full-width" style="position: relative; z-index: 1;">
+    <q-page :class="`text-center full-width finish-page column`" style="padding-top: 50px; margin-bottom: -1px;">
+        <q-card class="transparent text-white no-shadow full-width" style="position: relative; z-index: 1; flex: 1;">
             <q-card-section class="q-pb-none">
                 <div class="text-h5"><b>{{ lesson.active.title }}</b></div>
             </q-card-section>
@@ -28,7 +28,7 @@
           appear
           enter-active-class="animated fadeInUp animation-delay-2"
           leave-active-class="animated zoomOut">
-          <q-card flat class="position-relative text-center text-dark rounded-none q-pt-sm lesson-finish-card" style="z-index: 1; margin-top: -50px;" v-if="transitionTrigger">
+          <q-card flat class="position-relative text-center text-dark rounded-none q-pt-sm lesson-finish-card" style="z-index: 1; margin-top: -50px; flex: 1;" v-if="transitionTrigger">
             <q-card-section class="q-pb-none q-pt-sm text-positive"  style="margin-top: -100px; z-index: 1">
               <q-img v-if="lesson.active.exercise.data.totals.reward_level == 3 || lesson.active.exercise.data.totals.is_maximum" src="/images/lesson_finish_excellent.png"/>
               <q-img v-else-if="lesson.active.exercise.data.totals.reward_level >= 2" src="/images/lesson_finish_good.png"/>

@@ -48,7 +48,7 @@
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"/>
+            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"  :loading="isLoading"/>
             <q-btn v-else color="positive" push class="full-width text-bold q-mt-sm" icon="add" label="Докупить ресурсы" @click="openMarket()"  @click.stop="playAudio('click')"/>
           </div>
           <div v-if="currentSkill.is_gained" class="full-width">
@@ -98,6 +98,7 @@ const claimDialog = ref(false)
 const claimError = ref(false)
 const currentSkill = ref(false)
 const router = useRouter()
+const isLoading = ref(false)
 
 const props = defineProps({
   list: Array,
@@ -113,6 +114,7 @@ const openModal = function (skill) {
   claimDialog.value = true
 }
 const claimSkill = async function (skillId) {
+  isLoading.value = true
   const skillRewardResponse = await api.skill.claimSkill({ skill_id: skillId })
   if (skillRewardResponse.error) {
     claimError.value = true
@@ -121,6 +123,7 @@ const claimSkill = async function (skillId) {
     currentSkill.value = false
     claimDialog.value = false
   }
+  isLoading.value = false
 }
 const openMarket = () => {
   claimDialog.value = false

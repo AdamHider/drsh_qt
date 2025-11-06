@@ -18,9 +18,6 @@
             <q-avatar size="60px"><q-img src="images/icons/map.png"/></q-avatar>
           </q-btn>
         </q-page-sticky>
-        <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[80, 60]">
-          <ChestsWidget type="daily" color="primary"/>
-        </q-page-sticky>
         <q-page-sticky position="bottom-left" style="z-index: 100" :offset="[140, 60]">
           <ChestsWidget type="personal" color="green"/>
         </q-page-sticky>

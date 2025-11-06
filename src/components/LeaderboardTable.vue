@@ -25,7 +25,7 @@
             ref="virtualScrollRef"
           >
             <template v-slot:before>
-              <div style="position: sticky; top: 0; z-index: 1;" class="bg-white">
+              <div style="position: sticky; top: 0; z-index: 1;" class="bg-white" v-if="userRow.place > 3">
                 <LeaderboardTableItem v-if="!state.userIsVisible && state.userIsAbove" :item="userRow" :index="-1"/>
               </div>
             </template>
@@ -50,7 +50,7 @@
               </div>
             </template>
             <template v-slot:after>
-              <div style="position: sticky; bottom: 5px; z-index: 1;" class="bg-white">
+              <div style="position: sticky; bottom: 5px; z-index: 1;" class="bg-white" v-if="userRow.place > 3">
                 <LeaderboardTableItem v-if="!state.userIsVisible && state.userIsBelow" :item="userRow" :index="-1"/>
               </div>
             </template>

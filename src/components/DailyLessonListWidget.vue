@@ -12,7 +12,7 @@
           <q-toolbar-title class="text-subtitle1"><b>Ежедневные планеты</b></q-toolbar-title>
           <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
-        <q-card-section style="max-height: 50vh" class="scroll">
+        <q-card-section style="max-height: 70vh" class="scroll">
           <q-list>
             <q-item v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" clickable
                 :class="`q-push  relative-position rounded-sm q-mb-md text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" :to="`/lesson-startup-${lesson.id}`"
@@ -64,7 +64,8 @@ const load = async () => {
     dailyLessons.value = []
     return false;
   }
-  dailyLessons.value = lesson.dailyList
+  dailyLessons.value = lesson.dailyList.sort((a, b) => a.is_blocked ? 1 : -1);
+
   unexploredCount.value = dailyLessons.value.filter(function(item){
     return !item.is_blocked && !item.is_explored;
   }).length;
