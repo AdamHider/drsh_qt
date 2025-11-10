@@ -12,6 +12,7 @@
       <UserNewLevelDialog/>
       <PWAInstallDialog/>
       <PWASWDialog/>
+      <PushSubscribeDialog/>
       <NetworkTest/>
   </q-layout>
   <AppLoader/>
@@ -27,6 +28,7 @@ import AppNotifications from 'components/AppNotifications.vue'
 import UserNewLevelDialog from 'components/UserNewLevelDialog.vue'
 import PWAInstallDialog from 'components/PWAInstallDialog.vue'
 import PWASWDialog from 'components/PWASWDialog.vue'
+import PushSubscribeDialog from 'components/PushSubscribeDialog.vue'
 import NetworkTest from 'components/NetworkTest.vue'
 import { loadAudio } from 'src/services/audioService';
 import { Platform } from 'quasar'

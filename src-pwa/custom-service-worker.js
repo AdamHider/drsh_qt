@@ -28,9 +28,45 @@ if (process.env.MODE !== 'ssr' || process.env.PROD) {
     )
   )
 }
-
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting()
   }
 })
+self.addEventListener('push', function(event) {
+  const data = event.data ? event.data.json() : {};
+
+  const title = data.title || 'Новое уведомление';
+  const options = {
+      body: data.body || 'Кликните, чтобы узнать больше.',
+      icon: data.icon || '/icons/icon-128x128.png',
+      badge: '/icons/badge.png',
+      data: {
+          url: data.data.url || '/'
+      }
+  };
+  event.waitUntil(
+      self.registration.showNotification(title, options)
+  );
+});
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  const targetUrl = event.notification.data.url || '/';
+  event.waitUntil(
+      clients.matchAll({ type: 'window' }).then(windowClients => {
+          let matchingClient = null;
+          for (let i = 0; i < windowClients.length; i++) {
+              const client = windowClients[i];
+              if (client.url.includes(self.location.origin)) {
+                  matchingClient = client;
+                  break;
+              }
+          }
+          if (matchingClient) {
+              return matchingClient.navigate(targetUrl).then(client => client.focus());
+          } else {
+              return clients.openWindow(targetUrl);
+          }
+      })
+  );
+});
