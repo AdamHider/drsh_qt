@@ -27,7 +27,7 @@
               <div :class="`col col-${12/marketChest.priority} q-pa-sm q-mt-sm`" v-for="(marketChest, marketChestIndex) in marketChests" :key="`marketChestIndex-${marketChestIndex}`">
                 <q-card v-if="marketChest.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketChest.background_image}'); background-size: cover; margin-top: 40px;`">
                   <q-card-section horizontal class="q-pa-sm items-center">
-                    <q-img :src="marketChest.image" width="100%"  style="margin-top: -50px; min-width: 150px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
+                    <q-img :src="marketChest.image" width="70%"  style="margin-top: -50px; min-width: 150px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
                     <q-card-section class="q-pt-none" style="text-shadow: 0px 1px 2px black">
                       <div class="text-h7" style="line-height: 1.5;"><b>{{ marketChest.title }}</b></div>
                       <div class="text-caption">{{ marketChest.description }}</div>
@@ -44,7 +44,7 @@
                     <transition  mode="out-in"
                         enter-active-class="animated zoomIn"
                         leave-active-class="animated zoomOut">
-                        <q-btn v-if="marketChest.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                        <q-btn v-if="marketChest.is_bought" class="q-item-blinking  full-width" push color="secondary">Куплено!</q-btn>
                         <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
                         <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="goToPayment(marketChest.id)"  @click.stop="playAudio('click')">{{ marketChest.price }}₽</q-btn>
                     </transition>
@@ -52,11 +52,11 @@
                 </q-card>
                 <q-card v-else-if="marketChest.priority == 2" class="q-push q-mt-sm text-white text-center" :style="`background-image: url('${marketChest.background_image}'); background-size: cover;`">
                   <q-card-section class="q-pb-none q-px-none">
-                    <q-img :src="marketChest.image" width="100%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
+                    <q-img :src="marketChest.image" width="80%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
                   </q-card-section>
                   <q-card-section class="q-pa-sm q-pt-none" style="text-shadow: 0px 1px 2px black">
-                    <div class="text-subtitle1"><b>{{ marketChest.title }}</b></div>
-                    <div class="text-caption">{{ marketChest.description }}</div>
+                    <div class="text-subtitle2"><b>{{ marketChest.title }}</b></div>
+                    <div class="text-sm">{{ marketChest.description }}</div>
                   </q-card-section>
                   <q-card-section class="q-pa-none">
                     <div class="row q-gutter-sm items-center justify-center">
@@ -71,7 +71,10 @@
                           leave-active-class="animated zoomOut">
                       <q-btn v-if="marketChest.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
                       <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
-                      <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="goToPayment(marketChest.id)"  @click.stop="playAudio('click')">{{ marketChest.price }}₽</q-btn>
+                      <q-btn v-else :class="`q-item-blinking full-width ${(marketChest.is_discount) ? 'q-btn-shaking-always bg-light-gradient-red' : 'bg-gradient-primary'}`" push  :loading="activeOffer.id == marketChest.id" @click="goToPayment(marketChest.id)"  @click.stop="playAudio('click')">
+                        <span v-if="marketChest.is_discount" class="text-red-2 text-caption q-mr-xs" style="margin-left: -16px"><s><b>{{ marketChest.old_price }}₽</b></s></span>
+                        <span :style="(marketChest.is_discount) ? 'font-size: 16px' : ''">{{ marketChest.price }}₽</span>
+                      </q-btn>
                     </transition>
                   </q-card-actions>
                   <q-card-actions v-else class="full-width justify-center q-px-md" style="margin-bottom: -30px">
@@ -255,7 +258,7 @@ const markItem = (key) => {
   }
 }
 const onHide = () => {
-  clearInterval(pollingInterval); 
+  clearInterval(pollingInterval);
   pollingInterval = null;
 }
 

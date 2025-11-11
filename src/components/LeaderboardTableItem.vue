@@ -42,8 +42,8 @@
               </span>
             </span>
           </q-item-label>
-          <q-item-label caption>
-            Уровень {{ item.level.level }}
+          <q-item-label caption v-if="item.level">
+            Уровень {{ item.level?.level }}
           </q-item-label>
         </q-item-section>
         <q-item-section side v-if="item.is_dynamics">
