@@ -3,6 +3,7 @@ import MainLayout from 'layouts/MainLayout.vue'
 import CoursePage from 'pages/CoursePage.vue'
 import LeaderboardPage from 'pages/LeaderboardPage.vue'
 import NotificationsPage from 'pages/NotificationsPage.vue'
+import ExplorePage from 'pages/ExplorePage.vue'
 import UserDashboard from 'pages/UserDashboard.vue'
 import UserEdit from 'pages/UserEdit.vue'
 import UserEditPassword from 'pages/UserEditPassword.vue'
@@ -65,6 +66,21 @@ const routes = [
           transitionConfig: {
             course: 'slide-right',
             user: 'slide-left'
+          }
+        }
+      },
+      {
+        path: 'explore',
+        name: 'explore',
+        component: ExplorePage,
+        meta: {
+          level: 1,
+          requiresAuth: true,
+          bottomBarEnabled: true,
+          transition: 'slide-out',
+          transitionConfig: {
+            course: 'slide-right',
+            leaderboard: 'slide-right'
           }
         }
       },

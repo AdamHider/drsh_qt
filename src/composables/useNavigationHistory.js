@@ -8,6 +8,12 @@ const routes = reactive({
     label: 'Галактика',
     hash: ''
   },
+  explore: {
+    link: '/explore',
+    is_updated: false,
+    label: 'Открытия',
+    hash: ''
+  },
   skills: {
     link: '/skills',
     is_updated: false,

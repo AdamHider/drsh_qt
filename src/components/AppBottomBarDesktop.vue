@@ -28,6 +28,19 @@
           </q-item>
         </div>
         <div class="relative-position">
+          <q-tutorial-item title="Открытия" description="На этой странице отображаются ежедневные открытия, планеты и другие небесные тела." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-item :to="routes.explore.link" exact replace class="rounded-sm q-my-xs" active-class="q-push bg-light-gradient-primary-to-right text-white">
+            <q-item-section avatar>
+              <q-img :src="`/icons/explore${(routes.explore.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+            </q-item-section>
+            <q-item-section><b>{{ routes.explore.label }}</b></q-item-section>
+            <q-item-section side>
+              <q-badge v-show="routes.explore.is_updated" color="red" rounded/>
+              <q-avatar v-if="routes.explore.is_quest" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
+            </q-item-section>
+          </q-item>
+        </div>
+        <div class="relative-position">
           <q-tutorial-item title="Технологии" description="На этой странице отображаются технологии, помогающие в освоении космоса." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
           <q-item :to="routes.skills.link" exact replace class="rounded-sm q-my-xs" active-class="q-push bg-light-gradient-primary-to-right text-white">
             <q-item-section avatar>

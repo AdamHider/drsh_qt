@@ -9,13 +9,21 @@
       class="q-bottom-bar bg-white rounded-t-md text-primary"
       style="z-index: 10; box-shadow: 0px 0px 0px 1px lightgray"
     >
-      <q-tabs content-class="allow-overflow">
+      <q-tabs content-class="allow-overflow justify-between">
         <div class="relative-position">
           <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры, солнечные системы и целые галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
           <q-route-tab  :to="`${routes.course.link}`" exact replace @click.stop="playAudio('click')">
             <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             <q-badge v-show="routes.course.is_updated" color="red" rounded floating />
             <q-avatar v-if="routes.course.is_quest" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="absolute-top" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
+          </q-route-tab>
+        </div>
+        <div class="relative-position">
+          <q-tutorial-item title="Открытия" description="На этой странице отображаются ежедневные открытия, планеты и другие небесные тела." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-route-tab :to="routes.explore.link" exact replace  @click.stop="playAudio('click')">
+            <q-img :src="`/icons/explore${(routes.explore.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+            <q-badge v-show="routes.explore.is_updated" color="red" rounded floating />
+            <q-avatar v-if="routes.explore.is_quest" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="absolute-top" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
           </q-route-tab>
         </div>
         <div class="relative-position">
@@ -98,6 +106,11 @@ watch(() => notifications.value.level, () => {
     routes.user.is_updated = true
   }, 0)
 })
+watch(() => notifications.value.explore, () => {
+  setTimeout(() => {
+    routes.explore.is_updated = true
+  }, 0)
+})
 watch(() => notifications.value.notifications, () => {
   setTimeout(() => {
     routes.notifications.is_updated = true
@@ -116,6 +129,6 @@ watch(() => notifications.value.quests, () => {
 </script>
 <style scoped>
 .q-tab{
-  padding: 0 12px;
+  padding: 0 8px;
 }
 </style>

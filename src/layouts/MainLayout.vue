@@ -12,7 +12,6 @@
       <UserNewLevelDialog/>
       <PWAInstallDialog/>
       <PWASWDialog/>
-      <PushSubscribeDialog/>
       <NetworkTest/>
   </q-layout>
   <AppLoader/>
