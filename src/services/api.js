@@ -236,4 +236,9 @@ export class Api extends ApiService{
           return this.post('streak', 'getList', params)
       }
     }
+    explore = {
+      getList: (params) =>  {
+          return this.post('explore', 'getList', params)
+      }
+    }
 }

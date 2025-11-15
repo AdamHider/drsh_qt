@@ -1,37 +1,30 @@
 <template>
-    <q-card flat v-if="dailyLessons.length > 0">
-      <q-card-section class="q-pb-none q-pt-sm">
-        <div class="text-subtitle1"><b>Ежедневные планеты</b></div>
-      </q-card-section>
-      <q-card-section class="q-px-none q-pt-sm q-pb-none">
-        <swiper
-          :slidesPerView="props.slidesPerView"
-          :spaceBetween="8"
-          :slidesOffsetBefore="16"
-          :slidesOffsetAfter="16"
-        >
-          <swiper-slide v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" :class="'text-center'">
-            <q-card
-                :class="`q-push  relative-position rounded-sm q-mb-sm text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
-                :style="`background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
-              <q-card-section class="q-pb-none">
-                <q-img class="planet-image" :src="lesson.image" width="60px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
-              </q-card-section>
-              <q-card-section class="q-pt-sm q-px-xs">
-                <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
-                <div class="text-sm max-two-lines">{{ lesson.description }}</div>
-              </q-card-section>
-              <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
-            </q-card>
-          </swiper-slide>
-        </swiper>
-      </q-card-section>
-    </q-card>
+  <swiper
+    :slidesPerView="props.slidesPerView"
+    :spaceBetween="8"
+    :slidesOffsetBefore="16"
+    :slidesOffsetAfter="16"
+  >
+    <swiper-slide v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" :class="'text-center'">
+      <q-card
+          :class="`q-push  relative-position rounded-sm q-mb-sm text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
+          :style="`background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
+        <q-card-section class="q-pb-none">
+          <q-img class="planet-image" :src="lesson.image" width="80px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
+        </q-card-section>
+        <q-card-section class="q-pt-sm q-px-xs">
+          <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
+          <div class="text-sm max-two-lines">{{ lesson.type }}</div>
+        </q-card-section>
+        <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
+      </q-card>
+    </swiper-slide>
+  </swiper>
 </template>
 
 <script setup>
 import { ref, toRef, onMounted, onActivated, watch } from 'vue'
-import { useLesson } from '../composables/useLesson'
+import { useExplore } from '../composables/useExplore'
 import { useRouter } from "vue-router";
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { playAudio } from 'src/services/audioService';
@@ -40,7 +33,7 @@ import 'swiper/css'
 
 const router = useRouter();
 
-const { lesson, getDailyList  } = useLesson()
+const { explore, getList  } = useExplore()
 
 const error = ref(false)
 
@@ -49,6 +42,7 @@ const unexploredCount = ref(0)
 
 const props = defineProps({
   activeOnly: Boolean,
+  type: String,
   slidesPerView: Number,
   reloadTrigger: Boolean
 })
@@ -56,13 +50,13 @@ const props = defineProps({
 const reloadTrigger = toRef(props, "reloadTrigger");
 
 const load = async () => {
-  const lessonListResponse = await getDailyList()
+  const lessonListResponse = await getList({type: props.type})
   if (lessonListResponse.error) {
     error.value = lessonListResponse
     dailyLessons.value = []
     return false;
   }
-  dailyLessons.value = lesson.dailyList.sort((a, b) => a.is_blocked ? 1 : -1);
+  dailyLessons.value = lessonListResponse.sort((a, b) => a.is_blocked ? 1 : -1);
 
   unexploredCount.value = dailyLessons.value.filter(function(item){
     return !item.is_blocked && !item.is_explored;
@@ -70,12 +64,9 @@ const load = async () => {
 }
 
 onActivated(() => {
-  load()
+  //load()
 })
 onMounted(() => {
-  load()
-})
-watch(() => reloadTrigger.value, () => {
   load()
 })
 
