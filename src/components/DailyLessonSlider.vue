@@ -6,15 +6,12 @@
     :slidesOffsetAfter="16"
   >
     <swiper-slide v-for="(lesson, lessonIndex) in dailyLessons" :key="`lessonIndex-${lessonIndex}`" :class="'text-center'">
-      <q-card
-          :class="`q-push  relative-position rounded-sm q-mb-sm text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
-          :style="`background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
-        <q-card-section class="q-pb-none">
-          <q-img class="planet-image" :src="lesson.image" width="80px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
+      <q-card flat :class="`bg-transparent text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)">
+        <q-card-section class="q-pb-none q-px-none">
+          <q-img class="planet-image allow-overflow" :src="lesson.image" width="80px" style="filter: drop-shadow(0px 0px 15px #35adf4);" no-spinner/>
         </q-card-section>
-        <q-card-section class="q-pt-sm q-px-xs">
+        <q-card-section class="q-pt-none q-px-xs" >
           <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
-          <div class="text-sm max-two-lines">{{ lesson.type }}</div>
         </q-card-section>
         <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
       </q-card>

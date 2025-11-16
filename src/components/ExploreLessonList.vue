@@ -1,6 +1,15 @@
 <template>
   <div>
-    <div  v-for="(courseSection, courseSectionIndex) in courseSections" :key="`courseSectionIndex-${courseSectionIndex}`" >
+    <div class="q-mb-sm">
+      <q-input
+        class="q-ma-sm"
+        standout
+        v-model="formData.search"
+        placeholder="Поиск планет..."
+        autofocus
+      ></q-input>
+    </div>
+    <div v-for="(courseSection, courseSectionIndex) in courseSections" :key="`courseSectionIndex-${courseSectionIndex}`" >
         <q-card flat>
           <q-card-section class="q-pb-none q-pt-sm">
             <div class="text-subtitle1"><b>{{ courseSection.title }}</b></div>
@@ -15,10 +24,10 @@
             >
               <swiper-slide v-for="(lesson, lessonIndex) in courseSection.list" :key="`lessonIndex-${lessonIndex}`" :class="'text-center'">
                 <q-card
-                    :class="`q-push  relative-position rounded-sm  text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
-                    :style="`margin-top: 30px; background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${lesson.course_section.background_image}); background-size: cover; background-position: center;`">
+                    :class="`q-push relative-position rounded-sm  text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
+                    :style="`margin-top: 30px; background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${(lesson.background_image) ? lesson.background_image : lesson.course_section.background_image}); background-size: cover; background-position: center;`">
                   <q-card-section class="q-pb-none">
-                    <q-img class="planet-image" :src="lesson.image" width="100px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px); margin-top: -40px;" no-spinner/>
+                    <q-img class="planet-image allow-overflow" :src="lesson.image" width="100px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px); margin-top: -40px;" no-spinner/>
                   </q-card-section>
                   <q-card-section class="q-pt-sm q-px-xs">
                     <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
@@ -32,15 +41,10 @@
         </q-card>
     </div>
   </div>
-  <div v-if="lessons.length > 0" style="height: 0px;">
-      <div v-for="(lessonItem, index) in lessons" :key="`lessonItemImage${index}`">
-      <img :src="lessonItem.image" width="1px"/>
-    </div>
-  </div>
 </template>
 
 <script setup>
-import { ref, toRef, onMounted, onActivated, watch } from 'vue'
+import { ref, toRef, onMounted, onActivated, reactive, watch } from 'vue'
 import { useExplore } from '../composables/useExplore'
 import { useRouter } from "vue-router";
 import { Swiper, SwiperSlide } from 'swiper/vue'
@@ -55,6 +59,11 @@ const error = ref(false)
 
 const lessons = ref([])
 const courseSections = ref([])
+const tags = ref([])
+const formData = reactive({
+  tags: [],
+  search: ''
+})
 
 const props = defineProps({
   activeOnly: Boolean,
@@ -66,15 +75,22 @@ const props = defineProps({
 const reloadTrigger = toRef(props, "reloadTrigger");
 
 const load = async () => {
-  const lessonListResponse = await getList({type: props.type})
+  const filter = {
+    tags: formData.tags,
+    search: formData.search,
+    type: props.type
+  }
+  const lessonListResponse = await getList(filter)
   if (lessonListResponse.error) {
     error.value = lessonListResponse
     lessons.value = []
+    composeList()
     return false;
   }
 
   lessons.value = lessonListResponse//.sort((a, b) => a.is_blocked ? 1 : -1);
   composeList()
+  composeTags()
   console.log(courseSections.value)
 }
 
@@ -88,7 +104,6 @@ const composeList = () => {
       return result;
   }, {})
   const courseSectionIds = Object.keys(courseSectionsRaw)
-
   for(var i in courseSectionIds){
     var couseSection = courseSectionsRaw[courseSectionIds[i]]
     couseSection.list[0].is_initial = true
@@ -100,10 +115,32 @@ const composeList = () => {
   courseSections.value = result
 };
 
+const composeTags = () => {
+  tags.value = []
+  let tagsRaw = []
+  for(var i in lessons.value){
+    tagsRaw = tagsRaw.concat(lessons.value[i].tags)
+  }
+  tagsRaw = tagsRaw.filter((item, pos) => tagsRaw.indexOf(item) === pos)
+  tagsRaw = tagsRaw.sort((a, b) => (formData.tags.indexOf(b) > -1) ? 1 : -1);
+  tags.value = tagsRaw
+}
+
+const addActiveTag = (tag) => {
+  if(formData.tags.indexOf(tag) > -1){
+    formData.tags = formData.tags.filter((item) => item !== tag)
+  } else {
+    formData.tags.push(tag)
+  }
+}
+
 onActivated(() => {
   //load()
 })
 onMounted(() => {
+  load()
+})
+watch(formData, () => {
   load()
 })
 

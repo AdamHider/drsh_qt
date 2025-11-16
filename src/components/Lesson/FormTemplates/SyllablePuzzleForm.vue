@@ -4,7 +4,7 @@
           <q-spinner-puff v-if="isAnswered" class="absolute-left" size="50px" color="primary" />
           <div style="flex:1" class="flex justify-center ">
             <div v-for="(option, optionIndex) in selectedSyllables" :key="optionIndex">
-              <q-chip :class="`q-lesson-field-value bg-white rounded-xs ${(isCorrect) ? 'is-correct': ''}`" size="18px" style="width: 40px; height: 40px;" clickable @click.stop="selectVariant(option, optionIndex)">
+              <q-chip :class="`q-lesson-field-value bg-white rounded-xs ${(isCorrect) ? 'is-correct': ''}`" size="18px" style="width: 40px; height: 40px;"  >
                 <b>{{ transliterateHTML(option) }}</b>
               </q-chip>
             </div>
