@@ -123,6 +123,9 @@ export class Api extends ApiService{
         },
         getPage: (params) => {
             return this.post('lesson', 'getPage', params)
+        },
+        addToTraining: () => {
+          return this.post('lesson', 'addToTraining', params)
         }
     }
     exercise = {
@@ -239,6 +242,11 @@ export class Api extends ApiService{
     explore = {
       getList: (params) =>  {
           return this.post('explore', 'getList', params)
+      }
+    }
+    training = {
+      linkItem: (params) =>  {
+          return this.post('training', 'linkItem', params)
       }
     }
 }

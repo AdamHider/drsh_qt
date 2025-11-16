@@ -8,6 +8,15 @@
             :src="data.data.image"
             no-spinner
           />
+          <div class="absolute-right" style="bottom: 20px; top: unset" v-if="lesson.active.page.header?.training">
+            <q-btn v-if="!trainingLinked" size="sm" push
+                class="bg-dark-transparent-50 text-white" @click="linkTraining()" :loading="trainingIsLoading">
+              + Тренеровать
+            </q-btn>
+            <q-btn v-else size="sm" push class="bg-positive text-white" >
+               Тренеруется
+            </q-btn>
+          </div>
         </q-card-section>
         <q-card-section vertical :class="`q-pa-none text-center ${(!data.data.is_form) ? 'flex flex-center text-center' : ''}`">
           <div v-if="!data.data.is_form" class="text-h6">
@@ -41,16 +50,19 @@
 </template>
 
 <script setup>
-import { reactive, watch, onMounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { useTransliterate } from '../../../composables/useTransliterate'
 
 const emits = defineEmits(['onRendered'])
 
-const { lesson } = useLesson()
+const { lesson, linkTrainingItem } = useLesson()
 const { lessonAudio, playAudio, pauseAudio, loadAudio } = useLessonAudio()
 const { transliterateHTML } = useTransliterate()
+
+const trainingIsLoading = ref(false)
+const trainingLinked = ref(false)
 
 const data = reactive({
   data: []
@@ -67,8 +79,16 @@ const renderData = () => {
     }
   }
   data.data = lesson.active.page.data
-}
 
+  if(lesson.active.page.header.training){
+    trainingLinked.value = lesson.active.page.header.training?.is_linked
+  }
+}
+const linkTraining = async () => {
+  trainingIsLoading.value = true
+  trainingLinked.value = await linkTrainingItem()
+  trainingIsLoading.value = false
+}
 renderData()
 
 onMounted(() => {

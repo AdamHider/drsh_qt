@@ -8,47 +8,32 @@
     <q-page class="bg-white"  style="padding-top: 50px; padding-bottom: 48px;">
       <div class="page-background fixed-top full-width"  style="height: 300px; background-image: url('https://core.mektepium.com/image/index.php/backgrounds/daily_chat_1.jpg'); background-size: cover;"></div>
       <q-card class="text-center transparent no-shadow full-width justify-center column " style="position: relative;">
-          <q-card-section class="text-white text-left q-py-none"  style="text-shadow: 2px 2px 5px black;">
+          <q-card-section class="text-white text-left q-pb-none"  style="text-shadow: 2px 2px 5px black;">
             <div class="text-subtitle1"><b>Ежедневные планеты</b></div>
           </q-card-section>
           <q-card-section class="q-pa-none" >
             <DailyLessonSlider :slidesPerView="3.5" type="daily"/>
           </q-card-section>
       </q-card>
-      <q-card flat class="q-main-card relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1; margin-top: 30px;">
-        <q-tabs
-          v-model="tab"
-          dense
-          content-class="justify-center"
-          indicator-color="transparent"
-          style="margin-top: -30px;"
-        >
-          <q-tab name="galaxies" :ripple="false"  style="opacity: 1;">
-            <q-item  :class="`q-push full-width rounded-sm ${(tab == 'galaxies') ? 'bg-gradient-primary text-white' : 'bg-white'}`">
-              <q-item-section>
-                <div class="text-caption"><b>Созвездия</b></div>
-              </q-item-section>
-            </q-item>
-          </q-tab>
-          <q-tab name="training" :ripple="false" style="opacity: 1;">
-            <q-item  :class="`q-push full-width rounded-sm ${(tab == 'training') ? 'bg-gradient-primary text-white' : 'bg-white'}`">
-              <q-item-section>
-                <div class="text-caption"><b>Тренировка</b></div>
-              </q-item-section>
-            </q-item>
-          </q-tab>
-        </q-tabs>
+      <q-card flat class="q-main-card relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1; min-height: 50vh; margin-top: 30px;">
+        <div class="flex justify-center allow-overflow" style="margin-top: -40px;">
+          <q-btn  push :class="`q-push q-ma-xs rounded-sm ${(tab == 'galaxies') ? 'bg-gradient-primary text-white' : 'bg-white'} `"
+            @click="tab = 'galaxies'">
+              <div class="text-caption"><b>Созвездия</b></div>
+          </q-btn>
+          <q-btn push :class="`q-push q-ma-xs rounded-sm ${(tab == 'training') ? 'bg-gradient-primary text-white' : 'bg-white'}`"
+            @click="tab = 'training'">
+              <div class="text-caption"><b>Тренировка</b></div>
+          </q-btn>
+        </div>
         <q-inner-loading :showing="notLoaded">
           <q-spinner-puff size="50px" color="primary" />
         </q-inner-loading>
-        <q-card flat>
-          <q-card-section class="q-pt-sm q-pb-none">
-            <div class="text-h6"><b>Созвездия</b></div>
-          </q-card-section>
-          <q-card-section class="q-pa-none">
+        <q-tab-panels v-model="tab" animated keep-alive="">
+          <q-tab-panel name="galaxies" class="q-pa-none">
             <ExploreLessonList :slidesPerView="2.5"/>
-          </q-card-section>
-        </q-card>
+          </q-tab-panel>
+        </q-tab-panels>
 
         </q-card>
 

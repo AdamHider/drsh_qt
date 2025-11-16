@@ -51,6 +51,10 @@ export function useLesson () {
     lesson.active.page = exerciseAnswerResponse
     return exerciseAnswerResponse
   }
+  async function linkTrainingItem () {
+    const linkTrainingItemResponse = await api.training.linkItem({ lesson_id: lesson.active.id, page_index: lesson.active.page.current })
+    return linkTrainingItemResponse
+  }
   function setTarget (lessonId) {
     lesson.target = lessonId
   }
@@ -65,6 +69,7 @@ export function useLesson () {
     getDailyList,
     getPage,
     saveAnswer,
+    linkTrainingItem,
     setTarget,
     getTarget,
     lesson

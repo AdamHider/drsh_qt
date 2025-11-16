@@ -6,7 +6,6 @@
         standout
         v-model="formData.search"
         placeholder="Поиск планет..."
-        autofocus
       ></q-input>
     </div>
     <div v-for="(courseSection, courseSectionIndex) in courseSections" :key="`courseSectionIndex-${courseSectionIndex}`" >
@@ -91,7 +90,6 @@ const load = async () => {
   lessons.value = lessonListResponse//.sort((a, b) => a.is_blocked ? 1 : -1);
   composeList()
   composeTags()
-  console.log(courseSections.value)
 }
 
 const composeList = () => {
