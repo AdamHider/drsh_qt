@@ -247,6 +247,22 @@ export class Api extends ApiService{
     training = {
       linkItem: (params) =>  {
           return this.post('training', 'linkItem', params)
-      }
+      },
+      unlinkItem: (params) =>  {
+          return this.post('training', 'unlinkItem', params)
+      },
+      redoLessonItem: (params) =>  {
+          return this.post('training', 'redoLessonItem', params)
+      },
+      getList: (params) => {
+          return this.post('training', 'getList', params)
+      },
+      saveList: (params) => {
+          return this.post('training', 'saveList', params)
+      },
+      getLessonItem: (params) => {
+          return this.post('training', 'getLessonItem', params)
+      },
+
     }
 }

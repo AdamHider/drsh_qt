@@ -138,17 +138,23 @@ const props = defineProps({
 const answerPercentage = computed(() => lesson.active.page?.answer?.correct * 100 / lesson.active.page?.answer?.quantity)
 
 const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (props.pageAnswers[i].value.text === '' || props.pageAnswers[i].value.text === false ) return true } return false })
-const { lesson } = useLesson()
+const { lesson, unlinkTrainingItem } = useLesson()
 
 const next = async () => {
   playAudio('click')
   isLoading.value = true
+  if(lesson.active.page?.header?.is_training && answerPercentage.value >= 100){
+    await unlinkTrainingItem()
+  }
   emits('onPageChanged', 'next')
   extraActions.value = false
 }
 const finish = async () => {
   playAudio('click')
   isLoading.value = true
+  if(lesson.active.page?.header?.is_training && answerPercentage.value >= 100){
+    await unlinkTrainingItem()
+  }
   emits('onPageChanged', 'finish')
   extraActions.value = false
 }
@@ -191,6 +197,11 @@ const startTimer = () => {
   }, 50)
 }
 
+const unlinkTraining = async () => {
+  trainingIsLoading.value = true
+  trainingLinked.value = await unlinkTrainingItem()
+  trainingIsLoading.value = false
+}
 onBeforeRouteLeave((to, from) => {
   if (backDialog.value) {
     backDialog.value = false

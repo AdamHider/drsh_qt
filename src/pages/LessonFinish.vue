@@ -103,6 +103,7 @@
           icon="replay"
           color="gradient-orange"
           class="q-px-md q-mr-sm"
+          v-if="lesson.active.type !== 'training'"
           @click="redo()"/>
           <q-btn v-if="nextLesson.exercise?.finished_at || nextLesson.is_blocked || (!lesson.active.parent_id && nextLesson.parent_id !== lesson.active.id)"
             push

@@ -55,6 +55,15 @@ export function useLesson () {
     const linkTrainingItemResponse = await api.training.linkItem({ lesson_id: lesson.active.id, page_index: lesson.active.page.current })
     return linkTrainingItemResponse
   }
+  async function unlinkTrainingItem () {
+    const unlinkTrainingItemResponse = await api.training.unlinkItem({ lesson_id: lesson.active.id, page_index: lesson.active.page.current })
+    return unlinkTrainingItemResponse
+  }
+  async function redoTrainingItem (lessonId) {
+    const redoTrainingItemResponse = await api.training.redoLessonItem({ lesson_id: lessonId })
+    return redoTrainingItemResponse
+  }
+
   function setTarget (lessonId) {
     lesson.target = lessonId
   }
@@ -70,6 +79,8 @@ export function useLesson () {
     getPage,
     saveAnswer,
     linkTrainingItem,
+    unlinkTrainingItem,
+    redoTrainingItem,
     setTarget,
     getTarget,
     lesson

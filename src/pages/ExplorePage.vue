@@ -15,27 +15,17 @@
             <DailyLessonSlider :slidesPerView="3.5" type="daily"/>
           </q-card-section>
       </q-card>
-      <q-card flat class="q-main-card relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1; min-height: 50vh; margin-top: 30px;">
-        <div class="flex justify-center allow-overflow" style="margin-top: -40px;">
-          <q-btn  push :class="`q-push q-ma-xs rounded-sm ${(tab == 'galaxies') ? 'bg-gradient-primary text-white' : 'bg-white'} `"
-            @click="tab = 'galaxies'">
-              <div class="text-caption"><b>Созвездия</b></div>
-          </q-btn>
-          <q-btn push :class="`q-push q-ma-xs rounded-sm ${(tab == 'training') ? 'bg-gradient-primary text-white' : 'bg-white'}`"
-            @click="tab = 'training'">
-              <div class="text-caption"><b>Тренировка</b></div>
-          </q-btn>
-        </div>
-        <q-inner-loading :showing="notLoaded">
-          <q-spinner-puff size="50px" color="primary" />
-        </q-inner-loading>
-        <q-tab-panels v-model="tab" animated keep-alive="">
-          <q-tab-panel name="galaxies" class="q-pa-none">
-            <ExploreLessonList :slidesPerView="2.5"/>
-          </q-tab-panel>
-        </q-tab-panels>
-
-        </q-card>
+      <q-card flat class="q-main-card relative text-left q-pt-md q-pb-md rounded-borders rounded-b-0 full-width" style="flex: 1; min-height: 50vh; margin-top: 50px;">
+        <q-card-section style="margin-top: -70px">
+          <ExploreTrainingWidget/>
+        </q-card-section>
+        <q-card-section class="q-py-none">
+          <div class="text-h6"><b>Созвездия</b></div>
+        </q-card-section>
+        <q-card-section class="q-pa-none">
+          <ExploreLessonList :slidesPerView="2.5"/>
+        </q-card-section>
+      </q-card>
 
     </q-page>
   </q-page-container>
@@ -47,7 +37,9 @@ import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import DailyLessonSlider from '../components/DailyLessonSlider.vue'
 import ExploreLessonList from '../components/ExploreLessonList.vue'
+import ExploreTrainingWidget from '../components/ExploreTrainingWidget.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
+
 
 const { user } = useUserStore()
 
@@ -56,22 +48,5 @@ const error = ref({})
 const notLoaded = ref(true)
 const tab = ref('galaxies')
 
-const load = async function () {
-  const notificationListResponse = await api.notifications.getList({})
-  notLoaded.value = false
-  if (notificationListResponse.error) {
-    error.value = notificationListResponse
-    return []
-  }
-  notifications.value = notificationListResponse
-}
-
-onMounted(() => {
-  load()
-})
-
-onActivated(() => {
-  load()
-})
 
 </script>

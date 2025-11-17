@@ -6,15 +6,25 @@
         standout
         v-model="formData.search"
         placeholder="Поиск планет..."
-      ></q-input>
+      >
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     </div>
     <div v-for="(courseSection, courseSectionIndex) in courseSections" :key="`courseSectionIndex-${courseSectionIndex}`" >
         <q-card flat>
           <q-card-section class="q-pb-none q-pt-sm">
-            <div class="text-subtitle1"><b>{{ courseSection.title }}</b></div>
-            <div class="text-caption text-grey-9 max-two-lines">{{ courseSection.description }}</div>
+            <q-item class="q-px-none q-pb-none items-start">
+              <q-item-section>
+                <div class="text-subtitle1"><b>{{ courseSection.title }}</b></div>
+              </q-item-section>
+              <q-item-section side>
+                <a flat size="sm" @click="activeCourseSection = courseSection; dialog = true">Показать все</a>
+              </q-item-section>
+            </q-item>
           </q-card-section>
-          <q-card-section class="q-px-none q-py-sm">
+          <q-card-section class="q-pa-none">
             <swiper
               :slidesPerView="props.slidesPerView"
               :spaceBetween="8"
@@ -24,13 +34,20 @@
               <swiper-slide v-for="(lesson, lessonIndex) in courseSection.list" :key="`lessonIndex-${lessonIndex}`" :class="'text-center'">
                 <q-card
                     :class="`q-push relative-position rounded-sm  text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
-                    :style="`margin-top: 30px; background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${(lesson.background_image) ? lesson.background_image : lesson.course_section.background_image}); background-size: cover; background-position: center;`">
+                    :style="`margin-top: 30px; border-color: rgba(0, 0, 0, 0.7); background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${(lesson.background_image) ? lesson.background_image : lesson.course_section.background_image}); background-size: cover; background-position: center;`">
                   <q-card-section class="q-pb-none">
                     <q-img class="planet-image allow-overflow" :src="lesson.image" width="100px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px); margin-top: -40px;" no-spinner/>
                   </q-card-section>
                   <q-card-section class="q-pt-sm q-px-xs">
                     <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
-                    <div class="text-sm max-two-lines">{{ lesson.type }}</div>
+                    <div class="text-caption" v-if="lesson.progress > 0">
+                      <b>Изучено: </b>
+                      <b :class="lesson.progress > 0 ? ((lesson.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lesson.progress }}%</b>
+                    </div>
+                    <div class="text-caption text-grey-4" v-else>
+                      <b v-if="lesson.is_blocked">Премиум-планета</b>
+                      <b  v-else>Не изучено</b>
+                    </div>
                   </q-card-section>
                   <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
                 </q-card>
@@ -40,6 +57,52 @@
         </q-card>
     </div>
   </div>
+  <q-dialog v-model="dialog" position="bottom">
+    <q-card class="q-push full-width">
+      <q-card-section class="q-px-none ">
+        <q-item class="q-py-none text-left items-start">
+          <q-item-section >
+            <div class="text-subtitle1"><b>{{ activeCourseSection.title }}</b></div>
+            <div :class="`text-caption satellite-description ${(expandDescription) ? '': 'max-two-lines'}`" @click="expandDescription = !expandDescription">
+              {{activeCourseSection.description}}
+            </div>
+            <div class="text-caption" @click="expandDescription = !expandDescription"  @click.stop="playAudio('click')">
+              <b v-if="expandDescription">Свернуть <q-icon name="keyboard_arrow_up"></q-icon></b>
+              <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
+            </div>
+          </q-item-section>
+        </q-item>
+      </q-card-section>
+      <q-separator/>
+      <q-card-section style="max-height: 50vh" class="scroll">
+        <q-list>
+          <q-item v-for="(lessonItem, lessonItemIndex) in activeCourseSection.list" :key="`lessonItemIndex-${lessonItemIndex}`" clickable v-ripple
+            :class="`q-push q-mt-sm relative-position rounded-sm  text-white text-shadow ${lessonItem.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lessonItem.id}`)"
+            :style="`border-color: rgba(0, 0, 0, 0.7); background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)), url(${(lessonItem.background_image) ? lessonItem.background_image : lessonItem.course_section.background_image}); background-size: cover; background-position: center;`">
+            <q-item-section avatar>
+              <q-img class="planet-image allow-overflow" :src="lessonItem.image" width="80px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px);" no-spinner/>
+            </q-item-section>
+            <q-item-section>
+              <div class="text-subtitle1"><b>{{ lessonItem.title }}</b></div>
+              <div class="text-sm max-two-lines">{{ lessonItem.description }}</div>
+              <div class="text-caption  q-my-xs" v-if="lessonItem.progress > 0">
+                <b>Изучено: </b>
+                <b :class="lessonItem.progress > 0 ? ((lessonItem.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lessonItem.progress }}%</b>
+              </div>
+              <div class="text-caption q-my-xs text-grey-4" v-else>
+                <b v-if="lessonItem.is_blocked">Премиум-планета</b>
+                <b  v-else>Не изучено</b>
+              </div>
+            </q-item-section>
+            <q-btn v-if="lessonItem.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
+          </q-item>
+        </q-list>
+      </q-card-section>
+      <q-card-actions>
+        <q-btn color="gradient-primary" push class="full-width" v-close-popup>Продолжить</q-btn>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -47,6 +110,7 @@ import { ref, toRef, onMounted, onActivated, reactive, watch } from 'vue'
 import { useExplore } from '../composables/useExplore'
 import { useRouter } from "vue-router";
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import { playAudio } from 'src/services/audioService';
 
 import 'swiper/css'
 
@@ -55,6 +119,10 @@ const router = useRouter();
 const { explore, getList  } = useExplore()
 
 const error = ref(false)
+const expandDescription = ref(false)
+
+const dialog = ref(false)
+const activeCourseSection = ref({})
 
 const lessons = ref([])
 const courseSections = ref([])
@@ -130,6 +198,10 @@ const addActiveTag = (tag) => {
   } else {
     formData.tags.push(tag)
   }
+}
+
+const onClose = () => {
+
 }
 
 onActivated(() => {
