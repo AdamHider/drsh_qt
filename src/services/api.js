@@ -242,7 +242,7 @@ export class Api extends ApiService{
     explore = {
       getList: (params) =>  {
           return this.post('explore', 'getList', params)
-      }
+      },
     }
     training = {
       linkItem: (params) =>  {

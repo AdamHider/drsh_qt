@@ -4,6 +4,7 @@ import CoursePage from 'pages/CoursePage.vue'
 import LeaderboardPage from 'pages/LeaderboardPage.vue'
 import NotificationsPage from 'pages/NotificationsPage.vue'
 import ExplorePage from 'pages/ExplorePage.vue'
+import ExploreSection from 'pages/ExploreSection.vue'
 import UserDashboard from 'pages/UserDashboard.vue'
 import UserEdit from 'pages/UserEdit.vue'
 import UserEditPassword from 'pages/UserEditPassword.vue'
@@ -225,6 +226,12 @@ const routes = [
         component: PaymentsPage,
         meta: { noBottomBar: true }
       },
+      {
+        path: 'explore-section-:course_section_id',
+        component: ExploreSection,
+        meta: { noBottomBar: true }
+      },
+
     ]
   },
 

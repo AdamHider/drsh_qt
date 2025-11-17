@@ -8,7 +8,7 @@
             :src="data.data.image"
             no-spinner
           />
-          <div class="absolute-right" style="bottom: 20px; top: unset" v-if="!lesson.active.page.header.training && lesson.active.page.header?.training">
+          <div class="absolute-right" style="bottom: 20px; top: unset" v-if="lesson.active.page.header?.training">
             <q-btn v-if="!trainingLinked" size="sm" push
                 class="bg-dark-transparent-50 text-white" @click="linkTraining()" :loading="trainingIsLoading">
               + Тренеровать

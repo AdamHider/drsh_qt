@@ -4,6 +4,7 @@
       <q-input
         class="q-ma-sm"
         standout
+        dense
         v-model="formData.search"
         placeholder="Поиск планет..."
       >
@@ -14,13 +15,14 @@
     </div>
     <div v-for="(courseSection, courseSectionIndex) in courseSections" :key="`courseSectionIndex-${courseSectionIndex}`" >
         <q-card flat>
-          <q-card-section class="q-pb-none q-pt-sm">
-            <q-item class="q-px-none q-pb-none items-start">
+          <q-card-section class="q-py-none">
+            <q-item class="q-px-none q-pb-none" clickable v-ripple :to="`explore-section-${courseSection.id}`">
               <q-item-section>
                 <div class="text-subtitle1"><b>{{ courseSection.title }}</b></div>
+                <div class="text-sm text-grey"><b>{{ courseSection.list.length }} {{ courseSection.subtitle }}</b></div>
               </q-item-section>
               <q-item-section side>
-                <a flat size="sm" @click="activeCourseSection = courseSection; dialog = true">Показать все</a>
+                <q-btn flat round icon="chevron_right"></q-btn>
               </q-item-section>
             </q-item>
           </q-card-section>
@@ -38,18 +40,27 @@
                   <q-card-section class="q-pb-none">
                     <q-img class="planet-image allow-overflow" :src="lesson.image" width="100px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px); margin-top: -40px;" no-spinner/>
                   </q-card-section>
-                  <q-card-section class="q-pt-sm q-px-xs">
+                  <q-card-section class="q-py-sm q-px-xs">
                     <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
-                    <div class="text-caption" v-if="lesson.progress > 0">
-                      <b>Изучено: </b>
-                      <b :class="lesson.progress > 0 ? ((lesson.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lesson.progress }}%</b>
-                    </div>
-                    <div class="text-caption text-grey-4" v-else>
-                      <b v-if="lesson.is_blocked">Премиум-планета</b>
-                      <b  v-else>Не изучено</b>
-                    </div>
+                    <q-chip v-if="lesson.progress > 0" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Изучено: {{ lesson.progress }}%</b></q-chip>
+                    <q-chip v-else-if="lesson.is_blocked" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Премиум-планета</b></q-chip>
+                    <q-chip v-else class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Не изучено</b></q-chip>
                   </q-card-section>
                   <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
+                </q-card>
+              </swiper-slide>
+              <swiper-slide :key="`lessonIndex-100000`" :class="'text-center'">
+                <q-card flat
+                    :class="`relative-position rounded-sm `" @click="router.push(`/explore-section-${courseSection.id}`)"
+                    :style="`margin-top: 40px;`">
+                  <q-card-section class="q-pb-none">
+                    <q-avatar size="60px" class="bg-dark-transparent" >
+                      <q-icon name="chevron_right"></q-icon>
+                    </q-avatar>
+                  </q-card-section>
+                  <q-card-section class="q-py-sm q-px-xs">
+                    <div class="text-caption"><b>Показать все</b></div>
+                  </q-card-section>
                 </q-card>
               </swiper-slide>
             </swiper>
@@ -57,57 +68,11 @@
         </q-card>
     </div>
   </div>
-  <q-dialog v-model="dialog" position="bottom">
-    <q-card class="q-push full-width">
-      <q-card-section class="q-px-none ">
-        <q-item class="q-py-none text-left items-start">
-          <q-item-section >
-            <div class="text-subtitle1"><b>{{ activeCourseSection.title }}</b></div>
-            <div :class="`text-caption satellite-description ${(expandDescription) ? '': 'max-two-lines'}`" @click="expandDescription = !expandDescription">
-              {{activeCourseSection.description}}
-            </div>
-            <div class="text-caption" @click="expandDescription = !expandDescription"  @click.stop="playAudio('click')">
-              <b v-if="expandDescription">Свернуть <q-icon name="keyboard_arrow_up"></q-icon></b>
-              <b v-else>Показать ещё <q-icon name="keyboard_arrow_down"></q-icon></b>
-            </div>
-          </q-item-section>
-        </q-item>
-      </q-card-section>
-      <q-separator/>
-      <q-card-section style="max-height: 50vh" class="scroll">
-        <q-list>
-          <q-item v-for="(lessonItem, lessonItemIndex) in activeCourseSection.list" :key="`lessonItemIndex-${lessonItemIndex}`" clickable v-ripple
-            :class="`q-push q-mt-sm relative-position rounded-sm  text-white text-shadow ${lessonItem.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lessonItem.id}`)"
-            :style="`border-color: rgba(0, 0, 0, 0.7); background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)), url(${(lessonItem.background_image) ? lessonItem.background_image : lessonItem.course_section.background_image}); background-size: cover; background-position: center;`">
-            <q-item-section avatar>
-              <q-img class="planet-image allow-overflow" :src="lessonItem.image" width="80px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px);" no-spinner/>
-            </q-item-section>
-            <q-item-section>
-              <div class="text-subtitle1"><b>{{ lessonItem.title }}</b></div>
-              <div class="text-sm max-two-lines">{{ lessonItem.description }}</div>
-              <div class="text-caption  q-my-xs" v-if="lessonItem.progress > 0">
-                <b>Изучено: </b>
-                <b :class="lessonItem.progress > 0 ? ((lessonItem.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lessonItem.progress }}%</b>
-              </div>
-              <div class="text-caption q-my-xs text-grey-4" v-else>
-                <b v-if="lessonItem.is_blocked">Премиум-планета</b>
-                <b  v-else>Не изучено</b>
-              </div>
-            </q-item-section>
-            <q-btn v-if="lessonItem.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
-          </q-item>
-        </q-list>
-      </q-card-section>
-      <q-card-actions>
-        <q-btn color="gradient-primary" push class="full-width" v-close-popup>Продолжить</q-btn>
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
 </template>
 
 <script setup>
 import { ref, toRef, onMounted, onActivated, reactive, watch } from 'vue'
-import { useExplore } from '../composables/useExplore'
+import { api } from '../services/index'
 import { useRouter } from "vue-router";
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { playAudio } from 'src/services/audioService';
@@ -116,10 +81,8 @@ import 'swiper/css'
 
 const router = useRouter();
 
-const { explore, getList  } = useExplore()
 
 const error = ref(false)
-const expandDescription = ref(false)
 
 const dialog = ref(false)
 const activeCourseSection = ref({})
@@ -139,7 +102,6 @@ const props = defineProps({
   reloadTrigger: Boolean
 })
 
-const reloadTrigger = toRef(props, "reloadTrigger");
 
 const load = async () => {
   const filter = {
@@ -147,7 +109,7 @@ const load = async () => {
     search: formData.search,
     type: props.type
   }
-  const lessonListResponse = await getList(filter)
+  const lessonListResponse = await api.explore.getList(filter)
   if (lessonListResponse.error) {
     error.value = lessonListResponse
     lessons.value = []
@@ -164,18 +126,17 @@ const composeList = () => {
   var result = []
   const courseSectionsRaw = lessons.value.reduce((result, obj) => {
     result[obj.course_section_id] = result[obj.course_section_id] || {
-        ... obj.course_section, ...{ expandDescription: false, list: [] }
+        ... obj.course_section, ...{ list: [] }
       };
       result[obj.course_section_id].list.push(obj);
       return result;
   }, {})
   const courseSectionIds = Object.keys(courseSectionsRaw)
   for(var i in courseSectionIds){
-    var couseSection = courseSectionsRaw[courseSectionIds[i]]
-    couseSection.list[0].is_initial = true
-
-    couseSection.list = couseSection.list
-    result.push(couseSection)
+    var courseSection = courseSectionsRaw[courseSectionIds[i]]
+    courseSection.subtitle = pluralHumanize(courseSection.list.length, ['планет','планета','планеты'])
+    courseSection.list = courseSection.list
+    result.push(courseSection)
 
   }
   courseSections.value = result
@@ -200,12 +161,24 @@ const addActiveTag = (tag) => {
   }
 }
 
-const onClose = () => {
-
+const pluralHumanize = (n, wordsConfig) => {
+  if(!wordsConfig) return ''
+  const absN = Math.abs(n)
+  const lastDigit = absN % 10
+  const lastTwoDigits = absN % 100
+  let word = wordsConfig[0]
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+    word = wordsConfig[0]
+  } else if (lastDigit === 1) {
+    word = wordsConfig[1]
+  } else if (lastDigit >= 2 && lastDigit <= 4) {
+    word = wordsConfig[2]
+  }
+  return word
 }
 
 onActivated(() => {
-  //load()
+  load()
 })
 onMounted(() => {
   load()
@@ -219,53 +192,5 @@ watch(formData, () => {
 .is-blocked{
   filter: grayscale(1) brightness(0.9);
 }
-.daily-lesson-avatar{
-  &.lesson{
-    box-shadow: inset 0 0 0 2px $yellow;
-  }
-  &.unexplored:before{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 0 0 0 1px $secondary;
-    border-radius: inherit;
-    animation: pulseSignal 1.5s ease infinite;
-
-  }
-  &.unexplored:after{
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    box-shadow: 0 0 0 1px $secondary;
-    border-radius: inherit;
-    animation: pulseSignal 1.5s ease 0.2s infinite;
-  }
-}
-
-@keyframes pulseSignal {
-  0%{
-    transform: scale(1);
-    opacity: 1;
-  }
-  50%, 100%{
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-@keyframes pulseSignalShadow {
-  0%{
-    filter: drop-shadow(0 0 5px $yellow)
-  }
-  100%{
-    filter: drop-shadow(0 0 0px $yellow)
-  }
-}
-
 
 </style>
