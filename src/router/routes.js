@@ -4,7 +4,7 @@ import CoursePage from 'pages/CoursePage.vue'
 import LeaderboardPage from 'pages/LeaderboardPage.vue'
 import NotificationsPage from 'pages/NotificationsPage.vue'
 import ExplorePage from 'pages/ExplorePage.vue'
-import ExploreSection from 'pages/ExploreSection.vue'
+import ExploreCourseSection from 'src/pages/ExploreCourseSection.vue'
 import UserDashboard from 'pages/UserDashboard.vue'
 import UserEdit from 'pages/UserEdit.vue'
 import UserEditPassword from 'pages/UserEditPassword.vue'
@@ -228,7 +228,7 @@ const routes = [
       },
       {
         path: 'explore-section-:course_section_id',
-        component: ExploreSection,
+        component: ExploreCourseSection,
         meta: { noBottomBar: true }
       },
 

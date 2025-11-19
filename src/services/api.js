@@ -243,6 +243,9 @@ export class Api extends ApiService{
       getList: (params) =>  {
           return this.post('explore', 'getList', params)
       },
+      getCourseSectionList: (params) =>  {
+          return this.post('explore', 'getCourseSectionList', params)
+      },
     }
     training = {
       linkItem: (params) =>  {
