@@ -165,6 +165,14 @@ a{
     animation-duration: 2000ms
 }
 
+.max-one-lines{
+   overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: 1;
+           line-clamp: 1;
+   -webkit-box-orient: vertical;
+}
 .max-two-lines{
    overflow: hidden;
    text-overflow: ellipsis;

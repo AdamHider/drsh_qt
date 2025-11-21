@@ -78,7 +78,7 @@ const load = async function () {
     return
   }
   courseSection.value = lessonListResponse[0].course_section
-  courseSection.value.list = lessonListResponse
+  courseSection.value.list = lessonListResponse.sort((a, b) => a.is_blocked ? 1 : -1);
 }
 
 

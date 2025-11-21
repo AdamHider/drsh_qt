@@ -56,19 +56,22 @@
       </q-card>
     </q-card-section>
     <q-card-section class="q-py-none">
-      <div class="text-subtitle1"><b>Выученные слова</b></div>
+      <div class="text-subtitle1"><b>Выученные слова ({{ finishedWords.length }})</b></div>
     </q-card-section>
     <q-card-section class="q-py-none">
-      <q-list v-if="finishedWords.length > 0">
-        <q-item v-for="(word, wordIndex) in finishedWords" :key="`finishedWordIndex-${wordIndex}`">
+      <q-list v-if="finishedWords.length > 0" separator>
+        <q-item v-for="(word, wordIndex) in finishedWords" :key="`finishedWordIndex-${wordIndex}`" dense>
             <q-item-section avatar>
-              <q-avatar>
-                <q-icon name="check"></q-icon>
+              <q-avatar color="positive" size="25px">
+                <q-icon name="check" color="white"></q-icon>
               </q-avatar>
             </q-item-section>
             <q-item-section>
               <div class="text-subtitle1"><b>{{ word.data.text }}</b></div>
               <div class="text-caption">{{ word.data.label }}</div>
+            </q-item-section>
+            <q-item-section side>
+              <b class="text-caption">{{ word.updated_at_humanized }}</b>
             </q-item-section>
           </q-item>
       </q-list>
@@ -93,8 +96,8 @@
       </q-card-section>
       <q-separator/>
       <q-card-section style="max-height: 50vh" class="scroll q-pa-xs">
-        <q-list>
-          <q-item v-for="(word, wordIndex) in words" :key="`wordIndex-${wordIndex}`" tag="label" clickable v-ripple>
+        <q-list separator>
+          <q-item v-for="(word, wordIndex) in words" :key="`wordIndex-${wordIndex}`" tag="label" dense clickable v-ripple>
             <q-item-section>
               <div class="text-subtitle1"><b>{{ word.data.text }}</b></div>
               <div class="text-caption">{{ word.data.label }}</div>
@@ -151,8 +154,8 @@
       </q-card-section>
       <q-separator/>
       <q-card-section style="max-height: 50vh" class="scroll q-pa-xs">
-        <q-list>
-          <q-item v-for="(activeWord, wordIndex) in activeWords" :key="`activeWordIndex-${wordIndex}`">
+        <q-list separator>
+          <q-item v-for="(activeWord, wordIndex) in activeWords" dense :key="`activeWordIndex-${wordIndex}`">
             <q-item-section>
               <div class="text-subtitle1"><b>{{ activeWord.data.text }}</b></div>
               <div class="text-caption">{{ activeWord.data.label }}</div>
@@ -163,6 +166,17 @@
           </q-item>
         </q-list>
       </q-card-section>
+      <q-separator/>
+      <q-card-actions>
+        <q-btn
+          push
+          label="Продолжить"
+          icon="play_arrow"
+          color="gradient-green"
+          class="full-width rounded-sm"
+          :loading="buttonLoading"
+          @click="open(lesson.id)"/>
+      </q-card-actions>
     </q-card>
   </q-dialog>
 

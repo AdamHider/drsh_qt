@@ -15,23 +15,32 @@
     </div>
     <div v-if="courseSections.length > 0">
       <div v-for="(courseSection, courseSectionIndex) in courseSections" :key="`courseSectionIndex-${courseSectionIndex}`" >
-          <q-card flat>
+          <q-card flat class=" q-mt-sm">
             <q-card-section class="q-py-none">
-              <q-item class="q-px-xs q-pb-none" clickable v-ripple :to="`explore-section-${courseSection.id}`">
+              <q-item class="q-px-xs " clickable v-ripple :to="`explore-section-${courseSection.id}`">
+                <q-item-section avatar>
+                  <q-circular-progress
+                    show-value
+                    rounded
+                    class="text-primary"
+                    track-color="grey-4"
+                    :thickness="0.25"
+                    :value="courseSection.progress?.percentage"
+                    size="40px"
+                    font-size="12px"
+                    color="primary"
+                  >
+                  <b>{{ courseSection.progress?.percentage }}%</b>
+                  </q-circular-progress>
+                </q-item-section>
                 <q-item-section>
                   <div class="text-subtitle1"><b>{{ courseSection.title }}</b></div>
+                  <div class="text-sm text-grey-8 max-one-lines q-mb-xs">{{ courseSection.description }}</div>
                 </q-item-section>
                 <q-item-section side>
                   <q-btn flat round dense icon="chevron_right"></q-btn>
                 </q-item-section>
               </q-item>
-              <div>
-                <div class="flex justify-between text-caption q-ma-xs">
-                  <div class="text-grey-8"><b>Исследовано:</b></div>
-                  <div><b>{{ courseSection.progress?.percentage }}%</b></div>
-                </div>
-                <q-progress-bar :value="courseSection.progress?.percentage" size="20px" color="orange" />
-              </div>
             </q-card-section>
             <q-card-section class="q-pa-none">
               <swiper
@@ -124,6 +133,9 @@ const load = async () => {
     error.value = courseSectionListResponse
     courseSections.value = []
     return false;
+  }
+  for(var i in courseSectionListResponse){
+    courseSectionListResponse[i].list = courseSectionListResponse[i].list.sort((a, b) => a.is_blocked ? 1 : -1);
   }
   courseSections.value = courseSectionListResponse
 }

@@ -226,11 +226,13 @@ const next = async () => {
     } else {
       setTarget(nextLesson.value.id)
     }
+  } else if(lesson.active.type == 'training') {
+    router.go(-1)
+    return
   } else {
     router.go(-2)
     return
   }
-  router.go(-1)
 }
 const openSkills = () => {
   lowEnergyDialog.value = false
