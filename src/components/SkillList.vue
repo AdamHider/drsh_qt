@@ -48,7 +48,8 @@
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"  :loading="isLoading"/>
+            <q-btn v-if="currentSkill.price > 0" color="positive" push class="full-width text-bold q-mt-sm q-item-blinking " @click="goToPayment(currentSkill.id)"  @click.stop="playAudio('click')">{{ currentSkill.price }}₽</q-btn>
+            <q-btn v-else-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"  :loading="isLoading"/>
             <q-btn v-else color="positive" push class="full-width text-bold q-mt-sm" icon="add" label="Докупить ресурсы" @click="openMarket()"  @click.stop="playAudio('click')"/>
           </div>
           <div v-if="currentSkill.is_gained" class="full-width">
@@ -76,6 +77,12 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}; onHide()">
+      <PaymentWidget
+          :confirmationToken="confirmationToken"
+          @onPaymentSuccess="handlePaymentSuccess"
+          @onPaymentFail="handlePaymentFail"/>
+    </q-dialog>
   </div>
 </template>
 
@@ -88,6 +95,7 @@ import { Navigation } from 'swiper/modules'
 import SkillItem from '../components/SkillItem.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { playAudio } from 'src/services/audioService';
+import PaymentWidget from '../components/PaymentWidget.vue'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -99,6 +107,10 @@ const claimError = ref(false)
 const currentSkill = ref(false)
 const router = useRouter()
 const isLoading = ref(false)
+const buyDialog = ref(false)
+const confirmationToken = ref(false)
+const paymentId = ref(false)
+let pollingInterval = null
 
 const props = defineProps({
   list: Array,
@@ -125,6 +137,63 @@ const claimSkill = async function (skillId) {
   }
   isLoading.value = false
 }
+const goToPayment = async (skill_id) => {
+  const paymentCreatedResponse = await api.payment.createItem({item_id: skill_id, item_code: 'skill', return_url: 'skills'})
+  if (paymentCreatedResponse.error) {
+    confirmationToken.value = {}
+    return;
+  }
+  confirmationToken.value = paymentCreatedResponse.confirmationToken
+  paymentId.value = paymentCreatedResponse.paymentId
+  buyDialog.value = true;
+  startChecking()
+  return;
+}
+const onHide = () => {
+  clearInterval(pollingInterval);
+  pollingInterval = null;
+}
+
+const handlePaymentSuccess = async () => {
+  currentSkill.value = {}
+  buyDialog.value = false;
+  emit('onClaim')
+  confirmationToken.value = false
+  paymentId.value = false
+}
+
+const handlePaymentFail = async (data) => {
+  currentSkill.value = {}
+  buyDialog.value = false;
+  emit('onClaim')
+  confirmationToken.value = false
+  paymentId.value = false
+}
+const startChecking = () => {
+  pollingInterval = setInterval(async () => {
+    try {
+      const response =  await api.payment.checkStatus({payment_id: paymentId.value})
+      const status = response.status;
+
+      if (status === 'succeeded' || status === 'canceled') {
+        // Если статус не pending, останавливаем пуллинг
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+
+        // Здесь можно показать соответствующее уведомление пользователю
+        if (status === 'succeeded') {
+          handlePaymentSuccess();
+        } else {
+          handlePaymentFail();
+        }
+      }
+    } catch (error) {
+      console.error('Ошибка пуллинга:', error);
+      clearInterval(pollingInterval);
+      pollingInterval = null;
+    }
+  }, 3000);
+};
 const openMarket = () => {
   claimDialog.value = false
   router.push('/market')
