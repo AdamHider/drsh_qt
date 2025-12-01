@@ -228,6 +228,7 @@ const routes = [
       },
       {
         path: 'explore-section-:course_section_id',
+        name: 'explore-section',
         component: ExploreCourseSection,
         meta: { noBottomBar: true }
       },

@@ -40,7 +40,7 @@
         <q-separator/>
         <q-card-actions >
           <div v-if="currentSkill.is_available" class="full-width">
-            <div v-if="currentSkill.cost" class="q-pa-sm bg-grey-3 rounded-sm">
+            <div v-if="currentSkill.cost.length > 0" class="q-pa-sm bg-grey-3 rounded-sm">
               <div class="text-center text-subtitle1"><b>Необходимо: </b></div>
               <div class="row justify-center q-gutter-sm q-py-sm">
                 <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
@@ -48,7 +48,7 @@
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.price > 0" color="positive" push class="full-width text-bold q-mt-sm q-item-blinking " @click="goToPayment(currentSkill.id)"  @click.stop="playAudio('click')">{{ currentSkill.price }}₽</q-btn>
+            <q-btn v-if="currentSkill.price > 0" push class="bg-gradient-primary-purple-to-right text-white full-width text-bold q-mt-sm q-item-blinking " @click="goToPayment(currentSkill.id)"  @click.stop="playAudio('click')">{{ currentSkill.price }}₽</q-btn>
             <q-btn v-else-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"  :loading="isLoading"/>
             <q-btn v-else color="positive" push class="full-width text-bold q-mt-sm" icon="add" label="Докупить ресурсы" @click="openMarket()"  @click.stop="playAudio('click')"/>
           </div>
@@ -75,13 +75,13 @@
             </q-list>
           </div>
         </q-card-actions>
+        <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}; onHide()">
+          <PaymentWidget
+              :confirmationToken="confirmationToken"
+              @onPaymentSuccess="handlePaymentSuccess"
+              @onPaymentFail="handlePaymentFail"/>
+        </q-dialog>
       </q-card>
-    </q-dialog>
-    <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}; onHide()">
-      <PaymentWidget
-          :confirmationToken="confirmationToken"
-          @onPaymentSuccess="handlePaymentSuccess"
-          @onPaymentFail="handlePaymentFail"/>
     </q-dialog>
   </div>
 </template>

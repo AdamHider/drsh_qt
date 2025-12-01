@@ -1,8 +1,8 @@
 <template>
   <q-item v-ripple clickable
     :class="`q-push q-my-sm rounded-borders skill-item bg-blue-grey-1 color-${props.color} text-center relative-position
-      ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available q-item-blinking' : 'is_available' : 'is_blocked'} ${props.class}`">
-    <q-item-section avatar>
+     ${(skill.price > 0) ? 'is_payment ' : ''} ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available q-item-blinking' : 'is_available' : 'is_blocked'} ${props.class}`">
+    <q-item-section avatar :class="(skill.price > 0 || skill.is_available) ? 'q-item-blinking' : ''">
       <q-avatar :size="props.size" text-color="white">
         <q-img class="absolute" :src="skill.image" no-spinner/>
       </q-avatar>
@@ -32,6 +32,7 @@ const skill = toRefs(props).skill
 $glow: 0px 0px 5px -1px $blue;
 .skill-item{
   position: relative;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.37);
   &:before{
     content: "";
     position: absolute;
@@ -66,6 +67,7 @@ $glow: 0px 0px 5px -1px $blue;
   }
 }
 .skill-item.is_blocked {
+  text-shadow: none !important;
   filter: grayscale(1);
   &:before{
     background-image: url('/images/skills/skill_item_background_dark.png');
@@ -78,4 +80,10 @@ $glow: 0px 0px 5px -1px $blue;
   color: white;
   border-bottom: 4px solid $primary;
 }
+.skill-item.is_payment {
+  background: $gradient-primary-purple !important;
+  color: white;
+  border-bottom: 4px solid $primary-dark;
+}
+
 </style>

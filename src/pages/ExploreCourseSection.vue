@@ -29,9 +29,9 @@
         <q-card-section class="q-py-none">
           <div class="text-subtitle1"><b>Планеты:</b></div>
         </q-card-section>
-        <q-card-section class="q-pa-none">
+        <q-card-section class="q-pa-none" v-if="courseSectioneLssons.length > 0">
           <q-list class="q-px-md">
-            <q-item v-for="(lessonItem, lessonItemIndex) in courseSection.list" :key="`lessonItemIndex-${lessonItemIndex}`" clickable v-ripple
+            <q-item v-for="(lessonItem, lessonItemIndex) in courseSectioneLssons" :key="`lessonItemIndex-${lessonItemIndex}`" clickable v-ripple
               :class="`q-push q-mt-sm relative-position rounded-md  text-white text-shadow ${lessonItem.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lessonItem.id}`)"
               :style="`border-color: rgba(0, 0, 0, 0.7); background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)), url(${(lessonItem.background_image) ? lessonItem.background_image : lessonItem.course_section.background_image}); background-size: cover; background-position: center;`">
               <q-item-section avatar>
@@ -60,13 +60,15 @@ import { ref, onMounted, onActivated } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import { playAudio } from 'src/services/audioService';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import UserResourceBar from '../components/UserResourceBar.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { user } = useUserStore()
 
 const courseSection = ref([])
+const courseSectioneLssons = ref([])
 const error = ref({})
 const expandDescription = ref(false)
 
@@ -78,7 +80,7 @@ const load = async function () {
     return
   }
   courseSection.value = lessonListResponse[0].course_section
-  courseSection.value.list = lessonListResponse.sort((a, b) => a.is_blocked ? 1 : -1);
+  courseSectioneLssons.value = lessonListResponse.sort((a, b) => a.is_blocked ? 1 : -1);
 }
 
 

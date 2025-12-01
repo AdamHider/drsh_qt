@@ -22,7 +22,7 @@
                   <q-circular-progress
                     show-value
                     rounded
-                    class="text-primary"
+                    :class="(courseSection.progress?.percentage > 0) ? 'text-primary' : 'text-grey-7'"
                     track-color="grey-4"
                     :thickness="0.25"
                     :value="courseSection.progress?.percentage"

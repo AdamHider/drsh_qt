@@ -14,7 +14,7 @@
           leave-active-class="animated fadeOutDown">
                     <LessonSatelliteSlider
                       v-if="transitionTrigger"
-                        :slidesPerView=1.3
+                        :slidesPerView="(lesson.active.satellites.length > 1) ? 1.3 : 1.15"
                         :centerAligned="true"
                         :withButton="false"
                         slideHeight="100"
@@ -27,10 +27,9 @@
       </q-card>
       <q-page-sticky
           :class="`fixed full-width full-height background-space ${(isDark) ? 'dark': ''}`"
-          :style="`background: ${lesson.active.course_section?.background_gradient}; transform: none`"
           >
           <q-img
-          :src="lesson.active.course_section?.background_image"
+          :src="(activeLesson.background_image) ? activeLesson.background_image : activeLesson.course_section?.background_image"
           class="absolute-top absolute-left full-width full-height"
           loading="lazy"
           spinner-color="white"
