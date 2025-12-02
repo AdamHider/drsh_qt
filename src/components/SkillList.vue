@@ -2,6 +2,7 @@
   <div>
     <div class="justify-center">
       <div v-for="(subcategory, subcategoryIndex) in props.list" :key="subcategoryIndex" class="subcategory-block">
+          <div v-if="subcategoryIndex == targetSlider" id="scrollAnchor"></div>
           <div class="q-pa-md">
             <div class="row justify-between q-mb-sm">
               <div class="text-subtitle1"><b>{{subcategory.title}} </b> <b class="text-primary">({{subcategory.gained_total}}/{{subcategory.total}})</b></div>
@@ -10,15 +11,15 @@
             <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="22px" color="primary"/>
           </div>
           <div>
-            <swiper  slides-per-view="auto" spaceBetween="30" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
+            <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" @swiper="onSwiper($event, subcategoryIndex)">
               <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center">
                 <SkillItem v-for="(skill, skillIndex) in skillCol.slots" :key="skillIndex"
                   :skill="skill"
                   @click="openModal(skill)"
-                  size="50px"
-                  style="z-index: 10;  max-width: 50px;"
+                  size="60px"
+                  style="z-index: 10; min-width: 165px; max-width: 60px;"
                   :color="props.color"
-                  :class="(currentSkill.id == skill.id) ? 'is-active' : ''"
+                  :class="`${(currentSkill.id == skill.id) ? 'is-active' : ''}`"
                   @click.stop="playAudio('click')"
                 />
                 <div v-for="(relation, relationIndex) in skillCol.relations" :key="relationIndex" :class="`relation relation-${relation.direction} ${(relation.is_gained) ? 'relation-is_gained' : ''}`"></div>
@@ -32,6 +33,7 @@
         <div class="q-pa-sm" style="background: center / contain no-repeat url('/images/rays.png');">
           <q-img width="150px" :src="currentSkill.image" no-spinner/>
         </div>
+
         <q-card-section class="q-pt-none">
           <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
           <div class="text-caption">{{ currentSkill.description }}</div>
@@ -87,7 +89,7 @@
 
 <script setup>
 import { api } from '../services/index'
-import { ref, watch } from 'vue'
+import { onActivated, toRefs, reactive, ref, watch } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
@@ -114,10 +116,17 @@ let pollingInterval = null
 const props = defineProps({
   list: Array,
   color: String,
-  activeOnly: Boolean
+  activeOnly: Boolean,
+  targetId: Number
 })
 
 const emit = defineEmits(['onClaim', 'onModalOpen'])
+
+const targetId = toRefs(props).targetId
+const targetSlider = ref(null)
+const targetSlide = ref(null)
+const swiperEl = ref(null)
+const swipers = reactive([])
 
 const openModal = function (skill) {
   if (!skill.id) return
@@ -197,6 +206,41 @@ const openMarket = () => {
   claimDialog.value = false
   router.push('/market')
 }
+watch(() => targetId.value, () => {
+  if(targetId.value){
+    checkTarget()
+    scrollToTarget()
+  }
+
+})
+onActivated(() => {
+  if(targetId.value){
+    checkTarget()
+    scrollToTarget()
+  }
+})
+const checkTarget = () => {
+  for(var subcategoryIndex in props.list){
+    for(var slideIndex in props.list[subcategoryIndex].list){
+      if(props.list[subcategoryIndex].list[slideIndex].slots.find((item) => {return item.id == targetId.value})){
+        targetSlider.value = subcategoryIndex;
+        targetSlide.value = slideIndex;
+        break;
+      }
+    }
+  }
+}
+const scrollToTarget = () => {
+  setTimeout(() => {
+    if(swipers[targetSlider.value]) swipers[targetSlider.value].slideTo(targetSlide.value, 500)
+    if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "start", behavior: "smooth"})
+  }, 300)
+}
+const onSwiper = (swiper, subcategoryIndex) => {
+  setTimeout(() => {
+      swipers[subcategoryIndex] = swiper
+  }, 200)
+}
 watch(() => claimDialog.value, () => {
   emit('onModalOpen', claimDialog.value)
 })
@@ -233,7 +277,7 @@ onBeforeRouteLeave((to, from) => {
   border-style: solid;
   border-width: 0px;
   left: calc(-10px + 100%);
-  width: 22px;
+  width: 30px;
 }
 .relation:before{
   content: "";
@@ -243,7 +287,7 @@ onBeforeRouteLeave((to, from) => {
   border-width: 0px;
   left: 100%;
   height: 100%;
-  width: 12px;
+  width: 22px;
 }
 .relation:after{
   content: "";
@@ -251,7 +295,7 @@ onBeforeRouteLeave((to, from) => {
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
   border-left: 8px solid $grey-3;
-  left: 32px;
+  left: 52px;
 }
 .relation-is_gained{
   border-color: $positive;

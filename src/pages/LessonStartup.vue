@@ -84,7 +84,7 @@
               <div v-if="activeLesson?.unblock?.skills?.length > 0">
                 <q-list>
                   <q-item clickable v-ripple class="text-left q-px-none"  v-for="(unblockSkill, unblockSkillIndex) in activeLesson.unblock.skills" :key="`unblockLessonIndex-${unblockSkillIndex}`"
-                    :to="`/skills`" @click.stop="playAudio('click')">
+                    :to="{ path: '/skills', query: { target_id: unblockSkill.id, back_link: true } }" @click.stop="playAudio('click')">
                     <q-item-section avatar>
                         <q-img :src="unblockSkill.image"/>
                     </q-item-section>

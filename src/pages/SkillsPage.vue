@@ -1,7 +1,8 @@
 <template>
   <q-page-container>
     <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce" contentClass="justify-between">
-      <div></div>
+      <q-btn v-if="route.query.back_link" flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"  @click.stop="playAudio('click')"/>
+      <div v-else></div>
       <div class="flex full-width justify-center">
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
@@ -26,7 +27,7 @@
             <q-spinner-puff size="50px" color="primary" />
           </q-inner-loading>
           <q-card-section class="q-pa-none">
-            <SkillList :list="skills" @onClaim="reload()" @onModalOpen="(value) => {headerShowForce = value}"/>
+            <SkillList :list="skills" @onClaim="reload()" @onModalOpen="(value) => {headerShowForce = value}" :targetId="targetId"/>
           </q-card-section>
       </q-card>
     </q-page>
@@ -39,13 +40,17 @@ import UserResourceBar from '../components/UserResourceBar.vue'
 import { ref, onActivated, watch } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
+import { playAudio } from 'src/services/audioService';
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const { user, getItem } = useUserStore()
 
 const skills = ref([])
 const error = ref(false)
 const headerShowForce = ref(false)
 const notLoaded = ref(true)
+const targetId = ref(0)
 
 const load = async function (filter) {
   const skillListResponse = await api.skill.getList({ mode: 'by_user' })
@@ -64,7 +69,10 @@ const reload = async function () {
 }
 onActivated(async () => {
   await getItem()
-  load()
+  await load()
+  if(route.query.target_id){
+    targetId.value = route.query.target_id*1
+  }
 })
 </script>
 <style scoped>
