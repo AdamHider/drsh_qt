@@ -10,13 +10,13 @@
             <q-progress-bar :value="subcategory.gained_total/subcategory.total * 100" size="22px" color="primary"/>
           </div>
           <div>
-            <swiper  slides-per-view="auto" spaceBetween="50" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
+            <swiper  slides-per-view="auto" spaceBetween="30" :slidesOffsetBefore="16" :slidesOffsetAfter="16" >
               <swiper-slide  v-for="(skillCol, skillColIndex) in subcategory.list" :key="skillColIndex" class="flex column text-center">
                 <SkillItem v-for="(skill, skillIndex) in skillCol.slots" :key="skillIndex"
                   :skill="skill"
                   @click="openModal(skill)"
-                  size="60px"
-                  style="z-index: 10; min-width: 165px; max-width: 60px;"
+                  size="50px"
+                  style="z-index: 10;  max-width: 50px;"
                   :color="props.color"
                   :class="(currentSkill.id == skill.id) ? 'is-active' : ''"
                   @click.stop="playAudio('click')"
@@ -32,7 +32,6 @@
         <div class="q-pa-sm" style="background: center / contain no-repeat url('/images/rays.png');">
           <q-img width="150px" :src="currentSkill.image" no-spinner/>
         </div>
-
         <q-card-section class="q-pt-none">
           <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
           <div class="text-caption">{{ currentSkill.description }}</div>
@@ -234,7 +233,7 @@ onBeforeRouteLeave((to, from) => {
   border-style: solid;
   border-width: 0px;
   left: calc(-10px + 100%);
-  width: 30px;
+  width: 22px;
 }
 .relation:before{
   content: "";
@@ -244,7 +243,7 @@ onBeforeRouteLeave((to, from) => {
   border-width: 0px;
   left: 100%;
   height: 100%;
-  width: 22px;
+  width: 12px;
 }
 .relation:after{
   content: "";
@@ -252,7 +251,7 @@ onBeforeRouteLeave((to, from) => {
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
   border-left: 8px solid $grey-3;
-  left: 52px;
+  left: 32px;
 }
 .relation-is_gained{
   border-color: $positive;

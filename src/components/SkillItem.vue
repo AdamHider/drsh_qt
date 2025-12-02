@@ -7,7 +7,6 @@
         <q-img class="absolute" :src="skill.image" no-spinner/>
       </q-avatar>
       </q-item-section>
-    <q-item-section class="q-pt-none text-left"><div  class="text-subtitle2" style=""><b>{{ skill.title }}</b></div></q-item-section>
     <div class="absolute-top-left q-pa-xs">
       <q-avatar v-if="skill.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-ml-xs" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
     </div>

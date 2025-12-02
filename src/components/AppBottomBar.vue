@@ -20,7 +20,7 @@
         </div>
         <div class="relative-position">
           <q-tutorial-item title="Открытия" description="На этой странице отображаются ежедневные открытия, планеты и другие небесные тела." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
-          <q-route-tab :to="routes.explore.link" exact replace  @click.stop="playAudio('click')">
+          <q-route-tab  :to="routes.explore.link" exact replace   @click.stop="playAudio('click')">
             <q-img :src="`/icons/explore${(routes.explore.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             <q-badge v-show="routes.explore.is_updated" color="red" rounded floating />
             <q-avatar v-if="routes.explore.is_quest" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="absolute-top" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
@@ -28,8 +28,8 @@
         </div>
         <div class="relative-position">
           <q-tutorial-item title="Технологии" description="На этой странице отображаются технологии, помогающие в освоении космоса." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
-          <q-route-tab :to="routes.skills.link" exact replace  @click.stop="playAudio('click')">
-            <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+          <q-route-tab  @click="openDrawer('skills')" @click.stop="playAudio('click')">
+            <q-img :src="`/icons/microscope${(skillsDialog) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             <q-badge v-show="routes.skills.is_updated" color="red" rounded floating />
             <q-avatar v-if="routes.skills.is_quest" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="absolute-top" style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
           </q-route-tab>
@@ -64,6 +64,7 @@ import { useNotification } from '../composables/useNotification'
 import { playAudio } from 'src/services/audioService';
 import { useQuest } from '../composables/useQuest'
 
+
 const { notifications } = useNotification()
 
 const { routes } = useNavigationHistory();
@@ -73,10 +74,16 @@ const route = useRoute();
 const isRootPage = ref(false);
 const bottomBarEnabled = ref(false);
 
+const emits = defineEmits(['onTabSelected'])
+const openDrawer = (tab) => {
+  emits('onTabSelected', tab)
+}
+
 onMounted(() => {
   checkActive()
   getList(1)
 })
+
 
 watch(route, (currentValue, oldValue) => {
   setTimeout(() => {
