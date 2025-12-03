@@ -2,13 +2,13 @@
   <q-card flat>
     <q-card-section class="q-py-none">
       <q-card v-if="lesson"
-          :class="`q-push relative-position rounded-md text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`"
+          :class="`q-push relative-position rounded-md q-pt-sm text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`"
           :style="`margin-bottom: 30px; background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${lesson.background_image}); background-size: cover; background-position: center;`">
           <q-card-section horizontal class="items-center">
-            <q-card-section>
-              <q-img class="planet-image allow-overflow" :src="lesson.image" width="70px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px); scale: 1.5" no-spinner/>
+            <q-card-section class="">
+              <q-img class="planet-image allow-overflow q-ml-md " :src="lesson.image" width="70px" style="filter: drop-shadow(rgb(93, 195, 255) 0px 5px 10px); scale: 1.5" no-spinner/>
             </q-card-section>
-            <q-card-section  class="q-pa-sm">
+            <q-card-section >
               <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
               <div class="text-sm max-two-lines">{{ lesson.description }}</div>
             </q-card-section>
