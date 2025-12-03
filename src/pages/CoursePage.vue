@@ -22,11 +22,6 @@
           <ChestsWidget type="personal" color="green"/>
         </q-page-sticky>
 
-
-        <q-page-sticky position="bottom-right" style="z-index: 100" :offset="[10, 60]">
-          <DailyLessonListWidget :reloadTrigger="lessonListReloadTrigger"/>
-        </q-page-sticky>
-
     </q-page>
   </q-page-wrapper>
 </template>

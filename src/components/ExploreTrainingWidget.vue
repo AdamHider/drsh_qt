@@ -42,10 +42,20 @@
                   @click="open(lesson.id)"/>
               </div>
 
-              <q-btn v-else
+              <q-btn v-else-if="activeWordIds.length > totalWords"
                 push
                 label="Начать"
                 icon="play_arrow"
+                color="gradient-primary"
+                class="rounded-sm"
+                style="width: 80%"
+                @click="openDialog()"
+                :loading="buttonLoading">
+              </q-btn>
+              <q-btn v-else
+                push
+
+                :label="`Мало слов (${words.length}/${totalWords})`"
                 color="gradient-primary"
                 class="rounded-sm"
                 style="width: 80%"
@@ -94,16 +104,16 @@
           </q-item-section>
         </q-item>
       </q-card-section>
-      <q-separator/>
-      <q-card-section style="max-height: 50vh" class="scroll q-pa-xs">
+      <q-separator v-if="words.length > 0"/>
+      <q-card-section v-if="words.length > 0" style="max-height: 50vh" class="scroll q-pa-xs">
         <q-list separator>
-          <q-item v-for="(word, wordIndex) in words" :key="`wordIndex-${wordIndex}`" tag="label" dense clickable v-ripple>
+          <q-item v-for="(currentWord, wordIndex) in words" :key="`wordIndex-${wordIndex}`" tag="label" dense clickable v-ripple>
             <q-item-section>
-              <div class="text-subtitle1"><b>{{ word.data.text }}</b></div>
-              <div class="text-caption">{{ word.data.label }}</div>
+              <div class="text-subtitle1"><b>{{ currentWord.data.text }}</b></div>
+              <div class="text-caption">{{ currentWord.data.label }}</div>
             </q-item-section>
             <q-item-section side>
-              <q-checkbox v-model="activeWordIds" :val="word.id"/>
+              <q-checkbox v-model="activeWordIds" :val="currentWord.id"/>
             </q-item-section>
           </q-item>
         </q-list>
@@ -114,7 +124,7 @@
           <q-item class="q-px-none">
             <q-item-section>
               <div class="text-subtitle1"><b>Мало слов ({{ activeWordIds.length }})</b></div>
-              <div class="text-caption">Для начала тренировки нужно хотя бы {{ totalWords }} слов</div>
+              <div class="text-caption">Для начала тренировки нужно сохранить хотя бы {{ totalWords }} слов</div>
               <q-progress-bar :value="activeWordIds.length*100/totalWords" size="25px" color="positive" class="q-mt-sm"/>
             </q-item-section>
           </q-item>
@@ -241,22 +251,23 @@ const buttonLoading = ref(false)
 const lowEnergyDialog = ref(false)
 const activeWordsDialog = ref(false)
 
-const totalWords = ref(12)
+const totalWords = ref(8)
 
 const loadActiveList = async () => {
-  words.value = []
   const trainingListResponse = await api.training.getList({status: ['created', 'active']})
   if (trainingListResponse.error) {
     error.value = trainingListResponse
     words.value = []
     return false;
   }
+  activeWordIds.value = []
   for(var i in trainingListResponse){
     if(activeWordIds.value.length < totalWords.value){
       activeWordIds.value.push(trainingListResponse[i].id)
     }
   }
   words.value = trainingListResponse
+  console.log(words.value)
 }
 
 const loadFinishList = async () => {

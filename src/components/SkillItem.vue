@@ -85,5 +85,9 @@ $glow: 0px 0px 5px -1px $blue;
   color: white;
   border-bottom: 4px solid $primary-dark;
 }
+.skill-item.is_payment.is_gained {
+  background: $gradient-positive !important;
+  border-bottom: 4px solid #198031  !important;
+}
 
 </style>

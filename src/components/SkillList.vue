@@ -49,7 +49,7 @@
                 </div>
               </div>
             </div>
-            <q-btn v-if="currentSkill.price > 0" push class="bg-gradient-primary-purple-to-right text-white full-width text-bold q-mt-sm q-item-blinking " @click="goToPayment(currentSkill.id)"  @click.stop="playAudio('click')">{{ currentSkill.price }}₽</q-btn>
+            <q-btn v-if="currentSkill.price > 0" push class="bg-gradient-primary-purple-to-right text-white full-width text-bold q-mt-sm q-item-blinking " @click="openPayment(currentSkill.id)"  @click.stop="playAudio('click')">{{ currentSkill.price }}₽</q-btn>
             <q-btn v-else-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"  :loading="isLoading"/>
             <q-btn v-else color="positive" push class="full-width text-bold q-mt-sm" icon="add" label="Докупить ресурсы" @click="openMarket()"  @click.stop="playAudio('click')"/>
           </div>
@@ -76,12 +76,13 @@
             </q-list>
           </div>
         </q-card-actions>
-        <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}; onHide()">
-          <PaymentWidget
-              :confirmationToken="confirmationToken"
-              @onPaymentSuccess="handlePaymentSuccess"
-              @onPaymentFail="handlePaymentFail"/>
-        </q-dialog>
+        <PaymentWidget
+            :isOpen="buyDialog"
+            :itemId="currentSkill.id*1"
+            itemCode="skill"
+            @onHide="buyDialog = false"
+            @onPaymentSuccess="onPaymentSuccess"
+            @onPaymentFail="onPaymentFail"/>
       </q-card>
     </q-dialog>
   </div>
@@ -89,7 +90,7 @@
 
 <script setup>
 import { api } from '../services/index'
-import { onActivated, toRefs, reactive, ref, watch } from 'vue'
+import { onActivated, onMounted, toRefs, reactive, ref, watch } from 'vue'
 import { useRouter, onBeforeRouteLeave } from 'vue-router'
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Navigation } from 'swiper/modules'
@@ -97,6 +98,9 @@ import SkillItem from '../components/SkillItem.vue'
 import UserResourceBar from '../components/UserResourceBar.vue'
 import { playAudio } from 'src/services/audioService';
 import PaymentWidget from '../components/PaymentWidget.vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 import 'swiper/css'
 import 'swiper/css/navigation'
@@ -109,9 +113,6 @@ const currentSkill = ref(false)
 const router = useRouter()
 const isLoading = ref(false)
 const buyDialog = ref(false)
-const confirmationToken = ref(false)
-const paymentId = ref(false)
-let pollingInterval = null
 
 const props = defineProps({
   list: Array,
@@ -145,84 +146,17 @@ const claimSkill = async function (skillId) {
   }
   isLoading.value = false
 }
-const goToPayment = async (skill_id) => {
-  const paymentCreatedResponse = await api.payment.createItem({item_id: skill_id, item_code: 'skill', return_url: 'skills'})
-  if (paymentCreatedResponse.error) {
-    confirmationToken.value = {}
-    return;
-  }
-  confirmationToken.value = paymentCreatedResponse.confirmationToken
-  paymentId.value = paymentCreatedResponse.paymentId
-  buyDialog.value = true;
-  startChecking()
-  return;
+const openPayment = () => {
+  buyDialog.value = true
 }
-const onHide = () => {
-  clearInterval(pollingInterval);
-  pollingInterval = null;
-}
-
-const handlePaymentSuccess = async () => {
-  currentSkill.value = {}
-  buyDialog.value = false;
-  emit('onClaim')
-  confirmationToken.value = false
-  paymentId.value = false
-}
-
-const handlePaymentFail = async (data) => {
-  currentSkill.value = {}
-  buyDialog.value = false;
-  emit('onClaim')
-  confirmationToken.value = false
-  paymentId.value = false
-}
-const startChecking = () => {
-  pollingInterval = setInterval(async () => {
-    try {
-      const response =  await api.payment.checkStatus({payment_id: paymentId.value})
-      const status = response.status;
-
-      if (status === 'succeeded' || status === 'canceled') {
-        // Если статус не pending, останавливаем пуллинг
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-
-        // Здесь можно показать соответствующее уведомление пользователю
-        if (status === 'succeeded') {
-          handlePaymentSuccess();
-        } else {
-          handlePaymentFail();
-        }
-      }
-    } catch (error) {
-      console.error('Ошибка пуллинга:', error);
-      clearInterval(pollingInterval);
-      pollingInterval = null;
-    }
-  }, 3000);
-};
 const openMarket = () => {
   claimDialog.value = false
   router.push('/market')
 }
-watch(() => targetId.value, () => {
-  if(targetId.value){
-    checkTarget()
-    scrollToTarget()
-  }
-
-})
-onActivated(() => {
-  if(targetId.value){
-    checkTarget()
-    scrollToTarget()
-  }
-})
 const checkTarget = () => {
   for(var subcategoryIndex in props.list){
     for(var slideIndex in props.list[subcategoryIndex].list){
-      if(props.list[subcategoryIndex].list[slideIndex].slots.find((item) => {return item.id == targetId.value})){
+      if(props.list[subcategoryIndex].list[slideIndex].slots.find((item) => {return item.id == route.query.target_id})){
         targetSlider.value = subcategoryIndex;
         targetSlide.value = slideIndex;
         break;
@@ -234,13 +168,42 @@ const scrollToTarget = () => {
   setTimeout(() => {
     if(swipers[targetSlider.value]) swipers[targetSlider.value].slideTo(targetSlide.value, 500)
     if(document.querySelector('#scrollAnchor')) document.querySelector('#scrollAnchor').scrollIntoView({block: "start", behavior: "smooth"})
-  }, 300)
+  }, 200)
+}
+const onPaymentSuccess = async () => {
+  currentSkill.value = {}
+  emit('onClaim')
+  claimDialog.value = false
+}
+const onPaymentFail = async (data) => {
+  currentSkill.value = {}
+  buyDialog.value = false;
+  emit('onClaim')
+  claimDialog.value = false
 }
 const onSwiper = (swiper, subcategoryIndex) => {
   setTimeout(() => {
       swipers[subcategoryIndex] = swiper
-  }, 200)
+  }, 100)
 }
+onActivated(() => {
+  if(route.query.target_id){
+    checkTarget()
+    scrollToTarget()
+  }
+})
+onMounted(() => {
+  if(route.query.target_id){
+    checkTarget()
+    scrollToTarget()
+  }
+})
+watch(() => targetId.value, () => {
+  if(targetId.value){
+    checkTarget()
+    scrollToTarget()
+  }
+})
 watch(() => claimDialog.value, () => {
   emit('onModalOpen', claimDialog.value)
 })

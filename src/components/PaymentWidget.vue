@@ -1,17 +1,28 @@
 <template>
-  <q-card class="rounded-b-0 q-pt-sm">
-    <div id="payment-widget-container"></div>
-  </q-card>
-
+  <q-dialog v-model="dialogStatus" position="bottom" @before-hide="onHide()">
+    <q-card class="rounded-b-0 q-pt-sm">
+      <div id="payment-widget-container"></div>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue';
+import { api } from '../services/index'
+import { ref, watch, toRefs, nextTick } from 'vue';
+
+const confirmationToken = ref(false)
+const paymentId = ref(false)
+let pollingInterval = null
 
 const props = defineProps({
-  confirmationToken: String
+  isOpen: Boolean,
+  itemId: Number,
+  itemCode: String
 });
-const emits = defineEmits(['onPaymentSuccess', 'onPaymentFail'])
+const emits = defineEmits(['onPaymentSuccess', 'onPaymentFail', 'onHide'])
+
+const isOpen = toRefs(props).isOpen
+const dialogStatus = ref(false)
 
 const renderYookassaWidget = async (token) => {
   const checkout = await new YooMoneyCheckoutWidget({
@@ -28,16 +39,70 @@ const renderYookassaWidget = async (token) => {
     emits('onPaymentFail', event);
     checkout.destroy();
   });
-
-  //Отображение платежной формы в контейнере
   checkout.render('payment-widget-container');
 };
+const createPayment = async (skill_id) => {
+  const paymentCreatedResponse = await api.payment.createItem({item_id: skill_id, item_code: 'skill', return_url: 'skills'})
+  if (paymentCreatedResponse.error) {
+    confirmationToken.value = {}
+    return;
+  }
+  confirmationToken.value = paymentCreatedResponse.confirmationToken
+  paymentId.value = paymentCreatedResponse.paymentId
+  startChecking()
+  return;
+}
+const onHide = () => {
+  clearInterval(pollingInterval);
+  pollingInterval = null;
+  emits('onHide')
+}
+const handlePaymentSuccess = async () => {
+  emits('onPaymentSuccess')
+  confirmationToken.value = false
+  paymentId.value = false
+}
 
-watch(() => props.confirmationToken, async (newToken) => {
+const handlePaymentFail = async (data) => {
+  emits('onPaymentFail')
+  confirmationToken.value = false
+  paymentId.value = false
+}
+const startChecking = () => {
+  pollingInterval = setInterval(async () => {
+    try {
+      const response =  await api.payment.checkStatus({payment_id: paymentId.value})
+      const status = response.status;
+
+      if (status === 'succeeded' || status === 'canceled') {
+        // Если статус не pending, останавливаем пуллинг
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+
+        // Здесь можно показать соответствующее уведомление пользователю
+        if (status === 'succeeded') {
+          handlePaymentSuccess();
+        } else {
+          handlePaymentFail();
+        }
+      }
+    } catch (error) {
+      console.error('Ошибка пуллинга:', error);
+      clearInterval(pollingInterval);
+      pollingInterval = null;
+    }
+  }, 3000);
+};
+
+watch(() => confirmationToken.value, async (newToken) => {
   if (newToken) {
-    // Ждем, пока DOM обновится
     await nextTick();
     renderYookassaWidget(newToken);
   }
 }, { immediate: true });
+
+watch(() => isOpen.value, () => {
+  dialogStatus.value = isOpen.value
+  if(isOpen.value) createPayment(props.itemId)
+})
 </script>
