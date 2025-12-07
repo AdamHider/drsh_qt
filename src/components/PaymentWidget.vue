@@ -17,6 +17,7 @@ let pollingInterval = null
 const props = defineProps({
   isOpen: Boolean,
   itemId: Number,
+  returnUrl: String,
   itemCode: String
 });
 const emits = defineEmits(['onPaymentSuccess', 'onPaymentFail', 'onHide'])
@@ -42,7 +43,7 @@ const renderYookassaWidget = async (token) => {
   checkout.render('payment-widget-container');
 };
 const createPayment = async (skill_id) => {
-  const paymentCreatedResponse = await api.payment.createItem({item_id: skill_id, item_code: 'skill', return_url: 'skills'})
+  const paymentCreatedResponse = await api.payment.createItem({item_id: skill_id, item_code: props.itemCode, return_url: props.returnUrl})
   if (paymentCreatedResponse.error) {
     confirmationToken.value = {}
     return;

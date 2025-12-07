@@ -80,6 +80,7 @@
             :isOpen="buyDialog"
             :itemId="currentSkill.id*1"
             itemCode="skill"
+            returnUrl="skills"
             @onHide="buyDialog = false"
             @onPaymentSuccess="onPaymentSuccess"
             @onPaymentFail="onPaymentFail"/>

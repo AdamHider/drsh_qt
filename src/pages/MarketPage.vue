@@ -46,7 +46,7 @@
                         leave-active-class="animated zoomOut">
                         <q-btn v-if="marketChest.is_bought" class="q-item-blinking  full-width" push color="secondary">Куплено!</q-btn>
                         <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
-                        <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="goToPayment(marketChest.id)"  @click.stop="playAudio('click')">{{ marketChest.price }}₽</q-btn>
+                        <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="openPayment(marketChest.id)"  @click.stop="playAudio('click')">{{ marketChest.price }}₽</q-btn>
                     </transition>
                   </q-card-actions>
                 </q-card>
@@ -71,7 +71,7 @@
                           leave-active-class="animated zoomOut">
                       <q-btn v-if="marketChest.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
                       <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
-                      <q-btn v-else :class="`q-item-blinking full-width ${(marketChest.is_discount) ? 'q-btn-shaking-always bg-light-gradient-red' : 'bg-gradient-primary'}`" push  :loading="activeOffer.id == marketChest.id" @click="goToPayment(marketChest.id)"  @click.stop="playAudio('click')">
+                      <q-btn v-else :class="`q-item-blinking full-width ${(marketChest.is_discount) ? 'q-btn-shaking-always bg-light-gradient-red' : 'bg-gradient-primary'}`" push  :loading="activeOffer.id == marketChest.id" @click="openPayment(marketChest.id)"  @click.stop="playAudio('click')">
                         <span v-if="marketChest.is_discount" class="text-red-2 text-caption q-mr-xs" style="margin-left: -16px"><s><b>{{ marketChest.old_price }}₽</b></s></span>
                         <span :style="(marketChest.is_discount) ? 'font-size: 16px' : ''">{{ marketChest.price }}₽</span>
                       </q-btn>
@@ -145,12 +145,15 @@
           </q-card-actions>
         </q-card>
       </q-dialog>
-      <q-dialog v-model="buyDialog" position="bottom" @before-hide="activeOffer = {}; onHide()">
-        <PaymentWidget
-            :confirmationToken="confirmationToken"
-            @onPaymentSuccess="handlePaymentSuccess"
-            @onPaymentFail="handlePaymentFail"/>
-      </q-dialog>
+      <PaymentWidget
+          :isOpen="buyDialog"
+          :itemId="activeOffer.id*1"
+          itemCode="chest"
+          returnUrl="market"
+          @onHide="buyDialog = false; activeOffer={}"
+          :confirmationToken="confirmationToken"
+          @onPaymentSuccess="handlePaymentSuccess"
+          @onPaymentFail="handlePaymentFail"/>
       <q-dialog v-model="paymentSuccessDialog" position="bottom" >
         <q-card class="full-width q-push text-center">
           <q-card-section >
@@ -216,20 +219,10 @@ const load = async (filter) => {
   }
   marketChests.value = marketChestListResponse
 }
-const goToPayment = async (offer_id) => {
+const openPayment = (offer_id) => {
   activeOffer.value = marketChests.value.find((offer) => offer.id == offer_id);
-  const paymentCreatedResponse = await api.payment.createItem({item_id: offer_id, item_code: 'chest', return_url: 'market'})
-  if (paymentCreatedResponse.error) {
-    confirmationToken.value = {}
-    return;
-  }
-  confirmationToken.value = paymentCreatedResponse.confirmationToken
-  paymentId.value = paymentCreatedResponse.paymentId
-  buyDialog.value = true;
-  startChecking()
-  return;
+  buyDialog.value = true
 }
-
 const handlePaymentSuccess = async () => {
   markItem('is_bought')
   activeOffer.value = {}
@@ -257,37 +250,6 @@ const markItem = (key) => {
     }, 2000)
   }
 }
-const onHide = () => {
-  clearInterval(pollingInterval);
-  pollingInterval = null;
-}
-
-const startChecking = () => {
-  pollingInterval = setInterval(async () => {
-    try {
-      const response =  await api.payment.checkStatus({payment_id: paymentId.value})
-      const status = response.status;
-
-      if (status === 'succeeded' || status === 'canceled') {
-        // Если статус не pending, останавливаем пуллинг
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-
-        // Здесь можно показать соответствующее уведомление пользователю
-        if (status === 'succeeded') {
-          handlePaymentSuccess();
-        } else {
-          handlePaymentFail();
-        }
-      }
-    } catch (error) {
-      console.error('Ошибка пуллинга:', error);
-      clearInterval(pollingInterval);
-      pollingInterval = null;
-    }
-  }, 3000);
-};
-
 onActivated(async () => {
   load()
 })
