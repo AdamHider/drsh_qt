@@ -8,7 +8,7 @@
 
 <script setup>
 import { api } from '../services/index'
-import { ref, watch, toRefs, nextTick } from 'vue';
+import { ref, watch, toRefs, nextTick, onUnmounted } from 'vue';
 
 const confirmationToken = ref(false)
 const paymentId = ref(false)
@@ -94,6 +94,11 @@ const startChecking = () => {
     }
   }, 3000);
 };
+
+onUnmounted(() => {
+  onHide()
+  return true;
+})
 
 watch(() => confirmationToken.value, async (newToken) => {
   if (newToken) {

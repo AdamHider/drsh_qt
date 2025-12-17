@@ -34,7 +34,7 @@
                 <LeaderboardTableItem v-if="!item.is_border" :item="item" />
                 <q-item v-else>
                   <q-item-section side>
-                    <q-avatar size="28px" >
+                    <q-avatar size="28px" style="width: 1.2em;">
                     </q-avatar>
                   </q-item-section>
                   <q-item-section avatar>

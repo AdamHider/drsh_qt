@@ -209,6 +209,11 @@ watch(() => claimDialog.value, () => {
   emit('onModalOpen', claimDialog.value)
 })
 onBeforeRouteLeave((to, from) => {
+  
+  if (buyDialog.value) {
+    buyDialog.value = false
+    return false
+  }
   if (claimDialog.value) {
     claimDialog.value = false
     return false

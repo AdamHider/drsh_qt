@@ -1,7 +1,7 @@
 <template>
   <q-page-container>
       <q-app-header class="transparent text-white rounded-b-md" reveal>
-          <div class="text-caption"><b>v 1.2.0</b></div>
+          <div class="text-caption"><b>v 1.2.1</b></div>
           <q-toolbar-title></q-toolbar-title>
           <div class="relative-position q-mr-sm">
             <q-btn flat round dense icon="person_add" @click="inviteDialog = true"  @click.stop="playAudio('click')">

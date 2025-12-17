@@ -2,14 +2,14 @@
     <q-item  :active="item.is_active == 1" :class="`relative-position text-left ${(item.place <= 3) ? 'q-push q-my-xs place-'+item.place : ''} rounded-sm ${(item.is_active == 1) ? ' place-user q-push' : 'bg-white text-dark place-common'}`">
         <q-item-section side class="text-center">
           <div class="relative-position" v-if="item.place <= 3" style="margin-top: -24px; margin-left: -10px; margin-right: 10px">
-            <q-avatar  size="28px" class="allow-overflow"></q-avatar>
+            <q-avatar  size="28px" class="allow-overflow" style="width: 1.2em;"></q-avatar>
             <div class="absolute-top"  style="filter: drop-shadow(0px 2px 2px #00000094);">
               <img v-if="item.place == 1" src="/images/leaderboard/gold.png" width="49px"/>
               <img v-else-if="item.place == 2" src="/images/leaderboard/silver.png" width="49px"/>
               <img v-else-if="item.place == 3" src="/images/leaderboard/bronze.png" width="49px"/>
             </div>
           </div>
-          <q-avatar v-else size="28px" >
+          <q-avatar v-else size="28px" style="width: 1.2em;">
             <b>{{ item.place }}</b>
           </q-avatar>
         </q-item-section>
