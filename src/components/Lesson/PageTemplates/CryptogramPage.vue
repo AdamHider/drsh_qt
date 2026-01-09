@@ -14,7 +14,9 @@
           </template>
 
           <template v-else>
-            <div class="static-box">{{ item.text }}</div>
+            <div :class="`q-lesson-field ${(!item.symbol) ? 'non-symbol' : ''}`">
+              <span class="q-lesson-field-value">{{ item.text }}</span>
+            </div>
             <div class="symbol-label">{{ item.symbol }}</div>
           </template>
         </div>
@@ -66,23 +68,50 @@ onMounted(() => emits('onRendered', true))
 
 .crypt-word { 
   display: flex; 
-  gap: 4px; // Отступы между буквами внутри слова
-  white-space: nowrap; // ЗАПРЕТ ПЕРЕНОСА ВНУТРИ СЛОВА
+  gap: 2px;
+  white-space: nowrap;
   flex-wrap: nowrap;
 }
 
 .crypt-unit { display: flex; flex-direction: column; align-items: center; }
 
-.anchor-point { 
-  width: 30px; height: 40px; border-bottom: 2px solid #ccc; 
-  display: flex; align-items: center; justify-content: center;
-}
-
-.static-box {
-  width: 34px; height: 40px; border-bottom: 2px solid #999;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: bold; font-size: 1.4rem; background: #f0f0f0; color: #555;
-  border-radius: 4px 4px 0 0;
+.q-lesson-field {
+  vertical-align: middle;
+  display: inline-block;
+  position: relative;
+  width: 30px;
+  box-shadow: none;
+  min-height: 2.3em;
+  &:before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    border-bottom: 2px dotted #00000083;
+    border-radius: 8px 8px 0 0  !important;
+    box-shadow: none !important;
+    opacity: 1;
+    animation:none  !important;
+    transition: 0.3s all ease;
+  }
+  &.non-symbol:before{
+    display: none;
+  }
+  .q-lesson-field-value{
+    margin: 0;
+    font-size: 1.2em;
+    padding: 0.4em 0;
+    font-weight: bold;
+    width: 30px;
+    display: block;
+    text-align: center;
+    height: auto;
+    background: none !important;
+    box-shadow: none !important;
+    border: none;
+  }
 }
 
 .symbol-label { font-size: 12px; font-weight: bold; color: #666; margin-top: 4px; }
