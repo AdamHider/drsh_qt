@@ -68,8 +68,6 @@
       </q-card-section>
       <q-card-section class="q-pa-none text-left border-t-sm rouded-t border-grey" style="position: relative; z-index: 5;">
         <LeaderboardFilter
-          :allowed-filters="props.allowedFilters"
-          :timePeriod="props.timePeriod"
           @update-filter="updateFilter($event)"
         />
       </q-card-section>
@@ -77,18 +75,19 @@
 </template>
 
 <script setup>
-import { onActivated, watch, ref, reactive, nextTick } from 'vue'
+import { onActivated, watch, ref, reactive, nextTick, toRefs } from 'vue'
 import BannerNotFound from '../components/BannerNotFound.vue'
 import LeaderboardFilter from '../components/LeaderboardFilter.vue'
 import LeaderboardTableItem from '../components/LeaderboardTableItem.vue'
 import { api } from '../services/index'
 
 const props = defineProps({
-  allowedFilters: Array,
   lessonId: String,
   challengeId: String,
   timePeriod: String
 })
+const timePeriod = toRefs(props).timePeriod
+
 const userRowIndex = ref(0)
 const items = ref([]);
 const winners = ref([]);
@@ -105,13 +104,14 @@ const state = reactive({
   userIsVisible: true
 });
 
-const loadInitialData = async () => {
+const load = async () => {
   state.userIsAbove = false
   state.userIsBelow = false
   state.isLoading = true;
   isLoadingInitial.value = true;
 
   filter.value.mode = 'new'
+  filter.value.time_period = timePeriod.value
 
   const initialData = await api.exercise.getLeaderboard(filter.value);
   items.value = initialData.body;
@@ -132,7 +132,7 @@ const loadInitialData = async () => {
 };
 const updateFilter = (filterObject) => {
   filter.value = filterObject
-  loadInitialData()
+  load()
 }
 
 
@@ -158,7 +158,10 @@ watch(() => state.userIsVisible, () => {
     }
   }
 })
+watch(() => timePeriod.value, async (currentValue, oldValue) => {
+  await load();
+})
 onActivated(async () => {
-  await loadInitialData();
+  await load();
 })
 </script>

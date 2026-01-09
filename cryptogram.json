@@ -1,0 +1,94 @@
+{
+    "index": 1,
+    "title": "Криптограмма",
+    "subtitle": "Разгадай фразу, используя числовой шифр",
+    "silent_saves": true,
+    "form_template": "cryptogram",
+    "page_template": "cryptogram",
+    "template_config": {
+      "mapping": {
+        "М": 9, "Е": 12, "К": 2, "Т": 5, "П": 11, "И": 1, "У": 7, "Б": 4, "Л": 10
+      },
+      "letter_list": [
+        { "text": "{{input1}}", "symbol": 9, "index": 101 },
+        { "text": "Е", "symbol": 12, "index": 102 },
+        { "text": "К", "symbol": 2, "index": 103 },
+        { "text": "{{input2}}", "symbol": 5, "index": 104 },
+        { "text": "Е", "symbol": 12, "index": 105 },
+        { "text": "{{input3}}", "symbol": 11, "index": 106 },
+        { "text": "{{input4}}", "symbol": 1, "index": 107 },
+        { "text": "{{input5}}", "symbol": 7, "index": 108 },
+        { "text": "{{input6}}", "symbol": 9, "index": 109 },
+        { "text": " ", "symbol": null, "index": 110 },
+        { "text": "—", "symbol": null, "index": 111 },
+        { "text": " ", "symbol": null, "index": 112 },
+        { "text": "Б", "symbol": 4, "index": 113 },
+        { "text": "{{input7}}", "symbol": 1, "index": 114 },
+        { "text": "{{input8}}", "symbol": 10, "index": 115 },
+        { "text": "{{input9}}", "symbol": 1, "index": 116 },
+        { "text": "{{input10}}", "symbol": 9, "index": 117 }
+      ],
+      "input_list": [
+        {
+          "index": 1,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "М"
+        },
+        {
+          "index": 2,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "Т"
+        },
+        {
+          "index": 3,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "П"
+        },
+        {
+          "index": 4,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "И"
+        },
+        {
+          "index": 5,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "У"
+        },
+        {
+          "index": 6,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "М"
+        },
+        {
+          "index": 7,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "И"
+        },
+        {
+          "index": 8,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "Л"
+        },
+        {
+          "index": 9,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "И"
+        },
+        {
+          "index": 10,
+          "mode": "cryptogram",
+          "type": "input",
+          "answer": "М"
+        }
+      ]
+    }
+  }

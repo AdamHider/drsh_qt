@@ -15,53 +15,53 @@
           </q-card-section>
           <q-card-actions style="margin-bottom: -30px" class="justify-center">
             <q-btn v-if="lesson.exercise?.finished_at"
+              push
+              label="Начать"
+              icon="play_arrow"
+              color="gradient-primary"
+              class="rounded-sm"
+              style="width: 80%"
+              :loading="buttonLoading"
+              @click="redo(lesson.id)"/>
+            <div  v-else-if="lesson.exercise?.id">
+              <q-btn
                 push
-                label="Начать"
-                icon="play_arrow"
-                color="gradient-primary"
-                class="rounded-sm"
-                style="width: 80%"
+                round
+                icon="list"
+                color="gradient-secondary"
+                class="q-mr-sm rounded-sm"
                 :loading="buttonLoading"
-                @click="redo(lesson.id)"/>
-              <div  v-else-if="lesson.exercise?.id">
-                <q-btn
-                  push
-                  round
-                  icon="list"
-                  color="gradient-secondary"
-                  class="q-mr-sm rounded-sm"
-                  :loading="buttonLoading"
-                  @click="activeWordsDialog = true"/>
-                <q-btn
-                  push
-                  label="Продолжить"
-                  icon="play_arrow"
-                  color="gradient-green"
-                  class="rounded-sm"
-                  :loading="buttonLoading"
-                  @click="open(lesson.id)"/>
-              </div>
-
-              <q-btn v-else-if="activeWordIds.length > totalWords"
+                @click="activeWordsDialog = true"/>
+              <q-btn
                 push
-                label="Начать"
+                label="Продолжить"
                 icon="play_arrow"
-                color="gradient-primary"
+                color="gradient-green"
                 class="rounded-sm"
-                style="width: 80%"
-                @click="openDialog()"
-                :loading="buttonLoading">
-              </q-btn>
-              <q-btn v-else
-                push
+                :loading="buttonLoading"
+                @click="open(lesson.id)"/>
+            </div>
 
-                :label="`Мало слов (${words.length}/${totalWords})`"
-                color="gradient-primary"
-                class="rounded-sm"
-                style="width: 80%"
-                @click="openDialog()"
-                :loading="buttonLoading">
-              </q-btn>
+            <q-btn v-else-if="activeWordIds.length > totalWords"
+              push
+              label="Начать"
+              icon="play_arrow"
+              color="gradient-primary"
+              class="rounded-sm"
+              style="width: 80%"
+              @click="openDialog()"
+              :loading="buttonLoading">
+            </q-btn>
+            <q-btn v-else
+              push
+
+              :label="`Мало слов (${words.length}/${totalWords})`"
+              color="gradient-primary"
+              class="rounded-sm"
+              style="width: 80%"
+              @click="openDialog()"
+              :loading="buttonLoading">
+            </q-btn>
           </q-card-actions>
       </q-card>
     </q-card-section>
@@ -267,11 +267,9 @@ const loadActiveList = async () => {
     }
   }
   words.value = trainingListResponse
-  console.log(words.value)
 }
 
 const loadFinishList = async () => {
-  words.value = []
   const trainingListResponse = await api.training.getList({status: ['finished']})
   if (trainingListResponse.error) {
     error.value = trainingListResponse
@@ -341,6 +339,7 @@ onActivated(() => {
   loadFinishList()
 })
 onMounted(async () => {
+  words.value = []
   buttonLoading.value = false
   loadLessonItem()
   await loadActiveList()
