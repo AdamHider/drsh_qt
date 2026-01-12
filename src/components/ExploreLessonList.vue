@@ -21,11 +21,19 @@
             <q-img class="planet-image allow-overflow absolute" :src="lesson.image"  :width="`${lesson.appearance.width}%`" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px);" no-spinner/>
           <q-card-section class="q-py-sm q-px-xs">
             <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
-            <q-chip v-if="lesson.progress > 0" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Изучено: <span :class="lesson.progress > 0 ? ((lesson.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lesson.progress }}%</span></b></q-chip>
-            <q-chip v-else-if="lesson.is_blocked" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Премиум-планета</b></q-chip>
-            <q-chip v-else class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Не изучено</b></q-chip>
           </q-card-section>
-          <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
+          <div class="q-ma-sm" :class="{
+            'absolute-top-right': ['align-end-right'].indexOf(lesson.appearance.class) > -1,
+            'absolute-bottom-right': ['align-start-right'].indexOf(lesson.appearance.class) > -1,
+            'absolute-top-left': ['align-end-left'].indexOf(lesson.appearance.class) > -1,
+            'absolute-bottom-left': ['align-start-left'].indexOf(lesson.appearance.class) > -1,
+          }">
+            <q-btn v-if="lesson.is_blocked" round flat class="bg-dark-transparent-50" icon="lock"></q-btn>
+            <q-btn v-else-if="lesson.progress == 100" round flat class="bg-dark-transparent-50 text-positive" icon="check"></q-btn>
+            <q-btn v-else-if="lesson.progress > 0" round flat class="bg-dark-transparent-50" icon="chevron_right"></q-btn>
+            <q-btn v-else round flat class="bg-dark-transparent-50" icon="rocket"></q-btn>
+          </div>
+          
         </q-card>
       </div>
     </div>
@@ -129,33 +137,33 @@ watch(formData, () => {
     overflow: hidden;
     &.align-start-left{
       flex-direction: column;
-      text-align: right;
+      text-align: left;
       .q-img{
-        left: -20%;
+        right: -20%;
         bottom: -10%;
       }
     }
     &.align-start-right{
       flex-direction: column;
-      text-align: left;
+      text-align: right;
       .q-img{
-        right: -20%;
+        left: -20%;
         bottom: -10%;
       }
     }
     &.align-end-left{
       flex-direction: column-reverse;
-      text-align: right;
+      text-align: left;
       .q-img{
-        left: -20%;
+        right: -20%;
         top: -10%;
       }
     }
     &.align-end-right{
       flex-direction: column-reverse;
-      text-align: left;
+      text-align: right;
       .q-img{
-        right: -20%;
+        left: -20%;
         top: -10%;
       }
     }
