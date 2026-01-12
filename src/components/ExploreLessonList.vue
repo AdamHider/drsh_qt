@@ -13,75 +13,20 @@
         </template>
       </q-input>
     </div>
-    <div v-if="courseSections.length > 0">
-      <div v-for="(courseSection, courseSectionIndex) in courseSections" :key="`courseSectionIndex-${courseSectionIndex}`" >
-          <q-card flat class=" q-mt-sm">
-            <q-card-section class="q-py-none">
-              <q-item class="q-px-xs " clickable v-ripple :to="`explore-section-${courseSection.id}`">
-                <q-item-section avatar>
-                  <q-circular-progress
-                    show-value
-                    rounded
-                    :class="(courseSection.progress?.percentage > 0) ? 'text-primary' : 'text-grey-7'"
-                    track-color="grey-4"
-                    :thickness="0.25"
-                    :value="courseSection.progress?.percentage"
-                    size="40px"
-                    font-size="12px"
-                    color="primary"
-                  >
-                  <b>{{ courseSection.progress?.percentage }}%</b>
-                  </q-circular-progress>
-                </q-item-section>
-                <q-item-section>
-                  <div class="text-subtitle1"><b>{{ courseSection.title }}</b></div>
-                  <div class="text-sm text-grey-8 max-one-lines q-mb-xs">{{ courseSection.description }}</div>
-                </q-item-section>
-                <q-item-section side>
-                  <q-btn flat round dense icon="chevron_right"></q-btn>
-                </q-item-section>
-              </q-item>
-            </q-card-section>
-            <q-card-section class="q-pa-none">
-              <swiper
-                :slidesPerView="props.slidesPerView"
-                :spaceBetween="8"
-                :slidesOffsetBefore="16"
-                :slidesOffsetAfter="16"
-              >
-                <swiper-slide v-for="(lesson, lessonIndex) in courseSection.list" :key="`lessonIndex-${lessonIndex}`" :class="'text-center'">
-                  <q-card
-                      :class="`q-push relative-position rounded-md  text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
-                      :style="`margin-top: 30px; border-color: rgba(0, 0, 0, 0.7); background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${(lesson.background_image) ? lesson.background_image : lesson.course_section.background_image}); background-size: cover; background-position: center;`">
-                    <q-card-section class="q-pb-none">
-                      <q-img class="planet-image allow-overflow" :src="lesson.image" width="100px" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px); margin-top: -40px;" no-spinner/>
-                    </q-card-section>
-                    <q-card-section class="q-py-sm q-px-xs">
-                      <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
-                      <q-chip v-if="lesson.progress > 0" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Изучено: <span :class="lesson.progress > 0 ? ((lesson.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lesson.progress }}%</span></b></q-chip>
-                      <q-chip v-else-if="lesson.is_blocked" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Премиум-планета</b></q-chip>
-                      <q-chip v-else class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Не изучено</b></q-chip>
-                    </q-card-section>
-                    <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
-                  </q-card>
-                </swiper-slide>
-                <swiper-slide v-if="courseSection.total_lessons > courseSection.list.length" :key="`lessonIndex-100000`" :class="'text-center'">
-                  <q-card flat
-                      :class="`relative-position rounded-sm `" @click="router.push(`/explore-section-${courseSection.id}`)"
-                      :style="`margin-top: 40px;`">
-                    <q-card-section class="q-pb-none">
-                      <q-avatar size="60px" class="bg-dark-transparent" >
-                        <q-icon name="chevron_right"></q-icon>
-                      </q-avatar>
-                    </q-card-section>
-                    <q-card-section class="q-py-sm q-px-xs">
-                      <div class="text-caption"><b>Показать все</b></div>
-                    </q-card-section>
-                  </q-card>
-                </swiper-slide>
-              </swiper>
-            </q-card-section>
-          </q-card>
+    <div v-if="lessons.length > 0" class="masonry-container q-pa-md ">
+      <div v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`" :class="`masonry-item text-center`" :style="{ gridRowEnd: `span ${lesson.appearance.spans}` }">
+        <q-card
+            :class="`q-push q-pa-sm relative-position rounded-md  text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''} ${lesson.appearance.class}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
+            :style="`border-color: rgba(0, 0, 0, 0.7); background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${(lesson.background_image) ? lesson.background_image : lesson.course_section.background_image}); background-size: cover; background-position: center;`">
+            <q-img class="planet-image allow-overflow absolute" :src="lesson.image"  :width="`${lesson.appearance.width}%`" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px);" no-spinner/>
+          <q-card-section class="q-py-sm q-px-xs">
+            <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
+            <q-chip v-if="lesson.progress > 0" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Изучено: <span :class="lesson.progress > 0 ? ((lesson.progress == 100) ? 'text-positive' : 'text-warning') : ''">{{ lesson.progress }}%</span></b></q-chip>
+            <q-chip v-else-if="lesson.is_blocked" class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Премиум-планета</b></q-chip>
+            <q-chip v-else class="q-ma-none" size="sm" text-color="white" color="dark-transparent-50"><b>Не изучено</b></q-chip>
+          </q-card-section>
+          <q-btn v-if="lesson.is_blocked" round class="absolute-top-right" color="dark" icon="lock" push style="top: -5px; right: -5px; rotate: 15deg"></q-btn>
+        </q-card>
       </div>
     </div>
     <BannerNotFound v-else
@@ -126,20 +71,16 @@ const load = async () => {
   const filter = {
     tags: formData.tags,
     search: formData.search,
-    type: props.type
+    type: 'all'
   }
-  const courseSectionListResponse = await api.explore.getCourseSectionList(filter)
+  const courseSectionListResponse = await api.explore.getList(filter)
   if (courseSectionListResponse.error) {
     error.value = courseSectionListResponse
-    courseSections.value = []
+    lessons.value = []
     return false;
   }
-  for(var i in courseSectionListResponse){
-    courseSectionListResponse[i].list = courseSectionListResponse[i].list.sort((a, b) => a.is_blocked ? 1 : -1);
-  }
-  courseSections.value = courseSectionListResponse
+  lessons.value = courseSectionListResponse
 }
-
 
 const pluralHumanize = (n, wordsConfig) => {
   if(!wordsConfig) return ''
@@ -172,5 +113,58 @@ watch(formData, () => {
 .is-blocked{
   filter: grayscale(1) brightness(0.9);
 }
+.masonry-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 5px;
+  gap: 8px;
+}
 
+.masonry-item {
+  display: flex;
+  flex-direction: column;
+  .q-card{
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+    &.align-start-left{
+      flex-direction: column;
+      text-align: right;
+      .q-img{
+        left: -20%;
+        bottom: -10%;
+      }
+    }
+    &.align-start-right{
+      flex-direction: column;
+      text-align: left;
+      .q-img{
+        right: -20%;
+        bottom: -10%;
+      }
+    }
+    &.align-end-left{
+      flex-direction: column-reverse;
+      text-align: right;
+      .q-img{
+        left: -20%;
+        top: -10%;
+      }
+    }
+    &.align-end-right{
+      flex-direction: column-reverse;
+      text-align: left;
+      .q-img{
+        right: -20%;
+        top: -10%;
+      }
+    }
+  }
+}
+
+.small { height: 200px; }
+.medium { height: 230px; }
+.large { height: 260px; }
+
+@media (max-width: 800px) { .masonry-container { column-count: 2; } }
 </style>
