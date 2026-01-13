@@ -69,7 +69,7 @@
       <div class="text-subtitle1"><b>Выученные слова ({{ finishedWords.length }})</b></div>
     </q-card-section>
     <q-card-section class="q-py-none">
-      <q-list v-if="finishedWords.length > 0" separator>
+      <q-list v-if="finishedWords.length > 0" separator class="q-pb-md">
         <q-item v-for="(word, wordIndex) in finishedWords" :key="`finishedWordIndex-${wordIndex}`" dense>
             <q-item-section avatar>
               <q-avatar color="positive" size="25px">
