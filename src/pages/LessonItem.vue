@@ -94,7 +94,7 @@ const onPageChanged = async (action) => {
     if (pageResponse.messages?.error === 'finish') {
       return router.replace(`lesson-finish-${route.params.lesson_id}`)
     }
-    //return router.go(-1)
+    return router.go(-1)
   }
   progress.value = pageResponse.progress
 
@@ -130,7 +130,7 @@ const onDialogOpened = async (status) => {
 }
 const closeLesson = () => {
   closeConfirmed.value = true
-  //router.go(-1)
+  router.go(-1)
 }
 onBeforeRouteLeave((to, from) => {
   if (!closeConfirmed.value && !dialogOpened.value) {

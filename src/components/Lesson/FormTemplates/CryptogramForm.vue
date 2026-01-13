@@ -1,21 +1,53 @@
 
 <template>
   <div v-if="formData.fields.length > 0" class="q-pa-sm">
-    <div v-for="(field, index) in formData.fields" :key="field.index">
-      <Teleport :to="`#input_${field.index}`">
+    <div v-for="(input, index) in formData.fields" :key="input.index">
+      <Teleport :to="`#input_${input.index}`">
         <div 
           tabindex="-1"
           @focus="currentIndex = index; playAudio('click')"
-          :class="`q-lesson-field  ${(index === currentIndex) ? 'q-active' : ''}`"
+          @click="(formData.fields[index].answer && !formData.fields[index].answer.is_correct) ? input.modal = true : ''"
+          :class="`q-lesson-field  ${(index === currentIndex) ? 'q-active' : ''} ${(input.answer) ? ((input.answer.is_correct) ? 'is-answered is-correct' : 'is-answered is-incorrect') : ''}`"
         >
-          <span :class="`q-lesson-field-value  ${(field.value.text) ? 'text-primary' : 'text-grey-4'} ${(!field.value.text) ? 'is-question' : ''}`">
-            {{ field.value.text || '?' }}
+          <span :class="`q-lesson-field-value  ${(input.value.text) ? 'text-primary' : 'text-grey-4'} ${(!input.value.text) ? 'is-question' : ''}`">
+            {{ transliterateHTML(input.value.text) || '?' }}
           </span>
         </div>
+        <q-dialog v-model="input.modal" position="right">
+          <q-card flat class="relative-position allow-overflow rounded-r-0">
+            <q-img class="absolute" width="100px" style="bottom: 100%;" src="/images/characters/codex_full.png"/>
+              <q-card-section>
+                <div>
+                  <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Твой ответ: </b></div>
+                  <div class="flex wrap items-center">
+                    <div v-for="(option, optionIndex) in input.answer.value.split('|')" :key="optionIndex">
+                      <q-chip class="q-lesson-field-value rounded-xs" size="16px"
+                        color="negative"
+                        text-color="white">
+                        <b>{{ transliterateHTML(option) }}</b>
+                      </q-chip>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-subtitle1 text-no-wrap q-mr-sm"><b>Правильный ответ: </b></div>
+                  <div class="flex items-center wrap">
+                    <div v-for="(option, optionIndex) in input.answer.answer.split('|')" :key="optionIndex">
+                      <q-chip class="q-lesson-field-value rounded-xs" size="16px"
+                        color="positive"
+                        text-color="white">
+                        <b>{{ transliterateHTML(option) }}</b>
+                      </q-chip>
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+            </q-card>
+        </q-dialog>
       </Teleport>
     </div>
 
-    <div class="keyboard-container q-mt-md" v-if="currentIndex !== null">
+    <div v-if="!lesson.active.page?.answer?.is_finished" class="keyboard-container q-mt-md">
       <div v-for="(row, rIdx) in keyboardRows" :key="rIdx" class="row no-wrap justify-center q-mb-xs">
         <q-btn
           v-for="key in row" :key="key" :label="key"
@@ -34,6 +66,9 @@
 import { ref, reactive, watch, onMounted, nextTick } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { playAudio } from 'src/services/audioService'
+import { useTransliterate } from '../../../composables/useTransliterate'
+
+const { transliterateHTML } = useTransliterate()
 
 const emits = defineEmits(['update-answer'])
 const { lesson } = useLesson()
@@ -99,6 +134,7 @@ const renderFields = async () => {
   }
 
   updateCompletedStatus()
+  emits('update-answer', formData.fields)
 }
 
 const selectLetter = (letter) => {
@@ -108,7 +144,6 @@ const selectLetter = (letter) => {
   updateCompletedStatus()
   const nextEmpty = formData.fields.findIndex((f, i) => i > currentIndex.value && !f.value.text)
   if (nextEmpty !== -1) currentIndex.value = nextEmpty
-  emits('update-answer', formData.fields)
 }
 const matchEnd = (evt) => {
   if(evt.explicitOriginalTarget.nodeName == '#text' || !evt.explicitOriginalTarget.closest(".q-field")) currentIndex.value = null;
@@ -117,11 +152,14 @@ const clearLetter = () => {
   if (currentIndex.value === null) return
   formData.fields[currentIndex.value].value.text = ''
   updateCompletedStatus()
-  emits('update-answer', formData.fields)
 }
 
 onMounted(renderFields)
 watch(() => lesson.active.page, renderFields, { deep: true, immediate: true })
+
+watch(formData.fields, (newValue, oldValue) => {
+  emits('update-answer', formData.fields)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -136,7 +174,7 @@ watch(() => lesson.active.page, renderFields, { deep: true, immediate: true })
     content: "";
     position: absolute;
     left: 0;
-    top: 0px;
+    top: 4px;
     width: 100%;
     height: 100%;
     border-bottom: 2px dotted #00000083;
@@ -146,9 +184,6 @@ watch(() => lesson.active.page, renderFields, { deep: true, immediate: true })
     /*animation: pulseBottomLessonField 1.5s infinite alternate;*/
     animation:none  !important;
     transition: 0.3s all ease;
-  }
-  &.is-answered{
-    box-shadow: none !important;
   }
   &.q-active{
     border-color: $primary;
@@ -164,12 +199,16 @@ watch(() => lesson.active.page, renderFields, { deep: true, immediate: true })
     }
   }
   &.is-correct{
-    background: none !important;
     border: none;
+    .q-lesson-field-value{
+      color: white !important;
+    }
   }
   &.is-incorrect{
-    background: none !important;
     border: none;
+    .q-lesson-field-value{
+      color: white !important;
+    }
   }
   .q-lesson-field-value{
     margin: 0;

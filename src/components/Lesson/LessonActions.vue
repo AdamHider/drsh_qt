@@ -197,11 +197,6 @@ const startTimer = () => {
   }, 50)
 }
 
-const unlinkTraining = async () => {
-  trainingIsLoading.value = true
-  trainingLinked.value = await unlinkTrainingItem()
-  trainingIsLoading.value = false
-}
 onBeforeRouteLeave((to, from) => {
   if (backDialog.value) {
     backDialog.value = false
@@ -236,7 +231,7 @@ watch(() => props.rendered, (newValue, oldValue) => {
       startTimer()
       isLoading.value = false
     })
-  }
+  } 
 })
 
 const onImagesRendered = (callback) => {

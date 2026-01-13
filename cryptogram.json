@@ -2,7 +2,6 @@
     "index": 1,
     "title": "Криптограмма",
     "subtitle": "Разгадай фразу, используя числовой шифр",
-    "silent_saves": true,
     "form_template": "cryptogram",
     "page_template": "cryptogram",
     "template_config": {

@@ -1,18 +1,12 @@
 <template>
   <div class="full-width q-pa-md flex justify-center" v-if="letterList.length">
     <div class="crypt-layout">
-      <div 
-        v-for="(word, wIdx) in words" 
-        :key="wIdx" 
-        class="crypt-word"
-      >
+      <div v-for="(word, wIdx) in words" :key="wIdx" class="crypt-word">
         <div v-for="item in word" :key="item.index" class="crypt-unit">
-          
           <template v-if="isInput(item.text)">
             <div :id="`input_${extractId(item.text)}`" class="anchor-point"></div>
             <div class="symbol-label">{{ item.symbol }}</div>
           </template>
-
           <template v-else>
             <div :class="`q-lesson-field ${(!item.symbol) ? 'non-symbol' : ''}`">
               <span class="q-lesson-field-value">{{ item.text }}</span>
@@ -86,7 +80,7 @@ onMounted(() => emits('onRendered', true))
     content: "";
     position: absolute;
     left: 0;
-    top: 0px;
+    top: 4px;
     width: 100%;
     height: 100%;
     border-bottom: 2px dotted #00000083;
@@ -114,5 +108,5 @@ onMounted(() => emits('onRendered', true))
   }
 }
 
-.symbol-label { font-size: 12px; font-weight: bold; color: #666; margin-top: 4px; }
+.symbol-label { font-size: 12px; font-weight: bold; color: #666; margin-top: 6px; }
 </style>

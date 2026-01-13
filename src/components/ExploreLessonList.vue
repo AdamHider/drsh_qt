@@ -85,7 +85,7 @@ const getLessonType = (lesson) => {
     lexis: { icon: 'border_all', label: 'Карточки', color: 'light-gradient-primary' },
     chat: { icon: 'chat_bubble', label: 'Чат', color: 'gradient-red' },
     syllables: { icon: 'apps', label: 'Слоги', color: 'gradient-blue' },
-    cryptogram: { icon: 'password', label: 'Слоги', color: 'light-gradient-indigo' },
+    cryptogram: { icon: 'password', label: 'Шифр', color: 'light-gradient-indigo' },
   };
   return types[lesson.type] || null;
 };
@@ -128,12 +128,9 @@ watch(() => props.filter, () => {
     display: flex;
     overflow: hidden;
     transition: 0.5s all 0.2s ease;
-    background-size: 120%;
-    &.is-in-view{
-      background-size: 150%;
-    }
+    background-size: cover;
     .q-img{
-      transition: 0.5s all 0.2s ease;
+      transition: 0.5s all  ease;
     }
     &.align-start-left{
       flex-direction: column;
