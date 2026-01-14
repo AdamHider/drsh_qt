@@ -17,13 +17,13 @@
           <q-avatar size="60px"><q-img src="images/icons/training.png"/></q-avatar>
         </q-btn>
       </q-page-sticky>
-      <q-page-sticky position="bottom-right" style="z-index: 100" :offset="[10, 60]">
+      <q-page-sticky position="bottom-right" style="z-index: 100" :offset="[10, 65]">
         <transition
           appear
           enter-active-class="animated fadeInRight"
           leave-active-class="animated fadeOutRight">
-          <q-btn v-if="isNeedScrollTop" class="bg-gradient-primary" round push size="20px" @click="scrollToTop()" @click.stop="playAudio('click')">
-          <q-avatar size="60px"><q-img src="images/icons/arrow_up.png"/></q-avatar>
+          <q-btn v-if="isNeedScrollTop" class="bg-gradient-primary" round push size="18px" @click="scrollToTop()" @click.stop="playAudio('click')">
+            <q-avatar size="40px"><q-img src="images/icons/arrow_up.png"/></q-avatar>
           </q-btn>
         </transition>
       </q-page-sticky>
