@@ -1,111 +1,149 @@
 <template>
   <div>
-    <div v-if="lessons.length > 0" class="masonry-container q-pa-md ">
-      <div v-for="(lesson, lessonIndex) in lessons" :key="`lessonIndex-${lessonIndex}`" :class="`masonry-item text-center`" :style="{ gridRowEnd: `span ${lesson.appearance.spans}` }">
-        <q-card
+    <q-infinite-scroll @load="onLoadNextPage" :offset="250" :disable="!hasMore">
+
+      <div v-if="lessons.length > 0" class="masonry-container q-pa-md">
+        <div
+          v-for="(lesson, lessonIndex) in lessons"
+          :key="lesson.id"
+          class="masonry-item text-center"
+          :style="{ gridRowEnd: `span ${lesson.appearance.spans}` }"
+        >
+          <q-card
             v-intersection="onIntersection"
-            :class="`q-push q-pa-sm relative-position rounded-md  text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''} ${lesson.appearance.class}`" @click="router.push(`/lesson-startup-${lesson.id}`)"
-            :style="`border-color: rgba(0, 0, 0, 0.7); background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${(lesson.background_image) ? lesson.background_image : lesson.course_section.background_image}); background-position: center;`">
-            <q-img class="planet-image allow-overflow absolute" :src="lesson.image"  :width="`${lesson.appearance.width}%`" style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px);" no-spinner/>
-          <q-card-section class="q-pb-sm q-pt-none q-px-xs">
-            <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
-            <div class="chip-container ">
-              <div>
-                <q-chip v-bind="getLessonStatus(lesson)" class="q-mx-none q-mb-none text-bold" size="11px" text-color="white"/>
+            class="lesson-card q-push q-pa-sm relative-position rounded-md text-white text-shadow"
+            :class="[lesson.is_blocked ? 'is-blocked' : '', lesson.appearance.class]"
+            @click="router.push(`/lesson-startup-${lesson.id}`)"
+            :style="getCardStyle(lesson)"
+          >
+            <q-img
+              class="planet-image allow-overflow absolute"
+              :src="lesson.image"
+              :width="`${lesson.appearance.width}%`"
+              style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px);"
+              no-spinner
+            />
+
+            <q-card-section class="q-pb-sm q-pt-none q-px-xs">
+              <div class="text-subtitle1"><b>{{ lesson.title }}</b></div>
+              <div class="chip-container ">
+                <div><q-chip v-bind="getLessonStatus(lesson)" class="q-mx-none q-mb-none text-bold" size="11px" text-color="white"/></div>
+                <div><q-chip v-if="getLessonType(lesson)" v-bind="getLessonType(lesson)" class="q-mx-none q-mb-none text-bold" size="11px" text-color="white" /></div>
+                <div><ExploreDailyTimer v-if="lesson.is_daily"/></div>
               </div>
-              <div>
-                <q-chip
-                  v-if="getLessonType(lesson)"
-                  v-bind="getLessonType(lesson)"
-                  class="q-mx-none q-mb-none text-bold"
-                  size="11px"
-                  text-color="white"
-                />
-              </div>
-              <div>
-                <ExploreDailyTimer  v-if="lesson.is_daily"/>
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
-    </div>
-    <BannerNotFound v-else
-      title="Упс..."
-      description="Планет и созвездий не найдено"
-      default-image
-    />
+
+      <BannerNotFound v-else-if="!loading" title="Упс..." description="Планет и созвездий не найдено" default-image />
+
+      <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner-dots color="primary" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onActivated, reactive, watch, onDeactivated } from 'vue'
+import { ref, watch, onActivated } from 'vue'
 import { api } from '../services/index'
 import { useRouter } from "vue-router";
-import { playAudio } from 'src/services/audioService';
 import BannerNotFound from './BannerNotFound.vue'
 import ExploreDailyTimer from './ExploreDailyTimer.vue'
 
-
 const router = useRouter();
-
-const error = ref(false)
+const props = defineProps({ filter: Object })
 
 const lessons = ref([])
+const loading = ref(false)
+const hasMore = ref(true)
+const currentPage = ref(0)
+const itemsPerPage = 12
 
-const props = defineProps({
-  filter: Object,
-})
-
-const load = async () => {
-  const courseSectionListResponse = await api.explore.getList({...props.filter, ...{type: 'all'}})
-  if (courseSectionListResponse.error) {
-    error.value = courseSectionListResponse
-    lessons.value = []
-    return false;
+const getCardStyle = (lesson) => {
+  const bg = lesson.background_image || lesson.course_section?.background_image;
+  return {
+    borderColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${bg})`,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover'
   }
-  lessons.value = courseSectionListResponse
 }
 
-const getLessonStatus = (lesson) => {
-  if (lesson.is_blocked)
-    return { color: 'dark-transparent-75', icon: 'lock', label: 'Заблокировано' };
+const fetchLessons = async (page) => {
+  const params = {
+    ...props.filter,
+    type: props.filter?.type || 'all',
+    page: page,
+    limit: itemsPerPage
+  }
+  return await api.explore.getList(params)
+}
 
-  if (lesson.progress === 100)
-    return { color: 'gradient-green', icon: 'check', label: 'Исследовано' };
+const refreshList = async () => {
+  loading.value = true
+  hasMore.value = true
+  currentPage.value = 1
 
-  if (lesson.progress > 0)
-    return { color: 'dark-transparent-75', icon: 'fast_forward', label: `Исследовано ${lesson.progress}%` };
+  const data = await fetchLessons(1)
 
-  return { color: 'dark-transparent-75', icon: 'rocket', label: 'Не исследовано' };
-};
+  if (data.error || !Array.isArray(data)) {
+    lessons.value = []
+    hasMore.value = false
+  } else {
+    lessons.value = data
+    if (data.length < itemsPerPage) hasMore.value = false
+  }
+  loading.value = false
+}
 
-const getLessonType = (lesson) => {
+const onLoadNextPage = async (index, done) => {
+  if (!hasMore.value) {
+    done()
+    return
+  }
+  const nextPage = currentPage.value + 1
+  const data = await fetchLessons(nextPage)
+  if (data.error || !Array.isArray(data) || data.length === 0) {
+    hasMore.value = false
+  } else {
+    lessons.value = lessons.value.concat(data)
+    console.log(lessons.value)
+    currentPage.value = nextPage
+    if (data.length < itemsPerPage) hasMore.value = false
+  }
+
+  done()
+}
+
+const getLessonStatus = (l) => {
+  if (l.is_blocked) return { color: 'dark-transparent-75', icon: 'lock', label: 'Заблокировано' };
+  if (l.progress === 100) return { color: 'gradient-green', icon: 'check', label: 'Исследовано' };
+  return l.progress > 0
+    ? { color: 'dark-transparent-75', icon: 'fast_forward', label: `Исследовано ${l.progress}%` }
+    : { color: 'dark-transparent-75', icon: 'rocket', label: 'Не исследовано' };
+}
+
+const getLessonType = (l) => {
   const types = {
     lexis: { icon: 'border_all', label: 'Карточки', color: 'light-gradient-primary' },
     chat: { icon: 'chat_bubble', label: 'Чат', color: 'gradient-red' },
     syllables: { icon: 'apps', label: 'Слоги', color: 'gradient-blue' },
     cryptogram: { icon: 'password', label: 'Шифр', color: 'light-gradient-indigo' },
   };
-  return types[lesson.type] || null;
-};
-
-const onIntersection = (entry) => {
-  if (entry.isIntersecting) {
-    entry.target.classList.add('is-in-view');
-  } else {
-    entry.target.classList.remove('is-in-view');
-  }
+  return types[l.type] || null;
 }
 
-onActivated(() => {
-  load()
-})
-onMounted(() => {
-  load()
-})
+const onIntersection = (entry) => {
+  if (entry.isIntersecting) entry.target.classList.add('is-in-view');
+  else entry.target.classList.remove('is-in-view');
+}
+
 watch(() => props.filter, () => {
-  load()
+  refreshList()
 }, { deep: true })
 
 </script>

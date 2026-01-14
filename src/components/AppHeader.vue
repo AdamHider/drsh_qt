@@ -78,7 +78,7 @@ onMounted(() => {
   z-index: 10000 !important;
 }
 .q-app-header.header-sticky.header-reveal{
-  transform: translateY(-52px) !important;
+  transform: translateY(-62px) !important;
 }
 .q-app-header.header-sticky.header-overlap{
 }

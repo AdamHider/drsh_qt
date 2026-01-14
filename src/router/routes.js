@@ -5,6 +5,7 @@ import LeaderboardPage from 'pages/LeaderboardPage.vue'
 import NotificationsPage from 'pages/NotificationsPage.vue'
 import ExplorePage from 'pages/ExplorePage.vue'
 import ExploreCourseSection from 'src/pages/ExploreCourseSection.vue'
+import TrainingPage from 'pages/TrainingPage.vue'
 import UserDashboard from 'pages/UserDashboard.vue'
 import UserEdit from 'pages/UserEdit.vue'
 import UserEditPassword from 'pages/UserEditPassword.vue'
@@ -232,6 +233,13 @@ const routes = [
         component: ExploreCourseSection,
         meta: { noBottomBar: true }
       },
+      {
+        path: 'training',
+        name: 'training',
+        component: TrainingPage,
+        meta: { noBottomBar: true }
+      },
+
 
     ]
   },

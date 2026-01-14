@@ -1,0 +1,11 @@
+{
+    "index": 1,
+    "title": "Криптограмма",
+    "subtitle": "Разгадай фразу, используя числовой шифр",
+    "form_template": "cryptogram",
+    "page_template": "cryptogram",
+    "template_config": {
+      "sentence": "Акъыл яшта дегиль де, – баштадыр.",
+      "difficulty": 0.7
+    }
+  }
