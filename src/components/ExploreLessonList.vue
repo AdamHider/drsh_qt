@@ -111,7 +111,6 @@ const onLoadNextPage = async (index, done) => {
     hasMore.value = false
   } else {
     lessons.value = lessons.value.concat(data)
-    console.log(lessons.value)
     currentPage.value = nextPage
     if (data.length < itemsPerPage) hasMore.value = false
   }
