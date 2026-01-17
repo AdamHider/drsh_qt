@@ -295,4 +295,10 @@ watch(() => reloadTrigger.value, () => {
     opacity: 1;
   }
 }
+@media (min-width: 700px) { 
+  .section-block{
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
 </style>

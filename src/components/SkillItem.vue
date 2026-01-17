@@ -4,7 +4,7 @@
      ${(skill.price > 0) ? 'is_payment ' : ''} ${(skill.is_gained) ? 'is_gained' : (skill.is_available) ? (skill.is_purchasable) ? 'is_purchasable is_available q-item-blinking' : 'is_available' : 'is_blocked'} ${props.class}`">
     <q-item-section avatar :class="(skill.price > 0 || skill.is_available) ? 'q-item-blinking' : ''">
       <q-avatar :size="props.size" text-color="white">
-        <q-img class="absolute" :src="skill.image" no-spinner/>
+        <q-img class="absolute" :src="`${skill.image}?w=70&h=70`" no-spinner/>
       </q-avatar>
       </q-item-section>
     <q-item-section class="q-pt-none text-left"><div  class="text-subtitle2" style=""><b>{{ skill.title }}</b></div></q-item-section>

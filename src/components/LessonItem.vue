@@ -22,7 +22,7 @@
                 }"
               >
                 <img
-                  :src="satellite.image"
+                  :src="`${satellite.image}?w=100&h=100`"
                   :style="{
                     width: `${satellite.size}px`,
                     marginLeft: `-${satellite.size/2}px`,
@@ -32,7 +32,7 @@
                 />
               </div>
             </div>
-            <q-img :src="lessonItem.image" class="planet-image" loading="lazy" no-spinner> </q-img>
+            <q-img :src="`${lessonItem.image}?w=300&h=300`" class="planet-image" loading="lazy" no-spinner> </q-img>
           </q-card-section>
           <q-card-section class="text-center text-white q-pa-none absolute full-width"  style="top: 100%" >
             <div class="text-caption">

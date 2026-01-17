@@ -18,7 +18,7 @@
           >
             <q-img
               class="planet-image allow-overflow absolute"
-              :src="lesson.image"
+              :src="`${lesson.image}?w=350&h=350`"
               :width="`${lesson.appearance.width}%`"
               style="filter: drop-shadow(rgba(53, 173, 244, 0.62) 0px 5px 10px);"
               no-spinner
@@ -67,7 +67,7 @@ const getCardStyle = (lesson) => {
   const bg = lesson.background_image || lesson.course_section?.background_image;
   return {
     borderColor: 'rgba(0, 0, 0, 0.7)',
-    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${bg})`,
+    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${bg}?w=500&h=500)`,
     backgroundPosition: 'center',
     backgroundSize: 'cover'
   }
@@ -247,5 +247,8 @@ watch(() => props.filter, () => {
     }
   }
 }
-@media (max-width: 800px) { .masonry-container { column-count: 2; } }
+@media (max-width: 500px) { .masonry-container { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 700px) { .masonry-container { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1200px) { .masonry-container { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1500px) { .masonry-container { grid-template-columns: repeat(5, 1fr); } }
 </style>
