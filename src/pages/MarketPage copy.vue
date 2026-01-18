@@ -1,6 +1,7 @@
 <template>
   <q-page-container>
-    <q-app-header class="transparent text-white rounded-b-md" contentClass="justify-between">
+    <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce" contentClass="justify-between">
+      <q-btn flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"  @click.stop="playAudio('click')"/>
       <div class="flex full-width justify-center">
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.terralit" dense no-caption size="24px" push />
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.science" dense no-caption size="24px" push class="q-mx-sm"/>
@@ -15,75 +16,77 @@
               <q-img width="200px" src="/images/market/character.png" style="max-width: 100%;"/>
             </div>
             <div class="col q-pa-sm"  style="text-shadow: 2px 2px 5px black;">
-              <div class="text-h6"><b>Галактический базар</b></div>
+              <div class="text-h6"><b>Космо-маркет</b></div>
               <div class="text-caption">Время пополнить запасы!</div>
             </div>
           </q-card-section>
       </q-card>
       <q-card flat class="relative text-left q-pt-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
-          <q-card-section class="q-pa-none">
-            <q-list v-if="marketOffers?.length > 0">
-              <q-card class="q-push q-ma-md rounded-md" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOffer${marketOfferIndex}`">
-                <q-card-section class="q-pa-none">
-                  <q-item class="q-py-none">
-                    <q-item-section avatar style="margin-top: -10px">
-                      <q-img width="70px" :src="marketOffer.seller.avatar"/>
-                    </q-item-section>
-                    <q-item-section class="q-py-sm">
-                      <div class="text-bold">{{marketOffer.seller.name}}</div>
-                      <div>
-                        <span v-if="marketOffer.type == 'exchange'">
-                          <q-chip class="q-ma-none" color="orange-1" text-color="orange" icon="sync" size="12px"><b>Обмен</b></q-chip>
-                        </span>
-                        <span  v-if="marketOffer.type == 'purchase'">
-                          <q-chip class="q-ma-none" color="blue-1" text-color="blue" icon="shopping_cart" size="12px"><b>Покупка</b></q-chip>
-                        </span>
-                        <span v-if="marketOffer.last_rate < marketOffer.current_rate">
-                          <q-avatar class="q-ml-xs" size="sm" font-size="14px" color="red-1" text-color="negative" icon="trending_up" />
-                        </span>
-                        <span v-else>
-                          <q-avatar class="q-ml-xs" size="sm" font-size="14px" color="green-1" text-color="positive" icon="trending_down" />
-                        </span>
-                      </div>
-                    </q-item-section>
-                    <q-item-section side>
-                      <q-icon name="chevron_right"/>
-                    </q-item-section>
-                  </q-item>
-                </q-card-section>
-                <q-separator  />
-                <q-card-section horizontal class=" q-pa-none">
-                  <q-card-section class="full-width full-height q-pt-sm q-pb-xs">
-                    <div class="text-sm text-grey">{{ marketOffer.seller.name }} предлагает:</div>
+          <q-card-section style=" margin-top: -25px;" class="q-desc-mx-quart">
+            <div class="row q-pb-sm">
+              <div :class="`col col-${12/marketChest.priority} q-pa-sm q-mt-sm`" v-for="(marketChest, marketChestIndex) in marketChests" :key="`marketChestIndex-${marketChestIndex}`">
+                <q-card v-if="marketChest.priority == 1" class="text-left q-push text-white q-mb-md" :style="`background-image: url('${marketChest.background_image}'); background-size: cover; margin-top: 40px;`">
+                  <q-card-section horizontal class="q-pa-sm items-center">
+                    <q-img :src="marketChest.image" width="70%"  style="margin-top: -50px; min-width: 150px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)" />
+                    <q-card-section class="q-pt-none" style="text-shadow: 0px 1px 2px black">
+                      <div class="text-h7" style="line-height: 1.5;"><b>{{ marketChest.title }}</b></div>
+                      <div class="text-caption">{{ marketChest.description }}</div>
+                    </q-card-section>
                   </q-card-section>
-                  <q-separator vertical/>
-                  <q-card-section class="full-width text-right full-height q-pt-sm q-pb-xs">
-                    <div class="text-sm text-grey">{{ marketOffer.seller.name }} хочет взамен:</div>
-                  </q-card-section>
-                </q-card-section>
-                <q-card-section horizontal class="items-center q-pa-none">
-                  <q-card-section class="full-width full-height q-pt-none q-pb-sm">
-                    <div class="column items-start q-gutter-xs">
-                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="resourceIndex" >
-                        <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'" size="18px" push/>
+                  <q-card-section class="q-pa-none">
+                    <div class="row q-gutter-sm items-center justify-center">
+                      <div v-for="(resource, resourceIndex) in marketChest.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
+                          <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                       </div>
                     </div>
                   </q-card-section>
-                  <q-separator vertical/>
-                  <q-card-section class="full-width full-height q-pt-none q-pb-sm">
-                    <div  class="column items-end justify-center full-height q-gutter-xs">
-                      <div v-for="(resource, resourceIndex) in marketOffer.cost" :key="resourceIndex" >
-                        <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'"  size="18px" push/>
+                  <q-card-actions class="full-width justify-center q-px-md" style="margin-bottom: -30px">
+                    <transition  mode="out-in"
+                        enter-active-class="animated zoomIn"
+                        leave-active-class="animated zoomOut">
+                        <q-btn v-if="marketChest.is_bought" class="q-item-blinking  full-width" push color="secondary">Куплено!</q-btn>
+                        <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
+                        <q-btn v-else class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="openPayment(marketChest.id)"  @click.stop="playAudio('click')">{{ marketChest.price }}₽</q-btn>
+                    </transition>
+                  </q-card-actions>
+                </q-card>
+                <q-card v-else-if="marketChest.priority == 2" class="q-push q-mt-sm text-white text-center" :style="`background-image: url('${marketChest.background_image}'); background-size: cover;`">
+                  <q-card-section class="q-pb-none q-px-none">
+                    <q-img :src="marketChest.image" width="80%"  style="margin-top: -50px; filter: drop-shadow(rgba(255, 255, 255, 0.5) 0px 0px 5px)"/>
+                  </q-card-section>
+                  <q-card-section class="q-pa-sm q-pt-none" style="text-shadow: 0px 1px 2px black">
+                    <div class="text-subtitle2"><b>{{ marketChest.title }}</b></div>
+                    <div class="text-sm">{{ marketChest.description }}</div>
+                  </q-card-section>
+                  <q-card-section class="q-pa-none">
+                    <div class="row q-gutter-sm items-center justify-center">
+                      <div v-for="(resource, resourceIndex) in marketChest.reward" :key="`resource-${resourceIndex}`" style="filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.25));">
+                          <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                       </div>
                     </div>
                   </q-card-section>
-                </q-card-section>
-              </q-card>
-            </q-list>
+                  <q-card-actions v-if="marketChest.price > 0" class="full-width justify-center q-px-md" style="margin-bottom: -30px">
+                    <transition  mode="out-in"
+                          enter-active-class="animated zoomIn"
+                          leave-active-class="animated zoomOut">
+                      <q-btn v-if="marketChest.is_bought" class="q-item-blinking full-width" push color="secondary">Куплено!</q-btn>
+                      <q-btn v-else-if="marketChest.is_error" class="q-item-blinking full-width" push color="negative">Ошибка!</q-btn>
+                      <q-btn v-else :class="`q-item-blinking full-width ${(marketChest.is_discount) ? 'q-btn-shaking-always bg-light-gradient-red' : 'bg-gradient-primary'}`" push  :loading="activeOffer.id == marketChest.id" @click="openPayment(marketChest.id)"  @click.stop="playAudio('click')">
+                        <span v-if="marketChest.is_discount" class="text-red-2 text-caption q-mr-xs" style="margin-left: -16px"><s><b>{{ marketChest.old_price }}₽</b></s></span>
+                        <span :style="(marketChest.is_discount) ? 'font-size: 16px' : ''">{{ marketChest.price }}₽</span>
+                      </q-btn>
+                    </transition>
+                  </q-card-actions>
+                  <q-card-actions v-else class="full-width justify-center q-px-md" style="margin-bottom: -30px">
+                      <q-btn class="q-item-blinking full-width" push color="primary" :loading="activeOffer.id == marketChest.id" @click="inviteDialog = true" @click.stop="playAudio('click')">Бесплатно</q-btn>
+                  </q-card-actions>
+                </q-card>
+              </div>
+            </div>
           </q-card-section>
           <q-card-section class=" q-pb-none">
             <div class="text-subtitle1"><b>Юридическая информация</b></div>
-            <div class="text-caption">Здесь можно ознакомиться с условиями галактического базара.</div>
+            <div class="text-caption">Здесь можно ознакомиться с условиями нашего маркета.</div>
           </q-card-section>
           <q-card-section class="q-pa-none q-pt-none">
             <q-list class="q-my-sm" separator>
@@ -194,8 +197,9 @@ const route = useRoute()
 
 const { user, getItem } = useUserStore()
 
-const marketOffers = ref([])
+const marketChests = ref([])
 const error = ref(false)
+const headerShowForce = ref(false)
 const buyDialog = ref(false)
 const paymentStatusDialog = ref(false)
 const paymentSuccessDialog = ref(false)
@@ -207,16 +211,16 @@ let pollingInterval = null
 const inviteDialog = ref(false)
 
 const load = async (filter) => {
-  const marketOfferListResponse = await api.market_offer.getList()
-  if (marketOfferListResponse.error) {
-    error.value = marketOfferListResponse
-    marketOffers.value = []
+  const marketChestListResponse = await api.chest.getList({type: 'market'})
+  if (marketChestListResponse.error) {
+    error.value = marketChestListResponse
+    marketChests.value = []
     return []
   }
-  marketOffers.value = marketOfferListResponse
+  marketChests.value = marketChestListResponse
 }
 const openPayment = (offer_id) => {
-  activeOffer.value = marketOffers.value.find((offer) => offer.id == offer_id);
+  activeOffer.value = marketChests.value.find((offer) => offer.id == offer_id);
   buyDialog.value = true
 }
 const handlePaymentSuccess = async () => {
@@ -239,10 +243,10 @@ const handlePaymentFail = async (data) => {
   paymentFailDialog.value = true
 }
 const markItem = (key) => {
-  for(let i in marketOffers.value){
-    if(marketOffers.value[i].id == activeOffer.value.id) marketOffers.value[i][key] = true;
+  for(let i in marketChests.value){
+    if(marketChests.value[i].id == activeOffer.value.id) marketChests.value[i][key] = true;
     setTimeout(() => {
-      marketOffers.value[i][key] = false;
+      marketChests.value[i][key] = false;
     }, 2000)
   }
 }

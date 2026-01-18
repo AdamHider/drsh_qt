@@ -8,6 +8,7 @@ import ExploreCourseSection from 'src/pages/ExploreCourseSection.vue'
 import TrainingPage from 'pages/TrainingPage.vue'
 import UserDashboard from 'pages/UserDashboard.vue'
 import UserEdit from 'pages/UserEdit.vue'
+import MarketPage from 'pages/MarketPage.vue'
 import UserEditPassword from 'pages/UserEditPassword.vue'
 
 import UserSettings from 'pages/UserSettings.vue'
@@ -24,7 +25,6 @@ import LessonStartup from 'pages/LessonStartup.vue'
 import LessonFinish from 'pages/LessonFinish.vue'
 import LessonItem from 'pages/LessonItem.vue'
 import UserInvitation from 'pages/UserInvitation.vue'
-import MarketPage from 'pages/MarketPage.vue'
 import PaymentsPage from 'pages/PaymentsPage.vue'
 import ErrorNotFound from 'pages/ErrorNotFound.vue'
 
@@ -87,9 +87,9 @@ const routes = [
         }
       },
       {
-        path: 'notifications',
-        name: 'notifications',
-        component: NotificationsPage,
+        path: 'market',
+        name: 'market',
+        component: MarketPage,
         meta: {
           level: 1,
           requiresAuth: true,
@@ -218,11 +218,6 @@ const routes = [
         component: UserPasswordReset
       },
       {
-        path: 'market',
-        component: MarketPage,
-        meta: { noBottomBar: true }
-      },
-      {
         path: 'payments',
         component: PaymentsPage,
         meta: { noBottomBar: true }
@@ -237,6 +232,12 @@ const routes = [
         path: 'training',
         name: 'training',
         component: TrainingPage,
+        meta: { noBottomBar: true }
+      },
+      {
+        path: 'notifications',
+        name: 'notifications',
+        component: NotificationsPage,
         meta: { noBottomBar: true }
       },
 

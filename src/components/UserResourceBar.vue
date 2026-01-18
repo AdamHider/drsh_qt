@@ -5,12 +5,12 @@
               <q-img :width="props.size" :src="resource?.image" :style="`filter: drop-shadow(rgba(0, 0, 0, 0.44) 0px 2px 2px); scale: 1.2; min-height: ${props.size}`" no-spinner/>
           </q-item-section>
           <q-item-section style="z-index: 2; text-shadow: 0px 1px 2px #00000094;">
-              <q-item-label :class="`${(props.dense) ? '' : 'text-h7'} `">
+              <q-item-label v-if="!props.noValue" :class="`${(props.dense) ? '' : 'text-h7'} `">
                   <span class=""><b>{{(resource?.quantity*1).toLocaleString()}}</b></span>
                   <span v-if="resource.is_restorable"><b>{{ (resource.restoration?.maxValue) ? '/' + resource.restoration?.maxValue : '' }}</b></span>
                   <span v-if="resource.quantity_cost" class="text-caption"><b>/{{ resource.quantity_cost }}</b></span>
               </q-item-label>
-              <q-item-label v-if="!props.noCaption" caption lines="1" class="text-white text-sm"><b>{{resource?.title}}</b></q-item-label>
+              <q-item-label v-if="!props.noCaption" caption lines="1" :class="`text-white ${(!props.noValue) ? 'text-sm' : ''}`"><b>{{resource?.title}}</b></q-item-label>
           </q-item-section>
           <div v-if="resource.is_restorable"
             size="24px"
@@ -54,6 +54,7 @@ const props = defineProps({
   size: String,
   push: Boolean,
   noCaption: Boolean,
+  noValue: Boolean,
   dense: Boolean,
   transparent: Boolean,
   withBadge: Boolean,

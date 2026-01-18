@@ -203,10 +203,10 @@ export class Api extends ApiService{
     }
     market_offer = {
       getList: (params) => {
-          return this.post('marketOffer', 'getList', params)
+          return this.post('market', 'getList', params)
       },
       buyItem: (params) => {
-          return this.post('marketOffer', 'buyItem', params)
+          return this.post('market', 'buyItem', params)
       }
     }
     chest = {

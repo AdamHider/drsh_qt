@@ -140,7 +140,9 @@ const onIntersection = (entry) => {
   if (entry.isIntersecting) entry.target.classList.add('is-in-view');
   else entry.target.classList.remove('is-in-view');
 }
-
+onActivated(() => {
+  refreshList()
+})
 watch(() => props.filter, () => {
   refreshList()
 }, { deep: true })

@@ -42,9 +42,9 @@
         </div>
         <div class="relative-position">
           <q-tutorial-item title="Уведомления" description="На этой странице виден список уведомлений." :index="6" :positionFixed="{bottom: 50, left: 0}"/>
-          <q-route-tab :to="routes.notifications.link" exact replace style="opacity: 1;"  @click.stop="playAudio('click')">
-            <q-img :src="`/icons/notifications${(routes.notifications.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
-            <q-badge v-show="routes.notifications.is_updated" color="red" rounded floating />
+          <q-route-tab :to="routes.market.link" exact replace style="opacity: 1;"  @click.stop="playAudio('click')">
+            <q-img :src="`/icons/market${(routes.market.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+            <q-badge v-show="routes.market.is_updated" color="red" rounded floating />
           </q-route-tab>
         </div>
         <q-route-tab :to="routes.user.link" exact replace @click.stop="playAudio('click')">
@@ -101,27 +101,27 @@ watch(() => quest.activeList, () => {
     routes.course.is_quest = quest.activeList?.find((item) => item.code == 'lesson')
   }, 0)
 })
-watch(() => notifications.value.level, () => {
+watch(() => notifications.level, () => {
   setTimeout(() => {
     routes.user.is_updated = true
   }, 0)
 })
-watch(() => notifications.value.explore, () => {
+watch(() => notifications.explore, () => {
   setTimeout(() => {
     routes.explore.is_updated = true
   }, 0)
 })
-watch(() => notifications.value.notifications, () => {
+watch(() => notifications.market, () => {
   setTimeout(() => {
-    routes.notifications.is_updated = true
+    routes.market.is_updated = true
   }, 0)
 })
-watch(() => notifications.value.skills, () => {
+watch(() => notifications.skills, () => {
   setTimeout(() => {
     routes.skills.is_updated = true
   }, 0)
 })
-watch(() => notifications.value.quests, () => {
+watch(() => notifications.quests, () => {
   setTimeout(() => {
     routes.course.is_updated = true
   }, 0)
