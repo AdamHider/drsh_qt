@@ -29,7 +29,7 @@
       </div>
     </div>
     <q-dialog v-model="claimDialog"  position="bottom" full-width  class="overflow-visible" @hide="currentSkill = false">
-      <q-card :class="`skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
+      <q-card :class="`skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm rounded-b-0`">
         <div class="q-pa-sm" style="background: center / contain no-repeat url('/images/rays.png');">
           <q-img width="150px" :src="`${currentSkill.image}?w=150&h=150`" no-spinner/>
         </div>

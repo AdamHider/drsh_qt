@@ -1,7 +1,7 @@
 <template>
   <div>
   <q-list v-if="marketOffers?.length > 0">
-    <q-card class="q-push q-ma-md rounded-md" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOffer${marketOfferIndex}`">
+    <q-card class="q-push q-ma-md rounded-md" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOffer${marketOfferIndex}`" @click="openModal(marketOffer)">
       <q-card-section class="q-pa-none">
         <q-item class="q-py-none">
           <q-item-section avatar style="margin-top: -10px">
@@ -58,60 +58,72 @@
       </q-card-section>
     </q-card>
   </q-list>
-  <q-dialog v-model="claimDialog"  position="bottom" full-width  class="overflow-visible" @hide="currentSkill = false">
-      <q-card :class="`skill-card ${(currentSkill.is_gained) ? 'is_gained' : (currentSkill.is_available) ? (currentSkill.is_purchasable) ? 'is_purchasable is_available' : 'is_available' : 'is_blocked'} text-center q-pb-sm`">
-        <div class="q-pa-sm" style="background: center / contain no-repeat url('/images/rays.png');">
-          <q-img width="150px" :src="`${currentSkill.image}?w=150&h=150`" no-spinner/>
+  <q-dialog v-model="claimDialog"  position="bottom"  @hide="currentOffer = false; buttonLoading = false;">
+        <div class="row">
+          <div class="col-6">
+              <img  :src="`${currentOffer.seller.avatar}?w=150&h=150`" style="z-index: -1;float: right;"/>
+          </div>
         </div>
-
-        <q-card-section class="q-pt-none">
-          <div class="text-h6"><b>{{ currentSkill.title }}</b></div>
-          <div class="text-caption">{{ currentSkill.description }}</div>
+      <q-card class="text-center q-pb-sm allow-overflow rounded-b-0 relative-position">
+        <div class="absolute-top text-right" style="top: -10px; right: 10px; z-index: 1" >
+          <q-btn push color="negative" class="text-bold" @click="claimDialog = false" @click.stop="playAudio('click')" icon="close"></q-btn>
+        </div>
+        
+        <q-card-section>
+          <div class="text-h6"><b>{{ currentOffer.seller.name }}</b></div>
+          <div class="text-caption">{{ currentOffer.seller.description }}</div>
         </q-card-section>
         <q-separator/>
-        <q-card-actions >
-          <div v-if="currentSkill.is_available" class="full-width">
-            <div v-if="currentSkill.cost.length > 0" class="q-pa-sm bg-grey-3 rounded-sm">
-              <div class="text-center text-subtitle1"><b>Необходимо: </b></div>
-              <div class="row justify-center q-gutter-sm q-py-sm">
-                <div v-for="(resource, resourceIndex) in currentSkill.cost" :key="resourceIndex" >
+        <q-card-actions v-if="currentOffer.type == 'exchange'">
+          <q-card  flat class="bg-grey-3 full-width">
+            <q-card-section class="full-width full-height ">
+              <div class="q-mb-sm"><b>{{ currentOffer.seller.name }} предлагает:</b></div>
+              <div class="flex justify-center q-gutter-xs">
+                <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" class="flex no-wrap items-center justify-between">
+                  <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
+                </div>
+              </div>
+            </q-card-section>
+            <q-separator/>
+            <q-card-section class="full-width full-height">
+              <div class="q-mb-sm"><b>{{ currentOffer.seller.name }} хочет взамен:</b></div>
+              <div  class="">
+                <div v-for="(resource, resourceIndex) in currentOffer.cost" :key="resourceIndex" class="flex no-wrap items-center justify-between">
+                  <q-slider v-model="resource.quantity" :min="1" :max="user.active?.data.resources[resource.code].quantity*1" class="q-mr-sm" style="max-width: 68%" @update:model-value="calculateExchange"/>
+                  <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
+                </div>
+              </div>
+            </q-card-section>
+          </q-card>
+          <q-btn push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" @click="openPayment(currentOffer.id)" @click.stop="playAudio('click')" icon="sync">Обменять</q-btn>
+        </q-card-actions>
+        <q-card-actions v-if="currentOffer.type == 'purchase'">
+          <q-card  flat class="bg-grey-3 full-width">
+            <q-card-section class="full-width full-height ">
+              <div class="q-mb-sm"><b>{{ currentOffer.seller.name }} предлагает:</b></div>
+              <div class="flex justify-center q-gutter-xs">
+                <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" >
                   <UserResourceBar :resource="resource" dense no-caption size="26px" push/>
                 </div>
               </div>
-            </div>
-            <q-btn v-if="currentSkill.price > 0" push class="bg-gradient-primary-purple-to-right text-white full-width text-bold q-mt-sm q-item-blinking " @click="openPayment(currentSkill.id)"  @click.stop="playAudio('click')">{{ currentSkill.price }}₽</q-btn>
-            <q-btn v-else-if="currentSkill.is_purchasable" push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" icon="file_upload" label="Исследовать" @click="claimSkill(currentSkill.id)" @click.stop="playAudio('gain')"  :loading="isLoading"/>
-            <q-btn v-else color="positive" push class="full-width text-bold q-mt-sm" icon="add" label="Докупить ресурсы" @click="openMarket()"  @click.stop="playAudio('click')"/>
-          </div>
-          <div v-if="currentSkill.is_gained" class="full-width">
-            <q-btn color="white" icon="check" flat class="full-width text-bold" label="Исследовано"/>
-          </div>
-          <div v-if="!currentSkill.is_gained && !currentSkill.is_available" class="full-width">
-            <div class="text-subtitle1"><b>Сначала изучите: </b></div>
-            <q-list class="text-left">
-              <q-item  clickable  v-for="(requiredSkill, requiredSkillIndex) in currentSkill.required_skills" :key="requiredSkillIndex"  @click="openModal(requiredSkill)"  @click.stop="playAudio('click')">
-                <q-item-section avatar>
-                  <q-avatar size="50px" text-color="white">
-                    <img class="absolute" :src="requiredSkill.image" />
-                  </q-avatar>
-                </q-item-section>
-                <q-item-section class="q-pl-sm">
-                  <q-item-label lines="1"><b>{{ requiredSkill.title }}</b></q-item-label>
-                  <q-item-label caption>{{ requiredSkill.description }}</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-btn size="12px" flat dense round icon="chevron_right" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </div>
+            </q-card-section>
+          </q-card>
+          <q-spend-button
+            push
+            color="gradient-primary"
+            class="full-width q-mt-sm"
+            :resources="currentOffer.cost ?? []"
+            :loading="buttonLoading"
+            no-leftover-mark reversed
+            label="Купить за"
+            @click="openPayment(currentOffer.id)" @click.stop="playAudio('click')"></q-spend-button>
         </q-card-actions>
         <PaymentWidget
-            :isOpen="buyDialog"
-            :itemId="currentSkill.id*1"
+            :isOpen="paymentDialog"
+            :itemId="currentOffer.id*1"
             itemCode="skill"
             returnUrl="skills"
-            @onHide="buyDialog = false"
+            @onHide="paymentDialog = false"
             @onPaymentSuccess="onPaymentSuccess"
             @onPaymentFail="onPaymentFail"/>
       </q-card>
@@ -124,24 +136,19 @@ import { ref, onActivated, onMounted, onDeactivated, onUnmounted } from 'vue'
 import { api } from '../services/index'
 import { useUserStore } from '../stores/user'
 import UserResourceBar from '../components/UserResourceBar.vue'
-import UserInvitaionWidget from '../components/UserInvitaionWidget.vue'
 import PaymentWidget from '../components/PaymentWidget.vue'
 import { playAudio } from 'src/services/audioService';
-import { useRoute, onBeforeRouteLeave } from 'vue-router'
-import PaymentWidget from '../components/PaymentWidget.vue'
 
-const route = useRoute()
-
-const { user, getItem } = useUserStore()
+const { user } = useUserStore()
 
 const marketOffers = ref([])
 const error = ref(false)
-const buyDialog = ref(false)
+const paymentDialog = ref(false)
 const activeOffer = ref({})
-const confirmationToken = ref(false)
-const paymentId = ref(false)
-let pollingInterval = null
-const inviteDialog = ref(false)
+const currentOffer = ref({})
+const claimDialog = ref(false)
+const buttonLoading = ref(false)
+
 
 
 const load = async (filter) => {
@@ -153,9 +160,38 @@ const load = async (filter) => {
   }
   marketOffers.value = marketOfferListResponse
 }
+
+const calculateExchange = (value) => {
+  for(var i in currentOffer.value.reward){
+    currentOffer.value.reward[i].quantity = Math.floor(value * currentOffer.value.exchange_rate);
+  }
+}
+
+const openModal = function (offer) {
+  if (!offer.id) return
+  currentOffer.value = offer
+  if(currentOffer.value.type == 'exchange'){
+    currentOffer.value.exchange_rate = 0.5
+  }
+  claimDialog.value = true
+}
 const openPayment = (offer_id) => {
+  buttonLoading.value = true
   activeOffer.value = marketOffers.value.find((offer) => offer.id == offer_id);
-  buyDialog.value = true
+  paymentDialog.value = true
+}
+const onPaymentSuccess = async () => {
+  currentSkill.value = {}
+  emit('onClaim')
+  claimDialog.value = false
+  buttonLoading.value = false
+}
+const onPaymentFail = async (data) => {
+  currentSkill.value = {}
+  buyDialog.value = false;
+  emit('onClaim')
+  claimDialog.value = false
+  buttonLoading.value = false
 }
 onActivated(async () => {
   load()
