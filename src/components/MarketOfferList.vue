@@ -17,10 +17,10 @@
                 <q-chip class="q-ma-none" color="blue-1" text-color="blue" icon="shopping_cart" size="12px"><b>Покупка</b></q-chip>
               </span>
               <span v-if="marketOffer.last_rate < marketOffer.current_rate">
-                <q-avatar class="q-ml-xs" size="sm" font-size="14px" color="red-1" text-color="negative" icon="trending_up" />
+                <q-chip class="q-ml-xs" color="red-1" text-color="negative" icon="trending_up" size="12px"><b>{{marketOffer.current_rate}}</b></q-chip>
               </span>
               <span v-else>
-                <q-avatar class="q-ml-xs" size="sm" font-size="14px" color="green-1" text-color="positive" icon="trending_down" />
+                <q-chip class="q-ml-xs" color="green-1" text-color="positive" icon="trending_down" size="12px"><b>{{marketOffer.current_rate}}</b></q-chip>
               </span>
             </div>
           </q-item-section>
@@ -76,24 +76,34 @@
         <q-separator/>
         <q-card-actions v-if="currentOffer.type == 'exchange'">
           <q-card  flat class="bg-grey-3 full-width">
-            <q-card-section class="full-width full-height ">
-              <div class="q-mb-sm"><b>{{ currentOffer.seller.name }} предлагает:</b></div>
-              <div class="flex justify-center q-gutter-xs">
-                <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" class="flex no-wrap items-center justify-between">
-                  <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
+            <q-card-section horizontal>
+              <q-card-section class="full-width full-height ">
+                <div class="q-mb-sm"><b>Ты получишь:</b></div>
+                <div class="flex justify-center q-gutter-xs">
+                  <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" class="flex no-wrap items-center justify-between">
+                    <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
+                  </div>
                 </div>
-              </div>
-            </q-card-section>
-            <q-separator/>
-            <q-card-section class="full-width full-height">
-              <div class="q-mb-sm"><b>{{ currentOffer.seller.name }} хочет взамен:</b></div>
-              <div  class="">
-                <div v-for="(resource, resourceIndex) in currentOffer.cost" :key="resourceIndex" class="flex no-wrap items-center justify-between">
-                  <q-slider v-model="resource.quantity" :min="1" :max="user.active?.data.resources[resource.code].quantity*1" class="q-mr-sm" style="max-width: 68%" @update:model-value="calculateExchange"/>
-                  <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
+              </q-card-section>
+              <q-separator vertical/>
+              <q-card-section class="full-width full-height">
+                <div class="q-mb-sm"><b>Ты отдашь:</b></div>
+                <div  class="">
+                  <div v-for="(resource, resourceIndex) in currentOffer.cost" :key="resourceIndex" class="flex items-center justify-center">
+                    <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
+                  </div>
                 </div>
-              </div>
+              </q-card-section>
             </q-card-section>
+            <q-separator />
+            <q-card-actions class="q-px-md">
+              <q-slider v-model="currentOffer.cost[0].quantity" :min="1" :max="user.active?.data.resources[currentOffer.cost[0].code].quantity*1" class="q-mr-sm" @update:model-value="calculateExchange"/>
+              <div class="full-width text-center">
+                <div class="text-sm text-grey"><q-icon size="16px" name="swipe"/> Прокрути, чтобы изменить количество</div>
+              </div>
+              
+            </q-card-actions>
+            
           </q-card>
           <q-btn push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" @click="openPayment(currentOffer.id)" @click.stop="playAudio('click')" icon="sync">Обменять</q-btn>
         </q-card-actions>
@@ -163,7 +173,7 @@ const load = async (filter) => {
 
 const calculateExchange = (value) => {
   for(var i in currentOffer.value.reward){
-    currentOffer.value.reward[i].quantity = Math.floor(value * currentOffer.value.exchange_rate);
+    currentOffer.value.reward[i].quantity = Math.floor(value * currentOffer.value.current_rate);
   }
 }
 
@@ -171,7 +181,7 @@ const openModal = function (offer) {
   if (!offer.id) return
   currentOffer.value = offer
   if(currentOffer.value.type == 'exchange'){
-    currentOffer.value.exchange_rate = 0.5
+    currentOffer.value.cost[0].quantity_cost = user.active?.data.resources[currentOffer.value.cost[0].code].quantity*1
   }
   claimDialog.value = true
 }
