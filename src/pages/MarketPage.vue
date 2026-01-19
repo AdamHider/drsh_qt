@@ -22,64 +22,8 @@
       </q-card>
       <q-card flat class="relative text-left q-pt-md rounded-borders rounded-b-0 full-width overflow-hidden" style="flex: 1;">
           <q-card-section class="q-pa-none">
-            <q-list v-if="marketOffers?.length > 0">
-              <q-card class="q-push q-ma-md rounded-md" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOffer${marketOfferIndex}`">
-                <q-card-section class="q-pa-none">
-                  <q-item class="q-py-none">
-                    <q-item-section avatar style="margin-top: -10px">
-                      <q-img width="70px" :src="marketOffer.seller.avatar"/>
-                    </q-item-section>
-                    <q-item-section class="q-py-sm">
-                      <div class="text-bold">{{marketOffer.seller.name}}</div>
-                      <div>
-                        <span v-if="marketOffer.type == 'exchange'">
-                          <q-chip class="q-ma-none" color="orange-1" text-color="orange" icon="sync" size="12px"><b>Обмен</b></q-chip>
-                        </span>
-                        <span  v-if="marketOffer.type == 'purchase'">
-                          <q-chip class="q-ma-none" color="blue-1" text-color="blue" icon="shopping_cart" size="12px"><b>Покупка</b></q-chip>
-                        </span>
-                        <span v-if="marketOffer.last_rate < marketOffer.current_rate">
-                          <q-avatar class="q-ml-xs" size="sm" font-size="14px" color="red-1" text-color="negative" icon="trending_up" />
-                        </span>
-                        <span v-else>
-                          <q-avatar class="q-ml-xs" size="sm" font-size="14px" color="green-1" text-color="positive" icon="trending_down" />
-                        </span>
-                      </div>
-                    </q-item-section>
-                    <q-item-section side>
-                      <q-icon name="chevron_right"/>
-                    </q-item-section>
-                  </q-item>
-                </q-card-section>
-                <q-separator  />
-                <q-card-section horizontal class=" q-pa-none">
-                  <q-card-section class="full-width full-height q-pt-sm q-pb-xs">
-                    <div class="text-sm text-grey">{{ marketOffer.seller.name }} предлагает:</div>
-                  </q-card-section>
-                  <q-separator vertical/>
-                  <q-card-section class="full-width text-right full-height q-pt-sm q-pb-xs">
-                    <div class="text-sm text-grey">{{ marketOffer.seller.name }} хочет взамен:</div>
-                  </q-card-section>
-                </q-card-section>
-                <q-card-section horizontal class="items-center q-pa-none">
-                  <q-card-section class="full-width full-height q-pt-none q-pb-sm">
-                    <div class="column items-start q-gutter-xs">
-                      <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="resourceIndex" >
-                        <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'" size="18px" push/>
-                      </div>
-                    </div>
-                  </q-card-section>
-                  <q-separator vertical/>
-                  <q-card-section class="full-width full-height q-pt-none q-pb-sm">
-                    <div  class="column items-end justify-center full-height q-gutter-xs">
-                      <div v-for="(resource, resourceIndex) in marketOffer.cost" :key="resourceIndex" >
-                        <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'"  size="18px" push/>
-                      </div>
-                    </div>
-                  </q-card-section>
-                </q-card-section>
-              </q-card>
-            </q-list>
+
+            <MarketOfferList/>
           </q-card-section>
           <q-card-section class=" q-pb-none">
             <div class="text-subtitle1"><b>Юридическая информация</b></div>
@@ -189,6 +133,7 @@ import UserInvitaionWidget from '../components/UserInvitaionWidget.vue'
 import PaymentWidget from '../components/PaymentWidget.vue'
 import { playAudio } from 'src/services/audioService';
 import { useRoute, onBeforeRouteLeave } from 'vue-router'
+import MarketOfferList from 'src/components/MarketOfferList.vue'
 
 const route = useRoute()
 
@@ -206,19 +151,6 @@ const paymentId = ref(false)
 let pollingInterval = null
 const inviteDialog = ref(false)
 
-const load = async (filter) => {
-  const marketOfferListResponse = await api.market_offer.getList()
-  if (marketOfferListResponse.error) {
-    error.value = marketOfferListResponse
-    marketOffers.value = []
-    return []
-  }
-  marketOffers.value = marketOfferListResponse
-}
-const openPayment = (offer_id) => {
-  activeOffer.value = marketOffers.value.find((offer) => offer.id == offer_id);
-  buyDialog.value = true
-}
 const handlePaymentSuccess = async () => {
   markItem('is_bought')
   activeOffer.value = {}
@@ -246,12 +178,7 @@ const markItem = (key) => {
     }, 2000)
   }
 }
-onActivated(async () => {
-  load()
-})
-onMounted(async () => {
-  load();
-})
+
 onDeactivated(async () => {
   clearInterval(pollingInterval);
   pollingInterval = null;
