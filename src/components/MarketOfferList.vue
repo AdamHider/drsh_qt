@@ -61,7 +61,7 @@
   <q-dialog v-model="claimDialog"  position="bottom"  @hide="currentOffer = false; buttonLoading = false;">
         <div class="row">
           <div class="col-6">
-              <img  :src="`${currentOffer.seller.avatar}?w=150&h=150`" style="z-index: -1;float: right;"/>
+              <img  :src="`${currentOffer.seller.image}?w=150`" style="z-index: -1;float: right;"/>
           </div>
         </div>
       <q-card class="text-center q-pb-sm allow-overflow rounded-b-0 relative-position">
