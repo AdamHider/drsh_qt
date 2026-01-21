@@ -201,9 +201,12 @@ export class Api extends ApiService{
             return this.post('auth', 'signIn', params);
         },
     }
-    market_offer = {
+    market = {
       getList: (params) => {
           return this.post('market', 'getList', params)
+      },
+      createExchange: (params) => {
+          return this.post('market', 'createExchange', params)
       },
       buyItem: (params) => {
           return this.post('market', 'buyItem', params)
