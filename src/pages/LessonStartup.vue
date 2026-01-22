@@ -29,7 +29,7 @@
           :class="`fixed full-width full-height background-space ${(isDark) ? 'dark': ''}`"
           >
           <q-img
-          :src="(activeLesson.background_image) ? activeLesson.background_image : activeLesson.course_section?.background_image"
+          :src="(activeLesson.background_image) ? activeLesson.background_image : lesson.active.course_section?.background_image"
           class="absolute-top absolute-left full-width full-height"
           loading="lazy"
           spinner-color="white"
@@ -47,6 +47,9 @@
                   <q-icon v-if="activeLesson.is_blocked === true" name="lock"></q-icon>
                   <q-avatar v-if="activeLesson.is_quest === true" size="18px" font-size="12px" color="secondary" text-color="white" icon="priority_high" class="vertical-middle q-mr-xs"  style="box-shadow: rgba(255, 255, 255, 0.51) 0px 0px 0px 2px inset;"/>
                   <b>{{activeLesson.title}}</b>
+                </div>
+                <div class="text-subtitle2 text-grey-3">
+                  <b>{{ lesson.active.course_section?.title }}</b>
                 </div>
                 <div :class="`text-caption satellite-description ${(expandDescription) ? '': 'max-two-lines'}`" @click="expandDescription = !expandDescription">
                   {{activeLesson.description}}

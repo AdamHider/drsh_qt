@@ -14,7 +14,7 @@
                 <q-chip class="q-ma-none" color="orange-1" text-color="orange" icon="sync" size="12px"><b>Обмен</b></q-chip>
               </span>
               <span  v-if="marketOffer.type == 'purchase'">
-                <q-chip class="q-ma-none" color="blue-1" text-color="blue" icon="shopping_cart" size="12px"><b>Покупка</b></q-chip>
+                <q-chip class="q-ma-none" color="blue-1" text-color="blue" icon="shopping_cart" size="12px"><b>Продажа</b></q-chip>
               </span>
               <span v-if="marketOffer.last_rate < marketOffer.current_rate">
                 <q-chip class="q-ml-xs" color="red-1" text-color="negative" icon="trending_up" size="12px">
@@ -77,7 +77,7 @@
         
         <q-card-section class="text-left">
           <div v-if="currentOffer.type == 'exchange'" class="text-text-subtitle1 text-center text-orange"><b>Обмен ресурсами</b></div>
-          <div v-else class="text-text-subtitle1 text-center text-blue"><b>Покупка ресурсов</b></div>
+          <div v-else class="text-text-subtitle1 text-center text-blue"><b>Продажа ресурсов</b></div>
           <div class="text-h6"><b>{{ currentOffer.seller.name }}</b></div>
           <div class="text-caption">{{ currentOffer.seller.description }}</div>
           <div>

@@ -16,7 +16,7 @@
             </div>
             <div class="col q-pa-sm"  style="text-shadow: 2px 2px 5px black;">
               <div class="text-h6"><b>Галактический базар</b></div>
-              <div class="text-caption">Время пополнить запасы!</div>
+              <div class="text-caption">Предложения обновляются каждый день!</div>
             </div>
           </q-card-section>
       </q-card>

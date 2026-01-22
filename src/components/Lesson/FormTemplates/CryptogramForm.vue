@@ -55,7 +55,7 @@
           push dense
           :class="`key-cap ${(!isLetterInMapping(key)) ? 'key-absent' : ''} ${(completedLetters.has(key)) ? 'key-completed' : ''}`"
           :disable="!isLetterInMapping(key) || completedLetters.has(key)"
-        />
+        ><q-icon class="absolute-top" size="10px" style="left: unset; top: 2px; right: 2px" v-if="completedLetters.has(key)" name="check"/></q-btn>
         <q-btn v-if="rIdx === 2" @click="clearLetter" class="key-cap key-del" push  dense><q-icon size="14px" name="backspace"></q-icon></q-btn>
       </div>
     </div>
@@ -248,7 +248,7 @@ watch(formData.fields, (newValue, oldValue) => {
     background: #ffffff;
     pointer-events: none;
     color: $grey-5;
-    opacity: 0.6 !important;
+    opacity: 0.3 !important;
   }
 
   // Буква заполнена во всех положенных местах

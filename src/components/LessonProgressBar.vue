@@ -38,7 +38,7 @@
       >
         <q-card class="rounded-b-0">
           <q-list bordered separator>
-            <q-item-label header class="q-pb-sm"><b>Награды:</b></q-item-label>
+            <q-item-label header class="q-pb-sm"><b>Максимальная награда:</b></q-item-label>
             <q-item dense clickable v-ripple >
               <q-item-section>
                 <div class="row q-gutter-sm q-py-sm">

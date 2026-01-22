@@ -41,7 +41,7 @@
     </div>
     <div class="col-3 text-center cursor-pointer relative-position" @click="toggleType('cryptogram')">
       <div class="relative-position inline-block">
-        <q-avatar size="48px" :class="filter.lesson_type.includes('cryptogram') ? 'bg-light-gradient-indigo text-white' : 'bg-grey-3 text-grey-7'" icon="password"/>
+        <q-avatar size="48px" :class="filter.lesson_type.includes('cryptogram') ? 'bg-gradient-pink text-white' : 'bg-grey-3 text-grey-7'" icon="password"/>
         <transition name="scale">
           <q-badge v-if="filter.lesson_type.includes('cryptogram')" floating rounded color="red"
             class="q-pa-xs"
@@ -50,7 +50,7 @@
           </q-badge>
         </transition>
       </div>
-      <div :class="`text-caption q-mt-xs ${(filter.lesson_type.includes('cryptogram')) ? 'text-indigo' : ''}`"><b>Шифр</b></div>
+      <div :class="`text-caption q-mt-xs ${(filter.lesson_type.includes('cryptogram')) ? 'text-pink' : ''}`"><b>Шифр</b></div>
     </div>
   </div>
   <div class="q-mb-sm">

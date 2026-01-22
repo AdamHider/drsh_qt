@@ -11,8 +11,8 @@
         >
           <q-card
             v-intersection="onIntersection"
-            class="lesson-card q-push q-pa-sm relative-position rounded-md text-white text-shadow"
-            :class="[lesson.is_blocked ? 'is-blocked' : '', lesson.appearance.class]"
+            class="lesson-card q-push q-pa-sm relative-position rounded-md text-white text-shadow "
+            :class="[lesson.is_blocked ? 'is-blocked' : '', (lesson.progress == 0 && lesson.is_daily) ? 'q-item-blinking' : '', lesson.appearance.class]"
             @click="router.push(`/lesson-startup-${lesson.id}`)"
             :style="getCardStyle(lesson)"
           >
@@ -120,9 +120,9 @@ const onLoadNextPage = async (index, done) => {
 
 const getLessonStatus = (l) => {
   if (l.is_blocked) return { color: 'dark-transparent-75', icon: 'lock', label: 'Заблокировано' };
-  if (l.progress === 100) return { color: 'gradient-green', icon: 'check', label: 'Исследовано' };
-  return l.progress > 0
-    ? { color: 'dark-transparent-75', icon: 'fast_forward', label: `Исследовано ${l.progress}%` }
+  if (l.progress >= 100) return { color: 'gradient-green', icon: 'check', label: 'Исследовано' };
+  return l.progress >= 0 && l.exercise_id
+    ? { color: 'gradient-teal', icon: 'fast_forward', label: `Исследуется (${l.progress}%)` }
     : { color: 'dark-transparent-75', icon: 'rocket', label: 'Не исследовано' };
 }
 
@@ -131,7 +131,7 @@ const getLessonType = (l) => {
     lexis: { icon: 'border_all', label: 'Карточки', color: 'light-gradient-primary' },
     chat: { icon: 'chat_bubble', label: 'Чат', color: 'gradient-red' },
     syllables: { icon: 'apps', label: 'Слоги', color: 'gradient-blue' },
-    cryptogram: { icon: 'password', label: 'Шифр', color: 'light-gradient-indigo' },
+    cryptogram: { icon: 'password', label: 'Шифр', color: 'gradient-pink' },
   };
   return types[l.type] || null;
 }

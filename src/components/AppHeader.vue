@@ -56,7 +56,6 @@ watch(() => props.showForce, () => {
 })
 onActivated(() => {
   revealOffset = 0
-  console.log(header.value.$el)
   header.value.$el.classList.remove('header-reveal')
 })
 onMounted(() => {
