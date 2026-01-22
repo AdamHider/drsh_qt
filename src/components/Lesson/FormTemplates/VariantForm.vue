@@ -68,7 +68,7 @@
     </div>
     <q-card v-else-if="!lesson.active.page?.answer?.is_finished" flat class="text-dark">
       <q-card-section class="text-center">
-        <div class="text-h6 text-bold">Выберите поле</div>
+        <div class="text-h6 text-bold">Выбери поле</div>
         <div class="text-subtitle2">И здесь появятся варианты ответа</div>
       </q-card-section>
     </q-card>

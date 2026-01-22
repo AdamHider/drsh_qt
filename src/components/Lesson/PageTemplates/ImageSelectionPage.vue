@@ -41,7 +41,6 @@
             </span>
           </div>
           <div v-else class="text-bold text-h6">
-
               <div v-html="data.data.text"></div>
           </div>
         </q-card-section>

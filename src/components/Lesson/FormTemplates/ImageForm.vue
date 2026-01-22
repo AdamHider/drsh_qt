@@ -10,9 +10,10 @@
                     <div>
                       <q-card v-if="!formData.fields[index].answer"
                         :class="`q-lesson-radio cursor-pointer rounded-sm ${(formData.fields[index].value.text == image.text) ?  'q-active' : ''} `"
-                        @click="formData.fields[index].value.text = image.text;" @click.stop="playAudio('click')">
+                        @click="saveAnswer(index, image.text)" @click.stop="playAudio('click')">
                         <q-card-section class="flex items-center justify-center text-center text-subtitle1 " style="line-height: 1.2; min-height: 4.4rem;">
                           <b>{{ transliterateHTML(image.text) }}</b>
+                          <q-spinner v-if="formData.fields[index].is_loading" class="absolute-top" color="white" style="top: 8px; left: unset; right: 8px"/>
                         </q-card-section>
                       </q-card>
 
@@ -28,11 +29,17 @@
                 </div>
             </Teleport>
         </div>
+    <q-card v-if="!lesson.active.page?.answer?.is_finished" flat class="text-dark">
+      <q-card-section class="text-center">
+        <div class="text-h6 text-bold">Выбери слово</div>
+        <div class="text-subtitle2">И поехали дальше!</div>
+      </q-card-section>
+    </q-card>
   </div>
 </template>
 
 <script setup>
-import { reactive, watch, onMounted } from 'vue'
+import { reactive, watch, ref, onMounted } from 'vue'
 import { useLesson } from '../../../composables/useLesson'
 import { useLessonAudio } from '../../../composables/useLessonAudio'
 import { useTransliterate } from '../../../composables/useTransliterate'
@@ -45,6 +52,8 @@ const emits = defineEmits(['update-answer', 'onAnswerSaved'])
 const { lesson } = useLesson()
 const {  loadAudio } = useLessonAudio()
 const { transliterateHTML } = useTransliterate()
+
+const isLoading = ref()
 
 const formData = reactive({
   fields: []
@@ -67,6 +76,14 @@ const renderFields = () => {
 }
 
 renderFields()
+
+const saveAnswer = (index, value) => {
+  formData.fields[index].value.text = value
+  formData.fields[index].is_loading = true
+  setTimeout(() => {
+    emits('onAnswerSaved')
+  }, 100)
+}
 
 watch(() => lesson.active.page, (newValue, oldValue) => {
   renderFields()

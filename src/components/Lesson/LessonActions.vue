@@ -73,7 +73,7 @@
             @click="next"
         ></q-btn>
         <q-btn
-            v-if="lesson.active.page?.actions?.main == 'confirm'"
+            v-if="lesson.active.page?.actions?.main == 'confirm' && lesson.active.page?.header?.form_template !== 'image'"
             push
             :loading="isLoading"
             style="flex: 2"

@@ -1,7 +1,7 @@
 <template>
     <q-page-container>
       <q-app-header class="transparent text-white rounded-b-md " >
-          <q-toolbar-title>Выберите расу</q-toolbar-title>
+          <q-toolbar-title>Выбери расу</q-toolbar-title>
       </q-app-header>
         <q-page class=" column justify-end  items-end full-height full-width text-center overflow-hidden">
           <transition v-for="(characterItem, index) in characters" :key="index"  :duration="550" enter-active-class="animated fadeIn"  leave-active-class="animated fadeOut">
