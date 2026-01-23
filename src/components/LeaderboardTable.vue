@@ -1,6 +1,6 @@
 <template>
     <q-card flat style="height: calc(100% - 30px);" class="absolute-top rounded-b-0 rounded-t-0 q-pb-md full-width">
-      <q-card-section class="q-pb-none q-px-sm relative-position" style="height: calc(100% - 55px);">
+      <q-card-section class="q-pb-none q-px-sm relative-position full-height">
         <q-list v-if="items.length > 0 " class="column full-height" >
           <q-item class="text-left text-bold text-grey-7" style="font-size: 12px">
             <q-item-section side>
@@ -66,27 +66,19 @@
           </div>
         </div>
       </q-card-section>
-      <q-card-section class="q-pa-none text-left border-t-sm rouded-t border-grey" style="position: relative; z-index: 5;">
-        <LeaderboardFilter
-          @update-filter="updateFilter($event)"
-        />
-      </q-card-section>
     </q-card>
 </template>
 
 <script setup>
 import { onActivated, watch, ref, reactive, nextTick, toRefs } from 'vue'
-import BannerNotFound from '../components/BannerNotFound.vue'
-import LeaderboardFilter from '../components/LeaderboardFilter.vue'
 import LeaderboardTableItem from '../components/LeaderboardTableItem.vue'
 import { api } from '../services/index'
 
 const props = defineProps({
   lessonId: String,
   challengeId: String,
-  timePeriod: String
+  filter: Object
 })
-const timePeriod = toRefs(props).timePeriod
 
 const userRowIndex = ref(0)
 const items = ref([]);
@@ -111,14 +103,12 @@ const load = async () => {
   isLoadingInitial.value = true;
 
   filter.value.mode = 'new'
-  filter.value.time_period = timePeriod.value
 
-  const initialData = await api.exercise.getLeaderboard(filter.value);
+  const initialData = await api.exercise.getLeaderboard({...filter.value, ...props.filter});
   items.value = initialData.body;
   userRow.value = initialData.head.user_row
   winners.value = initialData.head.winners
   state.isLoading = false;
-
   if (initialData.body.length > 0) {
     userRowIndex.value = initialData.body.findIndex(item => item.is_active);
   }
@@ -130,12 +120,6 @@ const load = async () => {
     virtualScrollRef.value.scrollTo(userRowIndex.value-6)
   }
 };
-const updateFilter = (filterObject) => {
-  filter.value = filterObject
-  load()
-}
-
-
 const onScroll = ({ index, from, to, direction, ref }) => {
   state.direction = direction
   state.userIsVisible = false
@@ -158,9 +142,10 @@ watch(() => state.userIsVisible, () => {
     }
   }
 })
-watch(() => timePeriod.value, async (currentValue, oldValue) => {
-  await load();
-})
+watch(() => props.filter, () => {
+  load();
+}, { deep: true })
+
 onActivated(async () => {
   await load();
 })

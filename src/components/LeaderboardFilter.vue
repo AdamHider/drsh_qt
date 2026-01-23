@@ -1,32 +1,55 @@
 <template>
-    <q-form
-      ref="form"
-      v-model="formData.valid"
-      autocomplete="off"
-      class="full-width">
-          <div class="flex justify-center">
-            <q-tabs
-              v-model="formData.fields.resource.value"
-              :indicator-color="user.active?.data?.resources[formData.fields.resource.value]?.color"
-              switch-indicator
-              dense
-            >
-              <q-tab v-for="(option, optionKey) in formData.fields.resource.options" :key="optionKey" :name="option.value">
-                <q-item :class="`${(formData.fields.resource.value == option.value) ? `text-${user.active?.data?.resources[option.value]?.color}` : ''}`">
-                  <q-item-section avatar>
-                    <q-avatar size="30px">
-                      <q-img :src="user.active.data?.resources[option.value].image" style="filter: drop-shadow(rgba(0, 0, 0, 0.44) 0px 2px 2px);"/>
-                    </q-avatar>
-                  </q-item-section>
-                  <q-item-section>
-                    <div class="text-caption"><b>{{ option.label }}</b></div>
-                  </q-item-section>
-                </q-item>
-              </q-tab>
+  <q-btn icon="tune" flat @click="dialog = true"></q-btn>
+  <q-dialog v-model="dialog" position="top">
+      <q-card>
+        <q-card-section class="q-pb-sm">
+          <div class="text-h6"><b>Фильтр</b></div>
+        </q-card-section>
+          <q-separator/>
+        <q-card-section class="q-py-sm">
+            <div >
+              <div class="text-subtitle2"><b>Ресурсы</b></div>
+              <div class="text-caption text-grey">По какому ресурсу показывать рейтинг</div>
+            </div>
+            <q-list >
+              <q-item tag="label" class="q-pa-none" v-for="(option, optionKey) in formData.fields.resource.options" :key="optionKey" :name="option.value" dense>
+                <q-item-section avatar>
+                  <q-radio v-model="formData.fields.resource.value" :val="option.value"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    <b>{{ option.label }}</b>
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+        </q-card-section>
+          <q-separator/>
+        <q-card-section class="q-py-sm">
+          <div >
+              <div class="text-subtitle2"><b>Период</b></div>
+              <div class="text-caption text-grey">За какое время показывать рейтинг</div>
+            </div>
+            <q-list >
+              <q-item tag="label" class="q-pa-none" v-for="(option, optionKey) in formData.fields.time_period.options" :key="optionKey" :name="option.value" dense>
+                <q-item-section avatar>
+                  <q-radio v-model="formData.fields.time_period.value" :val="option.value"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    <b>{{ option.label }}</b>
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+        </q-card-section>
+          <q-separator/>
+        <q-card-actions>
+          <q-btn push class="full-width" color="primary" @click="dialog = false"><b>Сохранить</b></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
-            </q-tabs>
-          </div>
-    </q-form>
 </template>
 
 <script setup >
@@ -36,13 +59,11 @@ import { useUserStore } from '../stores/user'
 
 const { user } = useUserStore()
 
-const emits = defineEmits(['update-filter'])
+const emits = defineEmits(['onChange'])
 
 const form = ref(null)
+const dialog = ref(false)
 
-const props = defineProps({
-  allowedFilters: Array
-})
 const formData = reactive({
   valid: true,
   fields: {
@@ -58,10 +79,36 @@ const formData = reactive({
           value: 'experience'
         }
       ]
-    }
+    },
+    time_period: {
+      value: 'all',
+      options: [
+        {
+          label: 'Всё время',
+          value: 'all'
+        },
+        {
+          label: 'Месяц',
+          value: 'month'
+        },
+        {
+          label: 'Неделя',
+          value: 'week'
+        }
+      ]
+    },
   }
 })
+
+const prepareFilter = () => {
+  const result = {};
+  for(var i in formData.fields){
+    result[i] = formData.fields[i].value
+  }
+  return result;
+}
+
 watch(formData.fields, async (currentValue, oldValue) => {
-  emits('update-filter', formData.fields)
+  emits('onChange', prepareFilter())
 })
 </script>

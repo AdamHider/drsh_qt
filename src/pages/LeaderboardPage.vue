@@ -2,40 +2,22 @@
   <q-page-container>
         <q-app-header class="bg-white rounded-b-md ">
             <q-toolbar-title><b>Рейтинг</b></q-toolbar-title>
+            <LeaderboardFilter @onChange="filter = $event"/>
         </q-app-header>
         <q-page class="column justify-center content-start text-center full-width" style="padding-top: 50px; padding-bottom: 35px;">
           <div class="page-background fixed-top full-width"></div>
-            <LeaderboardTable :allowed-filters="['resource']" :time-period="formData.fields.time_period.value"/>
+            <LeaderboardTable :filter="filter"/>
         </q-page>
   </q-page-container>
 </template>
 
 <script setup >
+import LeaderboardFilter from '../components/LeaderboardFilter.vue'
 import LeaderboardTable from '../components/LeaderboardTable.vue'
 import { onActivated, onMounted, reactive, ref, watch } from 'vue'
 
-const formData = reactive({
-  valid: true,
-  fields: {
-    time_period: {
-      value: 'all',
-      options: [
-        {
-          label: 'Всё время',
-          value: 'all'
-        },
-        {
-          label: 'Месяц',
-          value: 'month'
-        },
-        {
-          label: 'Неделя',
-          value: 'week'
-        }
-      ]
-    },
-  }
-})
+const filter = ref({})
+
 </script>
 
 <style scoped>

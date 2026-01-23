@@ -1,9 +1,13 @@
 <template>
   <div>
+    <div class="q-px-md ">
+      <div class="text-subtitle1"><b>Предложения торговцев</b></div>
+      <div class="text-caption text-grey">Все предложения обновляются каждый день.</div>
+    </div>
   <q-list v-if="marketOffers?.length > 0">
     <q-card class="q-push q-ma-md rounded-md" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOffer${marketOfferIndex}`" @click="openModal(marketOffer)">
       <q-card-section class="q-pa-none">
-        <q-item class="q-py-none">
+        <q-item class="q-py-none" style="text-shadow: 0px 1px 2px black;">
           <q-item-section avatar style="margin-top: -10px">
             <q-img width="80px" :src="marketOffer.seller.avatar"/>
           </q-item-section>
@@ -17,15 +21,13 @@
                 <q-chip class="q-ma-none" color="blue-1" text-color="blue" icon="shopping_cart" size="12px"><b>Продажа</b></q-chip>
               </span>
               <span v-if="marketOffer.last_rate < marketOffer.current_rate">
-                <q-chip class="q-ml-xs" color="red-1" text-color="negative" icon="trending_up" size="12px">
-                  <b v-if="marketOffer.type == 'exchange'">{{ marketOffer.current_rate_readable }}</b>
-                  <b v-else>Рост</b>
+                <q-chip class="q-ml-xs q-px-sm" color="red-1" text-color="negative" size="12px">
+                  <q-icon name="trending_up" size="18px"/>
                 </q-chip>
               </span>
               <span v-else>
-                <q-chip class="q-ml-xs" color="green-1" text-color="positive" icon="trending_down" size="12px">
-                  <b v-if="marketOffer.type == 'exchange'">{{ marketOffer.current_rate_readable }}</b>
-                  <b v-else>Спад</b>
+                <q-chip class="q-ml-xs q-px-sm" color="green-1" text-color="positive" size="12px">
+                  <q-icon name="trending_down" size="18px"/>
                 </q-chip>
               </span>
             </div>
@@ -74,7 +76,7 @@
         <div class="absolute-top text-right" style="top: -10px; right: 10px; z-index: 1" >
           <q-btn push color="negative" class="text-bold" @click="claimDialog = false" @click.stop="playAudio('click')" icon="close"></q-btn>
         </div>
-        
+
         <q-card-section class="text-left">
           <div v-if="currentOffer.type == 'exchange'" class="text-text-subtitle1 text-center text-orange"><b>Обмен ресурсами</b></div>
           <div v-else class="text-text-subtitle1 text-center text-blue"><b>Продажа ресурсов</b></div>
@@ -83,13 +85,13 @@
           <div>
             <span v-if="currentOffer.last_rate < currentOffer.current_rate">
               <q-chip class="q-ml-none" color="red-1" text-color="negative" icon="trending_up" size="12px">
-                <b v-if="currentOffer.type == 'exchange'">Курс растёт {{currentOffer.current_rate_readable}}</b>
+                <b v-if="currentOffer.type == 'exchange'">Курс растёт</b>
                 <b v-else>Цена растёт</b>
               </q-chip>
             </span>
             <span v-else>
               <q-chip class="q-ml-none" color="green-1" text-color="positive" icon="trending_down" size="12px">
-                <b v-if="currentOffer.type == 'exchange'">Курс падает ({{currentOffer.current_rate_readable}})</b>
+                <b v-if="currentOffer.type == 'exchange'">Курс падает</b>
                 <b v-else>Цена падает</b>
               </q-chip>
             </span>
@@ -123,9 +125,9 @@
               <div class="full-width text-center">
                 <div class="text-sm text-grey"><q-icon size="16px" name="swipe"/> Прокрути, чтобы изменить количество</div>
               </div>
-              
+
             </q-card-actions>
-            
+
           </q-card>
           <q-btn push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" @click="createExchange()" @click.stop="playAudio('click')" icon="sync">Обменять</q-btn>
         </q-card-actions>
@@ -219,17 +221,10 @@ const load = async () => {
     return []
   }
   marketOffers.value = marketOfferListResponse
-  for(var i in marketOffers.value){
-    if(marketOffers.value[i].current_rate > 1){
-      marketOffers.value[i].current_rate_readable = `${marketOffers.value[i].current_rate}:1`
-    } else {
-      marketOffers.value[i].current_rate_readable = `1:${Math.floor(1/marketOffers.value[i].current_rate)}`
-    }
-  }
 }
 const calculateExchange = (value) => {
   for(var i in currentOffer.value.reward){
-    currentOffer.value.reward[i].quantity = Math.floor(value * currentOffer.value.current_rate);
+    currentOffer.value.reward[i].quantity = Math.round(value * currentOffer.value.current_rate);
   }
 }
 
@@ -240,7 +235,7 @@ const openModal = function (offer) {
     for(var i in currentOffer.value.cost){
       currentOffer.value.cost[i].quantity_cost = user.active?.data.resources[currentOffer.value.cost[i].code].quantity*1
     }
-    
+
   }
   claimDialog.value = true
 }
