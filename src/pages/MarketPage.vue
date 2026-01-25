@@ -15,8 +15,8 @@
               <q-img width="200px" src="/images/market/character.png" style="max-width: 100%;"/>
             </div>
             <div class="col q-pa-sm"  style="text-shadow: 2px 2px 5px black;">
-              <div class="text-h6"><b>Галактический базар</b></div>
-              <div class="text-caption">Предложения обновляются каждый день!</div>
+              <div class="text-h6"><b>Базар</b></div>
+              <div class="text-caption">Торговля - двигатель прогресса!</div>
             </div>
           </q-card-section>
       </q-card>

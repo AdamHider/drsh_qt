@@ -1,5 +1,5 @@
 <template>
-  <q-page-container>
+  <q-page-wrapper>
     <q-app-header class="transparent  rounded-b-md" reveal>
         <q-toolbar-title><b>Открытия</b></q-toolbar-title>
         <UserResourceBar v-if="user.active?.data.resources" :resource="user.active?.data.resources.energy" dense no-caption size="24px" push
@@ -29,7 +29,7 @@
       </q-page-sticky>
       <q-scroll-observer @scroll="onScroll" />
     </q-page>
-  </q-page-container>
+  </q-page-wrapper>
 </template>
 
 <script setup >

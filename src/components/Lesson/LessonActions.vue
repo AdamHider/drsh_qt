@@ -5,43 +5,21 @@
           appear
           enter-active-class="animated fadeInUp"
           leave-active-class="animated fadeOutDown">
-            <div class="text-h5 vertical-middle" v-if="lesson.active.page?.answer?.is_finished">
-              <b v-if="answerPercentage == 100">Превосходно!</b>
-              <b v-else-if="answerPercentage < 80 && answerPercentage >= 40">Хороший результат!</b>
-              <b v-else-if="answerPercentage < 40">Можно было и лучше!</b>
-            </div>
-          </transition>
-          <transition
-          appear
-          enter-active-class="animated fadeInUp animation-delay-1"
-          leave-active-class="animated fadeOutDown">
-            <div v-if="lesson.active.page?.answer?.is_finished">
-              <q-list class="text-left q-mt-sm " dense v-if="lesson.active.page?.timer">
-                <q-item>
-                  <q-item-section>Баллы:</q-item-section>
-                  <q-item-section class="text-right"><b>+{{ lesson.active.page?.answer?.points }}</b></q-item-section>
-                </q-item>
-                <q-separator inset />
-                <q-item>
-                  <q-item-section>Бонус за время:</q-item-section>
-                  <q-item-section class="text-right"><b>+{{ lesson.active.page?.answer?.time_bonus }}</b></q-item-section>
-                </q-item >
-                <q-separator inset />
-                <q-item>
-                  <q-item-section><b>Всего:</b></q-item-section>
-                  <q-item-section side class="text-right text-primary text-bold text-h6">
-                    <q-chip class="q-ma-none q-push rounded-sm" color="primary" text-color="white" size="16px" style="transform: translateX(10px) "><b>{{ lesson.active.page?.answer?.total }}</b></q-chip>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-              <q-list class="text-left q-mt-sm " dense v-else>
-                <q-item>
-                  <q-item-section><b>Всего баллов:</b></q-item-section>
-                  <q-item-section side class="text-right text-primary text-bold text-h6">
-                    <q-chip class="q-ma-none q-push rounded-sm" color="primary" text-color="white" size="16px" style="transform: translateX(10px)"><b>{{ lesson.active.page?.answer?.total }}</b></q-chip>
-                  </q-item-section>
-                </q-item>
-              </q-list>
+            <div>
+              <div class="text-h6 " v-if="lesson.active.page?.answer?.is_finished">
+                <b v-if="answerPercentage == 100">Превосходно!</b>
+                <b v-else-if="answerPercentage < 80 && answerPercentage >= 40">Хороший результат!</b>
+                <b v-else-if="answerPercentage < 40">Можно было и лучше!</b>
+              </div>
+              <div class="text-subtitle2 " v-if="lesson.active.page?.answer?.is_finished">
+                <span v-if="answerPercentage == 100">Всё выполнено по высшему разряду</span>
+                <span v-else-if="answerPercentage < 80 && answerPercentage >= 40">Но ещё есть куда расти</span>
+                <span v-else-if="answerPercentage < 40">Будь внимательнее и всё получится!</span>
+              </div>
+              <div v-if="lesson.active.page?.answer?.is_finished" class="flex justify-center q-mt-sm">
+                <q-chip v-if="lesson.active.page?.timer" color="gradient-blue" text-color="white" class="q-push rounded-sm" size="16px" icon="timer"><b>+{{ lesson.active.page?.answer?.time_bonus }}</b></q-chip>
+                <q-chip class=" q-push rounded-sm" color="gradient-primary" text-color="white" size="16px" icon="star"><b>+{{ lesson.active.page?.answer?.total }}</b></q-chip>
+              </div>
             </div>
           </transition>
         </q-card-section>
@@ -60,37 +38,16 @@
         </div>
       </transition>
     </div>
-    <q-toolbar
-        class="q-pa-sm"
-        v-if="lesson.active.page && ((lesson.active.page?.header?.page_template !== 'chat' && lesson.active.page?.header?.page_template !== 'syllables') || lesson.active.page?.actions?.main == 'finish')">
-        <q-btn
-            v-if="lesson.active.page?.actions?.main == 'next'"
-            push
-            :loading="isLoading"
-            style="flex: 2"
-            color="positive"
-            label="Далее"
-            @click="next"
-        ></q-btn>
-        <q-btn
-            v-if="lesson.active.page?.actions?.main == 'confirm' && lesson.active.page?.header?.form_template !== 'image'"
-            push
-            :loading="isLoading"
-            style="flex: 2"
-            color="primary"
-            label="Ответить"
-            @click="confirm"
-        ></q-btn>
-        <q-btn
-            v-if="lesson.active.page?.actions?.main == 'finish'"
-            push
-            :loading="isLoading"
-            style="flex: 2"
-            color="positive"
-            icon="done_all"
-            label="Завершить"
-            @click="finish"
-        ></q-btn>
+    <q-toolbar class="q-pa-sm" v-if="mainAction">
+      <q-btn
+        push
+        style="flex: 2"
+        :loading="isLoading"
+        :color="mainAction.color"
+        :label="mainAction.label"
+        :icon="mainAction.icon || undefined"
+        @click="mainAction.handler"
+      />
     </q-toolbar>
 
     <q-dialog v-model="confirmDialog"  transition-show="scale" transition-hide="scale" @hide="closeConfirmDialog">
@@ -134,7 +91,36 @@ const props = defineProps({
   pageAnswers: Object,
   rendered: Boolean
 })
+const mainAction = computed(() => {
+  const page = lesson.active.page;
+  if (!page) return null;
 
+  const action = page.actions?.main;
+  const template = page.header?.page_template;
+  const formTemplate = page.header?.form_template;
+
+  const isExcludedTemplate = 
+    ['chat', 'syllables'].includes(template) || 
+    (formTemplate === 'image' && action === 'confirm');
+  const isFinishAction = action === 'finish';
+  
+  const shouldShowToolbar = !isExcludedTemplate || isFinishAction;
+  if (!shouldShowToolbar) return null;
+
+  if (action === 'next') {
+    return { label: 'Далее', color: 'positive', icon: null, handler: next };
+  }
+  
+  if (action === 'confirm') {
+    return { label: 'Ответить', color: 'primary', icon: null, handler: confirm };
+  }
+  
+  if (action === 'finish') {
+    return { label: 'Завершить', color: 'positive', icon: 'done_all', handler: finish };
+  }
+
+  return null;
+});
 const answerPercentage = computed(() => lesson.active.page?.answer?.correct * 100 / lesson.active.page?.answer?.quantity)
 
 const isEmptyAnswer = computed(() => { for (const i in props.pageAnswers) { if (props.pageAnswers[i].value.text === '' || props.pageAnswers[i].value.text === false ) return true } return false })

@@ -1,5 +1,5 @@
 <template>
-  <q-page-container>
+  <q-page-wrapper>
     <q-app-header class="transparent text-white rounded-b-md" reveal :showForce="headerShowForce" contentClass="justify-between">
       <q-btn v-if="route.query.back_link" flat icon="arrow_back"  @click="$router.go(-1);" v:slot="back-button"  @click.stop="playAudio('click')"/>
       <div v-else></div>
@@ -31,7 +31,7 @@
           </q-card-section>
       </q-card>
     </q-page>
-  </q-page-container>
+  </q-page-wrapper>
 </template>
 
 <script setup >

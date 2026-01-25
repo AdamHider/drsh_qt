@@ -24,7 +24,7 @@
               </q-item>
             </q-list>
         </q-card-section>
-          <q-separator/>
+        <q-separator/>
         <q-card-section class="q-py-sm">
           <div >
               <div class="text-subtitle2"><b>Период</b></div>
@@ -34,6 +34,25 @@
               <q-item tag="label" class="q-pa-none" v-for="(option, optionKey) in formData.fields.time_period.options" :key="optionKey" :name="option.value" dense>
                 <q-item-section avatar>
                   <q-radio v-model="formData.fields.time_period.value" :val="option.value"/>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>
+                    <b>{{ option.label }}</b>
+                  </q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+        </q-card-section>
+          <q-separator/>
+        <q-card-section class="q-py-sm">
+          <div >
+              <div class="text-subtitle2"><b>Места</b></div>
+              <div class="text-caption text-grey">Какой диапазон мест показывать</div>
+            </div>
+            <q-list >
+              <q-item tag="label" class="q-pa-none" v-for="(option, optionKey) in formData.fields.place_range.options" :key="optionKey" :name="option.value" dense>
+                <q-item-section avatar>
+                  <q-radio v-model="formData.fields.place_range.value" :val="option.value"/>
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>
@@ -97,6 +116,23 @@ const formData = reactive({
         }
       ]
     },
+    place_range: {
+      value: 'all',
+      options: [
+        {
+          label: 'Показывать всех',
+          value: 'all'
+        },
+        {
+          label: 'Топ-10',
+          value: '10'
+        },
+        {
+          label: 'Топ-30',
+          value: '30'
+        }
+      ]
+    }
   }
 })
 
@@ -104,6 +140,10 @@ const prepareFilter = () => {
   const result = {};
   for(var i in formData.fields){
     result[i] = formData.fields[i].value
+    if(i == 'place_range' &&  formData.fields[i].value !== 'all'){
+      result.place_start = 4
+      result.place_end = formData.fields[i].value
+    } 
   }
   return result;
 }

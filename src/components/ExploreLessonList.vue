@@ -82,35 +82,56 @@ const fetchLessons = async (page) => {
   }
   return await api.explore.getList(params)
 }
-
 const refreshList = async () => {
+  if (loading.value) return
+  
   loading.value = true
-  hasMore.value = true
-  currentPage.value = 1
+  
+  // Если страниц еще нет, начинаем с первой
+  const pageToRefresh = currentPage.value || 1
+  
+  // Рассчитываем, сколько элементов нам нужно загрузить, чтобы покрыть весь текущий список
+  // Например, если были на 3-й странице: 3 * 12 = 36 элементов.
+  const totalToFetch = pageToRefresh * itemsPerPage
 
-  const data = await fetchLessons(1)
-
-  if (data.error || !Array.isArray(data)) {
-    lessons.value = []
-    hasMore.value = false
-  } else {
-    lessons.value = data
-    if (data.length < itemsPerPage) hasMore.value = false
+  const params = {
+    ...props.filter,
+    type: props.filter?.type || 'all',
+    page: 1, // Всегда берем с начала
+    limit: totalToFetch // Но увеличиваем лимит до текущего размера списка
   }
-  loading.value = false
-}
 
+  try {
+    const data = await api.explore.getList(params)
+
+    if (data.error || !Array.isArray(data)) {
+      // Оставляем старый список, если пришла ошибка (опционально)
+    } else {
+      lessons.value = data
+      // Проверяем, есть ли смысл грузить дальше
+      hasMore.value = data.length >= totalToFetch
+      // Важно: currentPage НЕ сбрасываем, он остается прежним
+    }
+  } catch (e) {
+    console.error("Refresh failed", e)
+  } finally {
+    loading.value = false
+  }
+}
 const onLoadNextPage = async (index, done) => {
-  if (!hasMore.value) {
+  // Защита от дублирующих запросов, пока идет refreshList
+  if (!hasMore.value || loading.value) {
     done()
     return
   }
+
   const nextPage = currentPage.value + 1
   const data = await fetchLessons(nextPage)
+
   if (data.error || !Array.isArray(data) || data.length === 0) {
     hasMore.value = false
   } else {
-    lessons.value = lessons.value.concat(data)
+    lessons.value = [...lessons.value, ...data] // Лучше использовать spread для реактивности
     currentPage.value = nextPage
     if (data.length < itemsPerPage) hasMore.value = false
   }
@@ -144,6 +165,8 @@ onActivated(() => {
   refreshList()
 })
 watch(() => props.filter, () => {
+  currentPage.value = 0     // Очищаем старые результаты
+  lessons.value = []
   refreshList()
 }, { deep: true })
 

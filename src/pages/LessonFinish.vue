@@ -219,12 +219,14 @@ const open = async (lessonId) => {
 }
 const next = async () => {
   playAudio('click')
+  
   if(lesson.active.next_lessons.length > 0){
     if(!lesson.active.parent_id && nextLesson.value.parent_id !== lesson.active.id){
       router.go(-2)
       return
     } else {
       setTarget(nextLesson.value.id)
+      router.go(-1)
     }
   } else if(lesson.active.type == 'training') {
     router.go(-1)

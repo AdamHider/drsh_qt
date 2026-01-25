@@ -5,115 +5,140 @@
       <div class="text-caption text-grey">Все предложения обновляются каждый день.</div>
     </div>
   <q-list v-if="marketOffers?.length > 0">
-    <q-card class="q-push q-ma-md rounded-md" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOffer${marketOfferIndex}`" @click="openModal(marketOffer)">
-      <q-card-section class="q-pa-none">
-        <q-item class="q-py-none" style="text-shadow: 0px 1px 2px black;">
-          <q-item-section avatar style="margin-top: -10px">
-            <q-img width="80px" :src="marketOffer.seller.avatar"/>
+    <q-card flat class="text-white q-ma-md rounded-md" v-for="(marketOffer, marketOfferIndex) in marketOffers" :key="`marketOffer${marketOfferIndex}`" @click="openModal(marketOffer)">
+      <q-card-section class="q-pa-none"  :style="{
+          backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url(${marketOffer.seller.background_image})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 60%',
+          paddingBottom: '20px'
+        }">
+        <q-item class="q-py-none">
+          <q-item-section avatar style="width: 100px">
+            <q-img width="90px" class="absolute-bottom" :src="marketOffer.seller.avatar" style="left: 10px"/>
           </q-item-section>
-          <q-item-section class="q-py-sm">
-            <div class="text-bold">{{marketOffer.seller.name}}</div>
+          <q-item-section class="q-py-md">
+            <div class="text-bold text-shadow" >{{marketOffer.seller.name}}</div>
             <div>
               <span v-if="marketOffer.type == 'exchange'">
-                <q-chip class="q-ma-none" color="orange-1" text-color="orange" icon="sync" size="12px"><b>Обмен</b></q-chip>
+                <q-chip class="q-ma-none" color="orange-1" text-color="orange-9" icon="sync" size="12px"><b>Обмен</b></q-chip>
               </span>
               <span  v-if="marketOffer.type == 'purchase'">
-                <q-chip class="q-ma-none" color="blue-1" text-color="blue" icon="shopping_cart" size="12px"><b>Продажа</b></q-chip>
+                <q-chip class="q-ma-none" color="blue-1" text-color="blue-9" icon="shopping_cart" size="12px"><b>Продажа</b></q-chip>
               </span>
-              <span v-if="marketOffer.last_rate < marketOffer.current_rate">
-                <q-chip class="q-ml-xs q-px-sm" color="red-1" text-color="negative" size="12px">
-                  <q-icon name="trending_up" size="18px"/>
+              <span v-if="marketOffer.is_discount">
+                <q-chip class="q-ml-xs q-px-sm" color="positive" text-color="white" size="12px" icon="star">
+                  <b>{{ marketOffer.current_rate_percentage_text }}</b>
                 </q-chip>
               </span>
-              <span v-else>
-                <q-chip class="q-ml-xs q-px-sm" color="green-1" text-color="positive" size="12px">
-                  <q-icon name="trending_down" size="18px"/>
+              <span v-else-if="marketOffer.current_rate_percentage > 0">
+                <q-chip class="q-ml-xs q-px-sm" color="red-1" text-color="negative" size="12px" icon="trending_up">
+                  <b>{{ marketOffer.current_rate_percentage_text }}</b>
+                </q-chip>
+              </span>
+              <span v-else-if="marketOffer.current_rate_percentage < 0">
+                <q-chip class="q-ml-xs q-px-sm" color="green-1" text-color="positive" size="12px" icon="trending_down">
+                  <b>{{ marketOffer.current_rate_percentage_text }}</b>
                 </q-chip>
               </span>
             </div>
           </q-item-section>
           <q-item-section side>
-            <q-icon name="chevron_right"/>
+            <q-icon color="white" name="chevron_right"/>
           </q-item-section>
         </q-item>
       </q-card-section>
-      <q-separator  />
-      <q-card-section horizontal class=" q-pa-none">
-        <q-card-section class="full-width full-height q-pt-sm q-pb-xs">
-          <div class="text-sm text-grey">{{ marketOffer.seller.name }} предлагает:</div>
-        </q-card-section>
-        <q-separator vertical/>
-        <q-card-section class="full-width text-right full-height q-pt-sm q-pb-xs">
-          <div class="text-sm text-grey">{{ marketOffer.seller.name }} хочет взамен:</div>
-        </q-card-section>
-      </q-card-section>
-      <q-card-section horizontal class="items-center q-pa-none">
-        <q-card-section class="full-width full-height q-pt-none q-pb-sm">
-          <div class="column items-start q-gutter-xs">
-            <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="resourceIndex" >
-              <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'" size="18px" push/>
-            </div>
-          </div>
-        </q-card-section>
-        <q-separator vertical/>
-        <q-card-section class="full-width full-height q-pt-none q-pb-sm">
-          <div  class="column items-end justify-center full-height q-gutter-xs">
-            <div v-for="(resource, resourceIndex) in marketOffer.cost" :key="resourceIndex" >
-              <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'"  size="18px" push/>
-            </div>
-          </div>
-        </q-card-section>
+      <q-card-section class=" q-pa-none" style="margin-top: -20px">
+        <q-card class="q-push">
+          <q-card-section horizontal class=" q-pa-none">
+            <q-card-section class="full-width full-height q-pt-sm q-pb-xs">
+              <div class="text-sm text-grey">{{ marketOffer.seller.name }} предлагает:</div>
+            </q-card-section>
+            <q-separator vertical/>
+            <q-card-section class="full-width text-right full-height q-pt-sm q-pb-xs">
+              <div class="text-sm text-grey">{{ marketOffer.seller.name }} хочет взамен:</div>
+            </q-card-section>
+          </q-card-section>
+          <q-card-section horizontal class="items-center q-pa-none">
+            <q-card-section class="full-width full-height q-pt-none q-pb-sm">
+              <div class="column items-start q-gutter-xs">
+                <div v-for="(resource, resourceIndex) in marketOffer.reward" :key="resourceIndex" >
+                  <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'" size="18px" push/>
+                </div>
+              </div>
+            </q-card-section>
+            <q-separator vertical/>
+            <q-card-section class="full-width full-height q-pt-none q-pb-sm">
+              <div  class="column items-end justify-center full-height q-gutter-xs">
+                <div v-for="(resource, resourceIndex) in marketOffer.cost" :key="resourceIndex" >
+                  <UserResourceBar :resource="resource" dense :no-caption="marketOffer.type !== 'exchange'" :no-value="marketOffer.type == 'exchange'"  size="18px" push/>
+                </div>
+              </div>
+            </q-card-section>
+          </q-card-section>
+        </q-card>
       </q-card-section>
     </q-card>
   </q-list>
   <q-dialog v-model="claimDialog"  position="bottom"  @hide="currentOffer = false; buttonLoading = false;">
-        <div class="row">
-          <div class="col-6">
-              <img  :src="`${currentOffer.seller.image}?w=150`" style="z-index: -1;float: right;"/>
-          </div>
-        </div>
+      
       <q-card class="text-center q-pb-sm allow-overflow rounded-b-0 relative-position">
         <div class="absolute-top text-right" style="top: -10px; right: 10px; z-index: 1" >
           <q-btn push color="negative" class="text-bold" @click="claimDialog = false" @click.stop="playAudio('click')" icon="close"></q-btn>
         </div>
-
-        <q-card-section class="text-left">
-          <div v-if="currentOffer.type == 'exchange'" class="text-text-subtitle1 text-center text-orange"><b>Обмен ресурсами</b></div>
-          <div v-else class="text-text-subtitle1 text-center text-blue"><b>Продажа ресурсов</b></div>
-          <div class="text-h6"><b>{{ currentOffer.seller.name }}</b></div>
-          <div class="text-caption">{{ currentOffer.seller.description }}</div>
-          <div>
-            <span v-if="currentOffer.last_rate < currentOffer.current_rate">
-              <q-chip class="q-ml-none" color="red-1" text-color="negative" icon="trending_up" size="12px">
-                <b v-if="currentOffer.type == 'exchange'">Курс растёт</b>
-                <b v-else>Цена растёт</b>
-              </q-chip>
-            </span>
-            <span v-else>
-              <q-chip class="q-ml-none" color="green-1" text-color="positive" icon="trending_down" size="12px">
-                <b v-if="currentOffer.type == 'exchange'">Курс падает</b>
-                <b v-else>Цена падает</b>
-              </q-chip>
-            </span>
-          </div>
+        <q-card-section horizontal class="relative-position text-left rounded-t-md q--avoid-card-border" :style="{
+          backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url(${currentOffer.seller.background_image})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 60%',
+        }">
+          <q-card-section class="col-4">
+            <img class="absolute-bottom" width="170px" :src="`${currentOffer.seller.image}?w=170`" style="z-index: 1; left: -30px"/>
+          </q-card-section>
+          <q-card-section class="text-white q-mb-md">
+            <div v-if="currentOffer.type == 'exchange'" class="text-text-subtitle1 text-orange-3"><b>Обмен ресурсами</b></div>
+            <div v-else class="text-text-subtitle1 text-blue-3"><b>Продажа ресурсов</b></div>
+            <div class="text-h6 text-shadow"><b>{{ currentOffer.seller.name }}</b></div>
+            <div class="text-caption text-shadow">{{ currentOffer.seller.description }}</div>
+            <div>
+              <span v-if="currentOffer.is_discount">
+                <q-chip class="q-ml-none" color="positive" text-color="white" icon="star" size="12px">
+                  <b v-if="currentOffer.type == 'exchange'">Распродажа</b>
+                  <b v-else>Распродажа</b>
+                  <b class="q-ml-xs">({{ currentOffer.current_rate_percentage_text }})</b>
+                </q-chip>
+              </span>
+              <span v-else-if="currentOffer.current_rate_percentage > 0">
+                <q-chip class="q-ml-none" color="red-1" text-color="negative" icon="trending_up" size="12px">
+                  <b v-if="currentOffer.type == 'exchange'">Высокая цена</b>
+                  <b v-else>Высокая цена</b>
+                  <b class="q-ml-xs">({{ currentOffer.current_rate_percentage_text }})</b>
+                </q-chip>
+              </span>
+              <span v-else-if="currentOffer.current_rate_percentage < 0">
+                <q-chip class="q-ml-none" color="green-1" text-color="positive" icon="trending_down" size="12px">
+                  <b v-if="currentOffer.type == 'exchange'">Низкая цена</b>
+                  <b v-else>Низкая цена</b>
+                  <b class="q-ml-xs">({{ currentOffer.current_rate_percentage_text }})</b>
+                </q-chip>
+              </span>
+            </div>
+          </q-card-section>
         </q-card-section>
-        <q-separator/>
-        <q-card-actions v-if="currentOffer.type == 'exchange'">
+        <q-card-actions v-if="currentOffer.type == 'exchange'" class="bg-white relative-position rounded-t q--avoid-card-border" style="margin-top: -20px; z-index: 10">
           <q-card  flat class="bg-grey-3 full-width">
             <q-card-section horizontal>
-              <q-card-section class="full-width full-height ">
-                <div class="q-mb-sm"><b>Ты получишь:</b></div>
-                <div class="flex justify-center q-gutter-xs">
-                  <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" class="flex no-wrap items-center justify-between">
+              <q-card-section class="full-width full-height q-pt-sm">
+                <div class="q-mb-sm"><b>Ты отдашь:</b></div>
+                <div  class="">
+                  <div v-for="(resource, resourceIndex) in currentOffer.cost" :key="resourceIndex" class="flex items-center justify-center">
                     <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
                   </div>
                 </div>
               </q-card-section>
               <q-separator vertical/>
-              <q-card-section class="full-width full-height">
-                <div class="q-mb-sm"><b>Ты отдашь:</b></div>
-                <div  class="">
-                  <div v-for="(resource, resourceIndex) in currentOffer.cost" :key="resourceIndex" class="flex items-center justify-center">
+              <q-card-section class="full-width full-height q-pt-sm">
+                <div class="q-mb-sm"><b>Ты получишь:</b></div>
+                <div class="flex justify-center q-gutter-xs">
+                  <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" class="flex no-wrap items-center justify-between">
                     <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
                   </div>
                 </div>
@@ -125,13 +150,11 @@
               <div class="full-width text-center">
                 <div class="text-sm text-grey"><q-icon size="16px" name="swipe"/> Прокрути, чтобы изменить количество</div>
               </div>
-
             </q-card-actions>
-
           </q-card>
-          <q-btn push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" @click="createExchange()" @click.stop="playAudio('click')" icon="sync">Обменять</q-btn>
+          <q-btn push color="primary" class="full-width text-bold q-mt-sm q-item-blinking" :disabled="exchangeDisabled" @click="createExchange()" @click.stop="playAudio('click')" icon="sync">Обменять</q-btn>
         </q-card-actions>
-        <q-card-actions v-if="currentOffer.type == 'purchase'">
+        <q-card-actions v-if="currentOffer.type == 'purchase'"  class="bg-white relative-position rounded-t q--avoid-card-border" style="margin-top: -20px; z-index: 10">
           <q-card  flat class="bg-grey-3 full-width">
             <q-card-section class="full-width full-height ">
               <div class="q-mb-sm"><b>{{ currentOffer.seller.name }} предлагает:</b></div>
@@ -202,6 +225,8 @@ const emits = defineEmits(['onAction'])
 
 const marketOffers = ref([])
 const error = ref(false)
+const exchangeDisabled = ref(false)
+
 const paymentDialog = ref(false)
 const currentOffer = ref({})
 const confirmationToken = ref(false)
@@ -223,8 +248,15 @@ const load = async () => {
   marketOffers.value = marketOfferListResponse
 }
 const calculateExchange = (value) => {
+  let allZero = true
   for(var i in currentOffer.value.reward){
-    currentOffer.value.reward[i].quantity = Math.round(value * currentOffer.value.current_rate);
+    currentOffer.value.reward[i].quantity = Math.floor(value * currentOffer.value.current_rate);
+    if(currentOffer.value.reward[i].quantity > 0) allZero = false 
+  }
+  if(allZero) {
+    exchangeDisabled.value = true
+  } else {
+    exchangeDisabled.value = false
   }
 }
 
@@ -234,8 +266,9 @@ const openModal = function (offer) {
   if(currentOffer.value.type == 'exchange'){
     for(var i in currentOffer.value.cost){
       currentOffer.value.cost[i].quantity_cost = user.active?.data.resources[currentOffer.value.cost[i].code].quantity*1
+      currentOffer.value.cost[i].quantity = 1
     }
-
+    calculateExchange(1)
   }
   claimDialog.value = true
 }

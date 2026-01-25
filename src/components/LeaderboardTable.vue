@@ -25,12 +25,12 @@
             ref="virtualScrollRef"
           >
             <template v-slot:before>
-              <div style="position: sticky; top: 0; z-index: 1;" class="bg-white" v-if="userRow.place > 3">
+              <div style="position: sticky; top: 0; z-index: 1;" class="bg-white" v-if="userRow?.place > 3">
                 <LeaderboardTableItem v-if="!state.userIsVisible && state.userIsAbove" :item="userRow" :index="-1"/>
               </div>
             </template>
             <template v-slot="{ item, index }">
-              <div :style="(item.is_active) ? 'position: sticky; bottom: 5px; top: 0; z-index: 1;' : ''" :index="index" :key="`itemIndex${index}`">
+              <div :style="(item.is_active) ? 'position: sticky; bottom: 5px; top: 0; z-index: 1;' : ''" :index="index" :key="`itemRowIndex${item.place}`">
                 <LeaderboardTableItem v-if="!item.is_border" :item="item" />
                 <q-item v-else>
                   <q-item-section side>
@@ -50,7 +50,7 @@
               </div>
             </template>
             <template v-slot:after>
-              <div style="position: sticky; bottom: 5px; z-index: 1;" class="bg-white" v-if="userRow.place > 3">
+              <div style="position: sticky; bottom: 5px; z-index: 1;" class="bg-white" v-if="userRow?.place > 3">
                 <LeaderboardTableItem v-if="!state.userIsVisible && state.userIsBelow" :item="userRow" :index="-1"/>
               </div>
             </template>
