@@ -40,6 +40,11 @@
                   <b>{{ marketOffer.current_rate_percentage_text }}</b>
                 </q-chip>
               </span>
+              <span v-else>
+                <q-chip class="q-ml-xs q-px-sm" color="yellow-1" text-color="orange" size="12px" >
+                  <b>0%</b>
+                </q-chip>
+              </span>
             </div>
           </q-item-section>
           <q-item-section side>
@@ -120,6 +125,13 @@
                   <b class="q-ml-xs">({{ currentOffer.current_rate_percentage_text }})</b>
                 </q-chip>
               </span>
+              <span v-else>
+                <q-chip class="q-ml-none" color="yellow-1" text-color="orange" size="12px">
+                  <b>Обычная цена</b>
+                  <b class="q-ml-xs">(0%)</b>
+                </q-chip>
+              </span>
+              
             </div>
           </q-card-section>
         </q-card-section>

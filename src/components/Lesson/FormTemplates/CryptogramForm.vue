@@ -219,6 +219,8 @@ watch(formData.fields, (newValue, oldValue) => {
     display: block;
     text-align: center;
     height: auto;
+  }
+  &:not(.is-question){
     background: none !important;
     box-shadow: none !important;
     border: none;

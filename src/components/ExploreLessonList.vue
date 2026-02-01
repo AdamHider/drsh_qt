@@ -29,6 +29,8 @@
               <div class="chip-container ">
                 <div><q-chip v-bind="getLessonStatus(lesson)" class="q-mx-none q-mb-none text-bold" size="11px" text-color="white"/></div>
                 <div><q-chip v-if="getLessonType(lesson)" v-bind="getLessonType(lesson)" class="q-mx-none q-mb-none text-bold" size="11px" text-color="white" /></div>
+                <div><q-chip v-if="lesson.is_new" class="q-mx-none q-mb-none text-bold" color="gradient-blue" size="11px" text-color="white" icon="star">Новинка</q-chip></div>
+                <div><q-chip v-if="lesson.is_premium && lesson.is_blocked" class="q-mx-none q-mb-none text-bold" color="light-gradient-green" size="11px" text-color="white" icon="diamond">Премиум</q-chip></div>
                 <div><ExploreDailyTimer v-if="lesson.is_daily"/></div>
               </div>
             </q-card-section>
@@ -165,7 +167,7 @@ onActivated(() => {
   refreshList()
 })
 watch(() => props.filter, () => {
-  currentPage.value = 0     // Очищаем старые результаты
+  currentPage.value = 0  
   lessons.value = []
   refreshList()
 }, { deep: true })

@@ -73,7 +73,7 @@ onMounted(() => emits('onRendered', true))
   vertical-align: middle;
   display: inline-block;
   position: relative;
-  width: 30px;
+  width: 25px;
   box-shadow: none;
   min-height: 2.3em;
   &:before{
