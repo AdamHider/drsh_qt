@@ -96,7 +96,7 @@
           backgroundPosition: 'center 60%',
         }">
           <q-card-section class="col-4">
-            <img class="absolute-bottom" width="170px" :src="`${currentOffer.seller.image}?w=170`" style="z-index: 1; left: -30px"/>
+            <img class="absolute-bottom" width="170px" :src="`${currentOffer.seller.image}?w=270`" style="z-index: 1; left: -30px"/>
           </q-card-section>
           <q-card-section class="text-white q-mb-md">
             <div v-if="currentOffer.type == 'exchange'" class="text-text-subtitle1 text-orange-3"><b>Обмен ресурсами</b></div>
@@ -197,18 +197,23 @@
             @onPaymentFail="onPaymentFail"/>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="paymentSuccessDialog" position="bottom" >
+    <q-dialog v-model="paymentSuccessDialog" position="bottom" @hide="claimDialog = false">
         <q-card class="full-width q-push text-center">
           <q-card-section >
             <div class="text-subtitle1"><b>Спасибо за покупку!</b></div>
-            <div class="text-caption">Все прошло успешно, а ресурсы начислены!</div>
+            <div class="text-caption">Полученные ресурсы:</div>
+              <div class="flex justify-center q-gutter-xs q-mt-sm">
+                <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" class="flex no-wrap items-center justify-between">
+                  <UserResourceBar class="q-ml-sm" :resource="resource" dense no-caption size="26px" push/>
+                </div>
+              </div>
           </q-card-section>
         <q-card-actions>
           <q-btn push class="full-width" color="primary" v-close-popup>Хорошо</q-btn>
         </q-card-actions>
         </q-card>
       </q-dialog>
-      <q-dialog v-model="paymentFailDialog">
+      <q-dialog v-model="paymentFailDialog" @hide="claimDialog = false">
         <q-card class="full-width q-push text-center">
           <q-card-section >
             <div class="text-subtitle1"><b>Что-то пошло не так!</b></div>
@@ -293,11 +298,10 @@ const createExchange = async () => {
   const exchangeCreatedResponse = await api.market.createExchange(data)
   if (exchangeCreatedResponse.error) {
     error.value = exchangeCreatedResponse
+    onPaymentFail()
+    return;
   }
-  await load()
-  emits('onAction')
-  buttonLoading.value = false
-  claimDialog.value = false
+  onPaymentSuccess()
 }
 const simplifyResources = (code) => {
   const result = {}
