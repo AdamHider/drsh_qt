@@ -1,22 +1,22 @@
 <template>
   <q-page-container>
-    <q-app-header class="transparent text-white">
+    <q-app-header>
         <q-btn flat round dense icon="arrow_back" @click="formData.step--" v:slot="back-button" @click.stop="playAudio('click')"></q-btn>
         <q-toolbar-title></q-toolbar-title>
     </q-app-header>
-    <q-page class="flex justify-center items-end full-height full-width text-center" style="padding-top: 50px">
+    <q-page class="flex justify-center items-center full-height full-width text-center bg-white q-pa-sm" style="padding-top: 50px">
       <q-form
         ref="form"
         v-model="formData.valid"
         @submit.prevent="null"
         autocomplete="off"
         class="full-width q-desc-mx-quart">
-        <q-card v-if="formData.step == 1" class="rounded-b-0">
+        <q-card v-if="formData.step == 1" flat>
           <q-card-section>
               <div class="text-h6"><b>Ваш логин</b></div>
               <div class="text-grey">Это может быть имя, никнейм или адрес электронной почты</div>
           </q-card-section>
-          <q-card-section>
+          <q-card-section class="q-px-sm">
             <q-input
               standout
               v-model="formData.fields.username.value"
@@ -44,13 +44,13 @@
                 color="primary" @click.stop="playAudio('click')"><b>Продолжить</b></q-btn>
           </q-card-actions>
         </q-card>
-        <q-card v-if="formData.step == 2" class="rounded-b-0">
+        <q-card v-if="formData.step == 2" flat>
           <div v-if="!passwordResetDialog">
             <q-card-section>
                 <div class="text-h6"><b>Ваш пароль</b></div>
                 <div class="text-grey">Тот самый, который вы придумали, когда регистрировались</div>
             </q-card-section>
-            <q-card-section>
+            <q-card-section class="q-px-sm">
               <q-input
                   standout
                   v-model="formData.fields.password.value"
@@ -115,7 +115,7 @@
                 <div class="text-caption">Мы отправили ссылку на указанную почту. Перейди по ней и создай новый пароль.</div>
             </q-card-section>
             <q-card-actions  v-if="!resetSent">
-                <q-btn push color="primary" class="full-width" @click="resetPassword()" :disabled="emailInput.hasError" @click.stop="playAudio('click')"><b>Отправить</b></q-btn>
+                <q-btn push color="primary" class="full-width" @click="resetPassword()" :disabled="formData.fields.email.errors.length > 0" @click.stop="playAudio('click')"><b>Отправить</b></q-btn>
             </q-card-actions>
           </q-card>
       </q-dialog>
@@ -171,7 +171,8 @@ const formData = reactive({
       rules: [
         v => v === null || (v !== null && ((/.+@.+\..+/.test(v)))) || 'Электронная почта должна быть корректной'
       ],
-      errors: ''
+      errors: '',
+      isError: false
     },
   }
 })

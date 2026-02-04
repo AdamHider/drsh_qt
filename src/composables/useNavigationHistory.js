@@ -35,7 +35,7 @@ const routes = reactive({
   market: {
     link: '/market',
     is_updated: false,
-    label: 'Уведомления',
+    label: 'Базар',
     hash: ''
   },
   user: {

@@ -3,7 +3,7 @@ const tutorial = reactive({
   status: false,
   index: 0,
   active: {},
-  total: 9,
+  total: 11,
   tutorialEnd: false
 })
 

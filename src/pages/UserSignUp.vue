@@ -1,10 +1,10 @@
 <template>
   <q-page-container>
-    <q-app-header class="transparent text-white">
+    <q-app-header>
         <q-btn flat round dense icon="arrow_back" @click="formData.step--" v:slot="back-button" @click.stop="playAudio('click')"></q-btn>
         <q-toolbar-title></q-toolbar-title>
     </q-app-header>
-    <q-page class="flex justify-center items-end full-height full-width text-center" style="padding-top: 50px">
+    <q-page class="flex justify-center items-center full-height full-width text-center bg-white q-pa-sm" style="padding-top: 50px">
       <q-form
         v-if="!mainStoryDialog"
         ref="form"
@@ -12,7 +12,7 @@
         @submit.prevent="validate()"
         autocomplete="off"
         class="full-width full-height column justify-end q-desc-mx-quart">
-          <q-card v-if="formData.step == 1" class="ful-width rounded-b-0">
+          <q-card v-if="formData.step == 1" class="ful-width " flat>
             <q-card-section>
               <div class="text-h6"><b>Создание нового героя</b></div>
               <div class="text-grey">Создайте своего героя и начните приключение</div>
@@ -28,12 +28,12 @@
               <div class="text-caption text-grey q-py-sm">Продолжая, вы соглашаетесь с <a class="cursor-pointer" @click="termsDialog = true;" @click.stop="playAudio('click')">нашими правилами</a>.</div>
             </q-card-actions>
           </q-card>
-          <q-card v-else-if="formData.step == 2" class="ful-width rounded-b-0">
+          <q-card v-else-if="formData.step == 2" flat class="ful-width">
             <q-card-section>
               <div class="text-h6"><b>Как зовут героя?</b></div>
               <div class="text-grey">Придумай имя для своего героя</div>
             </q-card-section>
-            <q-card-section>
+            <q-card-section class="q-px-sm">
               <q-input
                 v-model="formData.fields.name.value"
                 :rules="formData.fields.name.rules"
@@ -62,12 +62,12 @@
                   @click.stop="playAudio('click')"/>
             </q-card-actions>
           </q-card>
-          <q-card v-else-if="formData.step == 3" class="ful-width rounded-b-0">
+          <q-card v-else-if="formData.step == 3" flat class="ful-width">
             <q-card-section>
               <div class="text-h6"><b>Мальчик или девочка?</b></div>
               <div class="text-grey">Этот выбор нельзя будет изменить</div>
             </q-card-section>
-            <q-card-section>
+            <q-card-section class="q-px-sm">
               <q-btn-toggle
                 v-model="formData.fields.gender.value"
                 :rules="formData.fields.gender.rules"
@@ -101,12 +101,12 @@
                   label="Продолжить" @click.stop="playAudio('click')"/>
             </q-card-actions>
           </q-card>
-          <q-card v-else-if="formData.step == 4" class="ful-width rounded-b-0">
+          <q-card v-else-if="formData.step == 4" flat class="ful-width">
             <q-card-section>
               <div class="text-h6"><b>Придумай пароль</b></div>
               <div class="text-grey">Он нужен для того, чтобы в любой момент продолжить путешествие</div>
             </q-card-section>
-            <q-card-section>
+            <q-card-section  class="q-px-sm">
               <q-input
                 standout
                 v-model="formData.fields.password.value"
@@ -134,12 +134,12 @@
                   label="Продолжить" @click.stop="playAudio('click')" />
             </q-card-actions>
           </q-card>
-          <q-card v-else-if="formData.step == 5" class="ful-width rounded-b-0">
+          <q-card v-else-if="formData.step == 5" flat class="ful-width">
             <q-card-section>
               <div class="text-h6"><b>Повтори пароль</b></div>
               <div class="text-grey">И убедись, что помнишь его</div>
             </q-card-section>
-            <q-card-section>
+            <q-card-section class="q-px-sm">
               <q-input
                 standout
                 v-model="formData.fields.passwordConfirm.value"

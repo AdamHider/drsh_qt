@@ -22,7 +22,7 @@
                 </q-item-section>
             </q-item>
         </q-card-section>
-        <q-card-section>
+        <q-card-section class="q-pt-none">
           <q-form
             ref="form"
             v-model="formData.valid"
@@ -68,7 +68,6 @@
               </q-item-section>
               <q-item-section avatar>
                 <q-toggle
-                  color="blue"
                   false-value="0"
                   true-value="1"
                   @click.stop="playAudio('click')"
@@ -82,7 +81,6 @@
               </q-item-section>
               <q-item-section avatar>
                 <q-toggle disable
-                  color="blue"
                   false-value="0"
                   true-value="1"
                   v-model="formData.fields.musicFX.value" @update:model-value="saveSetting('musicFX', formData.fields.musicFX.value)"/>

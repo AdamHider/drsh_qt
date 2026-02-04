@@ -64,13 +64,13 @@
         </div>
         <div class="relative-position">
           <q-tutorial-item title="Уведомления" description="На этой странице виден список уведомлений." :index="6" :positionFixed="{bottom: 50, left: 0}"/>
-          <q-item :to="routes.notifications.link" exact replace style="opacity: 1;" class="rounded-sm q-my-xs" active-class="q-push bg-light-gradient-primary-to-right text-white">
+          <q-item :to="routes.market.link" exact replace style="opacity: 1;" class="rounded-sm q-my-xs" active-class="q-push bg-light-gradient-primary-to-right text-white">
             <q-item-section avatar>
-              <q-img :src="`/icons/notifications${(routes.notifications.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
+              <q-img :src="`/icons/market${(routes.market.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             </q-item-section>
-            <q-item-section><b>{{ routes.notifications.label }}</b></q-item-section>
+            <q-item-section><b>{{ routes.market.label }}</b></q-item-section>
             <q-item-section side>
-              <q-badge v-show="routes.notifications.is_updated" color="red" rounded/>
+              <q-badge v-show="routes.market.is_updated" color="red" rounded/>
             </q-item-section>
           </q-item>
         </div>
@@ -128,8 +128,8 @@ const checkActive = () => {
 watch(() => notifications.value.level, () => {
   routes.user.is_updated = true
 })
-watch(() => notifications.value.notifications, () => {
-  routes.notifications.is_updated = true
+watch(() => notifications.value.market, () => {
+  routes.market.is_updated = true
 })
 watch(() => notifications.value.skills, () => {
   routes.skills.is_updated = true

@@ -7,7 +7,7 @@
             <q-btn flat round dense icon="person_add" @click="inviteDialog = true"  @click.stop="playAudio('click')">
               <q-badge v-if="invitationAvailable > 0" color="positive" floating><b>{{ invitationAvailable }}</b></q-badge>
             </q-btn>
-            <q-tutorial-item title="Пригласить друзей" description="Здесь можно пригласить друзей и получить большой подарок за каждого." :index="5" position="bottom" positionInline="right"/>
+            <q-tutorial-item title="Пригласить друзей" description="Здесь можно пригласить друзей и получить большой подарок за каждого." :index="6" position="bottom" positionInline="right"/>
           </div>
           <q-btn flat round dense icon="settings" class="q-mr-sm" to="/user/settings"  @click.stop="playAudio('click')">
           </q-btn>
@@ -98,7 +98,7 @@
                   </div>
               </q-card-section>
               <div class="relative-position">
-                <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
+                <q-tutorial-item title="Серия" description="Здесь отображается твоя ежедневная серия." :index="2" position="top"/>
                 <q-card-section class="q-py-none q-pt-sm">
                     <div class="text-subtitle1"><b>Ежедневная серия</b></div>
                 </q-card-section>
@@ -107,7 +107,7 @@
                 </q-card-section>
               </div>
               <div class="relative-position">
-                <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="2" position="top"/>
+                <q-tutorial-item title="Ресурсы" description="Здесь отображается количество твоих ресурсов, которые нужны для исследований." :index="3" position="top"/>
                 <q-card-section class="q-py-none q-pt-sm">
                     <div class="text-subtitle1"><b>Ресурсы</b></div>
                 </q-card-section>
@@ -129,7 +129,7 @@
                 </q-card-section>
               </div>
               <div class="relative-position">
-                <q-tutorial-item title="Эффекты" description="Здесь отображаются эффекты, которые помогают или мешают исследованию галактики." :index="3" position="top"/>
+                <q-tutorial-item title="Эффекты" description="Здесь отображаются эффекты, которые помогают или мешают исследованию галактики." :index="4" position="top"/>
                 <q-card-section class="q-py-none q-pt-sm">
                     <div class="text-subtitle1"><b>Активные эффекты</b></div>
                 </q-card-section>
@@ -138,7 +138,7 @@
                 </q-card-section>
               </div>
               <div class="relative-position">
-                <q-tutorial-item title="Достижения" description="Здесь будут отображаться заработанные достижения." :index="4" position="top"/>
+                <q-tutorial-item title="Достижения" description="Здесь будут отображаться заработанные достижения." :index="5" position="top"/>
                 <q-card-section class="q-py-none flex justify-between items-center q-pt-sm">
                     <div class="text-subtitle1"><b>Достижения</b></div>
                     <router-link to="/achievements" @click.stop="playAudio('click')">Показать все</router-link>

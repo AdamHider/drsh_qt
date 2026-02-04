@@ -3,7 +3,7 @@
   <div v-if="formData.fields.length > 0" class="q-pa-sm">
     <div v-for="(input, index) in formData.fields" :key="input.index">
       <Teleport :to="`#input_${input.index}`">
-        <div 
+        <div
           tabindex="-1"
           @focus="currentIndex = index; playAudio('click')"
           @click="(formData.fields[index].answer && !formData.fields[index].answer.is_correct) ? input.modal = true : ''"
@@ -201,12 +201,14 @@ watch(formData.fields, (newValue, oldValue) => {
   &.is-correct{
     border: none;
     .q-lesson-field-value{
+      background: $positive !important;
       color: white !important;
     }
   }
   &.is-incorrect{
     border: none;
     .q-lesson-field-value{
+      background: $negative !important;
       color: white !important;
     }
   }
@@ -219,11 +221,11 @@ watch(formData.fields, (newValue, oldValue) => {
     display: block;
     text-align: center;
     height: auto;
-  }
-  &:not(.is-question){
     background: none !important;
-    box-shadow: none !important;
-    border: none;
+    &.is-question{
+      box-shadow: none !important;
+      border: none;
+    }
   }
 }
 

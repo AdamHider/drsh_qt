@@ -6,7 +6,7 @@
     </q-app-header>
     <q-page class="bg-white" style="padding-top: 50px; padding-bottom: 48px;">
       <q-card flat>
-        <q-card-section class="q-py-none">
+        <q-card-section>
           <q-card v-if="lesson"
               :class="`q-push relative-position rounded-md q-pt-sm text-white text-shadow ${lesson.is_blocked ? 'is-blocked' : ''}`"
               :style="`margin-bottom: 30px; background-image: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)), url(${lesson.background_image}); background-size: cover; background-position: center;`">

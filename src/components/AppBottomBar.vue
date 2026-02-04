@@ -11,7 +11,7 @@
     >
       <q-tabs content-class="allow-overflow justify-between">
         <div class="relative-position">
-          <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры, солнечные системы и целые галактики." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-tutorial-item title="Космическая карта" description="Здесь тебе и необходимо исследовать новые миры, солнечные системы и целые галактики." :index="11" :positionFixed="{bottom: 50, left: 0}"/>
           <q-route-tab  :to="`${routes.course.link}`" exact replace @click.stop="playAudio('click')">
             <q-img :src="`/icons/rocket${(routes.course.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             <q-badge v-show="routes.course.is_updated" color="red" rounded floating />
@@ -19,7 +19,7 @@
           </q-route-tab>
         </div>
         <div class="relative-position">
-          <q-tutorial-item title="Открытия" description="На этой странице отображаются ежедневные открытия, планеты и другие небесные тела." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-tutorial-item title="Открытия" description="На этой странице отображаются ежедневные открытия, планеты и другие небесные тела." :index="10" :positionFixed="{bottom: 50, left: 0}"/>
           <q-route-tab :to="routes.explore.link" exact replace  @click.stop="playAudio('click')">
             <q-img :src="`/icons/explore${(routes.explore.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             <q-badge v-show="routes.explore.is_updated" color="red" rounded floating />
@@ -27,7 +27,7 @@
           </q-route-tab>
         </div>
         <div class="relative-position">
-          <q-tutorial-item title="Технологии" description="На этой странице отображаются технологии, помогающие в освоении космоса." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-tutorial-item title="Технологии" description="На этой странице отображаются технологии, помогающие в освоении космоса." :index="9" :positionFixed="{bottom: 50, left: 0}"/>
           <q-route-tab :to="routes.skills.link" replace  @click.stop="playAudio('click')">
             <q-img :src="`/icons/microscope${(routes.skills.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             <q-badge v-show="routes.skills.is_updated" color="red" rounded floating />
@@ -35,13 +35,13 @@
           </q-route-tab>
         </div>
         <div class="relative-position">
-          <q-tutorial-item title="Рейтинг" description="На этой странице можно увидеть свой рейтинг среди других исследователей." :index="7" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-tutorial-item title="Рейтинг" description="На этой странице можно увидеть свой рейтинг среди других исследователей." :index="8" :positionFixed="{bottom: 50, left: 0}"/>
           <q-route-tab  :to="routes.leaderboard.link" exact replace @click.stop="playAudio('click')">
             <q-img :src="`/icons/leaderboard${(routes.leaderboard.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
           </q-route-tab>
         </div>
         <div class="relative-position">
-          <q-tutorial-item title="Уведомления" description="На этой странице виден список уведомлений." :index="6" :positionFixed="{bottom: 50, left: 0}"/>
+          <q-tutorial-item title="Базар" description="На странице базара есть предлежения от торговцев ресурсами." :index="7" :positionFixed="{bottom: 50, left: 0}"/>
           <q-route-tab :to="routes.market.link" exact replace style="opacity: 1;"  @click.stop="playAudio('click')">
             <q-img :src="`/icons/market${(routes.market.is_active) ? '_active' : ''}.svg`" width="32px" no-spinner></q-img>
             <q-badge v-show="routes.market.is_updated" color="red" rounded floating />

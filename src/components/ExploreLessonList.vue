@@ -5,7 +5,7 @@
       <div v-if="lessons.length > 0" class="masonry-container q-pa-md">
         <div
           v-for="(lesson, lessonIndex) in lessons"
-          :key="lesson.id"
+          :key="`lessonIndex${lessonIndex}`"
           class="masonry-item text-center"
           :style="{ gridRowEnd: `span ${lesson.appearance.spans}` }"
         >
@@ -62,7 +62,7 @@ const props = defineProps({ filter: Object })
 const lessons = ref([])
 const loading = ref(false)
 const hasMore = ref(true)
-const currentPage = ref(0)
+const currentPage = ref(1)
 const itemsPerPage = 12
 
 const getCardStyle = (lesson) => {
@@ -84,35 +84,31 @@ const fetchLessons = async (page) => {
   }
   return await api.explore.getList(params)
 }
-const refreshList = async () => {
+const refreshList = async (fromScratch) => {
   if (loading.value) return
-  
+
   loading.value = true
-  
-  // Если страниц еще нет, начинаем с первой
+
   const pageToRefresh = currentPage.value || 1
-  
-  // Рассчитываем, сколько элементов нам нужно загрузить, чтобы покрыть весь текущий список
-  // Например, если были на 3-й странице: 3 * 12 = 36 элементов.
-  const totalToFetch = pageToRefresh * itemsPerPage
+
+  let totalToFetch = itemsPerPage
+  if(fromScratch){
+    totalToFetch = pageToRefresh * itemsPerPage
+  }
 
   const params = {
     ...props.filter,
     type: props.filter?.type || 'all',
-    page: 1, // Всегда берем с начала
-    limit: totalToFetch // Но увеличиваем лимит до текущего размера списка
+    page: 1,
+    limit: totalToFetch
   }
 
   try {
     const data = await api.explore.getList(params)
-
     if (data.error || !Array.isArray(data)) {
-      // Оставляем старый список, если пришла ошибка (опционально)
     } else {
       lessons.value = data
-      // Проверяем, есть ли смысл грузить дальше
       hasMore.value = data.length >= totalToFetch
-      // Важно: currentPage НЕ сбрасываем, он остается прежним
     }
   } catch (e) {
     console.error("Refresh failed", e)
@@ -120,8 +116,8 @@ const refreshList = async () => {
     loading.value = false
   }
 }
+
 const onLoadNextPage = async (index, done) => {
-  // Защита от дублирующих запросов, пока идет refreshList
   if (!hasMore.value || loading.value) {
     done()
     return
@@ -164,12 +160,12 @@ const onIntersection = (entry) => {
   else entry.target.classList.remove('is-in-view');
 }
 onActivated(() => {
-  refreshList()
+  refreshList(true)
 })
 watch(() => props.filter, () => {
-  currentPage.value = 0  
+  currentPage.value = 1
   lessons.value = []
-  refreshList()
+  refreshList(false)
 }, { deep: true })
 
 </script>
