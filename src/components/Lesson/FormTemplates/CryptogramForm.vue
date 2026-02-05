@@ -203,6 +203,11 @@ watch(formData.fields, (newValue, oldValue) => {
     .q-lesson-field-value{
       background: $positive !important;
       color: white !important;
+      &.is-question{
+        margin-top: -3px !important;
+        border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+        box-shadow: inset 0px 0px 0px 2px rgba(25, 210, 65, 0.5) !important;
+      }
     }
   }
   &.is-incorrect{
@@ -210,6 +215,11 @@ watch(formData.fields, (newValue, oldValue) => {
     .q-lesson-field-value{
       background: $negative !important;
       color: white !important;
+      &.is-question{
+        margin-top: -3px !important;
+        border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+        box-shadow: inset 0px 0px 0px 2px rgba(0, 0, 0, 0.15) !important;
+      }
     }
   }
   .q-lesson-field-value{

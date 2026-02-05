@@ -105,6 +105,8 @@ onMounted(() => emits('onRendered', true))
     background: none !important;
     box-shadow: none !important;
     border: none;
+    margin-bottom: 2px;
+    margin-top: -2px;
   }
 }
 
