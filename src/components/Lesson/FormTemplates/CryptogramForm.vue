@@ -222,9 +222,11 @@ watch(formData.fields, (newValue, oldValue) => {
     text-align: center;
     height: auto;
     background: none !important;
+    margin-top: -3px;
     &.is-question{
       box-shadow: none !important;
       border: none;
+      margin-top: 0 !important;
     }
   }
 }
