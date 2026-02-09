@@ -85,7 +85,7 @@
     </q-card>
   </q-list>
   <q-dialog v-model="claimDialog"  position="bottom"  @hide="currentOffer = false; buttonLoading = false;">
-      
+
       <q-card class="text-center q-pb-sm allow-overflow rounded-b-0 relative-position">
         <div class="absolute-top text-right" style="top: -10px; right: 10px; z-index: 1" >
           <q-btn push color="negative" class="text-bold" @click="claimDialog = false" @click.stop="playAudio('click')" icon="close"></q-btn>
@@ -131,12 +131,35 @@
                   <b class="q-ml-xs">(0%)</b>
                 </q-chip>
               </span>
-              
+
             </div>
           </q-card-section>
         </q-card-section>
         <q-card-actions v-if="currentOffer.type == 'exchange'" class="bg-white relative-position rounded-t q--avoid-card-border" style="margin-top: -20px; z-index: 10">
           <q-card  flat class="bg-grey-3 full-width">
+            <q-card-section class="q-py-sm">
+              <div class="text-subtitle2"><b>Текущий курс:</b></div>
+              <div class="flex justify-center items-center">
+                <div class="flex bg-grey-4 rounded-borders q-px-sm">
+                  <div v-for="(resource, resourceIndex) in currentOffer.cost" :key="resourceIndex" class="flex items-center justify-center">
+                    <q-avatar square size="30px">
+                      <q-img :src="resource.image" width="22px"/>
+                    </q-avatar>
+                    <div class="q-px-xs text-sutitle1"><b>{{ resource.base_quantity }}</b></div>
+                  </div>
+                </div>
+                <div class="q-px-sm"><b>=</b></div>
+                <div class="flex bg-grey-4 rounded-borders q-px-sm">
+                  <div v-for="(resource, resourceIndex) in currentOffer.reward" :key="resourceIndex" class="flex items-center justify-center">
+                    <q-avatar square size="30px">
+                      <q-img :src="resource.image" width="22px"/>
+                    </q-avatar>
+                    <div class="q-px-xs text-sutitle1"><b>{{ resource.base_quantity }}</b></div>
+                  </div>
+                </div>
+              </div>
+            </q-card-section>
+              <q-separator />
             <q-card-section horizontal>
               <q-card-section class="full-width full-height q-pt-sm">
                 <div class="q-mb-sm"><b>Ты отдашь:</b></div>
@@ -263,17 +286,30 @@ const load = async () => {
     return []
   }
   marketOffers.value = marketOfferListResponse
+  calculateBaseQuantity()
 }
 const calculateExchange = (value) => {
   let allZero = true
   for(var i in currentOffer.value.reward){
     currentOffer.value.reward[i].quantity = Math.floor(value * currentOffer.value.current_rate);
-    if(currentOffer.value.reward[i].quantity > 0) allZero = false 
+    if(currentOffer.value.reward[i].quantity > 0) allZero = false
   }
   if(allZero) {
     exchangeDisabled.value = true
   } else {
     exchangeDisabled.value = false
+  }
+}
+const calculateBaseQuantity = () => {
+  for(var o in marketOffers.value){
+    if(marketOffers.value[o].type == 'exchange'){
+      for(var i in marketOffers.value[o].cost){
+        marketOffers.value[o].cost[i].base_quantity = marketOffers.value[o].cost_raw[marketOffers.value[o].cost[i].code]
+      }
+      for(var k in marketOffers.value[o].reward){
+        marketOffers.value[o].reward[k].base_quantity = marketOffers.value[o].reward_raw[marketOffers.value[o].reward[i].code]
+      }
+    }
   }
 }
 
