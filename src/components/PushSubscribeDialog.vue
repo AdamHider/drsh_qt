@@ -1,11 +1,8 @@
 <template>
   <q-dialog v-model="isModalOpen" persistent>
-    <q-card style="min-width: 350px">
+    <q-card style="min-width: 350px" class="q-push">
       <q-card-section>
-        <div class="text-h6">Подписка на уведомления</div>
-      </q-card-section>
-
-      <q-card-section class="q-pt-none">
+        <div class="text-subtitle1"><b>Подписка на уведомления</b></div>
         <div v-if="isLoading" class="text-center">
           <q-spinner color="primary" size="3em" />
           <p class="q-mt-sm">Проверка статуса подписки...</p>
@@ -33,9 +30,10 @@
       </q-card-section>
 
       <q-card-actions align="right" class="text-primary">
-        <q-btn flat label="Закрыть" @click="closeModal" />
+        <q-btn flat @click="closeModal"><b>Отмена</b></q-btn>
 
         <q-btn
+          push
           v-if="!isSubscribed && permissionState === 'default'"
           :loading="isSubmitting"
           label="Подписаться"
@@ -61,7 +59,6 @@ const isLoading = ref(true);
 const isSubmitting = ref(false);
 const permissionState = ref('default');
 
-// --- HELPER FUNCTION (остается прежней) ---
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
@@ -86,7 +83,6 @@ async function subscribeUser() {
     try {
         const registration = await navigator.serviceWorker.ready;
         console.log(registration)
-        // Нативный запрос разрешения
         const permission = await Notification.requestPermission();
         permissionState.value = permission;
         if (permission !== 'granted') {
@@ -101,8 +97,7 @@ async function subscribeUser() {
             applicationServerKey: convertedVapidKey
         });
 
-        // Отправка подписки на CodeIgniter-бэкенд
-        const response = await fetch('/api/subscribe', {
+        const response = await fetch('https://core.mektepium.com/Push/subscribe', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(subscription),
@@ -150,11 +145,13 @@ async function checkSubscriptionStatus() {
 const { user } = useUserStore()
 
 function autoShowModalIfRequired() {
+  console.log('Проверка ID:', user.id);
+    console.log('Подписан?', isSubscribed.value);
+    console.log('Статус разрешений:', permissionState.value);
     setTimeout(() => {
-        if(user.id != 167) return false
-        if (!isSubscribed.value && permissionState.value === 'default') {
-            openModal();
-        }
+      if (!isSubscribed.value && permissionState.value === 'default') {
+        openModal();
+      }
     }, 2000);
 }
 

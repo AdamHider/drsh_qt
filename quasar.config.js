@@ -149,10 +149,13 @@ export default defineConfig((ctx) => {
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
       workboxMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
+      injectPwaMetaTags: true, // Рекомендую включить для корректных мета-тегов
+
+      // Оставьте только это:
       workboxOptions: {
         swSrc: 'src-pwa/custom-service-worker.js',
-        skipWaiting: true,   // сразу активируем новый SW
-        clientsClaim: true   // новый SW сразу берёт под контроль все вкладки
+        // skipWaiting и clientsClaim здесь НЕ НУЖНЫ,
+        // так как они уже есть в коде самого воркера
       },
       // swFilename: 'sw.js',
       // manifestFilename: 'manifest.json',
