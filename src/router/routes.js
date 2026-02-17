@@ -14,6 +14,7 @@ import UserEditPassword from 'pages/UserEditPassword.vue'
 import UserSettings from 'pages/UserSettings.vue'
 import UserEmailVerification from 'pages/UserEmailVerification.vue'
 import UserPasswordReset from 'pages/UserPasswordReset.vue'
+import UserNotificationSettings from 'pages/UserNotificationSettings.vue'
 
 
 import AchievementsPage from 'pages/AchievementsPage.vue'
@@ -141,6 +142,16 @@ const routes = [
           transition: 'slide-in'
         }
       },
+      {
+        path: 'user/settings/notifications',
+        component: UserNotificationSettings,
+        meta: {
+          level: 3,
+          requiresAuth: true,
+          transition: 'slide-in'
+        }
+      },
+
       {
         path: '/achievements',
         component: AchievementsPage,

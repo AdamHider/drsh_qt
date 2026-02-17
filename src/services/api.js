@@ -269,6 +269,10 @@ export class Api extends ApiService{
       getLessonItem: (params) => {
           return this.post('training', 'getLessonItem', params)
       },
-
+    }
+    push = {
+      subscribe: (params) =>  {
+          return this.post('push', 'subscribe', params)
+      },
     }
 }

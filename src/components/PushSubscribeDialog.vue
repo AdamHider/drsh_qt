@@ -1,175 +1,69 @@
 <template>
   <q-dialog v-model="isModalOpen" persistent>
-    <q-card style="min-width: 350px" class="q-push">
+    <q-card style="min-width: 350px">
       <q-card-section>
         <div class="text-subtitle1"><b>Подписка на уведомления</b></div>
-        <div v-if="isLoading" class="text-center">
+
+        <div v-if="isLoading" class="text-center q-pa-md">
           <q-spinner color="primary" size="3em" />
-          <p class="q-mt-sm">Проверка статуса подписки...</p>
         </div>
 
-        <div v-else-if="isSubscribed">
-          <q-icon name="check_circle" color="green" size="md" />
-          Вы успешно подписаны! Теперь вы будете получать важные обновления.
-        </div>
-
-        <div v-else-if="permissionState === 'default'">
-          Получайте важные новости и уведомления, даже когда приложение закрыто.
-        </div>
-
-        <div v-else-if="permissionState === 'denied'">
-          <q-icon name="warning" color="red" size="md" />
-          Вы заблокировали уведомления для этого сайта. Чтобы подписаться,
-          измените настройки браузера вручную.
-        </div>
-
-        <div v-else>
-          <q-icon name="error" color="red" size="md" />
-          Ваш браузер не поддерживает Web Push Notifications.
+        <div v-else class="q-py-md">
+          <template v-if="isSubscribed">
+            Вы успешно подписаны!
+          </template>
+          <template v-else-if="permissionState === 'default'">
+            Получайте важные новости и уведомления даже при закрытом приложении.
+          </template>
+          <template v-else-if="permissionState === 'denied'">
+            Вы заблокировали уведомления. Измените настройки браузера вручную.
+          </template>
+          <template v-else>
+            Push-уведомления не поддерживаются вашим браузером.
+          </template>
         </div>
       </q-card-section>
 
-      <q-card-actions align="right" class="text-primary">
-        <q-btn flat @click="closeModal"><b>Отмена</b></q-btn>
-
+      <q-card-actions align="right">
+        <q-btn flat @click="isModalOpen = false"><b>Отмена</b></q-btn>
         <q-btn
-          push
           v-if="!isSubscribed && permissionState === 'default'"
-          :loading="isSubmitting"
+          push
           label="Подписаться"
           color="primary"
-          @click="subscribeUser"
+          :loading="isSubmitting"
+          @click="handleSubscribe"
         />
       </q-card-actions>
     </q-card>
   </q-dialog>
 </template>
+
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useQuasar } from 'quasar';
-import { useUserStore } from '../stores/user'
-
-const $q = useQuasar();
-
-const PUBLIC_VAPID_KEY = 'BKYqHtv23UyCmW-jvApFWK2zszHfm8Rh6O3gEUHdolaV1FewkewDWJRgBxsA8r73KxoueOoiiy4uYI5Z69JfWrI';
+import { usePushNotification } from '../composables/usePushNotification';
+import { useUserStore } from '../stores/user';
 
 const isModalOpen = ref(false);
-const isSubscribed = ref(false);
-const isLoading = ref(true);
-const isSubmitting = ref(false);
-const permissionState = ref('default');
+const { user } = useUserStore();
+const {
+  isSubscribed,
+  permissionState,
+  isLoading,
+  isSubmitting,
+  checkSubscriptionStatus,
+  subscribeUser
+} = usePushNotification();
 
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
-async function subscribeUser() {
-    if (!('serviceWorker' in navigator && 'PushManager' in window)) {
-        $q.notify({ type: 'negative', message: 'Push-уведомления не поддерживаются вашим браузером.' });
-        permissionState.value = 'unsupported';
-        return;
-    }
-
-    isSubmitting.value = true;
-
-    try {
-        const registration = await navigator.serviceWorker.ready;
-        console.log(registration)
-        const permission = await Notification.requestPermission();
-        permissionState.value = permission;
-        if (permission !== 'granted') {
-             $q.notify({ type: 'warning', message: 'Разрешение на уведомления не получено.' });
-             isSubmitting.value = false;
-             return;
-        }
-
-        const convertedVapidKey = urlBase64ToUint8Array(PUBLIC_VAPID_KEY);
-        const subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: convertedVapidKey
-        });
-
-        const response = await fetch('https://core.mektepium.com/Push/subscribe', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(subscription),
-        });
-
-        if (response.ok) {
-            isSubscribed.value = true;
-            $q.notify({ type: 'positive', message: 'Вы успешно подписаны на уведомления!' });
-        } else {
-            subscription.unsubscribe();
-            throw new Error('Ошибка сохранения подписки на сервере.');
-        }
-
-    } catch (error) {
-        console.error('Ошибка подписки:', error);
-        $q.notify({ type: 'negative', message: 'Произошла ошибка при попытке подписки.' });
-    } finally {
-        isSubmitting.value = false;
-    }
-}
-
-async function checkSubscriptionStatus() {
-    isLoading.value = true;
-
-    if (!('serviceWorker' in navigator && 'PushManager' in window)) {
-        permissionState.value = 'unsupported';
-        isLoading.value = false;
-        return;
-    }
-
-    permissionState.value = Notification.permission;
-
-    if (permissionState.value === 'granted') {
-        const registration = await navigator.serviceWorker.ready;
-
-        if (registration) {
-             const subscription = await registration.pushManager.getSubscription();
-             isSubscribed.value = !!subscription;
-        }
-    }
-
-    isLoading.value = false;
-}
-
-const { user } = useUserStore()
-
-function autoShowModalIfRequired() {
-  console.log('Проверка ID:', user.id);
-    console.log('Подписан?', isSubscribed.value);
-    console.log('Статус разрешений:', permissionState.value);
-    setTimeout(() => {
-      if (!isSubscribed.value && permissionState.value === 'default') {
-        openModal();
-      }
-    }, 2000);
-}
-
-function openModal() {
-    if (isLoading.value) {
-        checkSubscriptionStatus();
-    }
-    isModalOpen.value = true;
-}
-
-function closeModal() {
-    isModalOpen.value = false;
+async function handleSubscribe() {
+  const success = await subscribeUser();
+  if (success) isModalOpen.value = false;
 }
 
 onMounted(async () => {
-    await checkSubscriptionStatus();
-
-    autoShowModalIfRequired();
+  await checkSubscriptionStatus();
+  if (user.active.data.id == 167 && !isSubscribed.value && permissionState.value === 'default') {
+    setTimeout(() => { isModalOpen.value = true; }, 2000);
+  }
 });
-
 </script>

@@ -103,7 +103,7 @@
                   icon="build"
                   color="primary"
                   :disable="permissionState === 'denied'"
-                  to="/user/settings/notifications"
+                  to="/user/settings/push_notifications"
                 />
               </q-item-section>
             </q-item>
