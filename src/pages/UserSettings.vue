@@ -102,7 +102,6 @@
                   class="q-px-sm"
                   icon="build"
                   color="primary"
-                  :disable="permissionState === 'denied'"
                   to="/user/settings/notifications"
                 />
               </q-item-section>

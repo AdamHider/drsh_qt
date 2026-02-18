@@ -44,7 +44,7 @@
       "purpose": "maskable" 
     },
     {
-      "src": "/icons/splash-logo.png",
+      "src": "icons/splash-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
