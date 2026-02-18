@@ -18,9 +18,6 @@
           <template v-else-if="permissionState === 'denied'">
             Вы заблокировали уведомления. Измените настройки браузера вручную.
           </template>
-          <template v-else>
-            Push-уведомления не поддерживаются вашим браузером.
-          </template>
         </div>
       </q-card-section>
 
@@ -62,7 +59,7 @@ async function handleSubscribe() {
 
 onMounted(async () => {
   await checkSubscriptionStatus();
-  if (user.active.data.id == 167 && !isSubscribed.value && permissionState.value === 'default') {
+  if (user.active.data.level.level >= '2' && !isSubscribed.value && permissionState.value === 'default') {
     setTimeout(() => { isModalOpen.value = true; }, 2000);
   }
 });

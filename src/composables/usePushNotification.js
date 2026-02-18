@@ -2,10 +2,8 @@ import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
 import { api } from '../services/index'
 
-// Константы выносим за пределы функции, чтобы они были общими
 const PUBLIC_VAPID_KEY = 'BKYqHtv23UyCmW-jvApFWK2zszHfm8Rh6O3gEUHdolaV1FewkewDWJRgBxsA8r73KxoueOoiiy4uYI5Z69JfWrI';
 
-// Глобальное состояние (чтобы статус обновлялся во всех компонентах одновременно)
 const isSubscribed = ref(false);
 const permissionState = ref(Notification.permission);
 const isLoading = ref(true);
@@ -14,7 +12,6 @@ export function usePushNotification() {
   const $q = useQuasar();
   const isSubmitting = ref(false);
 
-  // Вспомогательная функция конвертации
   function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
@@ -26,7 +23,6 @@ export function usePushNotification() {
     return outputArray;
   }
 
-  // Проверка текущего статуса
   async function checkSubscriptionStatus() {
     isLoading.value = true;
     if (!('serviceWorker' in navigator && 'PushManager' in window)) {
@@ -65,7 +61,6 @@ export function usePushNotification() {
       });
 
       const response = await api.push.subscribe(subscription.toJSON())
-      console.log(response)
       if (response.status !== 'success') throw new Error('Server error');
 
       isSubscribed.value = true;
@@ -79,6 +74,9 @@ export function usePushNotification() {
       isSubmitting.value = false;
     }
   }
+  async function saveItemConfig(data){
+    return api.push.saveItemConfig(data)
+  }
 
   return {
     isSubscribed,
@@ -86,6 +84,7 @@ export function usePushNotification() {
     isLoading,
     isSubmitting,
     checkSubscriptionStatus,
-    subscribeUser
+    subscribeUser,
+    saveItemConfig
   };
 }

@@ -274,5 +274,9 @@ export class Api extends ApiService{
       subscribe: (params) =>  {
           return this.post('push', 'subscribe', params)
       },
+      saveItemConfig: (params) =>  {
+          return this.post('push', 'saveItemConfig', params)
+      },
+      
     }
 }

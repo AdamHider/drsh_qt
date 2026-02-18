@@ -101,7 +101,7 @@ const load = async () => {
   state.userIsBelow = false
   state.isLoading = true;
   isLoadingInitial.value = true;
-
+  userRow.value = {}
   filter.value.mode = 'new'
 
   const initialData = await api.exercise.getLeaderboard({...filter.value, ...props.filter});
